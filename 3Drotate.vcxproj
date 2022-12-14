@@ -128,6 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3Drotate.cpp" />
+    <ClCompile Include="Basical_Type.cpp" />
+    <ClCompile Include="Graphic_Engine.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Basical_Type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
