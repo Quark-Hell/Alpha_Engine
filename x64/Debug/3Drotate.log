@@ -1,1 +1,5 @@
-﻿LINK : fatal error LNK1168: cannot open C:\Users\genna\source\repos\3DRotate\x64\Debug\3Drotate.exe for writing
+﻿  Graphic_Engine.cpp
+  3Drotate.cpp
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Basical_Type.cpp(88,31): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+  3Drotate.vcxproj -> C:\Users\genna\source\repos\3DRotate\x64\Debug\3Drotate.exe

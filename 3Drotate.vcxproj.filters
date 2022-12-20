@@ -13,21 +13,33 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Models">
+      <UniqueIdentifier>{3a599750-d2a3-49d7-96b2-dfc895c0b602}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="3Drotate.cpp">
+    <ClCompile Include="Engine\Basical_Type.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphic_Engine.cpp">
+    <ClCompile Include="Engine\Graphic_Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Basical_Type.cpp">
+    <ClCompile Include="Game\3Drotate.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\GameModels.cpp">
+      <Filter>Models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Basical_Type.h">
+    <ClInclude Include="Engine\Basical_Type.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphic_Engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\GameModels.h">
+      <Filter>Models</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
