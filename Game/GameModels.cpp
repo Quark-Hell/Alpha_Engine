@@ -12,15 +12,6 @@
 
 //TODO: Function normilize color
 
-/* TODO: Form colors enum
-glColor3f(0.0f, 1.0f, 0.0f);  // Color Green
-glColor3f(1.0f, 0.5f, 0.0f);  // Color Orange
-glColor3f(1.0f, 0.0f, 0.0f);    // Color Red
-glColor3f(1.0f, 1.0f, 0.0f);    // Color Yellow
-glColor3f(0.0f, 0.0f, 1.0f);    // Color Blue
-glColor3f(1.0f, 0.0f, 1.0f);    // Color Violet
-*/
-
 void Primitive::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();

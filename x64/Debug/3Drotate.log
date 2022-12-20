@@ -1,5 +1,6 @@
-﻿  Graphic_Engine.cpp
-  3Drotate.cpp
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Basical_Type.cpp(88,31): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+﻿  Basical_Type.cpp
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Basical_Type.cpp(84,31): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  Graphic_Engine.cpp
+  GameModels.cpp
   Generating Code...
   3Drotate.vcxproj -> C:\Users\genna\source\repos\3DRotate\x64\Debug\3Drotate.exe

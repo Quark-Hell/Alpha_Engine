@@ -11,6 +11,15 @@
 #include <gl/gl.h>
 #include <gl/glu.h>
 
+struct Colors {
+	const Vector3 green { 0.0f, 1.0f, 0.0f }; 
+	const Vector3 orange {	1.0f, 0.5f, 0.0f}; 
+	const Vector3 red {	1.0f, 0.0f, 0.0f};    
+	const Vector3 yellow{	1.0f, 1.0f, 0.0f};  
+	const Vector3 blue{	0.0f, 0.0f, 1.0f};    
+	const Vector3 violet{ 1.0f, 0.0f, 1.0f };   
+};
+
 class Camera {
 private:
 	Vector3 Position;

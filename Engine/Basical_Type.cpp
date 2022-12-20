@@ -44,10 +44,8 @@ inline bool Object::DeleteModuleByIndex(int index) {
 		Object::Modules.erase(Object::Modules.begin() + index);
 		return true;
 	}
-	else
-	{
-		return false;
-	}
+
+	return false;
 }
 
 inline Module* Object::GetModuleByName(std::string name) {
@@ -64,10 +62,8 @@ inline Module* Object::GetModuleByIndex(int index) {
 	if (index >= 0 && index < Object::Modules.size()) {
 		return &Object::Modules[index];
 	}
-	else
-	{
-		return nullptr;
-	}
+
+	return nullptr;
 }
 
 #pragma endregion
