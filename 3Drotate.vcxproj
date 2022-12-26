@@ -21,12 +21,15 @@
   <ItemGroup>
     <ClCompile Include="Engine\Basical_Type.cpp" />
     <ClCompile Include="Engine\Graphic_Engine.cpp" />
-    <ClCompile Include="Game\3Drotate.cpp" />
+    <ClCompile Include="Engine\Main.cpp" />
+    <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\GameModels.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Basical_Type.h" />
     <ClInclude Include="Engine\Graphic_Engine.h" />
+    <ClInclude Include="Engine\Main.h" />
+    <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\GameModels.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -115,13 +118,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\genna\source\repos\3DRotate\3Drotate\Game;C:\Users\genna\source\repos\3DRotate\3Drotate\Engine;C:\Users\genna\source\repos\3DRotate\3Drotate\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\genna\source\repos\3DRotate\3Drotate\assimp\include;C:\Users\genna\source\repos\3DRotate\3Drotate\Game;C:\Users\genna\source\repos\3DRotate\3Drotate\Engine;C:\Users\genna\source\repos\3DRotate\3Drotate\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\genna\source\repos\3DRotate\3Drotate\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\genna\source\repos\3DRotate\3Drotate\assimp\lib;C:\Users\genna\source\repos\3DRotate\3Drotate\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

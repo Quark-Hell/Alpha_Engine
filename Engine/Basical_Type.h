@@ -5,7 +5,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <typeinfo>
 
 struct Vector3 {
 
@@ -209,11 +208,15 @@ public:
 class Mesh : public Module {
 private:
 	std::vector <Vector3> Points;
-private:
-	std::vector <Vector3> Triangles;
+	std::vector <Vector3> Normals;
+	std::vector <unsigned int> Indices;
+	//std::vector <Vector3> VertexColors;
+	//std::vector <Vector3> TextureCoords;
+
+	friend class Render;
 
 public:
-	bool CreateMesh(std::vector<Vector3> points, std::vector<Vector3> triangles);
+	bool CreateMesh(std::string linkToFBX);
 
 public:
 	void DeleteMesh();
@@ -225,38 +228,56 @@ class Physics : public Module {
 
 #pragma endregion
 
-class Object
-{
-private:
-	Vector3 Position;
+class Object {
 
 private:
+	Vector3 Position{ 0,0,0 };
+	Vector3 Rotation{ 0,0,0 };
+	Vector3 Scale{ 1,1,1 };
 	std::vector<Module> Modules;
 
 public:
-	Vector3 GetPosition();
+	Object();
 
-public:
+	Vector3 GetPosition();
 	void SetPosition(float X, float Y, float Z);
 
-public:
+	Vector3 GetRotation();
+	void SetRotation(float X, float Y, float Z);
+
+	Vector3 GetScale();
+	void SetScale(float X, float Y, float Z);
+
 	bool AddModule(class Module some_module);
 
-public:
 	bool DeleteModuleByName(std::string name);
-
-public:
 	bool DeleteModuleByIndex(int index);
 
-public:
 	Module* GetModuleByName(std::string name);
-
-public:
 	Module* GetModuleByIndex(int index);
 
-public:
 	int GetCountOfModules();
+
+	void DeleteObject();
 };
 
+class World {
+	/*
+private:
+	static std::vector<Object> ObjectsOnScene;
+
+
+public:
+	static struct _Static {
+		std::vector<Object> ObjectsOnScene{};
+	} global;
+
+		*/
+
+private:
+	friend class Object;
+
+	World();
+};
 
 #endif

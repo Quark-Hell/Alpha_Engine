@@ -49,6 +49,12 @@ public:
 
 public:
 	void RenderLoop();
+
+public:
+	void Assembler(Object* obj, Mesh* mesh);
+
+public:
+	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
 };
 
 class Output {

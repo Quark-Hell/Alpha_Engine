@@ -3,9 +3,6 @@
 #include "Basical_Type.h"
 
 class Primitive {
-private:
-	static void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
-
 public:
 	static void Plane(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
 
