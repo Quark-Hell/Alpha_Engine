@@ -1,10 +1,14 @@
 #pragma once
-#ifndef BasicalType_H
-#define BasicalType_H
 
 #include <iostream>
 #include <vector>
 #include <string>
+#include <filesystem>
+
+//Assimp
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 struct Vector3 {
 
@@ -234,21 +238,25 @@ private:
 	Vector3 Position{ 0,0,0 };
 	Vector3 Rotation{ 0,0,0 };
 	Vector3 Scale{ 1,1,1 };
-	std::vector<Module> Modules;
+	std::vector<Module*> Modules;
 
 public:
 	Object();
+	~Object();
 
 	Vector3 GetPosition();
 	void SetPosition(float X, float Y, float Z);
+	void SetPosition(Vector3 Position);
 
 	Vector3 GetRotation();
 	void SetRotation(float X, float Y, float Z);
+	void SetRotation(Vector3 Rotation);
 
 	Vector3 GetScale();
 	void SetScale(float X, float Y, float Z);
+	void SetScale(Vector3 Scale);
 
-	bool AddModule(class Module some_module);
+	bool AddModule(class Module* some_module);
 
 	bool DeleteModuleByName(std::string name);
 	bool DeleteModuleByIndex(int index);
@@ -279,5 +287,3 @@ private:
 
 	World();
 };
-
-#endif

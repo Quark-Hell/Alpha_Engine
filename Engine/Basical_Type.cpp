@@ -1,11 +1,4 @@
 #include "Basical_Type.h"
-#include <iostream>
-#include <vector>
-
-//Assimp
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 
 #pragma region World Define
 
@@ -21,46 +14,54 @@ inline::World::World() {
 
 #pragma region Object Define
 
+inline Vector3 Object::GetPosition() {
+	return Position;
+}
 inline void Object::SetPosition (float X, float Y, float Z) {
 	Object::Position.X = X;
 	Object::Position.Y = Y;
 	Object::Position.Z = Z;
 }
-
-inline Vector3 Object::GetPosition() {
-	return Position;
+inline void Object::SetPosition(Vector3 Position) {
+	Object::Position.X = Position.X;
+	Object::Position.Y = Position.Y;
+	Object::Position.Z = Position.Z;
 }
 
+
+inline Vector3 Object::GetRotation() {
+	return Rotation;
+}
 inline void Object::SetRotation(float X, float Y, float Z) {
 	Object::Rotation.X = X;
 	Object::Rotation.Y = Y;
 	Object::Rotation.Z = Z;
 }
-
-inline Vector3 Object::GetRotation() {
-	return Rotation;
+inline void Object::SetRotation(Vector3 Rotation) {
+	Object::Rotation.X = Rotation.X;
+	Object::Rotation.Y = Rotation.Y;
+	Object::Rotation.Z = Rotation.Z;
 }
 
+
+inline Vector3 Object::GetScale() {
+	return Scale;
+}
 inline void Object::SetScale(float X, float Y, float Z) {
 	Object::Scale.X = X;
 	Object::Scale.Y = Y;
 	Object::Scale.Z = Z;
 }
-
-inline Vector3 Object::GetScale() {
-	return Scale;
+inline void Object::SetScale(Vector3 Scale) {
+	Object::Scale.X = Scale.X;
+	Object::Scale.Y = Scale.Y;
+	Object::Scale.Z = Scale.Z;
 }
 
-inline bool Object::AddModule(class Module some_module) {
-	try
-	{
-		Object::Modules.push_back(some_module);
-		return true;
-	}
-	catch (const std::exception&)
-	{
-		return false;
-	}
+
+inline bool Object::AddModule(class Module *some_module) {
+	Object::Modules.push_back(some_module);
+	return true;
 }
 
 inline int Object::GetCountOfModules() {
@@ -69,7 +70,7 @@ inline int Object::GetCountOfModules() {
 
 inline bool Object::DeleteModuleByName(std::string name) {
 	for (size_t i = 0; i < Object::Modules.size(); i++) {
-		if (name == Object::Modules[i].GetName()) {
+		if (name == Object::Modules[i]->GetName()) {
 			Object::Modules.erase(Object::Modules.begin() + i);
 			return true;
 		}
@@ -89,20 +90,23 @@ inline bool Object::DeleteModuleByIndex(int index) {
 
 inline Module* Object::GetModuleByName(std::string name) {
 	for (size_t i = 0; i < Object::Modules.size(); i++) {
-		if (name == Object::Modules[i].GetName()) {
-			return &Object::Modules[i];
+		if (name == Object::Modules[i]->GetName()) {
+			return Object::Modules[i];
 		}
 	}
 
 	return nullptr;
 }
-
 inline Module* Object::GetModuleByIndex(int index) {
 	if (index >= 0 && index < Object::Modules.size()) {
-		return &Object::Modules[index];
+		return Object::Modules[index];
 	}
 
 	return nullptr;
+}
+
+inline void Object::DeleteObject() {
+	Object::~Object();
 }
 
 /*
@@ -119,6 +123,10 @@ inline void Object::DeleteObject() {
 
 inline Object::Object() {
 	//World::global.ObjectsOnScene.push_back(*this);
+}
+
+inline Object::~Object() {
+
 }
 
 #pragma endregion
@@ -160,9 +168,14 @@ inline bool Mesh::CreateMesh(std::vector<Vector3> points, std::vector < Vector3>
 
 inline bool Mesh::CreateMesh(std::string linkToFBX) {
 	Assimp::Importer importer;
+	std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
+
 	//TODO: Check if fbx
-	const aiScene* s = importer.ReadFile(linkToFBX, aiProcess_Triangulate);
+	const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate);
 	aiMesh* mesh = s->mMeshes[0];
+
+	Mesh::Points.clear();
+	Mesh::Normals.clear();
 
 	for (std::uint32_t it = 0; it < mesh->mNumVertices; it++) {
 		Vector3 point;

@@ -1,15 +1,6 @@
-#include <iostream>
 #include "Graphic_Engine.h"
-#include <SFML/Window.hpp>
-#include <SFML/OpenGL.hpp>
-#include <SFML/Graphics.hpp>
-//OpenGL
-#pragma comment(lib, "opengl32")
-#pragma comment(lib, "glu32")
-#include <gl/gl.h>
-#include <gl/glu.h>
+#include "GameModels.cpp"
 
-#include "GameModels.h"
 
 inline void Camera::SetCameraInfo(Vector3 Position, Vector3 Rotation, float Fov, float Aspect, float ZNear, float ZFar) {
     Camera::Fov = Fov;
@@ -30,6 +21,16 @@ inline void Camera::GetCameraInfo(Vector3* Position, Vector3* Rotation, float* F
     *Aspect = Camera::Aspect;
     *ZNear = Camera::ZNear;
     *ZFar = Camera::ZFar;
+}
+
+inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel,std::string Name, sf::ContextSettings Screen_Settings) {
+    _wight = Wight;
+    _height = Height;
+    _bitsPerPixel = BitsPerPixel;
+    _name = Name;
+    _screen_Settings = Screen_Settings;
+
+    _screen = new sf::RenderWindow(sf::VideoMode(Wight, Height, BitsPerPixel), Name, sf::Style::Resize | sf::Style::Close, Screen_Settings);
 }
 
 inline void Render::PrepareToRender(Camera *camera) {
@@ -88,11 +89,10 @@ inline void Render::PrepareToRender(Camera *camera) {
     glRotatef(Rotation.Z, 0.f, 0.f, 1.f);
 }
 
-inline void Render::Draw(sf::RenderWindow& App) {
-    //Prepare for drawing
-    // Clear color and depth buffer
+inline void Render::ClearFrameBuffer() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    App.display();
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
 
 inline void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
@@ -111,7 +111,8 @@ inline void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vect
 inline void Render::Assembler(Object *obj, Mesh *mesh) {
     Render::ApplyTransformation(obj->GetPosition(), obj->GetRotation(), obj->GetScale());
 
-    glBegin(GL_TRIANGLES);//draw some squares
+    glBegin(GL_TRIANGLES);
+    //TODO:
     glColor3f(1,0,0);
 
     for (size_t i = 0; i < mesh->Points.size(); i++)
@@ -136,56 +137,52 @@ inline void Render::RenderLoop() {
     window_settings.stencilBits = 8;
     window_settings.antialiasingLevel = 2;
 
-    sf::RenderWindow App(sf::VideoMode(800, 600, 32), "SFML OpenGL", sf::Style::Resize | sf::Style::Close , window_settings);
+
+    _screenClass.CreateScreen(800,600,32, "SFML OpenGL", window_settings);
+
     Render::PrepareToRender(&camera);
 
     camera.SetCameraInfo(Vector3{ 0,0, 0 }, Vector3{ 0,0,0 }, 60, 1, 1, 300);
 
-    App.setVerticalSyncEnabled(true);
+    _screenClass._screen->setVerticalSyncEnabled(true);
 
-    std::string link = "C:/Users/genna/source/repos/3DRotate/Models/text.fbx";
+    std::string link = "\\Models\\text.fbx";
     Object obj;
     Mesh mesh;
     mesh.CreateMesh(link);
-    obj.AddModule(mesh);
+    obj.AddModule(&mesh);
 
-    while (App.isOpen())
+    Vector3 Postion{ 0,0,-5 };
+    Vector3 Rotation(0, 30, 40);
+    Vector3 Scale{ 1,1,1 };
+    Vector3 Color{ 0,0,1 };
+
+    Object* cube = Primitives::Cube(Postion, Rotation, Scale, Color);
+
+    while (_screenClass._screen->isOpen())
     {
         // Process events
         sf::Event Event;
-        if (App.pollEvent(Event))
+        if (_screenClass._screen->pollEvent(Event))
         {
             // Close window : exit
             if (Event.type == sf::Event::Closed)
-                App.close();
+                _screenClass._screen->close();
 
             // Escape key : exit
             if ((Event.type == sf::Event::KeyPressed) && (Event.key.code == sf::Keyboard::Escape))
-                App.close();
+                _screenClass._screen->close();
         }
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+        ClearFrameBuffer();
 
-        float angle = Clock.getElapsedTime().asSeconds() * 50;
-
-        /*
-        // Apply some transformations for the cube
-        Vector3 Postion{ 1,0,-5 };
-        Vector3 Rotation(0, 30 * angle, 40);
-        Vector3 Scale{ 1,1,1 };
-        Vector3 Color{ 0,0,1 };
-
-        Primitive::Cube(Postion, Rotation, Scale, Color);
-
-         */
 
         obj.SetPosition(0, 0, -3);
-        obj.SetRotation(0, obj.GetRotation().X + angle, 0);
+        obj.SetRotation(obj.GetRotation().X + 1, obj.GetRotation().Y + 1, 0);
 
+        Render::Assembler(cube, (Mesh*)cube->GetModuleByIndex(0));
         Render::Assembler(&obj, &mesh);
 
-        App.display();
+        _screenClass._screen->display();
     }
 }

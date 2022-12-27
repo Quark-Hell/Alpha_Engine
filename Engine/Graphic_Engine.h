@@ -1,10 +1,9 @@
 #pragma once
+
 #include <iostream>
 #include "Basical_Type.h"
-#include "Graphic_Engine.h"
-#include <SFML/Window.hpp>
-#include <SFML/OpenGL.hpp>
-#include <SFML/Graphics.hpp>
+#include "IO.h"
+
 //OpenGL
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")
@@ -36,24 +35,39 @@ public:
 	void GetCameraInfo(Vector3* Position, Vector3* Rotation, float* Fov, float* Aspect, float* ZNear, float* ZFar);
 };
 
+class Screen {
+private:
+	unsigned int _wight;
+	unsigned int _height;
+	unsigned int _bitsPerPixel;
+	std::string _name;
+	sf::ContextSettings _screen_Settings;
+
+	sf::RenderWindow* _screen;
+
+	friend class Render;
+
+private:
+	void CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name, sf::ContextSettings Screen_Settings);
+};
+
 class Render {
+
+private:
+	Screen _screenClass;
 
 private:
 	void  PrepareToRender(Camera* camera);
 
-private:
-	void Draw(sf::RenderWindow& App);
+	void ClearFrameBuffer();
 
 public:
 	void RenderMesh();
 
-public:
 	void RenderLoop();
 
-public:
 	void Assembler(Object* obj, Mesh* mesh);
 
-public:
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
 };
 
