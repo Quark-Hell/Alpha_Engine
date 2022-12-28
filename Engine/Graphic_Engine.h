@@ -58,16 +58,15 @@ private:
 
 private:
 	void  PrepareToRender(Camera* camera);
-
 	void ClearFrameBuffer();
 
 public:
-	void RenderMesh();
+	 void StartRender();
+	 void RenderLoop();
 
-	void RenderLoop();
-
-	void Assembler(Object* obj, Mesh* mesh);
-
+private:
+	void SceneAssembler();
+	void RenderMesh(Mesh* mesh);
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
 };
 

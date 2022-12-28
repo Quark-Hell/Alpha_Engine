@@ -108,28 +108,36 @@ inline void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vect
     glScalef(Scale.X, Scale.Y, Scale.Z);
 }
 
-inline void Render::Assembler(Object *obj, Mesh *mesh) {
-    Render::ApplyTransformation(obj->GetPosition(), obj->GetRotation(), obj->GetScale());
-
+inline void Render::RenderMesh(Mesh* mesh) {
     glBegin(GL_TRIANGLES);
     //TODO:
-    glColor3f(1,0,0);
+    glColor3f(1, 0, 0);
 
     for (size_t i = 0; i < mesh->Points.size(); i++)
     {
         glNormal3f(mesh->Normals[i].X, mesh->Normals[i].Y, mesh->Normals[i].Z);
-        glVertex3f( mesh->Points[i].X, mesh->Points[i].Y, mesh->Points[i].Z);
+        glVertex3f(mesh->Points[i].X, mesh->Points[i].Y, mesh->Points[i].Z);
     }
 
     glEnd();
+}
+
+inline void Render::SceneAssembler() {
+    for (size_t i = 0; i < World::ObjectsOnScene.size(); i++)
+    {
+        for (size_t j = 0; j < World::ObjectsOnScene[i]->GetCountOfModules(); j++)
+        {
+            Mesh* mesh = dynamic_cast<Mesh*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+
+            if (mesh != nullptr) {
+                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+                RenderMesh(mesh);
+            }
+        }
+    }   
 }       
 
-//arg: sf::RenderWindow App
-inline void Render::RenderLoop() {
-
-    // Create a clock for measuring time elapsed
-    sf::Clock Clock;
-
+inline void Render::StartRender() {
     Camera camera;
 
     sf::ContextSettings window_settings;
@@ -137,29 +145,18 @@ inline void Render::RenderLoop() {
     window_settings.stencilBits = 8;
     window_settings.antialiasingLevel = 2;
 
-
-    _screenClass.CreateScreen(800,600,32, "SFML OpenGL", window_settings);
+    _screenClass.CreateScreen(800, 600, 32, "SFML OpenGL", window_settings);
 
     Render::PrepareToRender(&camera);
 
-    camera.SetCameraInfo(Vector3{ 0,0, 0 }, Vector3{ 0,0,0 }, 60, 1, 1, 300);
+    camera.SetCameraInfo(Vector3{ 0,0, 0 }, Vector3{ 0,0,0 }, 60, 4.0 / 3.0, 1, 300);
 
     _screenClass._screen->setVerticalSyncEnabled(true);
+}
 
-    std::string link = "\\Models\\text.fbx";
-    Object obj;
-    Mesh mesh;
-    mesh.CreateMesh(link);
-    obj.AddModule(&mesh);
-
-    Vector3 Postion{ 0,0,-5 };
-    Vector3 Rotation(0, 30, 40);
-    Vector3 Scale{ 1,1,1 };
-    Vector3 Color{ 0,0,1 };
-
-    Object* cube = Primitives::Cube(Postion, Rotation, Scale, Color);
-
-    while (_screenClass._screen->isOpen())
+//arg: sf::RenderWindow App
+inline void Render::RenderLoop() {
+    if (_screenClass._screen->isOpen())
     {
         // Process events
         sf::Event Event;
@@ -176,12 +173,7 @@ inline void Render::RenderLoop() {
 
         ClearFrameBuffer();
 
-
-        obj.SetPosition(0, 0, -3);
-        obj.SetRotation(obj.GetRotation().X + 1, obj.GetRotation().Y + 1, 0);
-
-        Render::Assembler(cube, (Mesh*)cube->GetModuleByIndex(0));
-        Render::Assembler(&obj, &mesh);
+        Render::SceneAssembler();
 
         _screenClass._screen->display();
     }

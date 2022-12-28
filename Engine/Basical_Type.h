@@ -195,18 +195,17 @@ public:
 class Module
 {
 private:
-	std::string Name;
+	std::string _name;
+
+private:
+	friend class Render;
 
 public:
-	bool Rename(std::string name);
-
-public:
+	void Rename(std::string name);
 	std::string GetName();
 
-	//TODO:
-	Module() {
-		Name = "";
-	}
+private:
+	virtual void Test();
 };
 
 class Mesh : public Module {
@@ -217,17 +216,23 @@ private:
 	//std::vector <Vector3> VertexColors;
 	//std::vector <Vector3> TextureCoords;
 
+private:
 	friend class Render;
 
 public:
-	bool CreateMesh(std::string linkToFBX);
+	Mesh();
+	~Mesh();
 
-public:
+	bool CreateMesh(std::string linkToFBX);
 	void DeleteMesh();
 };
 
 class Physics : public Module {
 
+
+public:
+	Physics();
+	~Physics();
 };
 
 #pragma endregion
@@ -270,11 +275,11 @@ public:
 };
 
 class World {
-	/*
+
 private:
-	static std::vector<Object> ObjectsOnScene;
+	static inline std::vector<Object*> ObjectsOnScene;
 
-
+	/*
 public:
 	static struct _Static {
 		std::vector<Object> ObjectsOnScene{};
@@ -284,6 +289,7 @@ public:
 
 private:
 	friend class Object;
+	friend class Render;
 
 	World();
 };

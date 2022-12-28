@@ -122,7 +122,7 @@ inline void Object::DeleteObject() {
 */
 
 inline Object::Object() {
-	//World::global.ObjectsOnScene.push_back(*this);
+	World::ObjectsOnScene.push_back(this);
 }
 
 inline Object::~Object() {
@@ -133,38 +133,27 @@ inline Object::~Object() {
 
 #pragma region Module Define
 
-inline bool Module::Rename(std::string name) {
-	//TODO:
-	Module::Name = name;
-	return true;
+inline void Module::Rename(std::string name) {
+	Module::_name = name;
 }
-
 inline std::string Module::GetName() {
-	return Module::Name;
+	return Module::_name;
 }
 
+inline void Module::Test() {
+
+}
 #pragma endregion
 
 
 #pragma region Mesh Define
-/*
-inline bool Mesh::CreateMesh(std::vector<Vector3> points, std::vector < Vector3> triangles) {
-	try
-	{
-		for (size_t i = 0; i < points.size(); i++) {
-			Mesh::Points[i] = points[i];
-		}
-		for (size_t i = 0; i < triangles.size(); i++) {
-			Mesh::Triangles[i] = triangles[i];
-		}
-		return true;
-	}
-	catch (const std::exception&)
-	{
-		return false;
-	}
+inline Mesh::Mesh() {
+	Mesh::Rename("Mesh");
 }
-*/
+
+inline Mesh::~Mesh() {
+
+}
 
 inline bool Mesh::CreateMesh(std::string linkToFBX) {
 	Assimp::Importer importer;
@@ -211,3 +200,12 @@ inline void Mesh::DeleteMesh() {
 #pragma endregion
 
 
+#pragma region Physics Define
+inline Physics::Physics() {
+	Physics::Rename("Physics");
+}
+
+inline Physics::~Physics() {
+
+}
+#pragma endregion
