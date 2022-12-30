@@ -1,8 +1,28 @@
 #include "Graphic_Engine.h"
 #include "GameModels.cpp"
 
+inline void Camera::SetCameraInfo(Vector3 Position, Vector3 Rotation) {
+    Camera::Position = Position;
+    Camera::Rotation = Rotation;
 
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glTranslatef(Position.X, Position.Y, Position.Z);
+}
+inline void Camera::SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar) {
+    Camera::Fov = Fov;
+    Camera::Aspect = Aspect;
+    Camera::ZNear = ZNear;
+    Camera::ZFar = ZFar;
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(Fov, Aspect, ZNear, ZFar);
+}
 inline void Camera::SetCameraInfo(Vector3 Position, Vector3 Rotation, float Fov, float Aspect, float ZNear, float ZFar) {
+    Camera::Position = Position;
+    Camera::Rotation = Rotation;
+
     Camera::Fov = Fov;
     Camera::Aspect = Aspect;
     Camera::ZNear = ZNear;
@@ -23,6 +43,25 @@ inline void Camera::GetCameraInfo(Vector3* Position, Vector3* Rotation, float* F
     *ZFar = Camera::ZFar;
 }
 
+inline Vector3 Camera::GetPosition(){
+    return Camera::Position;
+}
+inline Vector3 Camera::GetRotation() {
+    return Camera::Rotation;
+}
+inline float Camera::GetFov() {
+    return Camera::Fov;
+}
+inline float Camera::GetAspect() {
+    return Camera::Aspect;
+}
+inline float Camera::GetZNear() {
+    return Camera::ZNear;
+}
+inline float Camera::GetZFar() {
+    return Camera::ZFar;
+}
+
 inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel,std::string Name, sf::ContextSettings Screen_Settings) {
     _wight = Wight;
     _height = Height;
@@ -32,18 +71,11 @@ inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsign
 
     _screen = new sf::RenderWindow(sf::VideoMode(Wight, Height, BitsPerPixel), Name, sf::Style::Resize | sf::Style::Close, Screen_Settings);
 }
+inline Screen* Render::GetScreenClass() {
+    return &(Render::_screenClass);
+}
 
-inline void Render::PrepareToRender(Camera *camera) {
-    Vector3 Position;
-    Vector3 Rotation;
-
-    float Fov;
-    float Aspect;
-    float ZNear;
-    float ZFar;
-
-    camera->GetCameraInfo(&Position, &Rotation, &Fov, &Aspect, &ZNear, &ZFar);
-
+inline void Render::PrepareToRender() {
     glClearColor(0.3f, 0.3f, 0.3f, 0.f);
 
     //Light
@@ -76,6 +108,18 @@ inline void Render::PrepareToRender(Camera *camera) {
     glDepthMask(GL_TRUE);
     glClearDepth(1.f);
     glDepthFunc(GL_LEQUAL);
+}
+
+inline void Render::ApplyCameraTransform(Camera* camera) {
+    Vector3 Position;
+    Vector3 Rotation;
+
+    float Fov;
+    float Aspect;
+    float ZNear;
+    float ZFar;
+
+    camera->GetCameraInfo(&Position, &Rotation, &Fov, &Aspect, &ZNear, &ZFar);
 
     //// Setup a perspective projection & Camera position
     glMatrixMode(GL_PROJECTION);
@@ -137,9 +181,7 @@ inline void Render::SceneAssembler() {
     }   
 }       
 
-inline void Render::StartRender() {
-    Camera camera;
-
+inline void Render::StartRender(Camera* camera) {
     sf::ContextSettings window_settings;
     window_settings.depthBits = 24;
     window_settings.stencilBits = 8;
@@ -147,15 +189,16 @@ inline void Render::StartRender() {
 
     _screenClass.CreateScreen(800, 600, 32, "SFML OpenGL", window_settings);
 
-    Render::PrepareToRender(&camera);
+    Render::PrepareToRender();
+    Render::ApplyCameraTransform(camera);
 
-    camera.SetCameraInfo(Vector3{ 0,0, 0 }, Vector3{ 0,0,0 }, 60, 4.0 / 3.0, 1, 300);
+    camera->SetCameraInfo(Vector3{ 0,0, 0 }, Vector3{ 0,0,0 }, 60, 4.0 / 3.0, 1, 300);
 
     _screenClass._screen->setVerticalSyncEnabled(true);
 }
 
-//arg: sf::RenderWindow App
-inline void Render::RenderLoop() {
+
+inline void Render::RenderLoop(Camera* camera) {
     if (_screenClass._screen->isOpen())
     {
         // Process events
@@ -172,6 +215,9 @@ inline void Render::RenderLoop() {
         }
 
         ClearFrameBuffer();
+
+        PrepareToRender();
+        ApplyCameraTransform(camera);
 
         Render::SceneAssembler();
 

@@ -279,14 +279,6 @@ class World {
 private:
 	static inline std::vector<Object*> ObjectsOnScene;
 
-	/*
-public:
-	static struct _Static {
-		std::vector<Object> ObjectsOnScene{};
-	} global;
-
-		*/
-
 private:
 	friend class Object;
 	friend class Render;
