@@ -1,13 +1,11 @@
-﻿  IO.cpp
-  Main.cpp
+﻿  Main.cpp
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Basical_Type.cpp(68,31): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Graphic_Engine.cpp(174,90): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Graphic_Engine.cpp(195,85): warning C4305: 'argument': truncation from 'double' to 'float'
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(27,30): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(55,44): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(62,20): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(70,20): warning C4305: '-=': truncation from 'double' to 'float'
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(79,20): warning C4305: '-=': truncation from 'double' to 'float'
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(87,20): warning C4305: '+=': truncation from 'double' to 'float'
-  Generating Code...
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(51,44): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(58,20): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(66,20): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(75,20): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(83,20): warning C4305: '+=': truncation from 'double' to 'float'
   3Drotate.vcxproj -> C:\Users\genna\source\repos\3DRotate\x64\Debug\3Drotate.exe
