@@ -125,7 +125,7 @@ public:
 	}
 
 	bool operator!=(const Vector3 value) const {
-		if (X != value.X && Y != value.Y && Z != value.Z)
+		if (X != value.X || Y != value.Y || Z != value.Z)
 		{
 			return true;
 		}
@@ -133,7 +133,7 @@ public:
 	}
 
 	bool operator!=(const Vector3* value) const {
-		if (X != value->X && Y != value->Y && Z != value->Z)
+		if (X != value->X || Y != value->Y || Z != value->Z)
 		{
 			return true;
 		}

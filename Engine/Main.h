@@ -12,3 +12,5 @@ void RightMoveCamera();
 void UpMoveCamera();
 void DownMoveCamera();
 
+void CameraRotate();
+

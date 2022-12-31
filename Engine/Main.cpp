@@ -35,15 +35,23 @@ void GameFunction::Start() {
 
     Object* cube = Primitives::Sphere(Postion, Rotation, Scale, Color);
 
-    Bind LeftMove{ std::vector<void(*)()>{LeftMoveCamera}, {EnumKeyStates::KeyHold}, {sf::Keyboard::A} };     
+    Bind LeftMove{ std::vector<void(*)()>{LeftMoveCamera}, {EnumKeyStates::KeyHold}, {sf::Keyboard::A}  };
     Bind RightMove{ std::vector<void(*)()>{RightMoveCamera}, {EnumKeyStates::KeyHold}, {sf::Keyboard::D} };
     Bind UpMove{ std::vector<void(*)()>{UpMoveCamera}, {EnumKeyStates::KeyHold}, {sf::Keyboard::W} };
     Bind DownMove{ std::vector<void(*)()>{DownMoveCamera}, {EnumKeyStates::KeyHold}, {sf::Keyboard::S} };
-    
+
+    Bind CameraRot{
+    std::vector<void(*)()>{CameraRotate},
+    {},
+    {},
+    {},
+    MouseKeepMoved };
+
     InpSys->InsertBind(LeftMove);
     InpSys->InsertBind(RightMove);
     InpSys->InsertBind(UpMove);
     InpSys->InsertBind(DownMove);
+    InpSys->InsertBind(CameraRot);
 }
 
 void GameFunction::Update() {
@@ -72,7 +80,7 @@ void UpMoveCamera() {
     Vector3 newPos = camera->GetPosition();
     Vector3 newRot = camera->GetRotation();
 
-    newPos.Y -= 0.1;
+    newPos.Z += 0.1;
 
     camera->SetCameraInfo(newPos, newRot);
 }
@@ -80,9 +88,28 @@ void DownMoveCamera() {
     Vector3 newPos = camera->GetPosition();
     Vector3 newRot = camera->GetRotation();
 
-    newPos.Y += 0.1;
+    newPos.Z -= 0.1;
 
     camera->SetCameraInfo(newPos, newRot);
+}
+
+void CameraRotate() {
+    float sensitive = 0.15;
+
+    if (InpSys->GetMouseClass()->IsMouseChangePosition()) {
+
+        Vector3 delta = InpSys->GetMouseClass()->GetMouseDelta();
+
+        if (delta.GetMagnitude(delta) < 100) {
+        Vector3 pos = camera->GetPosition();
+        Vector3 rot = camera->GetRotation();
+
+        rot.X += delta.Y * sensitive;
+        rot.Y += delta.X * sensitive;
+
+        camera->SetCameraInfo(pos, rot);
+        }
+    }
 }
 
 int main()

@@ -12,85 +12,104 @@ enum EnumKeyStates {
 	KeyNotPressed = 1 << 0,
 	KeyPressed = 1 << 1,
 	KeyHold = 1 << 2,
-	KeyReleased = 1 << 3
+	KeyReleased = 1 << 3,
+
+	MouseWheelStartMoved = 1 << 4,
+	MouseWheelKeepMoved = 1 << 5,
+	MouseWheelEndMoved = 1 << 6,
+
+	MouseWheelMovedUp = 1 << 7,
+	MouseWheelMovedDown = 1 << 8
 };
 
-struct Key
+enum EnumMouseSensorStates {
+	UnknownState = 1 << 0,
+	MouseNotMoved = 1 << 1,
+	MouseStartMoved = 1 << 2,
+	MouseKeepMoved = 1 << 3,
+	MouseEndMoved = 1 << 4,
+
+	MouseEntire = 1 << 5,
+	MouseLeft = 1 << 6,
+};
+
+struct KeyboardKey
 {
 	const sf::Keyboard::Key Key;
 	EnumKeyStates KeyState;
 };
-
 class Keyboard {
 
 #pragma region Keys Definition
-	Key A{ sf::Keyboard::A }; Key B{ sf::Keyboard::B };
-	Key C{ sf::Keyboard::C }; Key D{ sf::Keyboard::D };
-	Key E{ sf::Keyboard::E }; Key F{ sf::Keyboard::F };
-	Key G{ sf::Keyboard::G }; Key H{ sf::Keyboard::H };
-	Key I{ sf::Keyboard::I }; Key J{ sf::Keyboard::J };
-	Key K{ sf::Keyboard::K }; Key L{ sf::Keyboard::L };
-	Key M{ sf::Keyboard::M }; Key N{ sf::Keyboard::N };
-	Key O{ sf::Keyboard::O }; Key P{ sf::Keyboard::P };
-	Key Q{ sf::Keyboard::Q }; Key R{ sf::Keyboard::R };
-	Key S{ sf::Keyboard::S }; Key T{ sf::Keyboard::T };
-	Key U{ sf::Keyboard::U }; Key V{ sf::Keyboard::V };
-	Key W{ sf::Keyboard::W }; Key X{ sf::Keyboard::X };
-	Key Y{ sf::Keyboard::Y }; Key Z{ sf::Keyboard::Z };
+private:
+	KeyboardKey A{ sf::Keyboard::A }; KeyboardKey B{ sf::Keyboard::B };
+	KeyboardKey C{ sf::Keyboard::C }; KeyboardKey D{ sf::Keyboard::D };
+	KeyboardKey E{ sf::Keyboard::E }; KeyboardKey F{ sf::Keyboard::F };
+	KeyboardKey G{ sf::Keyboard::G }; KeyboardKey H{ sf::Keyboard::H };
+	KeyboardKey I{ sf::Keyboard::I }; KeyboardKey J{ sf::Keyboard::J };
+	KeyboardKey K{ sf::Keyboard::K }; KeyboardKey L{ sf::Keyboard::L };
+	KeyboardKey M{ sf::Keyboard::M }; KeyboardKey N{ sf::Keyboard::N };
+	KeyboardKey O{ sf::Keyboard::O }; KeyboardKey P{ sf::Keyboard::P };
+	KeyboardKey Q{ sf::Keyboard::Q }; KeyboardKey R{ sf::Keyboard::R };
+	KeyboardKey S{ sf::Keyboard::S }; KeyboardKey T{ sf::Keyboard::T };
+	KeyboardKey U{ sf::Keyboard::U }; KeyboardKey V{ sf::Keyboard::V };
+	KeyboardKey W{ sf::Keyboard::W }; KeyboardKey X{ sf::Keyboard::X };
+	KeyboardKey Y{ sf::Keyboard::Y }; KeyboardKey Z{ sf::Keyboard::Z };
 
-	Key Num0{ sf::Keyboard::Num0 }; Key Num1{ sf::Keyboard::Num1 };
-	Key Num2{ sf::Keyboard::Num2 }; Key Num3{ sf::Keyboard::Num3 };
-	Key Num4{ sf::Keyboard::Num4 }; Key Num5{ sf::Keyboard::Num5 };
-	Key Num6{ sf::Keyboard::Num6 }; Key Num7{ sf::Keyboard::Num7 };
-	Key Num8{ sf::Keyboard::Num8 }; Key Num9{ sf::Keyboard::Num9 };
+	KeyboardKey Num0{ sf::Keyboard::Num0 }; KeyboardKey Num1{ sf::Keyboard::Num1 };
+	KeyboardKey Num2{ sf::Keyboard::Num2 }; KeyboardKey Num3{ sf::Keyboard::Num3 };
+	KeyboardKey Num4{ sf::Keyboard::Num4 }; KeyboardKey Num5{ sf::Keyboard::Num5 };
+	KeyboardKey Num6{ sf::Keyboard::Num6 }; KeyboardKey Num7{ sf::Keyboard::Num7 };
+	KeyboardKey Num8{ sf::Keyboard::Num8 }; KeyboardKey Num9{ sf::Keyboard::Num9 };
 
-	Key Escape{ sf::Keyboard::Escape };
+	KeyboardKey Escape{ sf::Keyboard::Escape };
 	
-	Key LControl{ sf::Keyboard::LControl }; Key LShift{ sf::Keyboard::LShift };
-	Key LAlt{ sf::Keyboard::LAlt }; Key LSystem{ sf::Keyboard::LSystem };
+	KeyboardKey LControl{ sf::Keyboard::LControl }; KeyboardKey LShift{ sf::Keyboard::LShift };
+	KeyboardKey LAlt{ sf::Keyboard::LAlt }; KeyboardKey LSystem{ sf::Keyboard::LSystem };
 	
-	Key RControl{ sf::Keyboard::RControl }; Key RShift{ sf::Keyboard::RShift };
-	Key RAlt{ sf::Keyboard::RAlt }; Key RSystem{ sf::Keyboard::RSystem };
+	KeyboardKey RControl{ sf::Keyboard::RControl }; KeyboardKey RShift{ sf::Keyboard::RShift };
+	KeyboardKey RAlt{ sf::Keyboard::RAlt }; KeyboardKey RSystem{ sf::Keyboard::RSystem };
 	
-	Key Menu{ sf::Keyboard::Menu }; Key LBracket{ sf::Keyboard::LBracket };
-	Key RBracket{ sf::Keyboard::RBracket }; Key Semicolon{ sf::Keyboard::Semicolon };
-	Key Comma{ sf::Keyboard::Comma }; Key Period{ sf::Keyboard::Period };
-	Key Quote{ sf::Keyboard::Quote }; Key Slash{ sf::Keyboard::Slash };
-	Key Backslash { sf::Keyboard::Backslash }; Key Tilde{ sf::Keyboard::Tilde };
-	Key Equal{ sf::Keyboard::Equal }; Key Hyphen{ sf::Keyboard::Hyphen };
+	KeyboardKey Menu{ sf::Keyboard::Menu }; KeyboardKey LBracket{ sf::Keyboard::LBracket };
+	KeyboardKey RBracket{ sf::Keyboard::RBracket }; KeyboardKey Semicolon{ sf::Keyboard::Semicolon };
+	KeyboardKey Comma{ sf::Keyboard::Comma }; KeyboardKey Period{ sf::Keyboard::Period };
+	KeyboardKey Quote{ sf::Keyboard::Quote }; KeyboardKey Slash{ sf::Keyboard::Slash };
+	KeyboardKey Backslash { sf::Keyboard::Backslash }; KeyboardKey Tilde{ sf::Keyboard::Tilde };
+	KeyboardKey Equal{ sf::Keyboard::Equal }; KeyboardKey Hyphen{ sf::Keyboard::Hyphen };
 	
-	Key Space{ sf::Keyboard::Space }; Key Enter{ sf::Keyboard::Enter };
-	Key Backspace{ sf::Keyboard::Backspace }; Key Tab{ sf::Keyboard::Tab };
+	KeyboardKey Space{ sf::Keyboard::Space }; KeyboardKey Enter{ sf::Keyboard::Enter };
+	KeyboardKey Backspace{ sf::Keyboard::Backspace }; KeyboardKey Tab{ sf::Keyboard::Tab };
 	
-	Key PageUp{ sf::Keyboard::PageUp }; Key PageDown{ sf::Keyboard::PageDown };
-	Key End{ sf::Keyboard::End }; Key Home{ sf::Keyboard::Home };
+	KeyboardKey PageUp{ sf::Keyboard::PageUp }; KeyboardKey PageDown{ sf::Keyboard::PageDown };
+	KeyboardKey End{ sf::Keyboard::End }; KeyboardKey Home{ sf::Keyboard::Home };
 	
-	Key Insert{ sf::Keyboard::Insert }; Key Delete{ sf::Keyboard::Delete };
+	KeyboardKey Insert{ sf::Keyboard::Insert }; KeyboardKey Delete{ sf::Keyboard::Delete };
 	
-	Key Add{ sf::Keyboard::Add }; Key Subtract{ sf::Keyboard::Subtract };
-	Key Multiply{ sf::Keyboard::Multiply }; Key Divide{ sf::Keyboard::Divide };
+	KeyboardKey Add{ sf::Keyboard::Add }; KeyboardKey Subtract{ sf::Keyboard::Subtract };
+	KeyboardKey Multiply{ sf::Keyboard::Multiply }; KeyboardKey Divide{ sf::Keyboard::Divide };
 
-	Key Left{ sf::Keyboard::Left }; Key Right{ sf::Keyboard::Right };
-	Key Up{ sf::Keyboard::Up }; Key Down{ sf::Keyboard::Down };
+	KeyboardKey Left{ sf::Keyboard::Left }; KeyboardKey Right{ sf::Keyboard::Right };
+	KeyboardKey Up{ sf::Keyboard::Up }; KeyboardKey Down{ sf::Keyboard::Down };
 
-	Key Numpad0{ sf::Keyboard::Numpad0 }; Key Numpad1{ sf::Keyboard::Numpad1 };
-	Key Numpad2{ sf::Keyboard::Numpad2 }; Key Numpad3{ sf::Keyboard::Numpad3 };
-	Key Numpad4{ sf::Keyboard::Numpad4 }; Key Numpad5{ sf::Keyboard::Numpad5 };
-	Key Numpad6{ sf::Keyboard::Numpad6 }; Key Numpad7{ sf::Keyboard::Numpad7 };
-	Key Numpad8{ sf::Keyboard::Numpad8 }; Key Numpad9{ sf::Keyboard::Numpad9 };
+	KeyboardKey Numpad0{ sf::Keyboard::Numpad0 }; KeyboardKey Numpad1{ sf::Keyboard::Numpad1 };
+	KeyboardKey Numpad2{ sf::Keyboard::Numpad2 }; KeyboardKey Numpad3{ sf::Keyboard::Numpad3 };
+	KeyboardKey Numpad4{ sf::Keyboard::Numpad4 }; KeyboardKey Numpad5{ sf::Keyboard::Numpad5 };
+	KeyboardKey Numpad6{ sf::Keyboard::Numpad6 }; KeyboardKey Numpad7{ sf::Keyboard::Numpad7 };
+	KeyboardKey Numpad8{ sf::Keyboard::Numpad8 }; KeyboardKey Numpad9{ sf::Keyboard::Numpad9 };
 
-	Key F1{ sf::Keyboard::F1 }; Key F2{ sf::Keyboard::F2 };
-	Key F3{ sf::Keyboard::F3 }; Key F4{ sf::Keyboard::F4 };
-	Key F5{ sf::Keyboard::F5 }; Key F6{ sf::Keyboard::F6 };
-	Key F7{ sf::Keyboard::F7 }; Key F8{ sf::Keyboard::F8 };
-	Key F9{ sf::Keyboard::F9 }; Key F10{ sf::Keyboard::F10 };
-	Key F11{ sf::Keyboard::F11 }; Key F12{ sf::Keyboard::F12 };
-	Key F13{ sf::Keyboard::F13 }; Key F14{ sf::Keyboard::F14 };
-	Key F15{ sf::Keyboard::F15 };
+	KeyboardKey F1{ sf::Keyboard::F1 }; KeyboardKey F2{ sf::Keyboard::F2 };
+	KeyboardKey F3{ sf::Keyboard::F3 }; KeyboardKey F4{ sf::Keyboard::F4 };
+	KeyboardKey F5{ sf::Keyboard::F5 }; KeyboardKey F6{ sf::Keyboard::F6 };
+	KeyboardKey F7{ sf::Keyboard::F7 }; KeyboardKey F8{ sf::Keyboard::F8 };
+	KeyboardKey F9{ sf::Keyboard::F9 }; KeyboardKey F10{ sf::Keyboard::F10 };
+	KeyboardKey F11{ sf::Keyboard::F11 }; KeyboardKey F12{ sf::Keyboard::F12 };
+	KeyboardKey F13{ sf::Keyboard::F13 }; KeyboardKey F14{ sf::Keyboard::F14 };
+	KeyboardKey F15{ sf::Keyboard::F15 };
 
-	Key Pause{ sf::Keyboard::Pause };
+	KeyboardKey Pause{ sf::Keyboard::Pause };
 
-	Key* Keys[103] = {
+private:
+	KeyboardKey* Keys[103] = {
 		&A, &B, &C, &D,
 		&E,&F, &G, &H,
 		&I, &J, &K, &L,
@@ -127,11 +146,32 @@ private:
 	inline void UpdateKeysState();
 };
 
+struct MouseKey
+{
+	const sf::Mouse::Button Key;
+	EnumKeyStates KeyState;
+};
 class Mouse {
 private:
 	Vector3 _previousMousePos{ 0,0,0 };
 	Vector3 _currentMousePos{ 0,0,0 };
 	Vector3 _mouseDelta{ 0,0,0 };
+
+private:
+	MouseKey LeftButton{sf::Mouse::Left};
+	MouseKey RightButton{ sf::Mouse::Right };
+	MouseKey MiddleButton{ sf::Mouse::Middle };
+
+	MouseKey FirstExtraButton{ sf::Mouse::XButton1 };
+	MouseKey SecondExtraButton{ sf::Mouse::XButton2 };
+
+	EnumMouseSensorStates MoveSensorState;
+
+	MouseKey* Buttons[5] = {
+		&LeftButton, &RightButton,
+		&MiddleButton, &FirstExtraButton,
+		&SecondExtraButton
+	};
 
 private:
 	friend class InputSystem;
@@ -142,19 +182,18 @@ public:
 	bool IsMouseChangePosition();
 
 private:
-	void UpdateMouseInfo();
-
-
-	inline bool Mouse_Events();
+	void UpdateMouseState();
 };
 
 class Bind {
 public:
 	std::vector<void(*)()> Operations;
 
-	std::vector<EnumKeyStates> KeysState{};
+	std::vector<EnumKeyStates> KeyboardKeysState;
 	std::vector<sf::Keyboard::Key> KeyboardKeys;
-	sf::Mouse::Button MouseKey;
+	std::vector<EnumKeyStates> MouseKeysState;
+	std::vector<sf::Mouse::Button> MouseKeys;
+	EnumMouseSensorStates MouseSensorState;
 
 private:
 	friend class InputSystem;
@@ -167,7 +206,8 @@ public:
 	Bind(std::vector<void(*)()> Operations,
 		std::vector<EnumKeyStates> KeysState = {},
 		std::vector<sf::Keyboard::Key> KeyboardKeys = {},
-		sf::Mouse::Button MouseKey = (sf::Mouse::Button)(-1));
+		std::vector<sf::Mouse::Button> MouseKeys = {},
+		EnumMouseSensorStates MouseSensorState = (EnumMouseSensorStates)(1));
 };
 
 class InputSystem {
