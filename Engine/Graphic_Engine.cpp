@@ -108,6 +108,9 @@ inline void Render::PrepareToRender() {
     glDepthMask(GL_TRUE);
     glClearDepth(1.f);
     glDepthFunc(GL_LEQUAL);
+    
+    float ratio = 4 / 3;
+    glFrustum(-ratio, ratio, -1.f, 1.f, 1.0f, 500.f);
 }
 
 inline void Render::ApplyCameraTransform(Camera* camera) {
@@ -126,11 +129,11 @@ inline void Render::ApplyCameraTransform(Camera* camera) {
     glLoadIdentity();
     gluPerspective(Fov, Aspect, ZNear, ZFar);
 
-    glTranslatef(Position.X, Position.Y, Position.Z);
-
     glRotatef(Rotation.X, 1.f, 0.f, 0.f);
     glRotatef(Rotation.Y, 0.f, 1.f, 0.f);
     glRotatef(Rotation.Z, 0.f, 0.f, 1.f);
+
+    glTranslatef(Position.X, Position.Y, Position.Z);
 }
 
 inline void Render::ClearFrameBuffer() {
