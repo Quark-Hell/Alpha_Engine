@@ -2,13 +2,21 @@
 #include "Main.h"
 #include "Basical_Type.cpp"
 #include "Graphic_Engine.cpp"
+
+#include "GameModels.cpp"
+
 #include "Physics.cpp"
+#include "Mesh.cpp"
+#include "Camera.cpp"
+
 #include "IO.cpp"
 #include <Windows.h>
 #include <thread>
 #include <future>
 
 Object obj;
+
+Object Player;
 Camera* camera = new Camera;
 
 
@@ -19,6 +27,8 @@ InputSystem* InpSys = new InputSystem;
 
 void GameFunction::Start() {
     std::string link = "\\Models\\Blender.fbx";
+
+    Player.AddModule(camera);
 
     Physics* phys = new Physics;
     Mesh* mesh = new Mesh;
@@ -58,7 +68,7 @@ void GameFunction::Start() {
     InpSys->InsertBind(UpMove);
     InpSys->InsertBind(DownMove);
     InpSys->InsertBind(CameraRot);
-
+    
     InpSys->InsertBind(CloseGameFirstMethod);
     InpSys->InsertBind(CloseGameSecondMethod);
 }
@@ -69,37 +79,41 @@ void GameFunction::Update() {
 }
 
 void LeftMoveCamera() {
-    Vector3 newPos = camera->GetPosition();
-    Vector3 newRot = camera->GetRotation();
+    Vector3 newPos = Player.GetPosition();
+    Vector3 newRot = Player.GetRotation();
 
     newPos.X += 0.1;
 
-    camera->SetCameraInfo(newPos, newRot);
+    Player.SetPosition(newPos);
+    Player.SetRotation(newRot);
 }
 void RightMoveCamera() {
-    Vector3 newPos = camera->GetPosition();
-    Vector3 newRot = camera->GetRotation();
+    Vector3 newPos = Player.GetPosition();
+    Vector3 newRot = Player.GetRotation();
 
     newPos.X -= 0.1;
 
-    camera->SetCameraInfo(newPos, newRot);
+    Player.SetPosition(newPos);
+    Player.SetRotation(newRot);
 }
 
 void UpMoveCamera() {
-    Vector3 newPos = camera->GetPosition();
-    Vector3 newRot = camera->GetRotation();
+    Vector3 newPos = Player.GetPosition();
+    Vector3 newRot = Player.GetRotation();
 
     newPos.Z += 0.1;
 
-    camera->SetCameraInfo(newPos, newRot);
+    Player.SetPosition(newPos);
+    Player.SetRotation(newRot);
 }
 void DownMoveCamera() {
-    Vector3 newPos = camera->GetPosition();
-    Vector3 newRot = camera->GetRotation();
+    Vector3 newPos = Player.GetPosition();
+    Vector3 newRot = Player.GetRotation();
 
     newPos.Z -= 0.1;
 
-    camera->SetCameraInfo(newPos, newRot);
+    Player.SetPosition(newPos);
+    Player.SetRotation(newRot);
 }
 
 void CameraRotate() {
@@ -110,13 +124,12 @@ void CameraRotate() {
         Vector3 delta = InpSys->GetMouseClass()->GetMouseDelta();
 
         if (delta.GetMagnitude(delta) < 100) {
-        Vector3 pos = camera->GetPosition();
-        Vector3 rot = camera->GetRotation();
+        Vector3 newRot = Player.GetRotation();
 
-        rot.X += delta.Y * sensitive;
-        rot.Y += delta.X * sensitive;
+        newRot.X += delta.Y * sensitive;
+        newRot.Y += delta.X * sensitive;
 
-        camera->SetCameraInfo(pos, rot);
+        Player.SetRotation(newRot);
         }
     }
 }

@@ -190,44 +190,28 @@ public:
 #pragma endregion
 };
 
-#pragma region Modules
+class Object;
 
 class Module
 {
 private:
 	std::string _name;
+	Object* ParentObject;
 
 private:
 	friend class Render;
+	friend class Object;
+
 
 public:
 	void Rename(std::string name);
 	std::string GetName();
+	Object* GetParentObject();
+
 
 private:
 	virtual void Test();
 };
-
-class Mesh : public Module {
-private:
-	std::vector <Vector3> Points;
-	std::vector <Vector3> Normals;
-	std::vector <unsigned int> Indices;
-	//std::vector <Vector3> VertexColors;
-	//std::vector <Vector3> TextureCoords;
-
-private:
-	friend class Render;
-
-public:
-	Mesh();
-	~Mesh();
-
-	bool CreateMesh(std::string linkToFBX);
-	void DeleteMesh();
-};
-
-#pragma endregion
 
 class Object {
 
@@ -259,12 +243,13 @@ public:
 	bool DeleteModuleByIndex(int index);
 
 	Module* GetModuleByName(std::string name);
-	Module* GetModuleByIndex(int index);
+	Module* GetModuleByIndex(size_t index);
 
 	int GetCountOfModules();
 
 	void DeleteObject();
 };
+
 
 static class World {
 

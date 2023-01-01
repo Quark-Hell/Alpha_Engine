@@ -40,6 +40,7 @@ inline void InputSystem::IO_Events() {
 	{
 		bool mark = true;
 
+		//Check event type statement
 		if (InputSystem::BindsBuff[i].EventType == (sf::Event::EventType)- 1) {}
 		else if (!(InputSystem::BindsBuff[i].EventType == Event.type)) { mark = false; }
 
@@ -49,6 +50,7 @@ inline void InputSystem::IO_Events() {
 			int IdCurrentKey = InputSystem::BindsBuff[i].KeyboardKeys[j];
 			if (! (InputSystem::BindsBuff[i].KeyboardKeysState[j] == InputSystem::KeyboardClass->Keys[IdCurrentKey]->KeyState)) { mark = false; break; }
 		}
+
 		//Mouse button statement check
 		for (size_t j = 0; j < InputSystem::BindsBuff[i].MouseKeys.size(); j++)
 		{
@@ -56,6 +58,7 @@ inline void InputSystem::IO_Events() {
 			if (!(InputSystem::BindsBuff[i].MouseKeysState[j] == InputSystem::MouseClass->Buttons[IdCurrentKey]->KeyState)) { mark = false; break; }
 		}		
 
+		//Check mouse sensor statement
 		if(InputSystem::BindsBuff[i].MouseSensorState & UnknownState) {}
 		else if (!(InputSystem::BindsBuff[i].MouseSensorState == InputSystem::MouseClass->MoveSensorState)) { mark = false; }
 

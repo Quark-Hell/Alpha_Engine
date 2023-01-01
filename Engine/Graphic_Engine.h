@@ -2,6 +2,9 @@
 
 #include <iostream>
 #include "Basical_Type.h"
+#include "Mesh.h"
+#include "Camera.h"
+#include "GameModels.h"
 
 //SFML
 #include <SFML/Window.hpp>
@@ -21,31 +24,6 @@ struct Colors {
 	const Vector3 yellow{	1.0f, 1.0f, 0.0f};  
 	const Vector3 blue{	0.0f, 0.0f, 1.0f};    
 	const Vector3 violet{ 1.0f, 0.0f, 1.0f };   
-};
-
-class Camera {
-private:
-	Vector3 Position = Vector3{0,0,0};
-	Vector3 Rotation = Vector3{0,0,0};
-
-private:
-	float Fov = 90;
-	float Aspect = 1;
-	float ZNear = 1;
-	float ZFar = 300;
-
-public:
-	void SetCameraInfo(Vector3 Position, Vector3 Rotation);
-	void SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar);
-	void SetCameraInfo(Vector3 Position, Vector3 Rotation, float Fov, float Aspect, float ZNear, float ZFar);
-	void GetCameraInfo(Vector3* Position, Vector3* Rotation, float* Fov, float* Aspect, float* ZNear, float* ZFar);
-
-	Vector3 GetPosition();
-	Vector3 GetRotation();
-	float GetFov();
-	float GetAspect();
-	float GetZNear();
-	float GetZFar();
 };
 
 class Screen {

@@ -1,66 +1,5 @@
 #include "Graphic_Engine.h"
-#include "GameModels.cpp"
 
-inline void Camera::SetCameraInfo(Vector3 Position, Vector3 Rotation) {
-    Camera::Position = Position;
-    Camera::Rotation = Rotation;
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glTranslatef(Position.X, Position.Y, Position.Z);
-}
-inline void Camera::SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar) {
-    Camera::Fov = Fov;
-    Camera::Aspect = Aspect;
-    Camera::ZNear = ZNear;
-    Camera::ZFar = ZFar;
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(Fov, Aspect, ZNear, ZFar);
-}
-inline void Camera::SetCameraInfo(Vector3 Position, Vector3 Rotation, float Fov, float Aspect, float ZNear, float ZFar) {
-    Camera::Position = Position;
-    Camera::Rotation = Rotation;
-
-    Camera::Fov = Fov;
-    Camera::Aspect = Aspect;
-    Camera::ZNear = ZNear;
-    Camera::ZFar = ZFar;
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(Fov, Aspect, ZNear, ZFar);
-    glTranslatef(Position.X, Position.Y, Position.Z);
-}
-
-inline void Camera::GetCameraInfo(Vector3* Position, Vector3* Rotation, float* Fov, float* Aspect, float* ZNear, float* ZFar) {
-    *Position = Camera::Position;
-    *Rotation = Camera::Rotation;
-    *Fov = Camera::Fov;
-    *Aspect = Camera::Aspect;
-    *ZNear = Camera::ZNear;
-    *ZFar = Camera::ZFar;
-}
-
-inline Vector3 Camera::GetPosition(){
-    return Camera::Position;
-}
-inline Vector3 Camera::GetRotation() {
-    return Camera::Rotation;
-}
-inline float Camera::GetFov() {
-    return Camera::Fov;
-}
-inline float Camera::GetAspect() {
-    return Camera::Aspect;
-}
-inline float Camera::GetZNear() {
-    return Camera::ZNear;
-}
-inline float Camera::GetZFar() {
-    return Camera::ZFar;
-}
 
 inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel,std::string Name, sf::ContextSettings Screen_Settings) {
     _wight = Wight;
@@ -114,15 +53,15 @@ inline void Render::PrepareToRender() {
 }
 
 inline void Render::ApplyCameraTransform(Camera* camera) {
-    Vector3 Position;
-    Vector3 Rotation;
+    Vector3 Position = camera->GetParentObject()->GetPosition();
+    Vector3 Rotation = camera->GetParentObject()->GetRotation();
 
     float Fov;
     float Aspect;
     float ZNear;
     float ZFar;
 
-    camera->GetCameraInfo(&Position, &Rotation, &Fov, &Aspect, &ZNear, &ZFar);
+    camera->GetCameraInfo(&Fov, &Aspect, &ZNear, &ZFar);
 
     //// Setup a perspective projection & Camera position
     glMatrixMode(GL_PROJECTION);
@@ -195,7 +134,7 @@ inline void Render::StartRender(Camera* camera) {
     Render::PrepareToRender();
     Render::ApplyCameraTransform(camera);
 
-    camera->SetCameraInfo(Vector3{ 0,0, 0 }, Vector3{ 0,0,0 }, 60, 4.0 / 3.0, 1, 300);
+    camera->SetCameraInfo(60, 4.0 / 3.0, 1, 300);
 
     _screenClass._screen->setVerticalSyncEnabled(true);
 }

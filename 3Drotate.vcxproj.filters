@@ -19,6 +19,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Engine\Modules">
+      <UniqueIdentifier>{ae1a1459-8e03-435a-859d-280598ef335c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game\GameModels.cpp">
@@ -39,8 +42,14 @@
     <ClCompile Include="Engine\IO.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Mesh.cpp">
+      <Filter>Engine\Modules</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Physics.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Camera.cpp">
+      <Filter>Engine\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,8 +71,14 @@
     <ClInclude Include="Engine\IO.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Mesh.h">
+      <Filter>Engine\Modules</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Physics.h">
-      <Filter>Engine</Filter>
+      <Filter>Engine\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Camera.h">
+      <Filter>Engine\Modules</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
