@@ -2,11 +2,16 @@
 
 #pragma region World Define
 
-//std::vector<Object> World::ObjectsOnScene;
-//World::_Static World::global{};
+inline World::World() {
 
-inline::World::World() {
+}
 
+inline void World::CloseGame() {
+	IsCloseGame = true;
+}
+
+inline bool World::GetStateOfGame() {
+	return IsCloseGame;
 }
 
 #pragma endregion
@@ -78,7 +83,6 @@ inline bool Object::DeleteModuleByName(std::string name) {
 
 	return false;
 }
-
 inline bool Object::DeleteModuleByIndex(int index) {
 	if (index >= 0 && index < Object::Modules.size()) {
 		Object::Modules.erase(Object::Modules.begin() + index);
@@ -199,13 +203,3 @@ inline void Mesh::DeleteMesh() {
 
 #pragma endregion
 
-
-#pragma region Physics Define
-inline Physics::Physics() {
-	Physics::Rename("Physics");
-}
-
-inline Physics::~Physics() {
-
-}
-#pragma endregion

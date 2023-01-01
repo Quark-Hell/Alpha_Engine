@@ -227,14 +227,6 @@ public:
 	void DeleteMesh();
 };
 
-class Physics : public Module {
-
-
-public:
-	Physics();
-	~Physics();
-};
-
 #pragma endregion
 
 class Object {
@@ -274,10 +266,20 @@ public:
 	void DeleteObject();
 };
 
-class World {
+static class World {
 
 private:
 	static inline std::vector<Object*> ObjectsOnScene;
+
+private:
+	static inline bool IsCloseGame = false;
+
+public:
+	static inline void CloseGame();
+	/// <summary>
+	/// Return bool IsCloseGame
+	/// </summary>
+	static inline bool GetStateOfGame();
 
 private:
 	friend class Object;

@@ -204,19 +204,6 @@ inline void Render::StartRender(Camera* camera) {
 inline void Render::RenderLoop(Camera* camera) {
     if (_screenClass._screen->isOpen())
     {
-        // Process events
-        sf::Event Event;
-        if (_screenClass._screen->pollEvent(Event))
-        {
-            // Close window : exit
-            if (Event.type == sf::Event::Closed)
-                _screenClass._screen->close();
-
-            // Escape key : exit
-            if ((Event.type == sf::Event::KeyPressed) && (Event.key.code == sf::Keyboard::Escape))
-                _screenClass._screen->close();
-        }
-
         ClearFrameBuffer();
 
         PrepareToRender();

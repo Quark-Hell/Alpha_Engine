@@ -109,7 +109,7 @@ private:
 	KeyboardKey Pause{ sf::Keyboard::Pause };
 
 private:
-	KeyboardKey* Keys[103] = {
+	KeyboardKey* Keys[101] = {
 		&A, &B, &C, &D,
 		&E,&F, &G, &H,
 		&I, &J, &K, &L,
@@ -117,11 +117,11 @@ private:
 		&Q, &R, &S, &T,
 		&U, &V, &W, &X,
 		&Y, &Z, &Num0, &Num1 ,
-		&Num2 , &Num3 ,&Num5 , &Num7,
-		&Num2 ,&Num3 ,&Num5 ,&Num7,
-		&Num8 ,&Num9  ,&Escape  ,&LControl,
-		&LShift  ,&LAlt  ,&LSystem  ,&RControl,
-		&RShift  ,&RAlt  ,&RSystem  ,&Menu  ,
+		&Num2 , &Num3 ,&Num4 , &Num5,
+		&Num6 ,&Num7, &Num8 ,&Num9,
+		&Escape  ,&LControl, &LShift  ,&LAlt,
+		&LSystem  ,&RControl, &RShift  ,&RAlt,
+		&RSystem  ,&Menu  ,
 		&LBracket  ,&RBracket  ,&Semicolon  ,&Comma  ,
 		&Period  ,&Quote  ,&Slash  ,&Backslash  ,
 		&Tilde  ,&Equal ,&Hyphen ,&Space,
@@ -189,6 +189,7 @@ class Bind {
 public:
 	std::vector<void(*)()> Operations;
 
+	sf::Event::EventType EventType;
 	std::vector<EnumKeyStates> KeyboardKeysState;
 	std::vector<sf::Keyboard::Key> KeyboardKeys;
 	std::vector<EnumKeyStates> MouseKeysState;
@@ -204,8 +205,10 @@ private:
 
 public:
 	Bind(std::vector<void(*)()> Operations,
+		sf::Event::EventType EventType = (sf::Event::EventType)(- 1),
 		std::vector<EnumKeyStates> KeysState = {},
 		std::vector<sf::Keyboard::Key> KeyboardKeys = {},
+		std::vector<EnumKeyStates> MouseKeysState = {},
 		std::vector<sf::Mouse::Button> MouseKeys = {},
 		EnumMouseSensorStates MouseSensorState = (EnumMouseSensorStates)(1));
 };

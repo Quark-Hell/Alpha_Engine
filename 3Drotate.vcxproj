@@ -23,6 +23,7 @@
     <ClCompile Include="Engine\Graphic_Engine.cpp" />
     <ClCompile Include="Engine\IO.cpp" />
     <ClCompile Include="Engine\Main.cpp" />
+    <ClCompile Include="Engine\Physics.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\GameModels.cpp" />
   </ItemGroup>
@@ -31,6 +32,7 @@
     <ClInclude Include="Engine\Graphic_Engine.h" />
     <ClInclude Include="Engine\IO.h" />
     <ClInclude Include="Engine\Main.h" />
+    <ClInclude Include="Engine\Physics.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\GameModels.h" />
   </ItemGroup>

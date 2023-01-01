@@ -1,15 +1,22 @@
 #include "IO.h"
 
 inline Bind::Bind(std::vector<void(*)()> Operations,
+	sf::Event::EventType EventType,
 	std::vector<EnumKeyStates> KeysState,
 	std::vector<sf::Keyboard::Key> KeyboardKeys,
+	std::vector<EnumKeyStates> MouseKeysState,
 	std::vector<sf::Mouse::Button> MouseKeys,
 	EnumMouseSensorStates MouseSensorState) {
 
 	Bind::Operations = Operations;
+	Bind::EventType = EventType;
+
 	Bind::KeyboardKeysState = KeysState;
 	Bind::KeyboardKeys = KeyboardKeys;
+
+	Bind::MouseKeysState = MouseKeysState;
 	Bind::MouseKeys = MouseKeys;
+
 	Bind::MouseSensorState = MouseSensorState;
 }
 
@@ -24,13 +31,18 @@ inline void InputSystem::IO_Events() {
 	InputSystem::MouseClass->UpdateMouseState();
 	InputSystem::KeyboardClass->UpdateKeysState();
 
-	if (InputSystem::ScreenClass->_screen->pollEvent(InputSystem::Event)) {}
+	if (!InputSystem::ScreenClass->_screen->isOpen()) { return; }
+	if (InputSystem::ScreenClass->_screen->pollEvent(InputSystem::Event)) { }
 
 
 	//All values
 	for (size_t i = 0; i < InputSystem::BindsBuff.size(); i++)
 	{
 		bool mark = true;
+
+		if (InputSystem::BindsBuff[i].EventType == (sf::Event::EventType)- 1) {}
+		else if (!(InputSystem::BindsBuff[i].EventType == Event.type)) { mark = false; }
+
 		//Keyboard statement check
 		for (size_t j = 0; j < InputSystem::BindsBuff[i].KeyboardKeys.size(); j++)
 		{
@@ -45,7 +57,7 @@ inline void InputSystem::IO_Events() {
 		}		
 
 		if(InputSystem::BindsBuff[i].MouseSensorState & UnknownState) {}
-		else if(!(InputSystem::BindsBuff[i].MouseSensorState == InputSystem::MouseClass->MoveSensorState)) { mark = false; }
+		else if (!(InputSystem::BindsBuff[i].MouseSensorState == InputSystem::MouseClass->MoveSensorState)) { mark = false; }
 
 		if (mark) { InputSystem::BindsBuff[i].InvokeOperations(); }
 	}
@@ -63,7 +75,7 @@ inline void InputSystem::InsertBind(Bind bind) {
 }
 
 inline void Keyboard::UpdateKeysState() {
-	for (size_t i = 0; i < 103; i++)
+	for (size_t i = 0; i < 101; i++)
 	{		
 		if (sf::Keyboard::isKeyPressed(Keys[i]->Key)) {
 			if (Keys[i]->KeyState & EnumKeyStates::KeyNotPressed) {
@@ -98,7 +110,7 @@ inline void Mouse::UpdateMouseState() {
 	Mouse::_mouseDelta = Vector3{ _currentMousePos - _previousMousePos };
 
 	if (Mouse::_mouseDelta != Vector3{0,0,0}) {
-		if (Mouse::MoveSensorState & MouseNotMoved) {
+		if (Mouse::MoveSensorState & MouseNotMoved || Mouse::MoveSensorState & MouseEndMoved) {
 			Mouse::MoveSensorState = EnumMouseSensorStates(MouseStartMoved | MouseKeepMoved);
 		}
 		else if (Mouse::MoveSensorState & (MouseStartMoved | MouseKeepMoved)) {

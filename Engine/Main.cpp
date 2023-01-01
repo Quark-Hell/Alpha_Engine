@@ -2,6 +2,7 @@
 #include "Main.h"
 #include "Basical_Type.cpp"
 #include "Graphic_Engine.cpp"
+#include "Physics.cpp"
 #include "IO.cpp"
 #include <Windows.h>
 #include <thread>
@@ -35,23 +36,31 @@ void GameFunction::Start() {
 
     Object* cube = Primitives::Sphere(Postion, Rotation, Scale, Color);
 
-    Bind LeftMove{ std::vector<void(*)()>{LeftMoveCamera}, {EnumKeyStates::KeyHold}, {sf::Keyboard::A}  };
-    Bind RightMove{ std::vector<void(*)()>{RightMoveCamera}, {EnumKeyStates::KeyHold}, {sf::Keyboard::D} };
-    Bind UpMove{ std::vector<void(*)()>{UpMoveCamera}, {EnumKeyStates::KeyHold}, {sf::Keyboard::W} };
-    Bind DownMove{ std::vector<void(*)()>{DownMoveCamera}, {EnumKeyStates::KeyHold}, {sf::Keyboard::S} };
+    Bind LeftMove{ std::vector<void(*)()>{LeftMoveCamera},  (sf::Event::EventType)- 1 , {EnumKeyStates::KeyHold}, {sf::Keyboard::A}};
+    Bind RightMove{ std::vector<void(*)()>{RightMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::D} };
+    Bind UpMove{ std::vector<void(*)()>{UpMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::W} };
+    Bind DownMove{ std::vector<void(*)()>{DownMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::S} };
 
     Bind CameraRot{
     std::vector<void(*)()>{CameraRotate},
+     (sf::Event::EventType)-1,
+    {},
     {},
     {},
     {},
     MouseKeepMoved };
+
+    Bind CloseGameFirstMethod{ std::vector<void(*)()>{World::CloseGame}, (sf::Event::EventType)-1, {EnumKeyStates::KeyReleased}, {sf::Keyboard::Escape} };
+    Bind CloseGameSecondMethod{ std::vector<void(*)()>{World::CloseGame}, {sf::Event::EventType::Closed}, {}, {}, {EnumKeyStates::KeyReleased} ,{sf::Mouse::Left} };
 
     InpSys->InsertBind(LeftMove);
     InpSys->InsertBind(RightMove);
     InpSys->InsertBind(UpMove);
     InpSys->InsertBind(DownMove);
     InpSys->InsertBind(CameraRot);
+
+    InpSys->InsertBind(CloseGameFirstMethod);
+    InpSys->InsertBind(CloseGameSecondMethod);
 }
 
 void GameFunction::Update() {
@@ -122,11 +131,10 @@ int main()
     render->StartRender(camera);
     InpSys->ScreenClass = render->GetScreenClass();
     
-    while (true)
+    while (!World::GetStateOfGame())
     {
         InpSys->IO_Events();
         Game->Update();
-        render->RenderLoop(camera);
-       
+        render->RenderLoop(camera);   
     }
 }
