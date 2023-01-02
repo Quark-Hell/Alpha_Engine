@@ -19,6 +19,7 @@ private:
 	float Aspect = 1;
 	float ZNear = 1;
 	float ZFar = 300;
+	Vector3 DirectionOfView;
 
 public:
 	void SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar);
@@ -28,4 +29,6 @@ public:
 	float GetAspect();
 	float GetZNear();
 	float GetZFar();
+
+	Vector3 GetDirectionOfView();
 };

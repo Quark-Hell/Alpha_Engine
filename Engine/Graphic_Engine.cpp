@@ -145,7 +145,7 @@ inline void Render::RenderLoop(Camera* camera) {
     {
         ClearFrameBuffer();
 
-        PrepareToRender();
+        //PrepareToRender();
         ApplyCameraTransform(camera);
 
         Render::SceneAssembler();

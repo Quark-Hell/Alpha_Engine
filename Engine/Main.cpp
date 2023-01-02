@@ -80,40 +80,56 @@ void GameFunction::Update() {
 
 void LeftMoveCamera() {
     Vector3 newPos = Player.GetPosition();
-    Vector3 newRot = Player.GetRotation();
 
-    newPos.X += 0.1;
+    Vector3 UpVector;
+
+    UpVector.X = sin((Player.GetRotation().Y + 90) * 3.14159 / 180);
+    UpVector.Y = 0;
+    UpVector.Z = sin((Player.GetRotation().Y) * 3.14159 / 180);
+
+    newPos += UpVector * 0.1;
 
     Player.SetPosition(newPos);
-    Player.SetRotation(newRot);
 }
 void RightMoveCamera() {
     Vector3 newPos = Player.GetPosition();
-    Vector3 newRot = Player.GetRotation();
 
-    newPos.X -= 0.1;
+    Vector3 UpVector;
+
+    UpVector.X = sin((Player.GetRotation().Y + 90) * 3.14159 / 180);
+    UpVector.Y = 0;
+    UpVector.Z = sin((Player.GetRotation().Y) * 3.14159 / 180);
+
+    newPos += UpVector * (-0.1);
 
     Player.SetPosition(newPos);
-    Player.SetRotation(newRot);
 }
 
 void UpMoveCamera() {
     Vector3 newPos = Player.GetPosition();
-    Vector3 newRot = Player.GetRotation();
 
-    newPos.Z += 0.1;
+    Vector3 UpVector{0,0,0};
+
+    UpVector.X = sin((Player.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
+    UpVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
+    UpVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
+
+    newPos += UpVector * 0.1;
 
     Player.SetPosition(newPos);
-    Player.SetRotation(newRot);
 }
 void DownMoveCamera() {
     Vector3 newPos = Player.GetPosition();
-    Vector3 newRot = Player.GetRotation();
 
-    newPos.Z -= 0.1;
+    Vector3 UpVector{0,0,0};
+
+    UpVector.X = sin((Player.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
+    UpVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
+    UpVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
+
+    newPos += UpVector * (-0.1);
 
     Player.SetPosition(newPos);
-    Player.SetRotation(newRot);
 }
 
 void CameraRotate() {
@@ -123,8 +139,18 @@ void CameraRotate() {
 
         Vector3 delta = InpSys->GetMouseClass()->GetMouseDelta();
 
-        if (delta.GetMagnitude(delta) < 100) {
+
+        if (delta.GetMagnitude() < 100) {
         Vector3 newRot = Player.GetRotation();
+
+        Vector3 test;
+        test.X = cos((Player.GetRotation().X) * 3.14159 / 180);
+        test.Y = sin((Player.GetRotation().Y) * 3.14159 / 180);
+
+
+        std::cout << test.X << std::endl;
+        std::cout << test.Y << std::endl;
+        std::cout << std::endl;
 
         newRot.X += delta.Y * sensitive;
         newRot.Y += delta.X * sensitive;
@@ -143,11 +169,18 @@ int main()
     Game->Start();
     render->StartRender(camera);
     InpSys->ScreenClass = render->GetScreenClass();
+
+    camera->GetDirectionOfView();
     
     while (!World::GetStateOfGame())
     {
         InpSys->IO_Events();
         Game->Update();
         render->RenderLoop(camera);   
+        //std::cout << camera->GetDirectionOfView().X << std::endl;
+        //std::cout << camera->GetDirectionOfView().Y << std::endl;
+        //std::cout << camera->GetDirectionOfView().Z << std::endl;
+
+        //std::cout << std::endl;
     }
 }

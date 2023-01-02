@@ -29,3 +29,11 @@ inline float Camera::GetZNear() {
 inline float Camera::GetZFar() {
     return Camera::ZFar;
 }
+
+inline Vector3 Camera::GetDirectionOfView() {
+    DirectionOfView = GetParentObject()->GetRotation();
+
+    DirectionOfView.Normilize();
+
+    return DirectionOfView;
+}

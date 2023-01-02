@@ -24,23 +24,23 @@ public:
 	}
 
 public:
-	float GetMagnitude(Vector3 vector) {
-		return sqrtf(powf(vector.X, 2) + powf(vector.Y, 2) + powf(vector.Z, 2));
+	float GetMagnitude() {
+		return sqrtf(powf(X, 2) + powf(Y, 2) + powf(Z, 2));
 	}
 
-	float GetNonSqrtMagnitude(Vector3 vector) {
-		return powf(vector.X, 2) + powf(vector.Y, 2) + powf(vector.Z, 2);
+	float GetNonSqrtMagnitude() {
+		return powf(X, 2) + powf(Y, 2) + powf(Z, 2);
 	}
 
-	Vector3 Normilize(Vector3 vector) {
-		float locLength = GetMagnitude(vector);
+	Vector3 Normilize() {
+		float locLength = GetMagnitude();
 		float inv_length = (1 / locLength);
 
-		vector.X *= inv_length;
-		vector.Y *= inv_length;
-		vector.Z *= inv_length;
+		X *= inv_length;
+		Y *= inv_length;
+		Z *= inv_length;
 
-		return vector;
+		return { Z,Y,Z };
 	}
 
 #pragma region Operators
@@ -95,34 +95,66 @@ public:
 	Vector3 operator+(const Vector3 value) const {
 		return Vector3(X + value.X, Y + value.Y, Z + value.Z);
 	}
-
 	Vector3 operator+(const Vector3* value) const {
 		return Vector3(X + value->X, Y + value->Y, Z + value->Z);
 	}
 
+	Vector3 operator+(const float value) const {
+		return Vector3(X + value, Y + value, Z + value);
+	}
+	Vector3 operator+(const float* value) const {
+		return Vector3(X + *value, Y + *value, Z + *value);
+	}
+
+	//-----------------------------------------------------------//
+
 	Vector3 operator-(const Vector3 value) const {
 		return Vector3(X - value.X, Y - value.Y, Z - value.Z);
 	}
-
 	Vector3 operator-(const Vector3* value) const {
 		return Vector3(X - value->X, Y - value->Y, Z - value->Z);
 	}
 
+	Vector3 operator-(const float value) const {
+		return Vector3(X - value, Y - value, Z - value);
+	}
+	Vector3 operator-(const float* value) const {
+		return Vector3(X - *value, Y - *value, Z - *value);
+	}
+
+	//-----------------------------------------------------------//
+
 	Vector3 operator*(const Vector3 value) const {
 		return Vector3(X * value.X, Y * value.Y, Z * value.Z);
 	}
-
 	Vector3 operator*(const Vector3* value) const {
 		return Vector3(X * value->X, Y * value->Y, Z * value->Z);
 	}
 
+	Vector3 operator*(const float value) const {
+		return Vector3(X * value, Y * value, Z * value);
+	}
+	Vector3 operator*(const float* value) const {
+		return Vector3(X * *value, Y * *value, Z * *value);
+	}
+
+	//-----------------------------------------------------------//
+
 	Vector3 operator/(const Vector3 value) const {
 		return Vector3(X / value.X, Y / value.Y, Z / value.Z);
 	}
-
 	Vector3 operator/(const Vector3* value) const {
 		return Vector3(X / value->X, Y / value->Y, Z / value->Z);
 	}
+
+	Vector3 operator/(const float value) const {
+		return Vector3(X / value, Y / value, Z / value);
+	}
+	Vector3 operator/(const float* value) const {
+		return Vector3(X / *value, Y / *value, Z / *value);
+	}
+
+	//-----------------------------------------------------------//
 
 	bool operator!=(const Vector3 value) const {
 		if (X != value.X || Y != value.Y || Z != value.Z)
@@ -131,7 +163,6 @@ public:
 		}
 		return false;
 	}
-
 	bool operator!=(const Vector3* value) const {
 		if (X != value->X || Y != value->Y || Z != value->Z)
 		{
@@ -140,6 +171,23 @@ public:
 		return false;
 	}
 
+	bool operator!=(const float value) const {
+		if (X != value || Y != value || Z != value)
+		{
+			return true;
+		}
+		return false;
+	}
+	bool operator!=(const float* value) const {
+		if (X != *value || Y != *value || Z != *value)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	//-----------------------------------------------------------//
+
 	bool operator==(const Vector3 value) const {
 		if (X == value.X && Y == value.Y && Z == value.Z)
 		{
@@ -147,7 +195,6 @@ public:
 		}
 		return false;
 	}
-
 	bool operator==(const Vector3* value) const {
 		if (X == value->X && Y == value->Y && Z == value->Z)
 		{
@@ -156,32 +203,49 @@ public:
 		return false;
 	}
 
-	bool operator>(const Vector3 value) {
-		if (GetNonSqrtMagnitude(Vector3{ X,Y,Z }) > GetNonSqrtMagnitude(value))
+	bool operator==(const float value) const {
+		if (X == value && Y == value && Z == value)
+		{
+			return true;
+		}
+		return false;
+	}
+	bool operator==(const float* value) const {
+		if (X == *value && Y == *value && Z == *value)
 		{
 			return true;
 		}
 		return false;
 	}
 
-	bool operator>(const Vector3* value) {
-		if (GetNonSqrtMagnitude(Vector3{ X,Y,Z }) > GetNonSqrtMagnitude(*value))
+	//-----------------------------------------------------------//
+
+	bool operator>(const Vector3 value) {
+		if (GetNonSqrtMagnitude() > GetNonSqrtMagnitude())
 		{
 			return true;
 		}
 		return false;
 	}
+	bool operator>(const Vector3* value) {
+		if (GetNonSqrtMagnitude() > GetNonSqrtMagnitude())
+		{
+			return true;
+		}
+		return false;
+	}
+
+	//-----------------------------------------------------------//
 
 	bool operator<(const Vector3 value) {
-		if (GetNonSqrtMagnitude(Vector3{ X,Y,Z }) < GetNonSqrtMagnitude(value))
+		if (GetNonSqrtMagnitude() < GetNonSqrtMagnitude())
 		{
 			return true;
 		}
 		return false;
 	}
-
 	bool operator<(const Vector3* value) {
-		if (GetNonSqrtMagnitude(Vector3{ X,Y,Z }) < GetNonSqrtMagnitude(*value))
+		if (GetNonSqrtMagnitude() < GetNonSqrtMagnitude())
 		{
 			return true;
 		}
