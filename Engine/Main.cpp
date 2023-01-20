@@ -28,14 +28,14 @@ void GameFunction::Start() {
     std::string link = "\\Models\\Blender.fbx";
 
     Player.AddModule(camera);
-    
+
     Physics* phys = new Physics;
     Mesh* mesh = new Mesh;
     Collision* collision = new Collision;
 
     mesh->CreateMesh(link);
     collision->CreateCollision(link);
-    
+
     obj.SetScale(0.5, 0.5, 0.5);
 
     obj.AddModule(phys);
@@ -49,26 +49,22 @@ void GameFunction::Start() {
 
     Object* sphere = Primitives::Sphere(Postion, Rotation, Scale, Color);
 
-    Bind LeftMove{ std::vector<void(*)()>{LeftMoveCamera},  (sf::Event::EventType)- 1 , {EnumKeyStates::KeyHold}, {sf::Keyboard::A}};
-    Bind RightMove{ std::vector<void(*)()>{RightMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::D} };
-    
-    Bind ForwardMove{ std::vector<void(*)()>{ForwardMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::W} };
-    Bind BackwardMove{ std::vector<void(*)()>{BackwardMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::S} };
+    Bind LeftMove; LeftMove.KeyboardBind(std::vector<void(*)()>{LeftMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::A });
+    Bind RightMove; RightMove.KeyboardBind(std::vector<void(*)()>{RightMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::D });
 
-    Bind UpMove{ std::vector<void(*)()>{UpMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::Q} };
-    Bind DownMove{ std::vector<void(*)()>{DownMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::E} };
+    Bind ForwardMove; ForwardMove.KeyboardBind({ ForwardMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::W });
+    Bind BackwardMove; BackwardMove.KeyboardBind({ BackwardMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::S });
+
+    Bind UpMove; UpMove.KeyboardBind({ UpMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::Q });
+    Bind DownMove; DownMove.KeyboardBind({ DownMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::E });
     
-    Bind CameraRot{
-    std::vector<void(*)()>{CameraRotate},
-     (sf::Event::EventType)-1,
-    {},
-    {},
-    {},
-    {},
-    MouseKeepMoved };
+    Bind CameraRot; CameraRot.MouseSensorBind({ CameraRotate }, MouseKeepMoved);
+
+    Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Keyboard::Escape });
+    Bind CloseGameSecondMethod; CloseGameSecondMethod.MouseButtonsBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Mouse::Left }, { sf::Event::EventType::Closed });
     
-    Bind CloseGameFirstMethod{ std::vector<void(*)()>{World::CloseGame}, (sf::Event::EventType)-1, {EnumKeyStates::KeyReleased}, {sf::Keyboard::Escape} };
-    Bind CloseGameSecondMethod{ std::vector<void(*)()>{World::CloseGame}, {sf::Event::EventType::Closed}, {}, {}, {EnumKeyStates::KeyReleased} ,{sf::Mouse::Left} };
+    
+    InpSys->InsertBind(CameraRot);
 
     InpSys->InsertBind(LeftMove);
     InpSys->InsertBind(RightMove);
@@ -78,8 +74,6 @@ void GameFunction::Start() {
 
     InpSys->InsertBind(UpMove);
     InpSys->InsertBind(DownMove);
-
-    InpSys->InsertBind(CameraRot);
     
     InpSys->InsertBind(CloseGameFirstMethod);
     InpSys->InsertBind(CloseGameSecondMethod);
@@ -100,7 +94,7 @@ void LeftMoveCamera() {
     UpVector.Z = sin((Player.GetRotation().Y) * 3.14159 / 180);
 
     newPos += UpVector * 0.1;
-
+    
     Player.SetPosition(newPos);
 }
 void RightMoveCamera() {
@@ -164,8 +158,7 @@ void CameraRotate() {
 
     if (InpSys->GetMouseClass()->IsMouseChangePosition()) {
 
-        Vector3 delta = InpSys->GetMouseClass()->GetMouseDelta();
-
+        Vector3 delta = { InpSys->GetMouseClass()->GetMouseDelta().XPos,InpSys->GetMouseClass()->GetMouseDelta().YPos };
 
         if (delta.GetMagnitude() < 100) {
         Vector3 newRot = Player.GetRotation();
@@ -192,10 +185,10 @@ int main()
     HWND hwnd = GetConsoleWindow();
     ShowWindow(hwnd, 1);
 
-    
     Game->Start();
     render->StartRender(camera);
-    InpSys->ScreenClass = render->GetScreenClass();
+
+    InpSys->Screen = render->GetScreenClass()->GetScreen();
 
     camera->GetDirectionOfView();
     

@@ -10,6 +10,10 @@ inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsign
 
     _screen = new sf::RenderWindow(sf::VideoMode(Wight, Height, BitsPerPixel), Name, sf::Style::Resize | sf::Style::Close, Screen_Settings);
 }
+inline sf::RenderWindow* Screen::GetScreen() {
+    return Screen::_screen;
+}
+
 inline Screen* Render::GetScreenClass() {
     return &(Render::_screenClass);
 }

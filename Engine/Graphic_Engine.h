@@ -42,6 +42,9 @@ private:
 
 private:
 	void CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name, sf::ContextSettings Screen_Settings);
+
+public:
+	sf::RenderWindow* GetScreen();
 };
 
 class Render {

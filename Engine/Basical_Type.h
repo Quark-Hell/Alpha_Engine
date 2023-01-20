@@ -53,9 +53,9 @@ public:
 	static Vector3 LinearInteprolation(Vector3 A, Vector3 B, float T) {
 		Vector3 newVector;
 
-		newVector.X = (A.X * (1.0 - T)) + (B.X * T);
-		newVector.Y = (A.Y * (1.0 - T)) + (B.Y * T);
-		newVector.Z = (A.Z * (1.0 - T)) + (B.Z * T);
+		newVector.X = (A.X * (1.0f - T)) + (B.X * T);
+		newVector.Y = (A.Y * (1.0f - T)) + (B.Y * T);
+		newVector.Z = (A.Z * (1.0f - T)) + (B.Z * T);
 
 		return newVector;
 	}
@@ -65,6 +65,7 @@ public:
 	}
 
 #pragma region Operators
+	//-----------------------------------------------------------//
 	void operator=(const Vector3 value) {
 		X = value.X;
 		Y = value.Y;
@@ -75,7 +76,9 @@ public:
 		Y = value->Y;
 		Z = value->Z;
 	}
+	//-----------------------------------------------------------//
 
+	//-----------------------------------------------------------//
 	void operator+=(const Vector3 value) {
 		X += value.X;
 		Y += value.Y;
@@ -86,7 +89,9 @@ public:
 		Y += value->Y;
 		Z += value->Z;
 	}
+	//-----------------------------------------------------------//
 
+	//-----------------------------------------------------------//
 	void operator-=(const Vector3 value) {
 		X -= value.X;
 		Y -= value.Y;
@@ -97,7 +102,9 @@ public:
 		Y -= value->Y;
 		Z -= value->Z;
 	}
+	//-----------------------------------------------------------//
 
+	//-----------------------------------------------------------//
 	void operator*=(const Vector3 value) {
 		X *= value.X;
 		Y *= value.Y;
@@ -108,7 +115,9 @@ public:
 		Y *= value->Y;
 		Z *= value->Z;
 	}
+	//-----------------------------------------------------------//
 
+	//-----------------------------------------------------------//
 	void operator/=(const Vector3 value) {
 		X /= value.X;
 		Y /= value.Y;
@@ -119,7 +128,9 @@ public:
 		Y /= value->Y;
 		Z /= value->Z;
 	}
+	//-----------------------------------------------------------//
 
+	//-----------------------------------------------------------//
 	Vector3 operator+(const Vector3 value) const {
 		return Vector3(X + value.X, Y + value.Y, Z + value.Z);
 	}
@@ -133,9 +144,9 @@ public:
 	Vector3 operator+(const float* value) const {
 		return Vector3(X + *value, Y + *value, Z + *value);
 	}
-
 	//-----------------------------------------------------------//
 
+	//-----------------------------------------------------------//
 	Vector3 operator-(const Vector3 value) const {
 		return Vector3(X - value.X, Y - value.Y, Z - value.Z);
 	}
@@ -149,9 +160,9 @@ public:
 	Vector3 operator-(const float* value) const {
 		return Vector3(X - *value, Y - *value, Z - *value);
 	}
-
 	//-----------------------------------------------------------//
 
+	//-----------------------------------------------------------//
 	Vector3 operator*(const Vector3 value) const {
 		return Vector3(X * value.X, Y * value.Y, Z * value.Z);
 	}
@@ -165,9 +176,9 @@ public:
 	Vector3 operator*(const float* value) const {
 		return Vector3(X * *value, Y * *value, Z * *value);
 	}
-
 	//-----------------------------------------------------------//
 
+	//-----------------------------------------------------------//
 	Vector3 operator/(const Vector3 value) const {
 		return Vector3(X / value.X, Y / value.Y, Z / value.Z);
 	}
@@ -181,9 +192,9 @@ public:
 	Vector3 operator/(const float* value) const {
 		return Vector3(X / *value, Y / *value, Z / *value);
 	}
-
 	//-----------------------------------------------------------//
 
+	//-----------------------------------------------------------//
 	bool operator!=(const Vector3 value) const {
 		if (X != value.X || Y != value.Y || Z != value.Z)
 		{
@@ -213,9 +224,9 @@ public:
 		}
 		return false;
 	}
-
 	//-----------------------------------------------------------//
 
+	//-----------------------------------------------------------//
 	bool operator==(const Vector3 value) const {
 		if (X == value.X && Y == value.Y && Z == value.Z)
 		{
@@ -245,9 +256,9 @@ public:
 		}
 		return false;
 	}
-
 	//-----------------------------------------------------------//	
 
+	//-----------------------------------------------------------//
 	bool operator>(const Vector3 value) {
 		if (GetNonSqrtMagnitude() > GetNonSqrtMagnitude(value))
 		{
@@ -262,7 +273,6 @@ public:
 		}
 		return false;
 	}
-
 	//-----------------------------------------------------------//
 
 	bool operator<(const Vector3 value) {

@@ -17,5 +17,3 @@ void DownMoveCamera();
 
 void CameraRotate();
 
-void PairsCount();
-
