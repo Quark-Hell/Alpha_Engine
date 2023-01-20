@@ -8,11 +8,11 @@
 #include "Physics.cpp"
 #include "Mesh.cpp"
 #include "Camera.cpp"
+#include "Collision.cpp"
 
-#include "IO.cpp"
-#include <Windows.h>
-#include <thread>
-#include <future>
+#include "Binds.cpp"
+
+#include <ctime>
 
 Object obj;
 
@@ -24,33 +24,40 @@ GameFunction* Game = new GameFunction;
 Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
 
-
 void GameFunction::Start() {
     std::string link = "\\Models\\Blender.fbx";
 
     Player.AddModule(camera);
-
+    
     Physics* phys = new Physics;
     Mesh* mesh = new Mesh;
+    Collision* collision = new Collision;
 
     mesh->CreateMesh(link);
+    collision->CreateCollision(link);
+    
+    obj.SetScale(0.5, 0.5, 0.5);
 
-    obj.SetScale(1.3, 1.3,1.3);
     obj.AddModule(phys);
-    obj.AddModule(mesh);
+    //obj.AddModule(mesh);
+    //obj.AddModule(collision);
 
     Vector3 Postion{ 0,0,-5 };
     Vector3 Rotation(0, 30, 40);
     Vector3 Scale{ 0.8f,0.8f,0.8f };
     Vector3 Color{ 0,0,1 };
 
-    Object* cube = Primitives::Sphere(Postion, Rotation, Scale, Color);
+    Object* sphere = Primitives::Sphere(Postion, Rotation, Scale, Color);
 
     Bind LeftMove{ std::vector<void(*)()>{LeftMoveCamera},  (sf::Event::EventType)- 1 , {EnumKeyStates::KeyHold}, {sf::Keyboard::A}};
     Bind RightMove{ std::vector<void(*)()>{RightMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::D} };
-    Bind UpMove{ std::vector<void(*)()>{UpMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::W} };
-    Bind DownMove{ std::vector<void(*)()>{DownMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::S} };
+    
+    Bind ForwardMove{ std::vector<void(*)()>{ForwardMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::W} };
+    Bind BackwardMove{ std::vector<void(*)()>{BackwardMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::S} };
 
+    Bind UpMove{ std::vector<void(*)()>{UpMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::Q} };
+    Bind DownMove{ std::vector<void(*)()>{DownMoveCamera},  (sf::Event::EventType)-1, {EnumKeyStates::KeyHold}, {sf::Keyboard::E} };
+    
     Bind CameraRot{
     std::vector<void(*)()>{CameraRotate},
      (sf::Event::EventType)-1,
@@ -59,14 +66,19 @@ void GameFunction::Start() {
     {},
     {},
     MouseKeepMoved };
-
+    
     Bind CloseGameFirstMethod{ std::vector<void(*)()>{World::CloseGame}, (sf::Event::EventType)-1, {EnumKeyStates::KeyReleased}, {sf::Keyboard::Escape} };
     Bind CloseGameSecondMethod{ std::vector<void(*)()>{World::CloseGame}, {sf::Event::EventType::Closed}, {}, {}, {EnumKeyStates::KeyReleased} ,{sf::Mouse::Left} };
 
     InpSys->InsertBind(LeftMove);
     InpSys->InsertBind(RightMove);
+
+    InpSys->InsertBind(ForwardMove);
+    InpSys->InsertBind(BackwardMove);
+
     InpSys->InsertBind(UpMove);
     InpSys->InsertBind(DownMove);
+
     InpSys->InsertBind(CameraRot);
     
     InpSys->InsertBind(CloseGameFirstMethod);
@@ -75,7 +87,7 @@ void GameFunction::Start() {
 
 void GameFunction::Update() {
     obj.SetPosition(0, 0, -3);
-    obj.SetRotation(0, obj.GetRotation().Y + 1.5, 0);
+    obj.SetRotation(0, obj.GetRotation().Y + 1.5, 90);
 }
 
 void LeftMoveCamera() {
@@ -105,9 +117,9 @@ void RightMoveCamera() {
     Player.SetPosition(newPos);
 }
 
-void UpMoveCamera() {
+void ForwardMoveCamera() {
     Vector3 newPos = Player.GetPosition();
-
+    
     Vector3 UpVector{0,0,0};
 
     UpVector.X = sin((Player.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
@@ -118,7 +130,7 @@ void UpMoveCamera() {
 
     Player.SetPosition(newPos);
 }
-void DownMoveCamera() {
+void BackwardMoveCamera() {
     Vector3 newPos = Player.GetPosition();
 
     Vector3 UpVector{0,0,0};
@@ -128,6 +140,21 @@ void DownMoveCamera() {
     UpVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
 
     newPos += UpVector * (-0.1);
+
+    Player.SetPosition(newPos);
+}
+
+void UpMoveCamera() {
+    Vector3 newPos = Player.GetPosition();
+
+    newPos.Y += 0.1;
+
+    Player.SetPosition(newPos);
+}
+void DownMoveCamera() {
+    Vector3 newPos = Player.GetPosition();
+
+    newPos.Y -= 0.1;
 
     Player.SetPosition(newPos);
 }
@@ -164,8 +191,8 @@ int main()
 {
     HWND hwnd = GetConsoleWindow();
     ShowWindow(hwnd, 1);
-    
 
+    
     Game->Start();
     render->StartRender(camera);
     InpSys->ScreenClass = render->GetScreenClass();
@@ -176,11 +203,6 @@ int main()
     {
         InpSys->IO_Events();
         Game->Update();
-        render->RenderLoop(camera);   
-        //std::cout << camera->GetDirectionOfView().X << std::endl;
-        //std::cout << camera->GetDirectionOfView().Y << std::endl;
-        //std::cout << camera->GetDirectionOfView().Z << std::endl;
-
-        //std::cout << std::endl;
+       render->RenderLoop(camera);   
     }
 }

@@ -2,8 +2,8 @@
 
 #include <iostream>
 #include <vector>
-#include <string>
 #include <filesystem>
+#include <string>  
 
 //Assimp
 #include <assimp/Importer.hpp>
@@ -27,9 +27,15 @@ public:
 	float GetMagnitude() {
 		return sqrtf(powf(X, 2) + powf(Y, 2) + powf(Z, 2));
 	}
+	static float GetMagnitude(Vector3 Vector) {
+		return sqrtf(powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2));
+	}
 
 	float GetNonSqrtMagnitude() {
 		return powf(X, 2) + powf(Y, 2) + powf(Z, 2);
+	}
+	static float GetNonSqrtMagnitude(Vector3 Vector) {
+		return powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2);
 	}
 
 	Vector3 Normilize() {
@@ -43,13 +49,38 @@ public:
 		return { Z,Y,Z };
 	}
 
+
+	static Vector3 LinearInteprolation(Vector3 A, Vector3 B, float T) {
+		Vector3 newVector;
+
+		newVector.X = (A.X * (1.0 - T)) + (B.X * T);
+		newVector.Y = (A.Y * (1.0 - T)) + (B.Y * T);
+		newVector.Z = (A.Z * (1.0 - T)) + (B.Z * T);
+
+		return newVector;
+	}
+
+	static Vector3 CrossProduct(Vector3 A, Vector3 B) {
+		return (A.X * B.X) + (A.Y * B.Y) + (A.Z + B.Z);
+	}
+
 #pragma region Operators
+	void operator=(const Vector3 value) {
+		X = value.X;
+		Y = value.Y;
+		Z = value.Z;
+	}
+	void operator=(const Vector3* value) {
+		X = value->X;
+		Y = value->Y;
+		Z = value->Z;
+	}
+
 	void operator+=(const Vector3 value) {
 		X += value.X;
 		Y += value.Y;
 		Z += value.Z;
 	}
-
 	void operator+=(const Vector3* value) {
 		X += value->X;
 		Y += value->Y;
@@ -61,7 +92,6 @@ public:
 		Y -= value.Y;
 		Z -= value.Z;
 	}
-
 	void operator-=(const Vector3* value) {
 		X -= value->X;
 		Y -= value->Y;
@@ -73,7 +103,6 @@ public:
 		Y *= value.Y;
 		Z *= value.Z;
 	}
-
 	void operator*=(const Vector3* value) {
 		X *= value->X;
 		Y *= value->Y;
@@ -85,7 +114,6 @@ public:
 		Y /= value.Y;
 		Z /= value.Z;
 	}
-
 	void operator/=(const Vector3* value) {
 		X /= value->X;
 		Y /= value->Y;
@@ -218,17 +246,17 @@ public:
 		return false;
 	}
 
-	//-----------------------------------------------------------//
+	//-----------------------------------------------------------//	
 
 	bool operator>(const Vector3 value) {
-		if (GetNonSqrtMagnitude() > GetNonSqrtMagnitude())
+		if (GetNonSqrtMagnitude() > GetNonSqrtMagnitude(value))
 		{
 			return true;
 		}
 		return false;
 	}
 	bool operator>(const Vector3* value) {
-		if (GetNonSqrtMagnitude() > GetNonSqrtMagnitude())
+		if (GetNonSqrtMagnitude() > GetNonSqrtMagnitude(*value))
 		{
 			return true;
 		}

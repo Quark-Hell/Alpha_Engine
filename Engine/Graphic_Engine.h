@@ -63,6 +63,11 @@ private:
 	void SceneAssembler();
 	void RenderMesh(Mesh* mesh);
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
+
+
+public:
+	void DebugRender(std::vector<Vector3> *Vertex, std::vector<Vector3>* Normals, Camera* camera);
+	void RenderVertArray(std::vector<Vector3>* Vertex, std::vector<Vector3>* Normals);
 };
 
 class Output {

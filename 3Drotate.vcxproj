@@ -20,9 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Basical_Type.cpp" />
+    <ClCompile Include="Engine\Binds.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
+    <ClCompile Include="Engine\Collision.cpp" />
     <ClCompile Include="Engine\Graphic_Engine.cpp" />
-    <ClCompile Include="Engine\IO.cpp" />
     <ClCompile Include="Engine\Main.cpp" />
     <ClCompile Include="Engine\Mesh.cpp" />
     <ClCompile Include="Engine\Physics.cpp" />
@@ -31,9 +32,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Basical_Type.h" />
+    <ClInclude Include="Engine\Binds.h" />
     <ClInclude Include="Engine\Camera.h" />
+    <ClInclude Include="Engine\Collision.h" />
     <ClInclude Include="Engine\Graphic_Engine.h" />
-    <ClInclude Include="Engine\IO.h" />
     <ClInclude Include="Engine\Main.h" />
     <ClInclude Include="Engine\Mesh.h" />
     <ClInclude Include="Engine\Physics.h" />
@@ -128,6 +130,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\genna\source\repos\3DRotate\3Drotate\assimp\include;C:\Users\genna\source\repos\3DRotate\3Drotate\Game;C:\Users\genna\source\repos\3DRotate\3Drotate\Engine;C:\Users\genna\source\repos\3DRotate\3Drotate\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

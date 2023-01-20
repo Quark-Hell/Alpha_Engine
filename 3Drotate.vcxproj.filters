@@ -39,9 +39,6 @@
     <ClCompile Include="Engine\Main.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\IO.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Mesh.cpp">
       <Filter>Engine\Modules</Filter>
     </ClCompile>
@@ -49,6 +46,12 @@
       <Filter>Engine\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Camera.cpp">
+      <Filter>Engine\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collision.cpp">
+      <Filter>Engine\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Binds.cpp">
       <Filter>Engine\Modules</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,16 +62,10 @@
     <ClInclude Include="Game\Game.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Basical_Type.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Graphic_Engine.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Main.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\IO.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Mesh.h">
@@ -79,6 +76,15 @@
     </ClInclude>
     <ClInclude Include="Engine\Camera.h">
       <Filter>Engine\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision.h">
+      <Filter>Engine\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Binds.h">
+      <Filter>Engine\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Basical_Type.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

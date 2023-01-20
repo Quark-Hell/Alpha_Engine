@@ -9,8 +9,13 @@ public:
 void LeftMoveCamera();
 void RightMoveCamera();
 
+void ForwardMoveCamera();
+void BackwardMoveCamera();
+
 void UpMoveCamera();
 void DownMoveCamera();
 
 void CameraRotate();
+
+void PairsCount();
 
