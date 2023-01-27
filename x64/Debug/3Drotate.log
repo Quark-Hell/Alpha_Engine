@@ -1,31 +1,31 @@
-﻿  Binds.cpp
-  Main.cpp
+﻿  Main.cpp
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Basical_Type.h(376,2): warning C4091: 'static ': ignored on left of 'World' when no variable is declared
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Basical_Type.cpp(72,31): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Graphic_Engine.cpp(141,48): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Collision.cpp(172,29): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Collision.cpp(188,105): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Collision.cpp(245,27): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Collision.cpp(270,49): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Collision.cpp(173,32): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Collision.cpp(189,114): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Collision.cpp(234,33): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Collision.cpp(259,55): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Collision.cpp(295,33): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Collision.cpp(371,34): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(84,44): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(92,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(94,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(96,29): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(105,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(107,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(109,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(111,32): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(109,32): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(119,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(120,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(121,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(122,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(123,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(125,29): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(123,29): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(132,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(133,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(134,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(135,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(136,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(138,32): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(146,20): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(153,20): warning C4305: '-=': truncation from 'double' to 'float'
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(159,27): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(169,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(170,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(136,32): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(144,20): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(151,20): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(157,27): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(167,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\genna\source\repos\3DRotate\3Drotate\Engine\Main.cpp(168,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   3Drotate.vcxproj -> C:\Users\genna\source\repos\3DRotate\x64\Debug\3Drotate.exe
