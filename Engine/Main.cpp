@@ -36,10 +36,10 @@ void GameFunction::Start() {
     mesh->CreateMesh(link);
     collision->CreateCollision(link);
 
-    obj.SetScale(0.5, 0.5, 0.5);
+    obj.SetScale(1, 1, 1);
 
     obj.AddModule(phys);
-    //obj.AddModule(mesh);
+    obj.AddModule(mesh);
     //obj.AddModule(collision);
 
     Vector3 Postion{ 0,0,-5 };
@@ -81,7 +81,7 @@ void GameFunction::Start() {
 
 void GameFunction::Update() {
     obj.SetPosition(0, 0, -3);
-    obj.SetRotation(0, obj.GetRotation().Y + 1.5, 90);
+    obj.SetRotation(0, obj.GetRotation().Y + 1.5, 0);
 }
 
 void LeftMoveCamera() {

@@ -38,8 +38,10 @@ private:
 
 public:
 	void AddEdge(int Src, int Dest);
-	void DFS(int StartVertex, std::vector<int>* Output);
 	unsigned int GetAdjListSize();
 
+	void DFS(int StartVertex, std::vector<int>* Output);
 	void BFS(int StartVertex, std::vector<int>* Output);
+
+	Graph(unsigned int size = 0);
 };

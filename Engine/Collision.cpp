@@ -40,256 +40,68 @@ inline bool Collision::CreateCollision(std::string link) {
     return true;
 }
 
-/*
-inline bool Collision::IsNeighbor(Triangle* current, Triangle* neighbor) {
-    //current Vert 1
-    if (current->Vert1 == neighbor->Vert1) {
-        return true;
-    }
-    else if (current->Vert1 == neighbor->Vert2)
-    {
-        return true;
-    }
-    else if (current->Vert1 == neighbor->Vert3)
-    {
-        return true;
-    }
-    //current Vert 2
-    else if (current->Vert2 == neighbor->Vert1)
-    {
-        return true;
-    }
-    else if (current->Vert2 == neighbor->Vert2)
-    {
-        return true;
-    }
-    else if (current->Vert2 == neighbor->Vert3)
-    {
-        return true;
-    }
-    //current Vert 3
-    else if (current->Vert3 == neighbor->Vert1)
-    {
-        return true;
-    }
-    else if (current->Vert3 == neighbor->Vert2)
-    {
-        return true;
-    }
-    else if (current->Vert3 == neighbor->Vert3)
-    {
-        return true;
-    }
-    return false;
-}
-
 inline bool Collision::SeparateCollision() {
-    Triangle currentTriangle;
-    Triangle neighborTriangle;
-
-    size_t countOfPrimitives;
-    while (Collision::GeneralCollider->Points.size() != 0)
+    struct VertInfo
     {
-        Collision::PrimitivesCollider.push_back(new Collider);
-        countOfPrimitives = Collision::PrimitivesCollider.size() - 1;
-
-        currentTriangle.Vert1 = Collision::GeneralCollider->Points[0];
-        currentTriangle.Vert2 = Collision::GeneralCollider->Points[1];
-        currentTriangle.Vert3 = Collision::GeneralCollider->Points[2];
-
-        Collision::PrimitivesCollider[countOfPrimitives]->Points.push_back(currentTriangle.Vert1);
-        Collision::PrimitivesCollider[countOfPrimitives]->Points.push_back(currentTriangle.Vert2);
-        Collision::PrimitivesCollider[countOfPrimitives]->Points.push_back(currentTriangle.Vert3);
-
-        //Erease current triangle from general buffer
-        Collision::GeneralCollider->Points.erase(Collision::GeneralCollider->Points.begin(), Collision::GeneralCollider->Points.begin() + 3);
-
-        size_t it = 3;
-        do
-        {
-            for (size_t jt = 0; jt < Collision::GeneralCollider->Points.size(); jt += 3)
-            {
-                //Definition neighbor triangle
-                neighborTriangle.Vert1 = Collision::GeneralCollider->Points[jt];
-                neighborTriangle.Vert2 = Collision::GeneralCollider->Points[jt + 1];
-                neighborTriangle.Vert3 = Collision::GeneralCollider->Points[jt + 2];
-
-                //Check is neigbor triangle really neighbor for current triangle
-                if (IsNeighbor(&currentTriangle, &neighborTriangle)) {
-                    Collision::PrimitivesCollider[countOfPrimitives]->Points.push_back(neighborTriangle.Vert1);
-                    Collision::PrimitivesCollider[countOfPrimitives]->Points.push_back(neighborTriangle.Vert2);
-                    Collision::PrimitivesCollider[countOfPrimitives]->Points.push_back(neighborTriangle.Vert3);
-
-                    //Erease current triangle from general buffer
-                    Collision::GeneralCollider->Points.erase(Collision::GeneralCollider->Points.begin() + jt, Collision::GeneralCollider->Points.begin() + jt + 3);
-
-                    currentTriangle.Vert1 = neighborTriangle.Vert1;
-                    currentTriangle.Vert2 = neighborTriangle.Vert2;
-                    currentTriangle.Vert3 = neighborTriangle.Vert3;
-
-                    it += 3;
-                    jt = -3;
-                }
-            }
-
-            it -= 3;
-
-            if (it != 0) {
-                currentTriangle.Vert1 = Collision::PrimitivesCollider[countOfPrimitives]->Points[it - 3];
-                currentTriangle.Vert2 = Collision::PrimitivesCollider[countOfPrimitives]->Points[it - 2];
-                currentTriangle.Vert3 = Collision::PrimitivesCollider[countOfPrimitives]->Points[it - 1];
-            }
-
-        } while (it != 0);
-    }
-
-    return true;
-}
-*/
-
-
-inline void Collision::SwapToEndAndDelete(unsigned int from, std::vector<int> *vector) {
-    unsigned int temp = (*vector)[vector->size() - 1];
-    (*vector)[vector->size() - 1] = (*vector)[from];
-    (*vector)[from] = temp;
-    vector->pop_back();
-}
-
-inline void Collision::InsertTriangle(unsigned int PrimitiveObjectID, 
-    unsigned int TriangleID, 
-    unsigned int TriangleNum,
-    std::vector<int>* AdjacentTriangles) {
-
-    Collision::PrimitivesCollider[PrimitiveObjectID]->Points.push_back(GeneralCollider->Points[TriangleID * 3]);
-    Collision::PrimitivesCollider[PrimitiveObjectID]->Points.push_back(GeneralCollider->Points[TriangleID * 3 + 1]);
-    Collision::PrimitivesCollider[PrimitiveObjectID]->Points.push_back(GeneralCollider->Points[TriangleID * 3 + 2]);
-
-    //Collision::SwapToEndAndDelete(TriangleNum, AdjacentTriangles);
-    AdjacentTriangles->erase(AdjacentTriangles->begin() + TriangleNum);
-}
-
-inline std::vector<int*> ItBuffer = {};
-inline void Collision::SearchFrom(unsigned int from, std::vector<int>* vector) {
-    int it = vector->size() - 1;
-    ItBuffer.push_back(&it);
-    for (; it >= 0; it--)
-    {
-        if (from == (*vector)[it]) {
-            unsigned int triangleID;
-            if (it % 2 == 0) {
-                triangleID = (*vector)[it + 1];
-            }
-            else
-            {
-                triangleID = (*vector)[it - 1];
-            }
-
-            //Collision::SwapToEndAndDelete(it, vector);
-            vector->erase(vector->begin() + it);
-            Collision::InsertTriangle(Collision::PrimitivesCollider.size() - 1, (*vector)[it - 1], it - 1, vector);
-
-            for (size_t jt = 0; jt < ItBuffer.size() - 1; jt++)
-            {
-                *ItBuffer[jt] -= 2;
-            }
-            it--;
-
-            Collision::SearchFrom(triangleID, vector);
-        }
-    }
-    ItBuffer.pop_back();
-}
-
-
-inline bool Collision::SeparateCollision() {
-    // Get starting timepoint
-    auto start = std::chrono::high_resolution_clock::now();
-
-    struct EdgeInfo
-    {
-        Vector3 *Point1;
-        Vector3 *Point2;
+        Vector3* Point;
         unsigned int TriangleID;
     };
 
-    std::unordered_map<std::string, EdgeInfo> edgeMap;
-    std::string hash;
-    Graph graph;
-    std::vector<bool> vertBool;
+    VertInfo vert;
+    std::unordered_map<std::string, VertInfo> vertMap;
+    std::vector<bool> triangleBool;
 
-    //Create unique egde list
+    const int arr_len = 3;
+    float edgeArr[arr_len];
+
+    std::string hash;
+    hash.resize(arr_len * sizeof(float));
+
+    Graph graph{ unsigned int (GeneralCollider->Points.size() / 3)};
+
+    unsigned int sizeBeforeInsert;
+
+    // Get starting timepoint
+    auto start = std::chrono::high_resolution_clock::now();
+
+    //Create graph
     for (size_t it = 0; it <= GeneralCollider->Points.size() - 1; it++)
     {
-        EdgeInfo edge;
-        //check if last point of triangle
-        if ((it + 1) % 3 == 0) {
-            edge.Point1 = &GeneralCollider->Points[it];
-            edge.Point2 = &GeneralCollider->Points[it - 2];
-        }
-        else
-        {
-            edge.Point1 = &GeneralCollider->Points[it];
-            edge.Point2 = &GeneralCollider->Points[it + 1];
-        }
-        edge.TriangleID = it / 3;
+        vert.Point = &GeneralCollider->Points[it];
+        vert.TriangleID = it / 3;
 
+        edgeArr[0] = { vert.Point->X };
+        edgeArr[1] = { vert.Point->Y };
+        edgeArr[2] = { vert.Point->Z };
 
-        const int arr_len = 6;
-        float edgeArr[arr_len];
-
-        //create same direction line
-        if ((edge.Point1->X > edge.Point2->X) || (edge.Point1->X == edge.Point2->X && edge.Point1->Y > edge.Point2->Y) || (edge.Point1->X == edge.Point2->X && edge.Point1->Y == edge.Point2->Y && edge.Point1->Z > edge.Point2->Z)) {
-            edgeArr[0] = { edge.Point1->X };
-            edgeArr[1] = { edge.Point1->Y };
-            edgeArr[2] = { edge.Point1->Z };
-            edgeArr[3] = { edge.Point2->X };
-            edgeArr[4] = { edge.Point2->Y };
-            edgeArr[5] = { edge.Point2->Z };
-        }
-        else
-        {
-            edgeArr[0] = { edge.Point2->X };
-            edgeArr[1] = { edge.Point2->Y };
-            edgeArr[2] = { edge.Point2->Z };
-            edgeArr[3] = { edge.Point1->X };
-            edgeArr[4] = { edge.Point1->Y };
-            edgeArr[5] = { edge.Point1->Z };
-        }
-
-        unsigned int sizeBeforeInsert = edgeMap.size();
+        sizeBeforeInsert = vertMap.size();
 
         //create hash
-        hash.resize(arr_len * sizeof(float));
         memcpy((char*)hash.data(), edgeArr, arr_len * sizeof(float));
 
         //insert hash
-        std::pair<std::string, EdgeInfo> p(hash, edge);
-        edgeMap.insert(p);
+        std::pair<std::string, VertInfo> p(hash, vert);
+        vertMap.insert(p);
 
         //chech if hash map not changed size after insert hash
         //is not changed => found same edges => found adjacent triangles
-        if (sizeBeforeInsert == edgeMap.size()) {
-            graph.AddEdge(edgeMap.find(hash)->second.TriangleID, edge.TriangleID);
-            graph.AddEdge(edge.TriangleID, edgeMap.find(hash)->second.TriangleID);
+        if (sizeBeforeInsert == vertMap.size()) {
+            unsigned int TriangleID = vertMap.find(hash)->second.TriangleID;
+            graph.AddEdge(TriangleID, vert.TriangleID);
+            graph.AddEdge(vert.TriangleID, TriangleID);
         }
     }
-    vertBool.resize(graph.GetAdjListSize());
+
+    triangleBool.resize(graph.GetAdjListSize());
     Collision::PrimitivesCollider.push_back(new Collider);
     std::vector<std::vector<int>> separatedMesh;
 
-    // Get ending timepoint
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast	<std::chrono::milliseconds>(stop - start);
-
-    std::cout << "Time taken by function: "
-        << duration.count() << " milliseconds" << std::endl;
-
     while (true) {
         int notConnected = -1;
-        //Search not connected triangle
-        for (size_t i = 0; i < vertBool.size(); i++)
+        //Searches first triangle that does not belong to separated mesh
+        for (size_t i = 0; i < triangleBool.size(); i++)
         {
-            if (vertBool[i] == false) {
+            if (triangleBool[i] == false) {
                 notConnected = i;
                 break;
             }
@@ -302,9 +114,16 @@ inline bool Collision::SeparateCollision() {
 
         for (size_t i = 0; i < separatedMesh[separatedMesh.size() - 1].size(); i++)
         {   
-            vertBool[separatedMesh[separatedMesh.size() - 1][i]] = true;
+            triangleBool[separatedMesh[separatedMesh.size() - 1][i]] = true;
         }
     }
+
+    // Get ending timepoint
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast	<std::chrono::milliseconds>(stop - start);
+
+    std::cout << "Time taken by function: "
+        << duration.count() << " milliseconds" << std::endl;
 
     return true;
 }
@@ -315,18 +134,7 @@ inline bool Collision::CreateConvexFromÑoncave(std::string link) {
 }
 
 inline void Graph::AddEdge(int Src, int Dest) {
-    if (Src >= Graph::adjLists.size()) {
-        Graph::adjLists.resize(Src + 1);
-        Graph::adjLists[Src].push_back(Dest);
-
-        Graph::visited.resize(Graph::adjLists.size());
-    }
-    else
-    {
-        Graph::adjLists[Src].push_back(Dest);
-
-        Graph::visited.resize(Graph::adjLists.size());
-    }
+    Graph::adjLists[Src].push_back(Dest);
 }
 
 inline void Graph::DFS(int StartVertex, std::vector<int> *Output) {
@@ -358,6 +166,11 @@ inline void Graph::BFS(int StartVertex, std::vector<int>* Output) {
             }
         }
     }
+}
+
+inline Graph::Graph(unsigned int size) {
+    Graph::adjLists.resize(size);
+    Graph::visited.resize(size);
 }
 
 inline unsigned int Graph::GetAdjListSize() {
