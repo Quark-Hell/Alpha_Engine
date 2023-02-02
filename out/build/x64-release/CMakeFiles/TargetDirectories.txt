@@ -1,0 +1,6 @@
+C:/Users/genna/source/repos/3DRotate/out/build/x64-release/CMakeFiles/edit_cache.dir
+C:/Users/genna/source/repos/3DRotate/out/build/x64-release/CMakeFiles/rebuild_cache.dir
+C:/Users/genna/source/repos/3DRotate/out/build/x64-release/ALPHA_Engine/CMakeFiles/Engine.dir
+C:/Users/genna/source/repos/3DRotate/out/build/x64-release/ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir
+C:/Users/genna/source/repos/3DRotate/out/build/x64-release/ALPHA_Engine/CMakeFiles/edit_cache.dir
+C:/Users/genna/source/repos/3DRotate/out/build/x64-release/ALPHA_Engine/CMakeFiles/rebuild_cache.dir
