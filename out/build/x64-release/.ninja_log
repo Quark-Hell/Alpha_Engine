@@ -1,0 +1,25 @@
+# ninja log v5
+43	1712	6970921012864865	ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir/Engine/Binds.cpp.obj	e9f14c2e12d7c9ca
+22	1723	6970921012974893	ALPHA_Engine/CMakeFiles/Engine.dir/Engine/Mesh.cpp.obj	822105c24c3dedab
+47	1730	6970921013024912	ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir/Engine/Basical_Type.cpp.obj	c63902919d25fe16
+30	1736	6970921012964896	ALPHA_Engine/CMakeFiles/Engine.dir/Game/GameModels.cpp.obj	c370711feca1d776
+5	1743	6970921012964896	ALPHA_Engine/CMakeFiles/Engine.dir/Engine/Binds.cpp.obj	de0351567c01944
+51	1749	6970921013174935	ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir/Engine/Physics.cpp.obj	30025a856d1ba16
+14	1756	6970921013234949	ALPHA_Engine/CMakeFiles/Engine.dir/Engine/Physics.cpp.obj	d76b0df3625ffe9e
+11	1758	6970921013334972	ALPHA_Engine/CMakeFiles/Engine.dir/Engine/Basical_Type.cpp.obj	d905478f3caf4a67
+1716	1827	6970921014105142	ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir/Game/Game.cpp.obj	da72f59d0f1e3ebd
+1	1861	6970921014445221	ALPHA_Engine/CMakeFiles/Engine.dir/Engine/Collision.cpp.obj	7df878df086f2d56
+39	1911	6970921014945329	ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir/Engine/Collision.cpp.obj	db3c330c7f9949ba
+1750	1952	0	ALPHA_Engine/CMakeFiles/copy_models	f99b7adcb28847dd
+1750	1952	0	C:/Users/genna/source/repos/3D-Engine/out/build/x64-release/ALPHA_Engine/CMakeFiles/copy_models	f99b7adcb28847dd
+1744	2136	0	ALPHA_Engine/CMakeFiles/copy_dll	b8c4da9f3ce920fe
+1744	2136	0	C:/Users/genna/source/repos/3D-Engine/out/build/x64-release/ALPHA_Engine/CMakeFiles/copy_dll	b8c4da9f3ce920fe
+34	2322	6970921019076271	ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir/Engine/Camera.cpp.obj	d9c24ace67f2329b
+8	2395	6970921019826436	ALPHA_Engine/CMakeFiles/Engine.dir/Engine/Camera.cpp.obj	a751b00cc0fad44d
+18	2398	6970921019846449	ALPHA_Engine/CMakeFiles/Engine.dir/Engine/Graphic_Engine.cpp.obj	f96ec082e159fc0e
+2399	2459	6970921020426570	ALPHA_Engine/Engine.lib	ea07f8a18fea3b2c
+1731	2809	6970921023937369	ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir/Engine/Mesh.cpp.obj	c772126ff6e9b0d4
+1737	2838	6970921024247448	ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir/Game/GameModels.cpp.obj	29809abe5abdb84c
+26	3322	6970921029048527	ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir/ALPHA_Engine.cpp.obj	47ed3201c056d72c
+1724	3343	6970921029298586	ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir/Engine/Graphic_Engine.cpp.obj	d81258140c6e87e5
+3343	3483	6970921030708904	ALPHA_Engine/ALPHA_Engine.exe	ab1de2c8e3f7651c
