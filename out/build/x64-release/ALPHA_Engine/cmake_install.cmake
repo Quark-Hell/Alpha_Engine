@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/genna/source/repos/3DRotate/ALPHA_Engine
+# Install script for directory: C:/Users/genna/source/repos/3D-Engine/ALPHA_Engine
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/genna/source/repos/3DRotate/out/install/x64-release")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/genna/source/repos/3D-Engine/out/install/x64-release")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

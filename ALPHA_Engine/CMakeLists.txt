@@ -68,6 +68,10 @@ PRIVATE ${SFMLlib}sfml-window.lib
 PRIVATE ${assimpLIB}assimp-vc143-mtd.lib
 )
 
+set(dll_Files "${PROJECT_SOURCE_DIR}/ALPHA_Engine/.dll")
+set(GameModels "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Models")
+set(EXE_DEST "${PROJECT_BINARY_DIR}/ALPHA_Engine")
+
 file(GLOB SOURCES "${Engine}*.cpp" "${Game}*.cpp")
 
 # Add source to this project's executable.
@@ -91,6 +95,22 @@ PRIVATE sfml-graphics
 PRIVATE sfml-system
 PRIVATE sfml-window
 PRIVATE ${assimpLIB}assimp-vc143-mtd.lib
+)
+
+add_custom_target(copy_dll ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${dll_Files}
+	${EXE_DEST}
+	DEPENDS ${dll_Files}
+	COMMENT "Copying resources to ${EXE_DEST}"
+)
+
+add_custom_target(copy_models ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${GameModels}
+	${EXE_DEST}/Models
+	DEPENDS ${dll_Files}
+	COMMENT "Copying resources to ${EXE_DEST}/Models"
 )
 
 # TODO: Add tests and install targets if needed.
