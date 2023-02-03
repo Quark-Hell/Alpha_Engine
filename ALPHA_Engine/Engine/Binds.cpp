@@ -158,7 +158,6 @@ inline void InputSystem::InsertBindWithClear(Bind bind) {
 }
 inline void InputSystem::InsertBind(Bind bind) {
 	InputSystem::_bindsBuff.push_back(bind);
-	printf("I'm work");
 }
 
 inline InputSystem::InputSystem() {
