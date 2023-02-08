@@ -121,6 +121,7 @@ inline void InputSystem::IO_Events() {
 	//All values
 	for (size_t i = 0; i < InputSystem::_bindsBuff.size(); i++)
 	{
+		if (InputSystem::_bindsBuff[i].Active == false) { continue; }
 		bool mark = true;
 
 		//Check event type statement
@@ -131,19 +132,19 @@ inline void InputSystem::IO_Events() {
 		for (size_t j = 0; j < InputSystem::_bindsBuff[i]._keyboardKeys.size(); j++)
 		{
 			int IdCurrentKey = InputSystem::_bindsBuff[i]._keyboardKeys[j];
-			if (! (InputSystem::_bindsBuff[i]._keyboardKeysState[j] == InputSystem::_keyboardClass->Keys[IdCurrentKey]->KeyState)) { mark = false; break; }
+			if (! (InputSystem::_bindsBuff[i]._keyboardKeysState[j] & InputSystem::_keyboardClass->Keys[IdCurrentKey]->KeyState)) { mark = false; break; }
 		}
 
 		//Mouse button statement check
 		for (size_t j = 0; j < InputSystem::_bindsBuff[i]._mouseKeys.size(); j++)
 		{
 			int IdCurrentKey = InputSystem::_bindsBuff[i]._mouseKeys[j];
-			if (!(InputSystem::_bindsBuff[i]._mouseKeysState[j] == InputSystem::_mouseClass->Buttons[IdCurrentKey]->KeyState)) { mark = false; break; }
+			if (!(InputSystem::_bindsBuff[i]._mouseKeysState[j] & InputSystem::_mouseClass->Buttons[IdCurrentKey]->KeyState)) { mark = false; break; }
 		}		
 
 		//Check mouse sensor statement
 		if(InputSystem::_bindsBuff[i]._mouseSensorState & UnknownState) {}
-		else if (!(InputSystem::_bindsBuff[i]._mouseSensorState == InputSystem::_mouseClass->MoveSensorState)) { mark = false; }
+		else if (!(InputSystem::_bindsBuff[i]._mouseSensorState & InputSystem::_mouseClass->MoveSensorState)) { mark = false; }
 
 		if (mark) { InputSystem::_bindsBuff[i].InvokeOperations(); }
 	}
@@ -176,7 +177,7 @@ inline void Keyboard::UpdateKeysState() {
 	{		
 		if (sf::Keyboard::isKeyPressed(Keys[i]->KEY)) {
 			if (Keys[i]->KeyState & EnumKeyStates::KeyNotPressed) {
-				Keys[i]->KeyState = (EnumKeyStates)(KeyPressed | KeyHold);
+				Keys[i]->KeyState = KeyPressed;
 				std::printf("Pressed");
 				continue;
 			}
@@ -188,7 +189,7 @@ inline void Keyboard::UpdateKeysState() {
 		}
 		else
 		{
-			if (Keys[i]->KeyState & EnumKeyStates::KeyHold || Keys[i]->KeyState & EnumKeyStates::KeyPressed || Keys[i]->KeyState & (EnumKeyStates)(KeyPressed | KeyHold)) {
+			if (Keys[i]->KeyState & EnumKeyStates::KeyHold || Keys[i]->KeyState & EnumKeyStates::KeyPressed) {
 				Keys[i]->KeyState = KeyReleased;
 				std::printf("Released");
 				continue;
@@ -222,15 +223,15 @@ inline void Mouse::UpdateMouseState() {
 
 	if (Mouse::_mouseDelta != MousePos{0,0}) {
 		if (Mouse::MoveSensorState & MouseNotMoved || Mouse::MoveSensorState & MouseEndMoved) {
-			Mouse::MoveSensorState = EnumMouseSensorStates(MouseStartMoved | MouseKeepMoved);
+			Mouse::MoveSensorState = MouseStartMoved;
 		}
-		else if (Mouse::MoveSensorState & (MouseStartMoved | MouseKeepMoved)) {
+		else if (Mouse::MoveSensorState & MouseStartMoved) {
 			Mouse::MoveSensorState = MouseKeepMoved;
 		}
 	}
 	else
 	{
-		if (Mouse::MoveSensorState & MouseKeepMoved || Mouse::MoveSensorState & (MouseStartMoved | MouseKeepMoved)) {
+		if (Mouse::MoveSensorState & MouseKeepMoved || Mouse::MoveSensorState & MouseStartMoved) {
 			Mouse::MoveSensorState = MouseEndMoved;
 		}
 		else

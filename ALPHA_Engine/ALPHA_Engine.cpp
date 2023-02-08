@@ -63,7 +63,7 @@ void GameFunction::Start() {
     Bind UpMove; UpMove.KeyboardBind({ UpMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::Q });
     Bind DownMove; DownMove.KeyboardBind({ DownMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::E });
 
-    Bind CameraRot; CameraRot.MouseSensorBind({ CameraRotate }, MouseKeepMoved);
+    Bind CameraRot; CameraRot.MouseSensorBind({ CameraRotate }, EnumMouseSensorStates(MouseKeepMoved | MouseStartMoved));
 
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Keyboard::Escape });
     Bind CloseGameSecondMethod; CloseGameSecondMethod.MouseButtonsBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Mouse::Left }, { sf::Event::EventType::Closed });
@@ -163,19 +163,12 @@ void CameraRotate() {
 
     if (InpSys->GetMouseClass()->IsMouseChangePosition()) {
 
-        Vector3 delta = { InpSys->GetMouseClass()->GetMouseDelta().XPos,InpSys->GetMouseClass()->GetMouseDelta().YPos };
+        Vector3 delta;
+        delta.X = InpSys->GetMouseClass()->GetMouseDelta().XPos;
+        delta.Y = InpSys->GetMouseClass()->GetMouseDelta().YPos;
 
         if (delta.GetMagnitude() < 100) {
             Vector3 newRot = Player.GetRotation();
-
-            Vector3 test;
-            test.X = cos((Player.GetRotation().X) * 3.14159 / 180);
-            test.Y = sin((Player.GetRotation().Y) * 3.14159 / 180);
-
-
-            std::cout << test.X << std::endl;
-            std::cout << test.Y << std::endl;
-            std::cout << std::endl;
 
             newRot.X += delta.Y * sensitive;
             newRot.Y += delta.X * sensitive;
@@ -187,7 +180,6 @@ void CameraRotate() {
 
 int main()
 {
-    printf("I'm work");
     HWND hwnd = GetConsoleWindow();
     ShowWindow(hwnd, 1);
 

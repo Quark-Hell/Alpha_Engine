@@ -41,10 +41,12 @@ inline float Camera::GetZFar() {
     return Camera::ZFar;
 }
 
+//TODO:
 inline Vector3 Camera::GetDirectionOfView() {
     DirectionOfView = GetParentObject()->GetRotation();
 
-    DirectionOfView.Normilize();
+
+    //DirectionOfView.NormilizeSelf();
 
     return DirectionOfView;
 }

@@ -149,6 +149,30 @@ build ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Timer.cpp.obj: CXX_COMPILER__Eng
   TARGET_COMPILE_PDB = ALPHA_Engine\CMakeFiles\Engine.dir\Engine.pdb
   TARGET_PDB = ALPHA_Engine\Engine.pdb
 
+build ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Alghoritms.cpp.obj: CXX_COMPILER__Engine_Debug C$:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine\Alghoritms.cpp || cmake_object_order_depends_target_Engine
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17
+  INCLUDES = -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\assimp\include -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Game -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1 -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1\include
+  OBJECT_DIR = ALPHA_Engine\CMakeFiles\Engine.dir
+  OBJECT_FILE_DIR = ALPHA_Engine\CMakeFiles\Engine.dir\Engine
+  TARGET_COMPILE_PDB = ALPHA_Engine\CMakeFiles\Engine.dir\Engine.pdb
+  TARGET_PDB = ALPHA_Engine\Engine.pdb
+
+build ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Material.cpp.obj: CXX_COMPILER__Engine_Debug C$:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine\Material.cpp || cmake_object_order_depends_target_Engine
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17
+  INCLUDES = -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\assimp\include -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Game -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1 -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1\include
+  OBJECT_DIR = ALPHA_Engine\CMakeFiles\Engine.dir
+  OBJECT_FILE_DIR = ALPHA_Engine\CMakeFiles\Engine.dir\Engine
+  TARGET_COMPILE_PDB = ALPHA_Engine\CMakeFiles\Engine.dir\Engine.pdb
+  TARGET_PDB = ALPHA_Engine\Engine.pdb
+
+build ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Texture.cpp.obj: CXX_COMPILER__Engine_Debug C$:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine\Texture.cpp || cmake_object_order_depends_target_Engine
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17
+  INCLUDES = -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\assimp\include -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Game -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1 -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1\include
+  OBJECT_DIR = ALPHA_Engine\CMakeFiles\Engine.dir
+  OBJECT_FILE_DIR = ALPHA_Engine\CMakeFiles\Engine.dir\Engine
+  TARGET_COMPILE_PDB = ALPHA_Engine\CMakeFiles\Engine.dir\Engine.pdb
+  TARGET_PDB = ALPHA_Engine\Engine.pdb
+
 
 # =============================================================================
 # Link build statements for STATIC_LIBRARY target Engine
@@ -157,7 +181,7 @@ build ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Timer.cpp.obj: CXX_COMPILER__Eng
 #############################################
 # Link the static library ALPHA_Engine\Engine.lib
 
-build ALPHA_Engine\Engine.lib: CXX_STATIC_LIBRARY_LINKER__Engine_Debug ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Basical_Type.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Binds.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Camera.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Collision.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Graphic_Engine.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Mesh.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Physics.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Game\GameModels.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Timer.cpp.obj
+build ALPHA_Engine\Engine.lib: CXX_STATIC_LIBRARY_LINKER__Engine_Debug ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Basical_Type.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Binds.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Camera.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Collision.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Graphic_Engine.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Mesh.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Physics.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Game\GameModels.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Timer.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Alghoritms.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Material.cpp.obj ALPHA_Engine\CMakeFiles\Engine.dir\Engine\Texture.cpp.obj
   LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64
   OBJECT_DIR = ALPHA_Engine\CMakeFiles\Engine.dir
@@ -181,6 +205,14 @@ build ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\ALPHA_Engine.cpp.obj: CXX_COMPILE
   INCLUDES = -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\assimp\include -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Game -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1 -external:I C:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1\include -external:W0
   OBJECT_DIR = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir
   OBJECT_FILE_DIR = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir
+  TARGET_COMPILE_PDB = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\
+  TARGET_PDB = ALPHA_Engine\ALPHA_Engine.pdb
+
+build ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Alghoritms.cpp.obj: CXX_COMPILER__ALPHA_Engine_Debug C$:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine\Alghoritms.cpp || cmake_object_order_depends_target_ALPHA_Engine
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17
+  INCLUDES = -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\assimp\include -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Game -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1 -external:I C:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1\include -external:W0
+  OBJECT_DIR = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir
+  OBJECT_FILE_DIR = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine
   TARGET_COMPILE_PDB = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\
   TARGET_PDB = ALPHA_Engine\ALPHA_Engine.pdb
 
@@ -224,6 +256,14 @@ build ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Graphic_Engine.cpp.obj: CX
   TARGET_COMPILE_PDB = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\
   TARGET_PDB = ALPHA_Engine\ALPHA_Engine.pdb
 
+build ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Material.cpp.obj: CXX_COMPILER__ALPHA_Engine_Debug C$:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine\Material.cpp || cmake_object_order_depends_target_ALPHA_Engine
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17
+  INCLUDES = -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\assimp\include -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Game -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1 -external:I C:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1\include -external:W0
+  OBJECT_DIR = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir
+  OBJECT_FILE_DIR = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine
+  TARGET_COMPILE_PDB = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\
+  TARGET_PDB = ALPHA_Engine\ALPHA_Engine.pdb
+
 build ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Mesh.cpp.obj: CXX_COMPILER__ALPHA_Engine_Debug C$:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine\Mesh.cpp || cmake_object_order_depends_target_ALPHA_Engine
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17
   INCLUDES = -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\assimp\include -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Game -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1 -external:I C:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1\include -external:W0
@@ -233,6 +273,14 @@ build ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Mesh.cpp.obj: CXX_COMPILER
   TARGET_PDB = ALPHA_Engine\ALPHA_Engine.pdb
 
 build ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Physics.cpp.obj: CXX_COMPILER__ALPHA_Engine_Debug C$:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine\Physics.cpp || cmake_object_order_depends_target_ALPHA_Engine
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17
+  INCLUDES = -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\assimp\include -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Game -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1 -external:I C:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1\include -external:W0
+  OBJECT_DIR = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir
+  OBJECT_FILE_DIR = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine
+  TARGET_COMPILE_PDB = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\
+  TARGET_PDB = ALPHA_Engine\ALPHA_Engine.pdb
+
+build ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Texture.cpp.obj: CXX_COMPILER__ALPHA_Engine_Debug C$:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine\Texture.cpp || cmake_object_order_depends_target_ALPHA_Engine
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17
   INCLUDES = -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\assimp\include -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Engine -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\Game -IC:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1 -external:I C:\Users\genna\source\repos\3D-Engine\ALPHA_Engine\SFML-2.5.1\include -external:W0
   OBJECT_DIR = ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir
@@ -272,7 +320,7 @@ build ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Game\GameModels.cpp.obj: CXX_COMP
 #############################################
 # Link the executable ALPHA_Engine\ALPHA_Engine.exe
 
-build ALPHA_Engine\ALPHA_Engine.exe: CXX_EXECUTABLE_LINKER__ALPHA_Engine_Debug ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\ALPHA_Engine.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Basical_Type.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Binds.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Camera.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Collision.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Graphic_Engine.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Mesh.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Physics.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Timer.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Game\Game.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Game\GameModels.cpp.obj | ..\..\..\ALPHA_Engine\SFML-2.5.1\lib\sfml-graphics-d.lib ..\..\..\ALPHA_Engine\SFML-2.5.1\lib\sfml-window-d.lib ..\..\..\ALPHA_Engine\assimp\lib\assimp-vc143-mtd.lib ..\..\..\ALPHA_Engine\SFML-2.5.1\lib\sfml-system-d.lib
+build ALPHA_Engine\ALPHA_Engine.exe: CXX_EXECUTABLE_LINKER__ALPHA_Engine_Debug ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\ALPHA_Engine.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Alghoritms.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Basical_Type.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Binds.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Camera.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Collision.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Graphic_Engine.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Material.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Mesh.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Physics.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Texture.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Engine\Timer.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Game\Game.cpp.obj ALPHA_Engine\CMakeFiles\ALPHA_Engine.dir\Game\GameModels.cpp.obj | ..\..\..\ALPHA_Engine\SFML-2.5.1\lib\sfml-graphics-d.lib ..\..\..\ALPHA_Engine\SFML-2.5.1\lib\sfml-window-d.lib ..\..\..\ALPHA_Engine\assimp\lib\assimp-vc143-mtd.lib ..\..\..\ALPHA_Engine\SFML-2.5.1\lib\sfml-system-d.lib
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = ..\..\..\ALPHA_Engine\SFML-2.5.1\lib\sfml-graphics-d.lib  ..\..\..\ALPHA_Engine\SFML-2.5.1\lib\sfml-window-d.lib  ..\..\..\ALPHA_Engine\assimp\lib\assimp-vc143-mtd.lib  ..\..\..\ALPHA_Engine\SFML-2.5.1\lib\sfml-system-d.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

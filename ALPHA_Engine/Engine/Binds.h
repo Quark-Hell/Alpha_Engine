@@ -270,6 +270,7 @@ enum EnumKeyStates {
 
 enum EnumMouseSensorStates {
 	UnknownState = 1 << 0,
+
 	MouseNotMoved = 1 << 1,
 	MouseStartMoved = 1 << 2,
 	MouseKeepMoved = 1 << 3,
@@ -466,6 +467,9 @@ private:
 	std::vector<sf::Mouse::Button> _mouseKeys;
 	EnumMouseSensorStates _mouseSensorState;
 
+public:
+	bool Active = true;
+
 private:
 	friend class InputSystem;
 
@@ -498,13 +502,14 @@ public:
 	//----------------------------------------------------------------------------//
 #pragma region Constructor for keyboard bind
 public:
-	void KeyboardBind(std::vector<void(*)()> Operations,
+	void KeyboardBind(
+		std::vector<void(*)()> Operations,
 		std::vector<EnumKeyStates> KeysState,
 		std::vector<sf::Keyboard::Key> KeyboardKeys,
 		sf::Event::EventType EventType);
 
-public:
-	void KeyboardBind(std::vector<void(*)()> Operations,
+	void KeyboardBind(
+		std::vector<void(*)()> Operations,
 		std::vector<EnumKeyStates> KeysState,
 		std::vector<sf::Keyboard::Key> KeyboardKeys);
 #pragma endregion
@@ -515,13 +520,14 @@ public:
 	//----------------------------------------------------------------------------//
 #pragma region Constructor for mouse buttons bind
 public:
-	void MouseButtonsBind(std::vector<void(*)()> Operations,
+	void MouseButtonsBind(
+		std::vector<void(*)()> Operations,
 		std::vector<EnumKeyStates> MouseKeysState,
 		std::vector<sf::Mouse::Button> MouseKeys,
 		sf::Event::EventType EventType);
 
-public:
-	void MouseButtonsBind(std::vector<void(*)()> Operations,
+	void MouseButtonsBind(
+		std::vector<void(*)()> Operations,
 		std::vector<EnumKeyStates> MouseKeysState,
 		std::vector<sf::Mouse::Button> MouseKeys);
 #pragma endregion
@@ -532,12 +538,13 @@ public:
 	//----------------------------------------------------------------------------//
 #pragma region Constructor for mouse sensor bind
 public:
-	void MouseSensorBind(std::vector<void(*)()> Operations,
+	void MouseSensorBind(
+		std::vector<void(*)()> Operations,
 		EnumMouseSensorStates MouseSensorState,
 		sf::Event::EventType EventType);
 
-public:
-	void MouseSensorBind(std::vector<void(*)()> Operations,
+	void MouseSensorBind(
+		std::vector<void(*)()> Operations,
 		EnumMouseSensorStates MouseSensorState);
 #pragma endregion
 	//----------------------------------------------------------------------------//

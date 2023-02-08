@@ -103,10 +103,10 @@ inline void Render::RenderMesh(Mesh* mesh) {
     //TODO:
     glColor3f(1, 0, 0);
 
-    for (size_t i = 0; i < mesh->Points.size(); i++)
+    for (size_t i = 0; i < mesh->_points.size(); i++)
     {
-        glNormal3f(mesh->Normals[i].X, mesh->Normals[i].Y, mesh->Normals[i].Z);
-        glVertex3f(mesh->Points[i].X, mesh->Points[i].Y, mesh->Points[i].Z);
+        glNormal3f(mesh->_normals[i].X, mesh->_normals[i].Y, mesh->_normals[i].Z);
+        glVertex3f(mesh->_points[i].X, mesh->_points[i].Y, mesh->_points[i].Z);
     }
 
     glEnd();

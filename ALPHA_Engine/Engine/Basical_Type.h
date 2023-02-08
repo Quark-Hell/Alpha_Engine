@@ -4,6 +4,9 @@
 #include <vector>
 #include <filesystem>
 #include <string>  
+#include <unordered_map>
+#include <chrono>
+#include <queue>
 
 struct Vector3 {
 
@@ -33,17 +36,26 @@ public:
 		return powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2);
 	}
 
-	Vector3 Normilize() {
+	void NormilizeSelf() {
 		float locLength = GetMagnitude();
 		float inv_length = (1 / locLength);
 
 		X *= inv_length;
 		Y *= inv_length;
 		Z *= inv_length;
-
-		return { Z,Y,Z };
 	}
 
+	static Vector3 GetNormalize(Vector3 vector) {
+		Vector3 newVector;
+		float locLength = Vector3::GetMagnitude(newVector);
+		float inv_length = (1 / locLength);
+
+		newVector.X *= inv_length;
+		newVector.Y *= inv_length;
+		newVector.Z *= inv_length;
+
+		return newVector;
+	}
 
 	static Vector3 LinearInteprolation(Vector3 A, Vector3 B, float T) {
 		Vector3 newVector;
@@ -352,9 +364,15 @@ static class World {
 
 private:
 	static inline std::vector<Object*> ObjectsOnScene;
+	static inline bool IsCloseGame = false;
+
+	static inline float _deltaTime;
+	static inline std::chrono::steady_clock::time_point _startTime;
+	static inline std::chrono::steady_clock::time_point _endTime;
 
 private:
-	static inline bool IsCloseGame = false;
+	void StartFrame();
+	void EndFrame();
 
 public:
 	static inline void CloseGame();
@@ -362,6 +380,7 @@ public:
 	/// Return bool IsCloseGame
 	/// </summary>
 	static inline bool GetStateOfGame();
+	static inline float GetDeltaTime();
 
 private:
 	friend class Object;

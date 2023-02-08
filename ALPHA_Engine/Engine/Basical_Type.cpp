@@ -14,6 +14,19 @@ inline bool World::GetStateOfGame() {
 	return IsCloseGame;
 }
 
+inline float World::GetDeltaTime() {
+	return World::_deltaTime;
+}
+
+inline void World::StartFrame() {
+	// Get starting timepoint
+	World::_startTime = std::chrono::high_resolution_clock::now();
+}
+inline void World::EndFrame() {
+	World::_endTime = std::chrono::high_resolution_clock::now();
+	World::_deltaTime = std::chrono::duration_cast	<std::chrono::milliseconds>(World::_endTime - World::_startTime).count();
+}
+
 #pragma endregion
 
 #pragma region Object Define

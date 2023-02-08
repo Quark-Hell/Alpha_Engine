@@ -9,11 +9,8 @@
 
 class Mesh : public Module {
 private:
-	std::vector <Vector3> Points;
-	std::vector <Vector3> Normals;
-	std::vector <unsigned int> Indices;
-	//std::vector <Vector3> VertexColors;
-	//std::vector <Vector3> TextureCoords;
+	std::vector <Vector3> _points;
+	std::vector <Vector3> _normals;
 
 private:
 	friend class Render;
@@ -24,4 +21,6 @@ public:
 
 	bool CreateMesh(std::string linkToFBX);
 	void DeleteMesh();
+
+	std::vector<Mesh*> SeparateMesh();
 };
