@@ -4,9 +4,9 @@
 //TODO: Function normilize color
 
 inline void CreateObject(Vector3 Position, Vector3 Rotation, Vector3 Scale, Object *Obj) {
-    Obj->SetPosition(Position);
-    Obj->SetRotation(Rotation);
-    Obj->SetScale(Scale);
+    Obj->AddPosition(Position);
+    Obj->AddRotation(Rotation);
+    Obj->AddScale(Scale);
 
     Mesh* mesh = new Mesh;
     Obj->AddModule(mesh);

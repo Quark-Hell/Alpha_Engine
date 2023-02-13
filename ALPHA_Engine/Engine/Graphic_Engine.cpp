@@ -28,6 +28,7 @@ inline void Render::PrepareToRender() {
     GLfloat LightAmbient[] = { 0.25f, 0.25f, 0.25f, 1.0f };
     glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
 
+
     GLfloat LightDiffuse[] = { 0.75f, 0.75f, 0.75f, 1.0f };
     glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
 
@@ -103,12 +104,12 @@ inline void Render::RenderMesh(Mesh* mesh) {
     //TODO:
     glColor3f(1, 0, 0);
 
-    for (size_t i = 0; i < mesh->_points.size(); i++)
+    for (size_t i = 0; i < mesh->_indices.size(); i++)
     {
-        glNormal3f(mesh->_normals[i].X, mesh->_normals[i].Y, mesh->_normals[i].Z);
-        glVertex3f(mesh->_points[i].X, mesh->_points[i].Y, mesh->_points[i].Z);
+        glNormal3f(mesh->_normals[mesh->_indices[i]].X, mesh->_normals[mesh->_indices[i]].Y, mesh->_normals[mesh->_indices[i]].Z);
+        glVertex3f(mesh->_vertex[mesh->_indices[i]].X, mesh->_vertex[mesh->_indices[i]].Y, mesh->_vertex[mesh->_indices[i]].Z);
     }
-
+    
     glEnd();
 }
 
@@ -119,8 +120,8 @@ inline void Render::SceneAssembler() {
         {
             Mesh* mesh = dynamic_cast<Mesh*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
 
-            if (mesh != nullptr) {
-                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+            if (mesh != nullptr && mesh->GetName() == "Mesh") {
+                //Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
                 RenderMesh(mesh);
             }
         }

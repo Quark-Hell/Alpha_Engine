@@ -59,7 +59,7 @@ ${Engine}Physics.cpp
 
 ${Game}GameModels.cpp
 ${Game}GameModels.h
- "Engine/Timer.cpp" "Engine/Timer.h" "Engine/Alghoritms.h" "Engine/Alghoritms.cpp" "Engine/Material.h" "Engine/Material.cpp" "Engine/Texture.cpp" "Engine/Texture.h")
+ "Engine/Timer.cpp" "Engine/Timer.h" "Engine/Alghoritms.h" "Engine/Alghoritms.cpp" "Engine/Material.h" "Engine/Material.cpp" "Engine/Texture.cpp" "Engine/Texture.h"  "Engine/Vectors.cpp" "Engine/Vectors.h"  "Engine/Matrix.h" "Engine/Matrix.cpp"  )
 
 target_link_libraries(Engine
 PRIVATE ${SFMLlib}sfml-graphics.lib
@@ -88,7 +88,7 @@ ${SFMLinclude}SFML/Graphics.hpp
 ${assimpINCLUDE}assimp/Importer.hpp
 ${assimpINCLUDE}assimp/scene.h
 ${assimpINCLUDE}assimp/postprocess.h
- "Engine/Timer.cpp" "Engine/Timer.h" "Engine/Alghoritms.h" "Engine/Alghoritms.cpp" "Engine/Material.h" "Engine/Material.cpp" "Engine/Texture.cpp" "Engine/Texture.h")
+ "Engine/Timer.cpp" "Engine/Timer.h" "Engine/Alghoritms.h" "Engine/Alghoritms.cpp" "Engine/Material.h" "Engine/Material.cpp" "Engine/Texture.cpp" "Engine/Texture.h"  "Engine/Vectors.cpp" "Engine/Vectors.h"  "Engine/Matrix.h" "Engine/Matrix.cpp"  )
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE sfml-graphics

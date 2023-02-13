@@ -12,10 +12,9 @@
 #include <SFML/Graphics.hpp>
 
 //OpenGL
-/*
+
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")
-*/
 #include <gl/gl.h>
 #include <gl/glu.h>
 
@@ -59,8 +58,8 @@ private:
 	void ClearFrameBuffer();
 
 public:
-	 void StartRender(Camera* camera);
-	 void RenderLoop(Camera* camera);
+	void StartRender(Camera* camera);
+	void RenderLoop(Camera* camera);
 	Screen* GetScreenClass();
 
 private:

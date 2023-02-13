@@ -1,4 +1,5 @@
 #include "Basical_Type.h"
+#include "Mesh.cpp"
 
 #pragma region World Define
 
@@ -34,45 +35,132 @@ inline void World::EndFrame() {
 inline Vector3 Object::GetPosition() {
 	return Position;
 }
-inline void Object::SetPosition (float X, float Y, float Z) {
-	Object::Position.X = X;
-	Object::Position.Y = Y;
-	Object::Position.Z = Z;
+inline void Object::AddPosition (float X, float Y, float Z) {
+	Matrix4x4 matrix = Matrix4x4();
+	matrix.Translation(Vector4(X, Y, Z, 1));
+
+	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
+
+	Object::Position.X += X;
+	Object::Position.Y += Y;
+	Object::Position.Z += Z;
 }
-inline void Object::SetPosition(Vector3 Position) {
-	Object::Position.X = Position.X;
-	Object::Position.Y = Position.Y;
-	Object::Position.Z = Position.Z;
+inline void Object::AddPosition(Vector3 position) {
+	Matrix4x4 matrix = Matrix4x4();
+	matrix.Translation(Vector4(position.X, position.Y, position.Z, 1));
+
+	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
+
+	Object::Position.X += position.X;
+	Object::Position.Y += position.Y;
+	Object::Position.Z += position.Z;
+}
+inline void Object::SetPosition(float X, float Y, float Z) {
+	Vector3 direction = Vector3(X, Y, Z) - Object::Position;
+
+	Object::AddPosition(direction);
+}
+inline void Object::SetPosition(Vector3 position) {
+	Vector3 direction = position - Object::Position;
+
+	Object::AddPosition(direction);
 }
 
 
 inline Vector3 Object::GetRotation() {
 	return Rotation;
 }
-inline void Object::SetRotation(float X, float Y, float Z) {
-	Object::Rotation.X = X;
-	Object::Rotation.Y = Y;
-	Object::Rotation.Z = Z;
+inline void Object::AddRotation(float X, float Y, float Z) {
+	Matrix4x4 matrix = Matrix4x4();
+	matrix.Rotation(Vector4(X, Y, Z, 1));
+
+	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
+
+	Object::Rotation.X += X;
+	Object::Rotation.Y += Y;
+	Object::Rotation.Z += Z;
 }
-inline void Object::SetRotation(Vector3 Rotation) {
-	Object::Rotation.X = Rotation.X;
-	Object::Rotation.Y = Rotation.Y;
-	Object::Rotation.Z = Rotation.Z;
+inline void Object::AddRotation(Vector3 rotation) {
+	Matrix4x4 matrix = Matrix4x4();
+	matrix.Rotation(Vector4(rotation.X, rotation.Y, rotation.Z, 1));
+
+	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
+
+	Object::Rotation.X += rotation.X;
+	Object::Rotation.Y += rotation.Y;
+	Object::Rotation.Z += rotation.Z;
+}
+inline void Object::SetRotation(float X, float Y, float Z) {
+	Vector3 direction = Vector3(X, Y, Z) - Object::Rotation;
+
+	Object::AddRotation(direction);
+}
+inline void Object::SetRotation(Vector3 rotation) {
+	Vector3 direction = rotation - Object::Rotation;
+
+	Object::AddRotation(direction);
 }
 
 
 inline Vector3 Object::GetScale() {
 	return Scale;
 }
-inline void Object::SetScale(float X, float Y, float Z) {
-	Object::Scale.X = X;
-	Object::Scale.Y = Y;
-	Object::Scale.Z = Z;
+inline void Object::AddScale(float X, float Y, float Z) {
+	Matrix4x4 matrix = Matrix4x4();
+	matrix.Scale(Vector4(X,Y,Z,1));
+
+	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
+
+	Object::Scale.X += X;
+	Object::Scale.Y += Y;
+	Object::Scale.Z += Z;
 }
-inline void Object::SetScale(Vector3 Scale) {
-	Object::Scale.X = Scale.X;
-	Object::Scale.Y = Scale.Y;
-	Object::Scale.Z = Scale.Z;
+inline void Object::AddScale(Vector3 scale) {
+	Matrix4x4 matrix = Matrix4x4();
+	matrix.Scale(Vector4(scale.X, scale.Y, scale.Z, 1));
+
+	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
+
+	Object::Scale.X += scale.X;
+	Object::Scale.Y += scale.Y;
+	Object::Scale.Z += scale.Z;
+}
+inline void Object::SetScale(float X, float Y, float Z) {
+	Vector3 direction = Vector3(X, Y, Z) - Object::Scale;
+
+	Object::AddScale(direction);
+}
+inline void Object::SetScale(Vector3 scale) {
+	Vector3 direction = scale - Object::Scale;
+
+	Object::AddScale(direction);
+}
+
+
+inline void Object::ApplyTransform() {
+	Matrix4x4 buffer = Object::_transformMatrix.GetMatrix();
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
+
+		if (mesh != nullptr && mesh->GetName() == "Mesh") {
+			for (size_t jt = 0; jt < mesh->_vertex.size(); jt++)
+			{
+				Vector3 buffer = mesh->_vertex[jt];
+				MatrixMath::MultiplyMatrix(mesh->_vertex[jt], Object::_transformMatrix , buffer);
+			}
+		}
+	}
+
+	Object::_transformMatrix.Identity();
+	//Vector4 posMatrix = Position;
+	//Vector4 rotMatrix = Rotation;
+	//Vector4 scaleMatrix = Scale;
+
+	//MatrixMath::MultiplyMatrix(Position, buffer, posMatrix);
+	//MatrixMath::MultiplyMatrix(Rotation, buffer, rotMatrix);
+	//MatrixMath::MultiplyMatrix(Scale,	 buffer, scaleMatrix);
 }
 
 inline bool Object::AddModule(class Module *some_module) {

@@ -15,43 +15,85 @@ inline bool Mesh::CreateMesh(std::string linkToFBX) {
 	std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
 
 	//TODO: Check if fbx
-	const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate);
+	const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
 	aiMesh* mesh = s->mMeshes[0];
 
-	Mesh::_points.clear();
+	Mesh::_vertex.clear();
 	Mesh::_normals.clear();
+
+    for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
+        for (size_t jt = 0; jt < mesh->mFaces[it].mNumIndices; jt++)
+        {
+            Mesh::_indices.push_back(mesh->mFaces[it].mIndices[jt]);
+        }
+    }
 
 	for (std::uint32_t it = 0; it < mesh->mNumVertices; it++) {
 		Vector3 point;
-		Vector3 normal;
+		Vector3 normal;  
 
 		if (mesh->HasPositions()) {
 			point.X = mesh->mVertices[it].x;
 			point.Y = mesh->mVertices[it].y;
 			point.Z = mesh->mVertices[it].z;
+
+            Mesh::_vertex.push_back(point);
 		}
 
 		if (mesh->HasNormals()) {
 			normal.X = mesh->mNormals[it].x;
 			normal.Y = mesh->mNormals[it].y;
 			normal.Z = mesh->mNormals[it].z;
+
+            Mesh::_normals.push_back(normal);
 		}
 
 		//if (mesh->HasVertexColors(0))v.color = vec4(mesh->mColors[0][it]);
 		//if (mesh->HasTextureCoords(0))v.uv = vec2(mesh->mTextureCoords[0][it]);
-
-		Mesh::_points.push_back(point);
-		Mesh::_normals.push_back(normal);
 	}
 
 	return true;
 }
 
 inline void Mesh::DeleteMesh() {
-	Mesh::_points.clear();
+	Mesh::_vertex.clear();
 	Mesh::_normals.clear();
 }
 
+inline void Mesh::MakeUnique(std::vector<Vector3> *data) {
+    const int arr_len = 3;
+    float buffer[arr_len];
+
+    std::unordered_map<std::string, Vector3> uniqueMap;
+
+    std::string hash;
+    hash.resize(arr_len * sizeof(float));
+
+    for (size_t it = 0; it < (*data).size(); it++)
+    {
+        //insert vert
+        buffer[0] = { (*data)[it].X };
+        buffer[1] = { (*data)[it].Y };
+        buffer[2] = { (*data)[it].Z };
+
+        memcpy((char*)hash.data(), buffer, arr_len * sizeof(float));
+
+        std::pair<std::string, Vector3> vertPair(hash, (*data)[it]);
+        uniqueMap.insert(vertPair);
+    }
+
+    (*data).clear();
+    (*data).clear();
+
+    for (size_t it = 0; it < uniqueMap.size(); it++)
+    {
+        auto begin = uniqueMap.begin();
+        std::advance(begin, it);
+        (*data).push_back(begin->second);
+    }
+}
+
+//Need refactoring
 inline std::vector<Mesh*> Mesh::SeparateMesh() {
     struct VertInfo
     {
@@ -64,29 +106,29 @@ inline std::vector<Mesh*> Mesh::SeparateMesh() {
     std::vector<bool> triangleBool;
 
     const int arr_len = 3;
-    float edgeArr[arr_len];
+    float vertArr[arr_len];
 
     std::string hash;
     hash.resize(arr_len * sizeof(float));
 
-    Graph graph{ unsigned int(_points.size() / 3) };
+    Graph graph{ unsigned int(_vertex.size() / 3) };
 
     unsigned int sizeBeforeInsert;
 
     //Create graph
-    for (size_t it = 0; it <= _points.size() - 1; it++)
+    for (size_t it = 0; it < _vertex.size(); it++)
     {
-        vert.Point = &_points[it];
+        vert.Point = &_vertex[it];
         vert.TriangleID = it / 3;
 
-        edgeArr[0] = { vert.Point->X };
-        edgeArr[1] = { vert.Point->Y };
-        edgeArr[2] = { vert.Point->Z };
+        vertArr[0] = { vert.Point->X };
+        vertArr[1] = { vert.Point->Y };
+        vertArr[2] = { vert.Point->Z };
 
         sizeBeforeInsert = vertMap.size();
 
         //create hash
-        memcpy((char*)hash.data(), edgeArr, arr_len * sizeof(float));
+        memcpy((char*)hash.data(), vertArr, arr_len * sizeof(float));
 
         //insert hash
         std::pair<std::string, VertInfo> p(hash, vert);
@@ -124,6 +166,35 @@ inline std::vector<Mesh*> Mesh::SeparateMesh() {
         {
             triangleBool[separatedMesh[separatedMesh.size() - 1][i]] = true;
         }
+    }
+}
+
+inline Vector3 Mesh::FindFurthestPoint() {
+
+}
+inline Vector3 Mesh::FindFurthestPoint(Vector3 direction) {
+    Vector3 maxPoint = { 0,0,0 };
+    float maxDistance = -FLT_MAX;
+
+    for (Vector3 vertex : Mesh::_vertex) {
+        float distance = Vector3::DotProduct(vertex, direction);
+        if (distance > maxDistance) {
+            maxDistance = distance;
+            maxPoint = vertex;
+        }
+    }
+
+    return maxPoint;
+}
+
+inline void Mesh::ApplyTransformation() {
+    for (size_t it = 0; it < Mesh::_vertex.size(); it++)
+    {
+
+    }
+    for (size_t it = 0; it < Mesh::_normals.size(); it++)
+    {
+
     }
 }
 #pragma endregion

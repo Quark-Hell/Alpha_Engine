@@ -29,15 +29,11 @@ class Texture {
 	//https://dtf.ru/gamedev/244935-iz-chego-sostoit-grafika#first
 
 private:
-	std::string _colorMap;
-	std::string _glossMap;
-	std::string _normalsMap;
-	std::string _transmissionMap;
-	std::string _fuzzMap;
-	std::string _occlusionMap;
-
+	std::string _textureLink;
 	std::vector <Vector3> _textureCoords;
 
+	sf::Texture _sfTexture;
+	//Other representation(DirectX, Vulkan...)
 
 	EnumTypeOfWrapping _typeOfWrapping;
 	EnumTypeOfTextureFiltering _typeOfTextureFiltering;

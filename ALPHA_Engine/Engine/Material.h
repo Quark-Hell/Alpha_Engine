@@ -5,14 +5,15 @@
 class Material
 {
 public:
-	float Metallic;
-	float Specular;
-	float Roughness;
-	float Anisotropic;
-	float EmissionColor[3] = {0,0,0};
-	float EmissionStrength;
-
-	Texture Texture;
+	Texture _colorMap;
+	Texture _metallic;
+	Texture _specular;
+	Texture _roughness;
+	Texture _anisotropic;
+	Texture _emission;
+	Texture _normalsMap;
+	Texture _opacityMap;
+	Texture _occlusionMap;
 
 public:	
 	Material();

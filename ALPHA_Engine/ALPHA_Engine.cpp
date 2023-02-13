@@ -8,9 +8,7 @@
 #include "Graphic_Engine.cpp"
 
 #include "GameModels.cpp"
-
 #include "Physics.cpp"
-#include "Mesh.cpp"
 #include "Camera.cpp"
 #include "Collision.cpp"
 
@@ -23,6 +21,8 @@ Object obj;
 Object Player;
 Camera* camera = new Camera;
 
+Object* Cube1;
+Object* Cube2;
 
 GameFunction* Game = new GameFunction;
 Render* render = new Render;
@@ -30,29 +30,38 @@ InputSystem* InpSys = new InputSystem;
 
 void GameFunction::Start() {
 
-    std::string link = "\\Models\\Blender.fbx";
-
     Player.AddModule(camera);
 
-    Physics* phys = new Physics;
     Mesh* mesh = new Mesh;
-    Collision* collision = new Collision;
-
-    mesh->CreateMesh(link);
-    collision->CreateCollision(link);
-
-    obj.SetScale(1, 1, 1);
-
-    obj.AddModule(phys);
+    mesh->CreateMesh("\\Models\\Blender.fbx");
     obj.AddModule(mesh);
-    //obj.AddModule(collision);
+    obj.AddScale(1, 1, 1);
 
     Vector3 Postion{ 0,0,-5 };
-    Vector3 Rotation(0, 30, 40);
+    Vector3 Rotation(0, 0, 0);
     Vector3 Scale{ 0.8f,0.8f,0.8f };
     Vector3 Color{ 0,0,1 };
 
-    Object* sphere = Primitives::Sphere(Postion, Rotation, Scale, Color);
+    Collider* col1 = new Collider;
+    Collider* col2 = new Collider;
+
+    col1->CreateCollider("\\Models\\Primitives\\Cube.fbx");
+    col2->CreateCollider("\\Models\\Primitives\\Cube.fbx");
+
+    col1->Rename("Collider");
+    col2->Rename("Collider");
+
+    Cube1 = Primitives::Cube(Postion, Rotation, Scale, Color);
+    Cube2 = Primitives::Cube(Postion, Rotation, Scale, Color);
+
+    Cube1->AddModule(col1);
+    Cube2->AddModule(col2);
+
+    Cube2->AddPosition(0,1,-4);
+
+    Cube1->ApplyTransform();
+    Cube2->ApplyTransform();
+
 
     Bind LeftMove; LeftMove.KeyboardBind(std::vector<void(*)()>{LeftMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::A});
     Bind RightMove; RightMove.KeyboardBind(std::vector<void(*)()>{RightMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::D });
@@ -85,8 +94,10 @@ void GameFunction::Start() {
 }
 
 void GameFunction::Update() {
-    obj.SetPosition(0, 0, -3);
-    obj.SetRotation(0, obj.GetRotation().Y + 1.5, 0);
+    //obj.SetPosition(0, 0, -3);
+    obj.AddRotation(0, 1.5, 0);
+
+    obj.ApplyTransform();
 }
 
 void LeftMoveCamera() {
@@ -192,6 +203,8 @@ int main()
 
     while (!World::GetStateOfGame())
     {
+        //Collision::GJK((Collider*)Cube1->GetModuleByName("Collider"), (Collider*)Cube2->GetModuleByName("Collider"));
+
         InpSys->IO_Events();
         Game->Update();
         render->RenderLoop(camera);
