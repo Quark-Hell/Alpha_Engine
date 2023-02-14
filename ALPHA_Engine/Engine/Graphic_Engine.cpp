@@ -92,11 +92,11 @@ inline void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vect
 
     glTranslatef(Position.X, Position.Y, Position.Z);
 
-    glRotatef(Rotation.X, 1.f, 0.f, 0.f);
-    glRotatef(Rotation.Y, 0.f, 1.f, 0.f);
-    glRotatef(Rotation.Z, 0.f, 0.f, 1.f);
+    //glRotatef(Rotation.X, 1.f, 0.f, 0.f);
+    //glRotatef(Rotation.Y, 0.f, 1.f, 0.f);
+    //glRotatef(Rotation.Z, 0.f, 0.f, 1.f);
 
-    glScalef(Scale.X, Scale.Y, Scale.Z);
+    //glScalef(Scale.X, Scale.Y, Scale.Z);
 }
 
 inline void Render::RenderMesh(Mesh* mesh) {
@@ -106,8 +106,9 @@ inline void Render::RenderMesh(Mesh* mesh) {
 
     for (size_t i = 0; i < mesh->_indices.size(); i++)
     {
+        Vector3* position = &mesh->GetParentObject()->GetPosition();
         glNormal3f(mesh->_normals[mesh->_indices[i]].X, mesh->_normals[mesh->_indices[i]].Y, mesh->_normals[mesh->_indices[i]].Z);
-        glVertex3f(mesh->_vertex[mesh->_indices[i]].X, mesh->_vertex[mesh->_indices[i]].Y, mesh->_vertex[mesh->_indices[i]].Z);
+        glVertex3f(mesh->_vertex[mesh->_indices[i]].X + position->X, mesh->_vertex[mesh->_indices[i]].Y + position->Y, mesh->_vertex[mesh->_indices[i]].Z + position->Z);
     }
     
     glEnd();

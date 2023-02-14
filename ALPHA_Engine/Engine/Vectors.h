@@ -340,10 +340,10 @@ public:
 	}
 
 	float DotProduct(Vector3 B) {
-		return (X * B.X) + (Y * B.Y) + (Z + B.Z);
+		return (X * B.X) + (Y * B.Y) + (Z * B.Z);
 	}
 	static float DotProduct(Vector3 A, Vector3 B) {
-		return (A.X * B.X) + (A.Y * B.Y) + (A.Z + B.Z);
+		return (A.X * B.X) + (A.Y * B.Y) + (A.Z * B.Z);
 	}
 
 	Vector3 CrossProduct(Vector3 B) {

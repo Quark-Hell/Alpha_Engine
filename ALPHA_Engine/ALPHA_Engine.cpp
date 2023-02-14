@@ -37,7 +37,7 @@ void GameFunction::Start() {
     obj.AddModule(mesh);
     obj.AddScale(1, 1, 1);
 
-    Vector3 Postion{ 0,0,-5 };
+    Vector3 Postion{ 0,0,0 };
     Vector3 Rotation(0, 0, 0);
     Vector3 Scale{ 0.8f,0.8f,0.8f };
     Vector3 Color{ 0,0,1 };
@@ -57,7 +57,7 @@ void GameFunction::Start() {
     Cube1->AddModule(col1);
     Cube2->AddModule(col2);
 
-    Cube2->AddPosition(0,1,-4);
+    Cube2->AddPosition(0,0.1,0.2);
 
     Cube1->ApplyTransform();
     Cube2->ApplyTransform();
@@ -203,7 +203,7 @@ int main()
 
     while (!World::GetStateOfGame())
     {
-        //Collision::GJK((Collider*)Cube1->GetModuleByName("Collider"), (Collider*)Cube2->GetModuleByName("Collider"));
+        Collision::GJK((Collider*)Cube1->GetModuleByName("Collider"), (Collider*)Cube2->GetModuleByName("Collider"));
 
         InpSys->IO_Events();
         Game->Update();

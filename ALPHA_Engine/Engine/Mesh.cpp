@@ -52,6 +52,8 @@ inline bool Mesh::CreateMesh(std::string linkToFBX) {
 		//if (mesh->HasTextureCoords(0))v.uv = vec2(mesh->mTextureCoords[0][it]);
 	}
 
+    Mesh::_isShifted = true;
+
 	return true;
 }
 
@@ -177,7 +179,7 @@ inline Vector3 Mesh::FindFurthestPoint(Vector3 direction) {
     float maxDistance = -FLT_MAX;
 
     for (Vector3 vertex : Mesh::_vertex) {
-        float distance = Vector3::DotProduct(vertex, direction);
+        float distance = Vector3::DotProduct(vertex + Mesh::GetParentObject()->GetPosition(), direction);
         if (distance > maxDistance) {
             maxDistance = distance;
             maxPoint = vertex;

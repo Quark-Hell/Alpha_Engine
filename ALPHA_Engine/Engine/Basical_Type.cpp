@@ -54,6 +54,7 @@ inline void Object::AddPosition(Vector3 position) {
 	Object::Position.X += position.X;
 	Object::Position.Y += position.Y;
 	Object::Position.Z += position.Z;
+
 }
 inline void Object::SetPosition(float X, float Y, float Z) {
 	Vector3 direction = Vector3(X, Y, Z) - Object::Position;
@@ -79,6 +80,15 @@ inline void Object::AddRotation(float X, float Y, float Z) {
 	Object::Rotation.X += X;
 	Object::Rotation.Y += Y;
 	Object::Rotation.Z += Z;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
+
+		if (mesh != nullptr && mesh->GetName() == "Mesh") {
+			mesh->_isShifted = true;
+		}
+	}
 }
 inline void Object::AddRotation(Vector3 rotation) {
 	Matrix4x4 matrix = Matrix4x4();
@@ -89,6 +99,15 @@ inline void Object::AddRotation(Vector3 rotation) {
 	Object::Rotation.X += rotation.X;
 	Object::Rotation.Y += rotation.Y;
 	Object::Rotation.Z += rotation.Z;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
+
+		if (mesh != nullptr && mesh->GetName() == "Mesh") {
+			mesh->_isShifted = true;
+		}
+	}
 }
 inline void Object::SetRotation(float X, float Y, float Z) {
 	Vector3 direction = Vector3(X, Y, Z) - Object::Rotation;
@@ -114,6 +133,15 @@ inline void Object::AddScale(float X, float Y, float Z) {
 	Object::Scale.X += X;
 	Object::Scale.Y += Y;
 	Object::Scale.Z += Z;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
+
+		if (mesh != nullptr && mesh->GetName() == "Mesh") {
+			mesh->_isShifted = true;
+		}
+	}
 }
 inline void Object::AddScale(Vector3 scale) {
 	Matrix4x4 matrix = Matrix4x4();
@@ -124,6 +152,15 @@ inline void Object::AddScale(Vector3 scale) {
 	Object::Scale.X += scale.X;
 	Object::Scale.Y += scale.Y;
 	Object::Scale.Z += scale.Z;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
+
+		if (mesh != nullptr && mesh->GetName() == "Mesh") {
+			mesh->_isShifted = true;
+		}
+	}
 }
 inline void Object::SetScale(float X, float Y, float Z) {
 	Vector3 direction = Vector3(X, Y, Z) - Object::Scale;
@@ -144,12 +181,13 @@ inline void Object::ApplyTransform() {
 	{
 		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
 
-		if (mesh != nullptr && mesh->GetName() == "Mesh") {
+		if (mesh != nullptr && mesh->GetName() == "Mesh" && mesh->_isShifted == true) {
 			for (size_t jt = 0; jt < mesh->_vertex.size(); jt++)
 			{
 				Vector3 buffer = mesh->_vertex[jt];
 				MatrixMath::MultiplyMatrix(mesh->_vertex[jt], Object::_transformMatrix , buffer);
 			}
+			mesh->_isShifted = false;
 		}
 	}
 
@@ -238,7 +276,7 @@ inline Object::~Object() {
 #pragma region Module Define
 
 inline void Module::Rename(std::string name) {
-	Module::_name = name;
+	_name = name;
 }
 inline std::string Module::GetName() {
 	return Module::_name;

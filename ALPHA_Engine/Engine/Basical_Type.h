@@ -17,7 +17,7 @@ class Module
 {
 private:
 	std::string _name;
-	Object* ParentObject;
+	Object* ParentObject = nullptr;
 
 private:
 	friend class Render;
@@ -35,9 +35,9 @@ private:
 class Object {
 
 private:
-	Vector4 Position{ 0,0,0, 1 };
-	Vector4 Rotation{ 0,0,0, 1 };
-	Vector4 Scale{ 1,1,1, 1 };
+	Vector3 Position{ 0,0,0 };
+	Vector4 Rotation{ 0,0,0,1 };
+	Vector3 Scale{ 1,1,1 };
 
 	Matrix4x4 _transformMatrix = Matrix4x4();
 

@@ -12,6 +12,7 @@ private:
 	std::vector <Vector3> _vertex;
 	std::vector <Vector3> _normals;
 	std::vector <unsigned int> _indices;
+	bool _isShifted = false;
 
 private:
 	friend class Object;
