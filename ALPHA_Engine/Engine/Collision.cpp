@@ -35,8 +35,7 @@ inline bool Simplex::Line(Simplex& points, Vector3& direction) {
     Vector3 ao = -a;
 
     if (SameDirection(ab, ao)) {
-        Vector3 first = ab.CrossProduct(ao);
-        direction = first.CrossProduct(ab);
+        direction = ab.CrossProduct(ao).CrossProduct(ab);
     }
 
     else {
@@ -56,6 +55,9 @@ inline bool Simplex::Triangle(Simplex& points, Vector3& direction) {
     Vector3 ao = -a;
 
     Vector3 abc = ab.CrossProduct(ac);
+
+    Vector3 cr1 = abc.CrossProduct(ac);
+    Vector3 cr2 = ab.CrossProduct(abc);
 
     if (SameDirection(abc.CrossProduct(ac), ao)) {
         if (SameDirection(ac, ao)) {
@@ -180,9 +182,8 @@ inline bool Collision::GJK(Collider* colliderA, Collider* colliderB) {
 
     while (true) {
         support = Support(colliderA, colliderB, direction);
-        float test = support.DotProduct(direction);
 
-        if (support.DotProduct(direction) <= 0) {
+        if (support.DotProduct(direction) < 0) {
             printf("false");
             return false; // no collision
         }

@@ -171,18 +171,16 @@ inline std::vector<Mesh*> Mesh::SeparateMesh() {
     }
 }
 
-inline Vector3 Mesh::FindFurthestPoint() {
-
-}
 inline Vector3 Mesh::FindFurthestPoint(Vector3 direction) {
     Vector3 maxPoint = { 0,0,0 };
     float maxDistance = -FLT_MAX;
 
     for (Vector3 vertex : Mesh::_vertex) {
-        float distance = Vector3::DotProduct(vertex + Mesh::GetParentObject()->GetPosition(), direction);
+        Vector3 vertexPos = vertex + Mesh::GetParentObject()->GetPosition();
+        float distance = Vector3::DotProduct(vertexPos, direction);
         if (distance > maxDistance) {
             maxDistance = distance;
-            maxPoint = vertex;
+            maxPoint = vertexPos;
         }
     }
 

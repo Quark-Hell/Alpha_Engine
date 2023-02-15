@@ -39,7 +39,7 @@ void GameFunction::Start() {
 
     Vector3 Postion{ 0,0,0 };
     Vector3 Rotation(0, 0, 0);
-    Vector3 Scale{ 0.8f,0.8f,0.8f };
+    Vector3 Scale{ 1,1,1 };
     Vector3 Color{ 0,0,1 };
 
     Collider* col1 = new Collider;
@@ -54,10 +54,13 @@ void GameFunction::Start() {
     Cube1 = Primitives::Cube(Postion, Rotation, Scale, Color);
     Cube2 = Primitives::Cube(Postion, Rotation, Scale, Color);
 
+    Cube1->ApplyTransform();
+    Cube2->ApplyTransform();
+
     Cube1->AddModule(col1);
     Cube2->AddModule(col2);
 
-    Cube2->AddPosition(0,0.1,0.2);
+    Cube2->AddPosition(0,0,2.1);
 
     Cube1->ApplyTransform();
     Cube2->ApplyTransform();

@@ -27,7 +27,6 @@ public:
 	bool CreateMesh(std::string linkToFBX);
 	void DeleteMesh();
 
-	Vector3 FindFurthestPoint();
 	Vector3 FindFurthestPoint(Vector3 direction);
 
 	std::vector<Mesh*> SeparateMesh();
