@@ -59,12 +59,14 @@ private:
 
 public:
 	CollisionPoints GetCollisionPoints();
+	void CollisionLoop();
 
-	static inline Vector3 Support(Collider* colliderA, Collider* colliderB, Vector3 direction);
-	static inline bool GJK(Collider* colliderA, Collider* colliderB, CollisionPoints& colPoints);
-	static inline CollisionPoints EPA(Simplex& simplex, Collider* colliderA, Collider* ColliderB);
+private:
+	Vector3 Support(Collider* colliderA, Collider* colliderB, Vector3 direction);
+	bool GJK(Collider* colliderA, Collider* colliderB, CollisionPoints& colPoints);
+	CollisionPoints EPA(Simplex& simplex, Collider* colliderA, Collider* ColliderB);
 
-	static inline std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
-	static inline void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
+	std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
+	void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
 };
 

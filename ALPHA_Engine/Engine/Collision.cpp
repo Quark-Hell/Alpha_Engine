@@ -127,6 +127,35 @@ inline bool Collider::CreateConvexFrom—oncave(std::string link) {
 
 }
 
+/*Maybe need refactoring*/
+inline void Collision::CollisionLoop() {
+    CollisionPoints points;
+    for (size_t it = 0; it < World::ObjectsOnScene.size()-1; it++)
+    {
+        for (size_t jt = 0; jt < World::ObjectsOnScene[it]->GetCountOfModules(); jt++)
+        {
+            Collider* colliderA = dynamic_cast<Collider*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+            for (size_t kt = 1; kt < World::ObjectsOnScene.size(); kt++)
+            {
+                for (size_t mt = 0; mt < World::ObjectsOnScene[kt]->GetCountOfModules(); mt++)
+                {
+                    Collider* colliderB = dynamic_cast<Collider*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
+
+                    if (colliderA != nullptr && colliderA->GetName() == "Collider" && colliderB != nullptr && colliderB->GetName() == "Collider" && colliderA != colliderB) {
+                        if (Collision::GJK((Collider*)colliderA, (Collider*)colliderB, points)) {
+                            colliderA->GetParentObject()->AddPosition(-(points.Normal.X * points.PenetrationDepth), -(points.Normal.Y * points.PenetrationDepth), -(points.Normal.Z * points.PenetrationDepth));
+                            colliderA->GetParentObject()->ApplyTransform();
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+
+}
+
 inline Vector3 Collision::Support(Collider* colliderA, Collider* colliderB, Vector3 direction) 
 {
     return colliderA->FindFurthestPoint(direction)
@@ -161,7 +190,6 @@ inline bool Collision::GJK(Collider* colliderA, Collider* colliderB, CollisionPo
         }
     }
 }
-
 inline CollisionPoints Collision::EPA(Simplex& simplex, Collider* colliderA, Collider* colliderB)
 {
     std::vector<Vector3> polytope(simplex.begin(), simplex.end());
@@ -241,7 +269,7 @@ inline CollisionPoints Collision::EPA(Simplex& simplex, Collider* colliderA, Col
     return points;
 }
 
-std::pair<std::vector<Vector4>, size_t> Collision::GetFaceNormals(std::vector<Vector3>& polytope,std::vector<size_t>& faces)
+inline std::pair<std::vector<Vector4>, size_t> Collision::GetFaceNormals(std::vector<Vector3>& polytope,std::vector<size_t>& faces)
 {
 
     std::vector<Vector4> normals;
@@ -274,7 +302,6 @@ std::pair<std::vector<Vector4>, size_t> Collision::GetFaceNormals(std::vector<Ve
 
     return { normals, minTriangle };
 }
-
 inline void Collision::AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges,std::vector<size_t>& faces,size_t a,size_t b)
 {
     auto reverse = std::find(             

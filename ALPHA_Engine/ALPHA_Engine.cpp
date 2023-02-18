@@ -26,6 +26,7 @@ Object* Cube2;
 
 GameFunction* Game = new GameFunction;
 Render* render = new Render;
+Collision* collision = new Collision;
 InputSystem* InpSys = new InputSystem;
 
 void GameFunction::Start() {
@@ -49,9 +50,6 @@ void GameFunction::Start() {
 
     col1->Create("\\Models\\Primitives\\Cube.fbx");
     col2->Create("\\Models\\Primitives\\Cube.fbx");
-
-    col1->Rename("Collider");
-    col2->Rename("Collider");
 
     Cube1 = Primitives::Cube(Postion, Rotation, Scale, Color);
     Cube2 = Primitives::Cube(Postion, Rotation, Scale, Color);
@@ -252,13 +250,7 @@ int main()
     {
         InpSys->IO_Events();
         Game->Update();
-
-        CollisionPoints points;
-        if (Collision::GJK((Collider*)Cube1->GetModuleByName("Collider"), (Collider*)Cube2->GetModuleByName("Collider"), points)) {
-            Cube1->AddPosition(-(points.Normal.X * points.PenetrationDepth), -(points.Normal.Y * points.PenetrationDepth), -(points.Normal.Z * points.PenetrationDepth));
-            Cube1->ApplyTransform();
-        }
-
+        collision->CollisionLoop();
         render->RenderLoop(camera);
     }
 }

@@ -22,6 +22,7 @@ private:
 
 private:
 	friend class Render;
+	friend class Collision;
 	friend class Object;
 
 public:
@@ -113,8 +114,9 @@ public:
 	static inline float GetDeltaTime();
 
 private:
-	friend class Object;
 	friend class Render;
+	friend class Collision;
+	friend class Object;
 
 	World();
 };
