@@ -102,7 +102,7 @@ inline void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vect
 inline void Render::RenderMesh(Mesh* mesh) {
     glBegin(GL_TRIANGLES);
     //TODO:
-    glColor3f(1, 0, 0);
+    glColor3f(0.8, 0.8, 0.8);
 
     for (size_t i = 0; i < mesh->_indices.size(); i++)
     {

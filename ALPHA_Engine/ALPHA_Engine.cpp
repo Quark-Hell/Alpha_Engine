@@ -36,11 +36,13 @@ void GameFunction::Start() {
     mesh->Create("\\Models\\Blender.fbx");
     obj.AddModule(mesh);
     obj.AddScale(1, 1, 1);
+    obj.AddPosition(0,1,0);
+    obj.ApplyTransform();
 
     Vector3 Postion{ 0,0,0 };
     Vector3 Rotation(0, 0, 0);
     Vector3 Scale{ 1,1,1 };
-    Vector3 Color{ 0,0,1 };
+    Vector3 Color{ 0.8, 0.8, 0.8 };
 
     Collider* col1 = new Collider;
     Collider* col2 = new Collider;
@@ -65,14 +67,14 @@ void GameFunction::Start() {
     Cube1->ApplyTransform();
     Cube2->ApplyTransform();
 
-    Bind LeftCubeMove; LeftCubeMove.KeyboardBind({LeftMoveTestObject}, { EnumKeyStates::KeyHold }, { sf::Keyboard::Left });
-    Bind RightCubeMove; RightCubeMove.KeyboardBind({RightMoveTestObject}, { EnumKeyStates::KeyHold }, { sf::Keyboard::Right });
+    Bind LeftCubeMove; LeftCubeMove.KeyboardBind({LeftMoveTestObject}, { EnumKeyStates::KeyHold }, { sf::Keyboard::F });
+    Bind RightCubeMove; RightCubeMove.KeyboardBind({RightMoveTestObject}, { EnumKeyStates::KeyHold }, { sf::Keyboard::H });
 
-    Bind ForwardCubeMove; ForwardCubeMove.KeyboardBind({ ForwardMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::N });
-    Bind BackwardCubeMove; BackwardCubeMove.KeyboardBind({ BackwardMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::M });
+    Bind ForwardCubeMove; ForwardCubeMove.KeyboardBind({ ForwardMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::T });
+    Bind BackwardCubeMove; BackwardCubeMove.KeyboardBind({ BackwardMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::G });
 
-    Bind UpCubeMove; UpCubeMove.KeyboardBind({ UpMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::Up });
-    Bind DownCubeMove; DownCubeMove.KeyboardBind({ DownMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::Down });
+    Bind UpCubeMove; UpCubeMove.KeyboardBind({ UpMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::R });
+    Bind DownCubeMove; DownCubeMove.KeyboardBind({ DownMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::Y });
 
 
     Bind LeftMove; LeftMove.KeyboardBind({LeftMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::A});
@@ -137,11 +139,11 @@ void BackwardMoveTestObject() {
 }
 
 void UpMoveTestObject() {
-    Cube1->AddPosition(0, 0.1, 0);
+    Cube1->AddPosition(0, -0.1, 0);
     Cube1->ApplyTransform();
 }
 void DownMoveTestObject() {
-    Cube1->AddPosition(0, -0.1, 0);
+    Cube1->AddPosition(0, 0.1, 0);
     Cube1->ApplyTransform();
 }
 
