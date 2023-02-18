@@ -159,29 +159,3 @@ inline void Render::RenderLoop(Camera* camera) {
         _screenClass._screen->display();
     }
 }
-
-inline void Render::RenderVertArray(std::vector<Vector3>* Vertex, std::vector<Vector3>* Normals) {
-    glBegin(GL_TRIANGLES);
-    //TODO:
-    glColor3f(1, 0, 0);
-
-    for (size_t i = 0; i < Vertex->size(); i++)
-    {
-        glNormal3f((*Normals)[i].X, (*Normals)[i].Y, (*Normals)[i].Z);
-        glVertex3f((*Vertex)[i].X, (*Vertex)[i].Y, (*Vertex)[i].Z);
-    }
-
-    glEnd();
-}
-
-inline void Render::DebugRender(std::vector<Vector3>* Vertex, std::vector<Vector3>* Normals, Camera *camera) {
-    Object obj;
-
-    ClearFrameBuffer();
-    ApplyCameraTransform(camera);
-
-    Render::ApplyTransformation(obj.GetPosition(), obj.GetRotation(), obj.GetScale());
-    Render::RenderVertArray(Vertex, Normals);
-
-    _screenClass._screen->display();
-}

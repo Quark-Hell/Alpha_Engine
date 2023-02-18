@@ -1,4 +1,5 @@
 #include "Collision.h"
+#include "Geometry.cpp"
 #include <set>
 
 inline Simplex::Simplex(std::array<Vector3, 4> points, unsigned size) {
@@ -119,46 +120,9 @@ inline bool Simplex::Tetrahedron(Simplex& points, Vector3& direction) {
     return true;
 }
 
-inline bool Collider::CreateCollider(std::string link) {
-    Assimp::Importer importer;
-    std::string path = std::filesystem::current_path().string() + link.c_str();
-
-    //TODO: Check if fbx
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
-    aiMesh* mesh = scene->mMeshes[0];
-
-    Collider::_vertex.clear();
-    Collider::_normals.clear();
-
-    for (std::uint32_t it = 0; it < mesh->mNumVertices; it++) {
-        Vector3 point;
-        Vector3 normal;
-        std::string hash;
-        const int arr_len = 3;
-        float vertArr[arr_len];
-
-        if (mesh->HasPositions()) {
-            point.X = mesh->mVertices[it].x;
-            point.Y = mesh->mVertices[it].y;
-            point.Z = mesh->mVertices[it].z;
-        }
-
-        if (mesh->HasNormals()) {
-            normal.X = mesh->mNormals[it].x;
-            normal.Y = mesh->mNormals[it].y;
-            normal.Z = mesh->mNormals[it].z;
-        }
-
-        Collider::_vertex.push_back(point);
-        Collider::_normals.push_back(normal);
-    }
-
-    Mesh::MakeUnique(&(Collider::_vertex));
-    Mesh::MakeUnique(&(Collider::_normals));
-
-    return true;
+inline Collider::Collider() {
+    Collider::Rename("Collider");
 }
-
 inline bool Collider::CreateConvexFromÑoncave(std::string link) {
 
 }
@@ -169,7 +133,7 @@ inline Vector3 Collision::Support(Collider* colliderA, Collider* colliderB, Vect
         - colliderB->FindFurthestPoint(-direction);
 }
 
-inline bool Collision::GJK(Collider* colliderA, Collider* colliderB) {
+inline bool Collision::GJK(Collider* colliderA, Collider* colliderB, CollisionPoints& colPoints) {
     // Get initial support point in any direction
     Vector3 support = Support(colliderA, colliderB, {1,0,0});
 
@@ -184,7 +148,7 @@ inline bool Collision::GJK(Collider* colliderA, Collider* colliderB) {
         support = Support(colliderA, colliderB, direction);
 
         if (support.DotProduct(direction) < 0) {
-            printf("false");
+            //printf("false");
             return false; // no collision
         }
 
@@ -192,7 +156,138 @@ inline bool Collision::GJK(Collider* colliderA, Collider* colliderB) {
 
         if (Simplex::NextSimplex(points, direction)) {
             printf("true");
+            colPoints = Collision::EPA(points, colliderA, colliderB);
             return true;
         }
+    }
+}
+
+inline CollisionPoints Collision::EPA(Simplex& simplex, Collider* colliderA, Collider* colliderB)
+{
+    std::vector<Vector3> polytope(simplex.begin(), simplex.end());
+    std::vector<size_t>  faces = {
+        0, 1, 2,
+        0, 3, 1,
+        0, 2, 3,
+        1, 3, 2
+    };
+
+    // list: vector4(normal, distance), index: min distance
+    auto [normals, minFace] = GetFaceNormals(polytope, faces);
+
+    Vector3 minNormal;
+    float   minDistance = FLT_MAX;
+
+    while (minDistance == FLT_MAX) {
+        minNormal = normals[minFace];
+        minDistance = normals[minFace].W;
+
+        Vector3 support = Support(colliderA, colliderB, minNormal);
+        float sDistance = minNormal.DotProduct(support);
+
+        if (abs(sDistance - minDistance) > 0.001f) {
+            minDistance = FLT_MAX;
+            std::vector<std::pair<size_t, size_t>> uniqueEdges;
+
+            for (size_t i = 0; i < normals.size(); i++) {
+                if (Simplex::SameDirection(normals[i], support)) {
+                    size_t f = i * 3;
+
+                    AddIfUniqueEdge(uniqueEdges, faces, f, f + 1);
+                    AddIfUniqueEdge(uniqueEdges, faces, f + 1, f + 2);
+                    AddIfUniqueEdge(uniqueEdges, faces, f + 2, f);
+
+                    faces[f + 2] = faces.back(); faces.pop_back();
+                    faces[f + 1] = faces.back(); faces.pop_back();
+                    faces[f] = faces.back(); faces.pop_back();
+
+                    normals[i] = normals.back(); normals.pop_back();
+
+                    i--;
+                }
+            }
+            std::vector<size_t> newFaces;
+            for (auto [edgeIndex1, edgeIndex2] : uniqueEdges) {
+                newFaces.push_back(edgeIndex1);
+                newFaces.push_back(edgeIndex2);
+                newFaces.push_back(polytope.size());
+            }
+
+            polytope.push_back(support);
+
+            auto [newNormals, newMinFace] = GetFaceNormals(polytope, newFaces);
+            float oldMinDistance = FLT_MAX;
+            for (size_t i = 0; i < normals.size(); i++) {
+                if (normals[i].W < oldMinDistance) {
+                    oldMinDistance = normals[i].W;
+                    minFace = i;
+                }
+            }
+
+            if (newNormals[newMinFace].W < oldMinDistance) {
+                minFace = newMinFace + normals.size();
+            }
+
+            faces.insert(faces.end(), newFaces.begin(), newFaces.end());
+            normals.insert(normals.end(), newNormals.begin(), newNormals.end());
+        }
+    }
+    CollisionPoints points;
+
+    points.Normal = minNormal;
+    points.PenetrationDepth = minDistance + 0.001f;
+    points.HasCollision = true;
+
+    return points;
+}
+
+std::pair<std::vector<Vector4>, size_t> Collision::GetFaceNormals(std::vector<Vector3>& polytope,std::vector<size_t>& faces)
+{
+
+    std::vector<Vector4> normals;
+    size_t minTriangle = 0;
+    float  minDistance = FLT_MAX;
+
+    for (size_t i = 0; i < faces.size(); i += 3) {
+        Vector3 a = polytope[faces[i]];
+        Vector3 b = polytope[faces[i + 1]];
+        Vector3 c = polytope[faces[i + 2]];
+
+        Vector3 normal = (b - a).CrossProduct(c - a);
+        normal.NormilizeSelf();
+        float distance = normal.DotProduct(a);
+
+        if (distance < 0) {
+            normal *= -1;
+            distance *= -1;
+        }
+
+        normals.emplace_back(normal.X,normal.Y,normal.Z, distance);
+   
+        if (distance < minDistance) {
+            minTriangle = i / 3;
+            minDistance = distance;
+        }
+    }
+
+
+
+    return { normals, minTriangle };
+}
+
+inline void Collision::AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges,std::vector<size_t>& faces,size_t a,size_t b)
+{
+    auto reverse = std::find(             
+        edges.begin(),                    
+        edges.end(),                       
+        std::make_pair(faces[b], faces[a]) 
+    );
+
+    if (reverse != edges.end()) {
+        edges.erase(reverse);
+    }
+
+    else {
+        edges.emplace_back(faces[a], faces[b]);
     }
 }

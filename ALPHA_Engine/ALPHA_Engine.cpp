@@ -33,7 +33,7 @@ void GameFunction::Start() {
     Player.AddModule(camera);
 
     Mesh* mesh = new Mesh;
-    mesh->CreateMesh("\\Models\\Blender.fbx");
+    mesh->Create("\\Models\\Blender.fbx");
     obj.AddModule(mesh);
     obj.AddScale(1, 1, 1);
 
@@ -45,8 +45,8 @@ void GameFunction::Start() {
     Collider* col1 = new Collider;
     Collider* col2 = new Collider;
 
-    col1->CreateCollider("\\Models\\Primitives\\Cube.fbx");
-    col2->CreateCollider("\\Models\\Primitives\\Cube.fbx");
+    col1->Create("\\Models\\Primitives\\Cube.fbx");
+    col2->Create("\\Models\\Primitives\\Cube.fbx");
 
     col1->Rename("Collider");
     col2->Rename("Collider");
@@ -60,14 +60,23 @@ void GameFunction::Start() {
     Cube1->AddModule(col1);
     Cube2->AddModule(col2);
 
-    Cube2->AddPosition(0,0,2.1);
+    Cube2->AddPosition(0,0,1);
 
     Cube1->ApplyTransform();
     Cube2->ApplyTransform();
 
+    Bind LeftCubeMove; LeftCubeMove.KeyboardBind({LeftMoveTestObject}, { EnumKeyStates::KeyHold }, { sf::Keyboard::Left });
+    Bind RightCubeMove; RightCubeMove.KeyboardBind({RightMoveTestObject}, { EnumKeyStates::KeyHold }, { sf::Keyboard::Right });
 
-    Bind LeftMove; LeftMove.KeyboardBind(std::vector<void(*)()>{LeftMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::A});
-    Bind RightMove; RightMove.KeyboardBind(std::vector<void(*)()>{RightMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::D });
+    Bind ForwardCubeMove; ForwardCubeMove.KeyboardBind({ ForwardMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::N });
+    Bind BackwardCubeMove; BackwardCubeMove.KeyboardBind({ BackwardMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::M });
+
+    Bind UpCubeMove; UpCubeMove.KeyboardBind({ UpMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::Up });
+    Bind DownCubeMove; DownCubeMove.KeyboardBind({ DownMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::Down });
+
+
+    Bind LeftMove; LeftMove.KeyboardBind({LeftMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::A});
+    Bind RightMove; RightMove.KeyboardBind({RightMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::D });
 
     Bind ForwardMove; ForwardMove.KeyboardBind({ ForwardMoveCamera }, { EnumKeyStates::KeyHold, EnumKeyStates::KeyHold }, { sf::Keyboard::W, sf::Keyboard::LShift });
     Bind BackwardMove; BackwardMove.KeyboardBind({ BackwardMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::S });
@@ -80,6 +89,12 @@ void GameFunction::Start() {
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Keyboard::Escape });
     Bind CloseGameSecondMethod; CloseGameSecondMethod.MouseButtonsBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Mouse::Left }, { sf::Event::EventType::Closed });
 
+    InpSys->InsertBind(LeftCubeMove);
+    InpSys->InsertBind(RightCubeMove);
+    InpSys->InsertBind(ForwardCubeMove);
+    InpSys->InsertBind(BackwardCubeMove);
+    InpSys->InsertBind(UpCubeMove);
+    InpSys->InsertBind(DownCubeMove);
 
     InpSys->InsertBind(CameraRot);
 
@@ -101,6 +116,33 @@ void GameFunction::Update() {
     obj.AddRotation(0, 1.5, 0);
 
     obj.ApplyTransform();
+}
+
+void LeftMoveTestObject() {
+    Cube1->AddPosition(0.1,0,0);
+    Cube1->ApplyTransform();
+}
+void RightMoveTestObject() {
+    Cube1->AddPosition(-0.1, 0, 0);
+    Cube1->ApplyTransform();
+}
+
+void ForwardMoveTestObject() {
+    Cube1->AddPosition(0, 0, 0.1);
+    Cube1->ApplyTransform();
+}
+void BackwardMoveTestObject() {
+    Cube1->AddPosition(0, 0, -0.1);
+    Cube1->ApplyTransform();
+}
+
+void UpMoveTestObject() {
+    Cube1->AddPosition(0, 0.1, 0);
+    Cube1->ApplyTransform();
+}
+void DownMoveTestObject() {
+    Cube1->AddPosition(0, -0.1, 0);
+    Cube1->ApplyTransform();
 }
 
 void LeftMoveCamera() {
@@ -133,26 +175,26 @@ void RightMoveCamera() {
 void ForwardMoveCamera() {
     Vector3 newPos = Player.GetPosition();
 
-    Vector3 UpVector{ 0,0,0 };
+    Vector3 ForwardVector{ 0,0,0 };
 
-    UpVector.X = sin((Player.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
-    UpVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
-    UpVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
+    ForwardVector.X = sin((Player.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
+    ForwardVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
+    ForwardVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
 
-    newPos += UpVector * 0.1;
+    newPos += ForwardVector * 0.1;
 
     Player.SetPosition(newPos);
 }
 void BackwardMoveCamera() {
     Vector3 newPos = Player.GetPosition();
 
-    Vector3 UpVector{ 0,0,0 };
+    Vector3 BackwardVector{ 0,0,0 };
 
-    UpVector.X = sin((Player.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
-    UpVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
-    UpVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
+    BackwardVector.X = sin((Player.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
+    BackwardVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
+    BackwardVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
 
-    newPos += UpVector * (-0.1);
+    newPos += BackwardVector * (-0.1);
 
     Player.SetPosition(newPos);
 }
@@ -206,10 +248,15 @@ int main()
 
     while (!World::GetStateOfGame())
     {
-        Collision::GJK((Collider*)Cube1->GetModuleByName("Collider"), (Collider*)Cube2->GetModuleByName("Collider"));
-
         InpSys->IO_Events();
         Game->Update();
+
+        CollisionPoints points;
+        if (Collision::GJK((Collider*)Cube1->GetModuleByName("Collider"), (Collider*)Cube2->GetModuleByName("Collider"), points)) {
+            Cube1->AddPosition(-(points.Normal.X * points.PenetrationDepth), -(points.Normal.Y * points.PenetrationDepth), -(points.Normal.Z * points.PenetrationDepth));
+            Cube1->ApplyTransform();
+        }
+
         render->RenderLoop(camera);
     }
 }

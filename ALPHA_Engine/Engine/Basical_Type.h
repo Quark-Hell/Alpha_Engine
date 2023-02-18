@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "Matrix.h"
+#include "Alghoritms.h"
 
 class Object;
 
