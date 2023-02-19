@@ -66,9 +66,6 @@ public:
 
 
 	Vector3 GetScale();
-	void AddScale(float X, float Y, float Z);
-	void AddScale(Vector3 scale);
-
 	void SetScale(float X, float Y, float Z);
 	void SetScale(Vector3 scale);
 
@@ -97,13 +94,14 @@ private:
 	static inline std::vector<Object*> ObjectsOnScene;
 	static inline bool IsCloseGame = false;
 
-	static inline float _deltaTime;
+	static inline double _timeLong = 0;
+	static inline float _deltaTime = 0;
 	static inline std::chrono::steady_clock::time_point _startTime;
 	static inline std::chrono::steady_clock::time_point _endTime;
 
-private:
-	void StartFrame();
-	void EndFrame();
+public:
+	inline static void StartFrame();
+	inline static void EndFrame();
 
 public:
 	static inline void CloseGame();
@@ -111,6 +109,8 @@ public:
 	/// Return bool IsCloseGame
 	/// </summary>
 	static inline bool GetStateOfGame();
+
+	static inline double GetTimeLong();
 	static inline float GetDeltaTime();
 
 private:

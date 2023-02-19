@@ -16,67 +16,48 @@
 
 #include <ctime>
 
-Object obj;
-
 Object Player;
 Camera* camera = new Camera;
-
-Object* Cube1;
-Object* Cube2;
 
 GameFunction* Game = new GameFunction;
 Render* render = new Render;
 Collision* collision = new Collision;
 InputSystem* InpSys = new InputSystem;
 
-void GameFunction::Start() {
+Object object;
 
-    Player.AddModule(camera);
+void GameFunction::Start() {
+    SetControl();
 
     Mesh* mesh = new Mesh;
-    mesh->Create("\\Models\\Blender.fbx");
-    obj.AddModule(mesh);
-    obj.AddScale(1, 1, 1);
-    obj.AddPosition(0,1,0);
-    obj.ApplyTransform();
+    mesh->Create("\\Models\\TestModel.fbx");
+    object.AddModule(mesh);
 
-    Vector3 Postion{ 0,0,0 };
-    Vector3 Rotation(0, 0, 0);
-    Vector3 Scale{ 1,1,1 };
-    Vector3 Color{ 0.8, 0.8, 0.8 };
+    object.SetScale(1,1,1);
+    object.AddPosition(1,0,0);
+    object.AddRotation(90,0,0);
 
-    Collider* col1 = new Collider;
-    Collider* col2 = new Collider;
+    object.ApplyTransform();
+}
 
-    col1->Create("\\Models\\Primitives\\Cube.fbx");
-    col2->Create("\\Models\\Primitives\\Cube.fbx");
+void GameFunction::Update() {
+    object.AddRotation(1.5,1.5,0);
+    object.ApplyTransform();
+    printf("%f\n", abs(sin(World::GetTimeLong())));
 
-    Cube1 = Primitives::Cube(Postion, Rotation, Scale, Color);
-    Cube2 = Primitives::Cube(Postion, Rotation, Scale, Color);
+    object.SetScale(
+        abs(sin(World::GetTimeLong() / 350) + 1),
+        abs(sin(World::GetTimeLong() / 350) + 1),
+        abs(sin(World::GetTimeLong() / 350) + 1));
 
-    Cube1->ApplyTransform();
-    Cube2->ApplyTransform();
+    object.ApplyTransform();
+}
 
-    Cube1->AddModule(col1);
-    Cube2->AddModule(col2);
+void SetControl() {
+    Player.AddModule(camera);
 
-    Cube2->AddPosition(0,0,1);
-
-    Cube1->ApplyTransform();
-    Cube2->ApplyTransform();
-
-    Bind LeftCubeMove; LeftCubeMove.KeyboardBind({LeftMoveTestObject}, { EnumKeyStates::KeyHold }, { sf::Keyboard::F });
-    Bind RightCubeMove; RightCubeMove.KeyboardBind({RightMoveTestObject}, { EnumKeyStates::KeyHold }, { sf::Keyboard::H });
-
-    Bind ForwardCubeMove; ForwardCubeMove.KeyboardBind({ ForwardMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::T });
-    Bind BackwardCubeMove; BackwardCubeMove.KeyboardBind({ BackwardMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::G });
-
-    Bind UpCubeMove; UpCubeMove.KeyboardBind({ UpMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::R });
-    Bind DownCubeMove; DownCubeMove.KeyboardBind({ DownMoveTestObject }, { EnumKeyStates::KeyHold }, { sf::Keyboard::Y });
-
-
-    Bind LeftMove; LeftMove.KeyboardBind({LeftMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::A});
-    Bind RightMove; RightMove.KeyboardBind({RightMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::D });
+    Bind LeftMove; LeftMove.KeyboardBind({ LeftMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::A });
+    Bind RightMove; RightMove.KeyboardBind({ RightMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::D });
 
     Bind ForwardMove; ForwardMove.KeyboardBind({ ForwardMoveCamera }, { EnumKeyStates::KeyHold, EnumKeyStates::KeyHold }, { sf::Keyboard::W, sf::Keyboard::LShift });
     Bind BackwardMove; BackwardMove.KeyboardBind({ BackwardMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::S });
@@ -88,13 +69,6 @@ void GameFunction::Start() {
 
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Keyboard::Escape });
     Bind CloseGameSecondMethod; CloseGameSecondMethod.MouseButtonsBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Mouse::Left }, { sf::Event::EventType::Closed });
-
-    InpSys->InsertBind(LeftCubeMove);
-    InpSys->InsertBind(RightCubeMove);
-    InpSys->InsertBind(ForwardCubeMove);
-    InpSys->InsertBind(BackwardCubeMove);
-    InpSys->InsertBind(UpCubeMove);
-    InpSys->InsertBind(DownCubeMove);
 
     InpSys->InsertBind(CameraRot);
 
@@ -110,41 +84,6 @@ void GameFunction::Start() {
     InpSys->InsertBind(CloseGameFirstMethod);
     InpSys->InsertBind(CloseGameSecondMethod);
 }
-
-void GameFunction::Update() {
-    //obj.SetPosition(0, 0, -3);
-    obj.AddRotation(0, 1.5, 0);
-
-    obj.ApplyTransform();
-}
-
-void LeftMoveTestObject() {
-    Cube1->AddPosition(0.1,0,0);
-    Cube1->ApplyTransform();
-}
-void RightMoveTestObject() {
-    Cube1->AddPosition(-0.1, 0, 0);
-    Cube1->ApplyTransform();
-}
-
-void ForwardMoveTestObject() {
-    Cube1->AddPosition(0, 0, 0.1);
-    Cube1->ApplyTransform();
-}
-void BackwardMoveTestObject() {
-    Cube1->AddPosition(0, 0, -0.1);
-    Cube1->ApplyTransform();
-}
-
-void UpMoveTestObject() {
-    Cube1->AddPosition(0, -0.1, 0);
-    Cube1->ApplyTransform();
-}
-void DownMoveTestObject() {
-    Cube1->AddPosition(0, 0.1, 0);
-    Cube1->ApplyTransform();
-}
-
 void LeftMoveCamera() {
     Vector3 newPos = Player.GetPosition();
 
@@ -248,9 +187,11 @@ int main()
 
     while (!World::GetStateOfGame())
     {
+        World::StartFrame();
         InpSys->IO_Events();
         Game->Update();
         collision->CollisionLoop();
         render->RenderLoop(camera);
+        World::EndFrame();
     }
 }

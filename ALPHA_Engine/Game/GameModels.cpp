@@ -6,7 +6,7 @@
 inline void CreateObject(Vector3 Position, Vector3 Rotation, Vector3 Scale, Object *Obj) {
     Obj->AddPosition(Position);
     Obj->AddRotation(Rotation);
-    Obj->AddScale(Scale);
+    Obj->SetScale(Scale);
 
     Mesh* mesh = new Mesh;
     Obj->AddModule(mesh);

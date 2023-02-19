@@ -6,6 +6,8 @@ public:
 
 };
 
+void SetControl();
+
 void LeftMoveTestObject();
 void RightMoveTestObject();
 

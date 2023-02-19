@@ -15,6 +15,9 @@ inline bool World::GetStateOfGame() {
 	return IsCloseGame;
 }
 
+inline double World::GetTimeLong() {
+	return World::_timeLong;
+}
 inline float World::GetDeltaTime() {
 	return World::_deltaTime;
 }
@@ -26,6 +29,7 @@ inline void World::StartFrame() {
 inline void World::EndFrame() {
 	World::_endTime = std::chrono::high_resolution_clock::now();
 	World::_deltaTime = std::chrono::duration_cast	<std::chrono::milliseconds>(World::_endTime - World::_startTime).count();
+	World::_timeLong += std::chrono::duration_cast	<std::chrono::milliseconds>(World::_endTime - World::_startTime).count();
 }
 
 #pragma endregion
@@ -124,53 +128,48 @@ inline void Object::SetRotation(Vector3 rotation) {
 inline Vector3 Object::GetScale() {
 	return Scale;
 }
-inline void Object::AddScale(float X, float Y, float Z) {
-	Matrix4x4 matrix = Matrix4x4();
-	matrix.Scale(Vector4(X,Y,Z,1));
-
-	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
-
-	Object::Scale.X += X;
-	Object::Scale.Y += Y;
-	Object::Scale.Z += Z;
-
-	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
-	{
-		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
-
-		if (mesh != nullptr && mesh->GetName() == "Mesh") {
-			mesh->_isShifted = true;
-		}
-	}
-}
-inline void Object::AddScale(Vector3 scale) {
-	Matrix4x4 matrix = Matrix4x4();
-	matrix.Scale(Vector4(scale.X, scale.Y, scale.Z, 1));
-
-	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
-
-	Object::Scale.X += scale.X;
-	Object::Scale.Y += scale.Y;
-	Object::Scale.Z += scale.Z;
-
-	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
-	{
-		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
-
-		if (mesh != nullptr && mesh->GetName() == "Mesh") {
-			mesh->_isShifted = true;
-		}
-	}
-}
 inline void Object::SetScale(float X, float Y, float Z) {
-	Vector3 direction = Vector3(X, Y, Z) - Object::Scale;
+	Vector3 delta = Object::Scale / Vector3(X, Y, Z);
 
-	Object::AddScale(direction);
+	Matrix4x4 matrix = Matrix4x4();
+
+	matrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
+
+	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
+
+	Object::Scale.X = X;
+	Object::Scale.Y = Y;
+	Object::Scale.Z = Z;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
+
+		if (mesh != nullptr && mesh->GetName() == "Mesh") {
+			mesh->_isShifted = true;
+		}
+	}
 }
 inline void Object::SetScale(Vector3 scale) {
-	Vector3 direction = scale - Object::Scale;
+	Vector3 delta = Object::Scale / scale;
+	Matrix4x4 matrix = Matrix4x4();
 
-	Object::AddScale(direction);
+	matrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
+
+	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
+
+	Object::Scale.X = scale.X;
+	Object::Scale.Y = scale.Y;
+	Object::Scale.Z = scale.Z;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
+
+		if (mesh != nullptr && mesh->GetName() == "Mesh") {
+			mesh->_isShifted = true;
+		}
+	}
 }
 
 
