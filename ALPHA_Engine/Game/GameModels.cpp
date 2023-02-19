@@ -17,6 +17,7 @@ inline Object* Primitives::Plane(Vector3 Position, Vector3 Rotation, Vector3 Sca
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Plane.fbx");
+    obj->ApplyTransform();
 
     return obj;
 }
@@ -26,6 +27,7 @@ inline Object* Primitives::Cube(Vector3 Position, Vector3 Rotation, Vector3 Scal
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Cube.fbx");
+    obj->ApplyTransform();
 
     return obj;
 }
@@ -35,6 +37,7 @@ inline Object* Primitives::Circle(Vector3 Position, Vector3 Rotation, Vector3 Sc
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Circe.fbx");
+    obj->ApplyTransform();
 
     return obj;
 }
@@ -44,6 +47,7 @@ inline Object* Primitives::Sphere(Vector3 Position, Vector3 Rotation, Vector3 Sc
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Sphere.fbx");
+    obj->ApplyTransform();
 
     return obj;
 }
@@ -53,6 +57,7 @@ inline Object* Primitives::Cylinder(Vector3 Position, Vector3 Rotation, Vector3 
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Cylinder.fbx");
+    obj->ApplyTransform();
 
     return obj;
 }
@@ -62,6 +67,7 @@ inline Object* Primitives::Cone(Vector3 Position, Vector3 Rotation, Vector3 Scal
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Cone.fbx");
+    obj->ApplyTransform();
 
     return obj;
 }
@@ -71,6 +77,7 @@ inline Object* Primitives::Torus(Vector3 Position, Vector3 Rotation, Vector3 Sca
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Torus.fbx");
+    obj->ApplyTransform();
 
     return obj;
 }
