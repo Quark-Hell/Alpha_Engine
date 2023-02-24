@@ -17,32 +17,37 @@ inline bool Mesh::Create(std::string linkToFBX) {
 	const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
 	aiMesh* mesh = s->mMeshes[0];
 
-	Geometry::_vertex.resize(mesh->mNumVertices);
-	Geometry::_normals.resize(mesh->mNumVertices);
-	Mesh::_indices.clear();
+	Geometry::_vertexCount = mesh->mNumVertices;
+	Geometry::_normalsCount = mesh->mNumVertices;
+	Geometry::_indicesCount = mesh->mNumFaces*3;
+
+	Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+	Geometry::_normals = new float[Geometry::_normalsCount * 3];
+	Geometry::_indices = new float[Geometry::_indicesCount];
 
 	for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
 		for (size_t jt = 0; jt < mesh->mFaces[it].mNumIndices; jt++)
 		{
-			Mesh::_indices.push_back(mesh->mFaces[it].mIndices[jt]);
+			Mesh::_indices[it] = mesh->mFaces[it].mIndices[jt];
 		}
 	}
 
-	for (std::uint32_t it = 0; it < mesh->mNumVertices; it++) {
+	for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it+=3) {
 		if (mesh->HasPositions()) {
-			Geometry::_vertex[it] = std::move(Vector3{	mesh->mVertices[it].x,
-														mesh->mVertices[it].y,
-														mesh->mVertices[it].z });
+			Geometry::_vertex[it]	  =	mesh->mVertices[it / 3].x;
+			Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
+			Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
 		}
 		if (mesh->HasNormals()) {
-			Geometry::_normals[it] = std::move(Vector3{ mesh->mNormals[it].x,
-														mesh->mNormals[it].y,
-														mesh->mNormals[it].z });
+			Geometry::_normals[it]	   = mesh->mNormals[it / 3].x;
+			Geometry::_normals[it + 1] = mesh->mNormals[it / 3].y;
+			Geometry::_normals[it + 2] = mesh->mNormals[it / 3].z;
 		}
 	}
 
+	Mesh::_isIndexed = true;
 	//Mesh::MakeUnique();
-	Mesh::_isShifted = true;
+	//Mesh::_isShifted = true;
 
 	return true;
 }

@@ -11,9 +11,13 @@ class Geometry : public Module {
 private:
 	Object* _parentObject;
 
-	std::vector<Vector3> _vertex;
-	std::vector<Vector3> _normals;
-	std::vector<unsigned int> _indices;
+	float* _vertex;
+	float* _normals;
+	float* _indices;
+
+	unsigned int _vertexCount;
+	unsigned int _normalsCount;
+	unsigned int _indicesCount;
 
 private:
 	friend class Object;

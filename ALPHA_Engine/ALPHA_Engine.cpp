@@ -25,32 +25,41 @@ Collision* collision = new Collision;
 InputSystem* InpSys = new InputSystem;
 
 Object object;
+Object object2;
 
 void GameFunction::Start() {
     SetControl();
 
-    Mesh* mesh = new Mesh;
-    mesh->Create("\\Models\\TestModel.fbx");
-    object.AddModule(mesh);
+    Collider* col1 = new Collider; 
+    Collider* col2 = new Collider; 
 
-    object.SetScale(1,1,1);
-    object.AddPosition(1,0,0);
-    object.AddRotation(90,0,0);
+    col1->Create("\\Models\\Primitives\\Cube.fbx");
+    col2->Create("\\Models\\Primitives\\Cube.fbx");
 
-    object.ApplyTransform();
+    object = *Primitives::Cube({ 0,0,0 }, { 0,0,0 }, { 1,1,1 }, {1,1,1});
+    object2 = *Primitives::Cube({ 0.1,0,0 }, { 0,0,0 }, { 1,1,1 }, { 1,1,1 });
+
+    object.AddModule(col1);
+    object2.AddModule(col2);
+
+    //object.SetScale(1,1,1);
+    //object.AddPosition(0,0,0);
+    //object.AddRotation(0,0,0);
+    //
+    //object.ApplyTransform();
 }
 
 void GameFunction::Update() {
-    object.AddRotation(1.5,1.5,0);
-    object.ApplyTransform();
-    printf("%f\n", abs(sin(World::GetTimeLong())));
-
-    object.SetScale(
-        abs(sin(World::GetTimeLong() / 350) + 1),
-        abs(sin(World::GetTimeLong() / 350) + 1),
-        abs(sin(World::GetTimeLong() / 350) + 1));
-
-    object.ApplyTransform();
+    //object.AddRotation(1.5,1.5,0);
+    //object.ApplyTransform();
+    //printf("%f\n", abs(sin(World::GetTimeLong())));
+    //
+    //object.SetScale(
+    //    abs(sin(World::GetTimeLong() / 350) + 1),
+    //    abs(sin(World::GetTimeLong() / 350) + 1),
+    //    abs(sin(World::GetTimeLong() / 350) + 1));
+    //
+    //object.ApplyTransform();
 }
 
 void SetControl() {

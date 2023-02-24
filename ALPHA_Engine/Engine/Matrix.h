@@ -73,6 +73,17 @@ public:
 
 static class MatrixMath {
 public:
+    static void MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const std::array<float, 4>& secondMatrix4x1);
+    static void MultiplyMatrix(std::array<float, 4>& outputMatrix4x1, const Matrix4x4& firstMatrix4x4, const std::array<float, 4>& secondMatrix4x1);
+    
+    static void MultiplyMatrix(
+        float& outputMatrix4x1Xvalue, 
+        float& outputMatrix4x1Yvalue,
+        float& outputMatrix4x1Zvalue,
+        float& outputMatrix4x1Wvalue,
+        const Matrix4x4& firstMatrix4x4, 
+        const std::array<float, 4>& secondMatrix4x1);
+
     static void MultiplyMatrix(Matrix4x4& outputMatrix , const Matrix4x4& firstMatrix4x4, const Matrix4x4& secondMatrix4x4);
     static void MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const Matrix4x4& secondMatrix4x1);
     static void MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const Vector4& secondMatrix4x1);

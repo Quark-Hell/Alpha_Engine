@@ -15,34 +15,22 @@ inline bool Geometry::Create(std::string linkToFBX) {
     const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate);
     aiMesh* mesh = s->mMeshes[0];
 
-    Geometry::_vertex.resize(mesh->mNumVertices);
-    Geometry::_normals.resize(mesh->mNumVertices);
+    Geometry::_vertexCount = mesh->mNumVertices;
+    Geometry::_normalsCount = mesh->mNumVertices;
 
-    for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
-        for (size_t jt = 0; jt < mesh->mFaces[it].mNumIndices; jt++)
-        {
-            Geometry::_indices.push_back(mesh->mFaces[it].mIndices[jt]);
-        }
-    }
+    Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+    Geometry::_normals = new float[Geometry::_normalsCount * 3];
 
-    for (std::uint32_t it = 0; it < mesh->mNumVertices; it++) {
-        Vector3 point;
-        Vector3 normal;
-
+    for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
         if (mesh->HasPositions()) {
-            point.X = mesh->mVertices[it].x;
-            point.Y = mesh->mVertices[it].y;
-            point.Z = mesh->mVertices[it].z;
-
-            Geometry::_vertex[it] = point;
+            Geometry::_vertex[it]     = mesh->mVertices[it / 3].x;
+            Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
+            Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
         }
-
         if (mesh->HasNormals()) {
-            normal.X = mesh->mNormals[it].x;
-            normal.Y = mesh->mNormals[it].y;
-            normal.Z = mesh->mNormals[it].z;
-
-            Geometry::_normals[it] = normal;
+            Geometry::_normals[it]     = mesh->mNormals[it / 3].x;
+            Geometry::_normals[it + 1] = mesh->mNormals[it / 3].y;
+            Geometry::_normals[it + 2] = mesh->mNormals[it / 3].z;
         }
     }
 
@@ -53,34 +41,43 @@ inline bool Geometry::Create(std::string linkToFBX) {
 
 /*Recommended not use now. Work so slow*/
 inline void Geometry::MakeUnique() {
-	const int arr_len = 3;
-	float buffer[arr_len];
+    const int arr_len = 3;
+    std::array<float, arr_len> buffer;
 
-	std::unordered_map<std::string, Vector3> uniqueMap;
+    unsigned int count = 0;
 
-	std::string hash;
-	hash.resize(arr_len * sizeof(float));
+    std::unordered_map<std::string, std::array<float,arr_len>> uniqueMap;
+
+    std::string hash;
+    hash.resize(arr_len * sizeof(float));
 
     //delete same vertex by use hash map
-	for (size_t it = 0; it < Geometry::_vertex.size(); it++)
-	{
-		//insert vert
-		buffer[0] = Geometry::_vertex[it].X;
-		buffer[1] = Geometry::_vertex[it].Y;
-		buffer[2] = Geometry::_vertex[it].Z;
+    for (size_t it = 0; it < Geometry::_vertexCount * 3; it += 3)
+    {
+        //insert vert
+        buffer[0] = Geometry::_vertex[it];
+        buffer[1] = Geometry::_vertex[it + 1];
+        buffer[2] = Geometry::_vertex[it + 2];
 
-		memcpy((char*)hash.data(), buffer, arr_len * sizeof(float));
+        memcpy((char*)hash.data(), &buffer, arr_len * sizeof(float));
 
-		std::pair<std::string, Vector3> vertPair(hash, Geometry::_vertex[it]);
-		uniqueMap.insert(vertPair);
-	}
+        std::pair<std::string, std::array<float, arr_len>> vertPair(hash, buffer);
 
-    Geometry::_vertex.clear();
-    for (size_t it = 0; it < uniqueMap.size(); it++)
+        uniqueMap.insert(vertPair);
+    }
+
+    Geometry::_vertexCount = uniqueMap.size();
+    free(Geometry::_vertex);
+    Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+
+    for (size_t it = 0; it < uniqueMap.size() * 3; it+=3)
     {
         auto begin = uniqueMap.begin();
-        std::advance(begin, it);
-        Geometry::_vertex.push_back(begin->second);
+        std::advance(begin, it / 3);
+
+        Geometry::_vertex[it]   = begin->second[0];
+        Geometry::_vertex[it+1] = begin->second[1];
+        Geometry::_vertex[it+2] = begin->second[2];
     }
 }
 
@@ -102,14 +99,17 @@ inline std::vector<Mesh*> Geometry::SeparateByLooseParts() {
     std::string hash;
     hash.resize(arr_len * sizeof(float));
 
-    Graph graph{ unsigned int(Geometry::_vertex.size() / 3)};
+    Graph graph{ unsigned int(Geometry::_vertexCount / 3)};
 
     unsigned int sizeBeforeInsert;
 
     //Create graph
-    for (size_t it = 0; it < Geometry::_vertex.size(); it++)
+    for (size_t it = 0; it < Geometry::_vertexCount * 3; it+=3)
     {
-        vert.Point = &_vertex[it];
+        vert.Point->X = _vertex[it];
+        vert.Point->Y = _vertex[it + 1];
+        vert.Point->Z = _vertex[it + 2];
+
         vert.TriangleID = it / 3;
 
         vertArr[0] = { vert.Point->X };
@@ -163,10 +163,15 @@ inline std::vector<Mesh*> Geometry::SeparateByLooseParts() {
 inline Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
     Vector3 maxPoint = { 0,0,0 };
     float maxDistance = -FLT_MAX;
+    Vector3* vertexPos = new Vector3;
 
-    for (size_t it = 0; it < Geometry::_vertex.size(); it++) {
-        Vector3 vertexPos = Geometry::_vertex[it];
-        float distance = Vector3::DotProduct(vertexPos, direction);
+    for (size_t it = 0; it < Geometry::_vertexCount * 3; it+=3) {
+
+        vertexPos->X = Geometry::_vertex[it];
+        vertexPos->Y = Geometry::_vertex[it + 1];
+        vertexPos->Z = Geometry::_vertex[it + 2];
+  
+        float distance = Vector3::DotProduct(*vertexPos, direction);
         if (distance > maxDistance) {
             maxDistance = distance;
             maxPoint = vertexPos;
@@ -177,8 +182,5 @@ inline Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
 }
 
 inline void Geometry::ApplyTransformation() {
-    for (size_t it = 0; it < Geometry::_vertex.size(); it++)
-    {
 
-    }
 }
