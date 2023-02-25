@@ -13,7 +13,7 @@ private:
 
 	float* _vertex;
 	float* _normals;
-	float* _indices;
+	unsigned int* _indices;
 
 	unsigned int _vertexCount;
 	unsigned int _normalsCount;

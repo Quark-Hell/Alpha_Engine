@@ -23,12 +23,12 @@ inline bool Mesh::Create(std::string linkToFBX) {
 
 	Geometry::_vertex = new float[Geometry::_vertexCount * 3];
 	Geometry::_normals = new float[Geometry::_normalsCount * 3];
-	Geometry::_indices = new float[Geometry::_indicesCount];
+	Geometry::_indices = new unsigned int[Geometry::_indicesCount];
 
 	for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
 		for (size_t jt = 0; jt < mesh->mFaces[it].mNumIndices; jt++)
 		{
-			Mesh::_indices[it] = mesh->mFaces[it].mIndices[jt];
+			Mesh::_indices[(it * 3) + jt] = mesh->mFaces[it].mIndices[jt];
 		}
 	}
 

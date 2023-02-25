@@ -25,22 +25,13 @@ Collision* collision = new Collision;
 InputSystem* InpSys = new InputSystem;
 
 Object object;
-Object object2;
 
 void GameFunction::Start() {
     SetControl();
 
-    Collider* col1 = new Collider; 
-    Collider* col2 = new Collider; 
+    Mesh* mesh = new Mesh; mesh->Create("\\Models\\Blender.fbx");
 
-    col1->Create("\\Models\\Primitives\\Cube.fbx");
-    col2->Create("\\Models\\Primitives\\Cube.fbx");
-
-    object = *Primitives::Cube({ 0,0,0 }, { 0,0,0 }, { 1,1,1 }, {1,1,1});
-    object2 = *Primitives::Cube({ 0.1,0,0 }, { 0,0,0 }, { 1,1,1 }, { 1,1,1 });
-
-    object.AddModule(col1);
-    object2.AddModule(col2);
+    object.AddModule(mesh);
 
     //object.SetScale(1,1,1);
     //object.AddPosition(0,0,0);

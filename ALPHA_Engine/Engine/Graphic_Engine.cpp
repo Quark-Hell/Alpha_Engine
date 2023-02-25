@@ -107,22 +107,23 @@ inline void Render::RenderMesh(Mesh& mesh) {
 
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_INDEX_ARRAY);
+    //glEnableClientState(GL_INDEX_ARRAY);
     //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    
 
 
     //glBindTexture();
-    glIndexPointer(GL_UNSIGNED_INT,0, &mesh._indices);
+    //glIndexPointer(GL_UNSIGNED_INT,0, mesh._indices);
     glNormalPointer(GL_FLOAT, 0, mesh._normals);
     glVertexPointer(3, GL_FLOAT, 0, mesh._vertex);
     
 
-    //glDrawElements(GL_TRIANGLES, mesh._indicesCount,GL_UNSIGNED_INT, &mesh._indices);
-    glDrawArrays(GL_TRIANGLES,0, mesh._vertexCount);
+    glDrawElements(GL_TRIANGLES,mesh._indicesCount,GL_UNSIGNED_INT, mesh._indices);
+    //glDrawArrays(GL_TRIANGLES,0, mesh._vertexCount);
     
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_INDEX_ARRAY);
+    //glDisableClientState(GL_INDEX_ARRAY);
 }
 
 inline void Render::SceneAssembler() {
