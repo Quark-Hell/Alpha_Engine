@@ -45,6 +45,9 @@ private:
 
 	std::vector<Module*> Modules;
 
+private:
+	friend class Geometry;
+
 public:
 	Object();
 	~Object();

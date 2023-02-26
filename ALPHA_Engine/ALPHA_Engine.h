@@ -6,6 +6,7 @@ public:
 
 };
 
+void Switcher();
 void SetControl();
 
 void LeftMoveTestObject();

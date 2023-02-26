@@ -4,10 +4,6 @@
 
 class Mesh : public Geometry {
 private:
-	bool _isShifted = false;
-	bool _isIndexed = false;
-
-private:
 	friend class Object;
 
 public:

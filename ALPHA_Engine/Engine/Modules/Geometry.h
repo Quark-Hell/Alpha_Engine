@@ -9,6 +9,9 @@
 
 class Geometry : public Module {
 private:
+	bool _isShifted = false;
+	bool _isIndexed = false;
+
 	Object* _parentObject;
 
 	float* _vertex;

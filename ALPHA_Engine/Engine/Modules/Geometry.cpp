@@ -182,5 +182,22 @@ inline Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
 }
 
 inline void Geometry::ApplyTransformation() {
+    for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
+    {
+        std::array<float, 4> buffer;
+        buffer[0] = Geometry::_vertex[jt];
+        buffer[1] = Geometry::_vertex[jt + 1];
+        buffer[2] = Geometry::_vertex[jt + 2];
+        buffer[3] = 1;
 
+        float w = 1;
+
+        MatrixMath::MultiplyMatrix(
+            Geometry::_vertex[jt],
+            Geometry::_vertex[jt + 1],
+            Geometry::_vertex[jt + 2],
+            w,
+            Geometry::GetParentObject()->_transformMatrix, buffer);
+    }
+    Geometry::_isShifted = false;
 }

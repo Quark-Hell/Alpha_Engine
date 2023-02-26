@@ -178,29 +178,10 @@ inline void Object::ApplyTransform() {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
+		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
 
-		if (mesh != nullptr && mesh->GetName() == "Mesh" && mesh->_isShifted == true) {
-			for (size_t jt = 0; jt < mesh->_vertexCount * 3; jt+=3)
-			{
-				std::array<float, 4> buffer;
-				buffer[0] = mesh->_vertex[jt];
-				buffer[1] = mesh->_vertex[jt + 1];
-				buffer[2] = mesh->_vertex[jt + 2];
-				buffer[3] = 1;
-
-				float w = 1;
-
-				//MatrixMath::MultiplyMatrix(mesh->_vertex[jt], Object::_transformMatrix , buffer);
-
-				MatrixMath::MultiplyMatrix(
-					mesh->_vertex[jt], 
-					mesh->_vertex[jt+1], 
-					mesh->_vertex[jt+2],
-					w, 
-					Object::_transformMatrix, buffer);
-			}
-			mesh->_isShifted = false;
+		if (geometry != nullptr && geometry->_isShifted == true) {
+			geometry->ApplyTransformation();
 		}
 	}
 
