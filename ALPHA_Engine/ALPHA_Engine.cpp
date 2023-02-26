@@ -29,28 +29,28 @@ Object object;
 void GameFunction::Start() {
     SetControl();
 
-    Mesh* mesh = new Mesh;
-    mesh->Create("\\Models\\TestModel.fbx");
+    Mesh* mesh = new Mesh; mesh->Create("\\Models\\Blender.fbx");
+
     object.AddModule(mesh);
 
-    object.SetScale(1,1,1);
-    object.AddPosition(1,0,0);
-    object.AddRotation(90,0,0);
-
-    object.ApplyTransform();
+    //object.SetScale(1,1,1);
+    //object.AddPosition(0,0,0);
+    //object.AddRotation(0,0,0);
+    //
+    //object.ApplyTransform();
 }
 
 void GameFunction::Update() {
-    object.AddRotation(1.5,1.5,0);
-    object.ApplyTransform();
-    printf("%f\n", abs(sin(World::GetTimeLong())));
-
-    object.SetScale(
-        abs(sin(World::GetTimeLong() / 350) + 1),
-        abs(sin(World::GetTimeLong() / 350) + 1),
-        abs(sin(World::GetTimeLong() / 350) + 1));
-
-    object.ApplyTransform();
+    //object.AddRotation(1.5,1.5,0);
+    //object.ApplyTransform();
+    //printf("%f\n", abs(sin(World::GetTimeLong())));
+    //
+    //object.SetScale(
+    //    abs(sin(World::GetTimeLong() / 350) + 1),
+    //    abs(sin(World::GetTimeLong() / 350) + 1),
+    //    abs(sin(World::GetTimeLong() / 350) + 1));
+    //
+    //object.ApplyTransform();
 }
 
 void SetControl() {

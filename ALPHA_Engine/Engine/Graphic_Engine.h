@@ -12,7 +12,6 @@
 #include <SFML/Graphics.hpp>
 
 //OpenGL
-
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")
 #include <gl/gl.h>
@@ -65,7 +64,7 @@ public:
 private:
 	void ApplyCameraTransform(Camera* camera);
 	void SceneAssembler();
-	void RenderMesh(Mesh* mesh);
+	void RenderMesh(Mesh& mesh);
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
 };
 
