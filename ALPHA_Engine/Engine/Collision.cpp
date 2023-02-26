@@ -1,5 +1,5 @@
 #include "Collision.h"
-#include "Geometry.cpp"
+#include "Modules/Geometry.cpp"
 #include <set>
 
 inline Simplex::Simplex(std::array<Vector3, 4> points, unsigned size) {

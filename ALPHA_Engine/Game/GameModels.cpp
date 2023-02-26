@@ -1,5 +1,5 @@
 #include "GameModels.h"
-#include "Mesh.h"
+#include "Modules/Mesh.h"
 
 //TODO: Function normilize color
 

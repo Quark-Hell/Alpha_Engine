@@ -8,8 +8,8 @@
 #include "Graphic_Engine.cpp"
 
 #include "GameModels.cpp"
-#include "Physics.cpp"
-#include "Camera.cpp"
+#include "Modules/Physics.cpp"
+#include "Modules/Camera.cpp"
 #include "Collision.cpp"
 
 #include "Binds.cpp"

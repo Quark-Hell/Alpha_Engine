@@ -2,8 +2,8 @@
 
 #include <iostream>
 #include "Basical_Type.h"
-#include "Mesh.h"
-#include "Camera.h"
+#include "Modules/Mesh.h"
+#include "Modules/Camera.h"
 #include "GameModels.h"
 
 //SFML
