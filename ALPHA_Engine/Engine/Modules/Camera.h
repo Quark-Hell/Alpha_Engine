@@ -20,4 +20,6 @@ public:
 	float GetZFar();
 
 	Vector3 GetDirectionOfView();
+
+	Camera();
 };

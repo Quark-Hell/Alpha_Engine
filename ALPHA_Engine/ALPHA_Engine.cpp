@@ -8,66 +8,86 @@
 #include "Graphic_Engine.cpp"
 
 #include "GameModels.cpp"
-#include "Physics.cpp"
-#include "Camera.cpp"
+#include "Modules/Physics.cpp"
+#include "Modules/Camera.cpp"
 #include "Collision.cpp"
 
 #include "Binds.cpp"
 
 #include <ctime>
 
-Object obj;
-
 Object Player;
 Camera* camera = new Camera;
 
-Object* Cube1;
-Object* Cube2;
-
 GameFunction* Game = new GameFunction;
 Render* render = new Render;
+Collision* collision = new Collision;
 InputSystem* InpSys = new InputSystem;
 
-void GameFunction::Start() {
+std::vector<Object*> objects;
 
+bool IsRotating = true;
+
+void GameFunction::Start() {
+    SetControl();
+
+    for (size_t it = 0; it < 3; it++)
+    {
+        Object* obj = new Object;
+        Mesh* mesh = new Mesh; mesh->Create("\\Models\\Blender.fbx");
+        obj->AddModule(mesh);
+        obj->AddPosition(0, (float)it / 2, 0);
+
+        objects.push_back(obj);
+    }
+
+    objects[0]->AddPosition(0, 2, 0);
+    objects[0]->AddRotation(0, 30, 0);
+    objects[0]->SetScale(2, 2, 2);
+
+    //object.SetScale(1,1,1);
+    //object.AddPosition(0,0,0);
+    //object.AddRotation(0,0,0);
+    //
+    //object.ApplyTransform();
+}
+
+void GameFunction::Update() {
+    if (IsRotating) {
+        for (size_t it = 0; it < objects.size(); it++)
+        {
+            objects[it]->AddRotation(0, 0.5, 0);
+            objects[it]->AddPosition(sin(World::GetTimeLong() / 400) / 10, 0, 0);
+
+            objects[it]->SetScale(
+                abs(sin(World::GetTimeLong() / 750) + 2),
+                abs(sin(World::GetTimeLong() / 750) + 2),
+                abs(sin(World::GetTimeLong() / 750) + 2));
+
+            //objects[it]->AddPosition(sin(World::GetTimeLong() / 350) / 15, 0, 0);
+            //objects[it]->AddPosition(sin(World::GetTimeLong() / 350) / 15, 0, 0);
+        }
+    }
+    
+    //object.SetScale(
+    //    abs(sin(World::GetTimeLong() / 350) + 1),
+    //    abs(sin(World::GetTimeLong() / 350) + 1),
+    //    abs(sin(World::GetTimeLong() / 350) + 1));
+    
+    //object.ApplyTransform();
+}
+
+void Switcher() {
+    IsRotating = !IsRotating;
+}
+
+void SetControl() {
     Player.AddModule(camera);
 
-    Mesh* mesh = new Mesh;
-    mesh->CreateMesh("\\Models\\Blender.fbx");
-    obj.AddModule(mesh);
-    obj.AddScale(1, 1, 1);
+    Bind Switch; Switch.KeyboardBind({ Switcher },{EnumKeyStates::KeyPressed},{sf::Keyboard::U});
 
-    Vector3 Postion{ 0,0,0 };
-    Vector3 Rotation(0, 0, 0);
-    Vector3 Scale{ 1,1,1 };
-    Vector3 Color{ 0,0,1 };
-
-    Collider* col1 = new Collider;
-    Collider* col2 = new Collider;
-
-    col1->CreateCollider("\\Models\\Primitives\\Cube.fbx");
-    col2->CreateCollider("\\Models\\Primitives\\Cube.fbx");
-
-    col1->Rename("Collider");
-    col2->Rename("Collider");
-
-    Cube1 = Primitives::Cube(Postion, Rotation, Scale, Color);
-    Cube2 = Primitives::Cube(Postion, Rotation, Scale, Color);
-
-    Cube1->ApplyTransform();
-    Cube2->ApplyTransform();
-
-    Cube1->AddModule(col1);
-    Cube2->AddModule(col2);
-
-    Cube2->AddPosition(0,0,2.1);
-
-    Cube1->ApplyTransform();
-    Cube2->ApplyTransform();
-
-
-    Bind LeftMove; LeftMove.KeyboardBind(std::vector<void(*)()>{LeftMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::A});
-    Bind RightMove; RightMove.KeyboardBind(std::vector<void(*)()>{RightMoveCamera}, { EnumKeyStates::KeyHold }, { sf::Keyboard::D });
+    Bind LeftMove; LeftMove.KeyboardBind({ LeftMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::A });
+    Bind RightMove; RightMove.KeyboardBind({ RightMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::D });
 
     Bind ForwardMove; ForwardMove.KeyboardBind({ ForwardMoveCamera }, { EnumKeyStates::KeyHold, EnumKeyStates::KeyHold }, { sf::Keyboard::W, sf::Keyboard::LShift });
     Bind BackwardMove; BackwardMove.KeyboardBind({ BackwardMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::S });
@@ -80,6 +100,7 @@ void GameFunction::Start() {
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Keyboard::Escape });
     Bind CloseGameSecondMethod; CloseGameSecondMethod.MouseButtonsBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Mouse::Left }, { sf::Event::EventType::Closed });
 
+    InpSys->InsertBind(Switch);
 
     InpSys->InsertBind(CameraRot);
 
@@ -95,14 +116,6 @@ void GameFunction::Start() {
     InpSys->InsertBind(CloseGameFirstMethod);
     InpSys->InsertBind(CloseGameSecondMethod);
 }
-
-void GameFunction::Update() {
-    //obj.SetPosition(0, 0, -3);
-    obj.AddRotation(0, 1.5, 0);
-
-    obj.ApplyTransform();
-}
-
 void LeftMoveCamera() {
     Vector3 newPos = Player.GetPosition();
 
@@ -133,26 +146,26 @@ void RightMoveCamera() {
 void ForwardMoveCamera() {
     Vector3 newPos = Player.GetPosition();
 
-    Vector3 UpVector{ 0,0,0 };
+    Vector3 ForwardVector{ 0,0,0 };
 
-    UpVector.X = sin((Player.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
-    UpVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
-    UpVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
+    ForwardVector.X = sin((Player.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
+    ForwardVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
+    ForwardVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
 
-    newPos += UpVector * 0.1;
+    newPos += ForwardVector * 0.1;
 
     Player.SetPosition(newPos);
 }
 void BackwardMoveCamera() {
     Vector3 newPos = Player.GetPosition();
 
-    Vector3 UpVector{ 0,0,0 };
+    Vector3 BackwardVector{ 0,0,0 };
 
-    UpVector.X = sin((Player.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
-    UpVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
-    UpVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
+    BackwardVector.X = sin((Player.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
+    BackwardVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
+    BackwardVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
 
-    newPos += UpVector * (-0.1);
+    newPos += BackwardVector * (-0.1);
 
     Player.SetPosition(newPos);
 }
@@ -206,10 +219,12 @@ int main()
 
     while (!World::GetStateOfGame())
     {
-        Collision::GJK((Collider*)Cube1->GetModuleByName("Collider"), (Collider*)Cube2->GetModuleByName("Collider"));
-
+        World::StartFrame();
         InpSys->IO_Events();
         Game->Update();
+        World::ApplyingSceneTransformation();
+        collision->CollisionLoop();
         render->RenderLoop(camera);
+        World::EndFrame();
     }
 }

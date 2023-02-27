@@ -44,22 +44,35 @@ ${Engine}Basical_Type.cpp
 ${Engine}Basical_Type.h
 ${Engine}Binds.cpp
 ${Engine}Binds.h
-${Engine}Camera.cpp
-${Engine}Camera.h
+${Engine}Modules/Camera.cpp
+${Engine}Modules/Camera.h
 ${Engine}Collision.cpp
 ${Engine}Collision.h
 ${Engine}Graphic_Engine.cpp
 ${Engine}Graphic_Engine.h
-${Engine}Mesh.cpp
-${Engine}Mesh.h
+${Engine}Modules/Mesh.cpp
+${Engine}Modules/Mesh.h
 ${Engine}Collision.h
 ${Engine}Collision.cpp
-${Engine}Physics.h
-${Engine}Physics.cpp
+${Engine}Modules/Physics.h
+${Engine}Modules/Physics.cpp
 
 ${Game}GameModels.cpp
 ${Game}GameModels.h
- "Engine/Timer.cpp" "Engine/Timer.h" "Engine/Alghoritms.h" "Engine/Alghoritms.cpp" "Engine/Material.h" "Engine/Material.cpp" "Engine/Texture.cpp" "Engine/Texture.h"  "Engine/Vectors.cpp" "Engine/Vectors.h"  "Engine/Matrix.h" "Engine/Matrix.cpp"  )
+ "Engine/Timer.cpp" 
+ "Engine/Timer.h" 
+ "Engine/Alghoritms.h" 
+ "Engine/Alghoritms.cpp"
+ "Engine/Material.h" 
+ "Engine/Material.cpp" 
+ "Engine/Texture.cpp" 
+ "Engine/Texture.h"
+ "Engine/Vectors.cpp" 
+ "Engine/Vectors.h"
+ "Engine/Matrix.h" 
+ "Engine/Matrix.cpp"  
+ "Engine/Modules/Geometry.h" 
+ "Engine/Modules/Geometry.cpp")
 
 target_link_libraries(Engine
 PRIVATE ${SFMLlib}sfml-graphics.lib
@@ -88,7 +101,20 @@ ${SFMLinclude}SFML/Graphics.hpp
 ${assimpINCLUDE}assimp/Importer.hpp
 ${assimpINCLUDE}assimp/scene.h
 ${assimpINCLUDE}assimp/postprocess.h
- "Engine/Timer.cpp" "Engine/Timer.h" "Engine/Alghoritms.h" "Engine/Alghoritms.cpp" "Engine/Material.h" "Engine/Material.cpp" "Engine/Texture.cpp" "Engine/Texture.h"  "Engine/Vectors.cpp" "Engine/Vectors.h"  "Engine/Matrix.h" "Engine/Matrix.cpp"  )
+ "Engine/Timer.cpp"
+ "Engine/Timer.h" 
+ "Engine/Alghoritms.h" 
+ "Engine/Alghoritms.cpp" 
+ "Engine/Material.h"
+ "Engine/Material.cpp" 
+ "Engine/Texture.cpp" 
+ "Engine/Texture.h" 
+ "Engine/Vectors.cpp"
+ "Engine/Vectors.h"
+ "Engine/Matrix.h" 
+ "Engine/Matrix.cpp"  
+ "Engine/Modules/Geometry.h"
+ "Engine/Modules/Geometry.cpp")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE sfml-graphics

@@ -1,12 +1,5 @@
 #pragma once
-#include "Basical_Type.h"
-#include "Alghoritms.h"
-#include "Mesh.h"
-
-//Assimp
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include "Modules/Geometry.h"
 
 class Simplex
 {
@@ -42,23 +35,38 @@ public:
 	static inline bool Tetrahedron(Simplex& points, Vector3& direction);
 };
 
-class Collider : public Mesh {
+class Collider : public Geometry {
 public:
-	bool CreateCollider(std::string link);
+	Collider();
+	~Collider();
 
-	bool SeparateCollision();
 	bool CreateConvexFrom—oncave(std::string link);
 
 private:
 	friend class Collision;
-	friend class Graph;
+};
+
+class CollisionPoints {
+public:
+	Vector3 Normal;
+	float PenetrationDepth;
+	bool HasCollision;
 };
 
 class Collision{
-public:
-	static inline Vector3 Support(Collider* colliderA, Collider* colliderB, Vector3 direction);
-	static inline bool GJK(Collider* colliderA, Collider* colliderB);
+private:
+	CollisionPoints _collisionPoints;
 
-	
+public:
+	CollisionPoints GetCollisionPoints();
+	void CollisionLoop();
+
+private:
+	Vector3 Support(Collider* colliderA, Collider* colliderB, Vector3 direction);
+	bool GJK(Collider* colliderA, Collider* colliderB, CollisionPoints& colPoints);
+	CollisionPoints EPA(Simplex& simplex, Collider* colliderA, Collider* ColliderB);
+
+	std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
+	void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
 };
 

@@ -399,3 +399,82 @@ void MatrixMath::AddMatrix(Matrix4x4& outputMatrix, const Matrix4x4& firstMatrix
 	outputMatrix._matrix[3][2] = firstMatrix4x4._matrix[3][2] + secondMatrix4x4._matrix[3][2];
 	outputMatrix._matrix[3][3] = firstMatrix4x4._matrix[3][3] + secondMatrix4x4._matrix[3][3];
 }
+
+
+void MatrixMath::MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const std::array<float, 4>& secondMatrix4x1) {
+	//First row
+	outputMatrix._matrix[0][0] =
+		firstMatrix4x4._matrix[0][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[0][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[0][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[0][3] * secondMatrix4x1[3];
+	outputMatrix._matrix[1][0] =
+		firstMatrix4x4._matrix[1][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[1][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[1][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[1][3] * secondMatrix4x1[3];
+	outputMatrix._matrix[2][0] =
+		firstMatrix4x4._matrix[2][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[2][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[2][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[2][3] * secondMatrix4x1[3];
+	outputMatrix._matrix[3][0] =
+		firstMatrix4x4._matrix[3][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[3][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[3][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[3][3] * secondMatrix4x1[3];
+}
+void MatrixMath::MultiplyMatrix(std::array<float, 4>& outputMatrix4x1, const Matrix4x4& firstMatrix4x4, const std::array<float, 4>& secondMatrix4x1) {
+	//First row
+	outputMatrix4x1[0] =
+		firstMatrix4x4._matrix[0][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[0][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[0][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[0][3] * secondMatrix4x1[3];
+	outputMatrix4x1[1] =
+		firstMatrix4x4._matrix[1][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[1][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[1][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[1][3] * secondMatrix4x1[3];
+	outputMatrix4x1[2] =
+		firstMatrix4x4._matrix[2][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[2][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[2][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[2][3] * secondMatrix4x1[3];
+	outputMatrix4x1[3] =
+		firstMatrix4x4._matrix[3][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[3][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[3][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[3][3] * secondMatrix4x1[3];
+}
+
+void MatrixMath::MultiplyMatrix(
+	float& outputMatrix4x1Xvalue,
+	float& outputMatrix4x1Yvalue,
+	float& outputMatrix4x1Zvalue,
+	float& outputMatrix4x1Wvalue,
+	const Matrix4x4& firstMatrix4x4,
+	const std::array<float, 4>& secondMatrix4x1) {
+
+	//First row
+	outputMatrix4x1Xvalue =
+		firstMatrix4x4._matrix[0][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[0][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[0][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[0][3] * secondMatrix4x1[3];
+	outputMatrix4x1Yvalue =
+		firstMatrix4x4._matrix[1][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[1][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[1][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[1][3] * secondMatrix4x1[3];
+	outputMatrix4x1Zvalue =
+		firstMatrix4x4._matrix[2][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[2][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[2][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[2][3] * secondMatrix4x1[3];
+	outputMatrix4x1Wvalue =
+		firstMatrix4x4._matrix[3][0] * secondMatrix4x1[0] +
+		firstMatrix4x4._matrix[3][1] * secondMatrix4x1[1] +
+		firstMatrix4x4._matrix[3][2] * secondMatrix4x1[2] +
+		firstMatrix4x4._matrix[3][3] * secondMatrix4x1[3];
+}

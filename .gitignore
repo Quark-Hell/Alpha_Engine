@@ -2,3 +2,14 @@ out
 .vs
 
 
+out/build/x64-debug/build.ninja
+out/build/x64-debug/CMakeCache.txt
+out/build/x64-debug/CMakeFiles/3.22.22040401-MSVC_2/CMakeDetermineCompilerABI_C.bin
+out/build/x64-debug/CMakeFiles/3.22.22040401-MSVC_2/CMakeDetermineCompilerABI_CXX.bin
+out/build/x64-debug/CMakeFiles/3.22.22040401-MSVC_2/CompilerIdC/CMakeCCompilerId.exe
+out/build/x64-debug/CMakeFiles/3.22.22040401-MSVC_2/CompilerIdC/CMakeCCompilerId.obj
+out/build/x64-debug/CMakeFiles/3.22.22040401-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.exe
+out/build/x64-debug/CMakeFiles/3.22.22040401-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.obj
+out/build/x64-debug/CMakeFiles/CMakeOutput.log
+out/build/x64-debug/CMakeFiles/ShowIncludes/main.obj
+out/build/x64-debug/Testing/Temporary/LastTest.log

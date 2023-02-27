@@ -6,6 +6,18 @@ public:
 
 };
 
+void Switcher();
+void SetControl();
+
+void LeftMoveTestObject();
+void RightMoveTestObject();
+
+void ForwardMoveTestObject();
+void BackwardMoveTestObject();
+
+void UpMoveTestObject();
+void DownMoveTestObject();
+
 void LeftMoveCamera();
 void RightMoveCamera();
 

@@ -8,8 +8,10 @@
 #include <chrono>
 #include <queue>
 #include <algorithm>
+#include <thread>
 
 #include "Matrix.h"
+#include "Alghoritms.h"
 
 class Object;
 
@@ -21,6 +23,7 @@ private:
 
 private:
 	friend class Render;
+	friend class Collision;
 	friend class Object;
 
 public:
@@ -43,6 +46,9 @@ private:
 
 	std::vector<Module*> Modules;
 
+private:
+	friend class Geometry;
+
 public:
 	Object();
 	~Object();
@@ -64,9 +70,6 @@ public:
 
 
 	Vector3 GetScale();
-	void AddScale(float X, float Y, float Z);
-	void AddScale(Vector3 scale);
-
 	void SetScale(float X, float Y, float Z);
 	void SetScale(Vector3 scale);
 
@@ -86,6 +89,8 @@ public:
 	int GetCountOfModules();
 
 	void DeleteObject();
+
+	unsigned long GetGeometryHeaviness();
 };
 
 
@@ -95,25 +100,31 @@ private:
 	static inline std::vector<Object*> ObjectsOnScene;
 	static inline bool IsCloseGame = false;
 
-	static inline float _deltaTime;
+	static inline double _timeLong = 0;
+	static inline float _deltaTime = 0;
 	static inline std::chrono::steady_clock::time_point _startTime;
 	static inline std::chrono::steady_clock::time_point _endTime;
 
-private:
-	void StartFrame();
-	void EndFrame();
-
 public:
+	inline static void BuildTransformationThread(const std::vector<Object*> objects);
+	inline static void ApplyingSceneTransformation();
+
+	inline static void StartFrame();
+	inline static void EndFrame();
+
 	static inline void CloseGame();
 	/// <summary>
 	/// Return bool IsCloseGame
 	/// </summary>
 	static inline bool GetStateOfGame();
+
+	static inline double GetTimeLong();
 	static inline float GetDeltaTime();
 
 private:
-	friend class Object;
 	friend class Render;
+	friend class Collision;
+	friend class Object;
 
 	World();
 };

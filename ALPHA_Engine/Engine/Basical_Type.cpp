@@ -1,5 +1,5 @@
 #include "Basical_Type.h"
-#include "Mesh.cpp"
+#include "Modules/Mesh.cpp"
 
 #pragma region World Define
 
@@ -15,6 +15,9 @@ inline bool World::GetStateOfGame() {
 	return IsCloseGame;
 }
 
+inline double World::GetTimeLong() {
+	return World::_timeLong;
+}
 inline float World::GetDeltaTime() {
 	return World::_deltaTime;
 }
@@ -26,8 +29,51 @@ inline void World::StartFrame() {
 inline void World::EndFrame() {
 	World::_endTime = std::chrono::high_resolution_clock::now();
 	World::_deltaTime = std::chrono::duration_cast	<std::chrono::milliseconds>(World::_endTime - World::_startTime).count();
+	World::_timeLong += std::chrono::duration_cast	<std::chrono::milliseconds>(World::_endTime - World::_startTime).count();
 }
 
+inline void World::BuildTransformationThread(const std::vector<Object*> objects) {
+	for (size_t it = 0; it < objects.size(); it++)
+	{
+		objects[it]->ApplyTransform();	
+	}
+}
+
+inline void World::ApplyingSceneTransformation() {
+	const unsigned int bufferCapacity = 500000;
+
+	std::vector<std::thread> threads;
+	std::vector<std::vector<Object*>> objectsPool;
+	objectsPool.resize(1);
+
+	unsigned long heaviness = 0;
+
+	for (size_t it = 0; it < World::ObjectsOnScene.size(); it++)
+	{
+		Object* obj = World::ObjectsOnScene[it];
+
+		heaviness += obj->GetGeometryHeaviness();
+		if (heaviness > bufferCapacity) {
+			objectsPool[objectsPool.size() - 1].push_back(obj);
+			objectsPool.resize(objectsPool.size() + 1);
+			heaviness = 0;
+
+			threads.push_back(std::thread(BuildTransformationThread, objectsPool[objectsPool.size() - 2]));
+		}
+		else if(heaviness > 0) {
+			objectsPool[objectsPool.size() - 1].push_back(obj);
+		}
+	}	
+	//set last callable 
+	if (heaviness > 0) {
+		threads.push_back(std::thread(BuildTransformationThread, objectsPool[objectsPool.size() - 1]));
+	}
+
+	for (size_t it = 0; it < threads.size(); it++)
+	{
+		threads[it].join();
+	}
+}
 #pragma endregion
 
 #pragma region Object Define
@@ -36,25 +82,14 @@ inline Vector3 Object::GetPosition() {
 	return Position;
 }
 inline void Object::AddPosition (float X, float Y, float Z) {
-	Matrix4x4 matrix = Matrix4x4();
-	matrix.Translation(Vector4(X, Y, Z, 1));
-
-	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
-
 	Object::Position.X += X;
 	Object::Position.Y += Y;
 	Object::Position.Z += Z;
 }
 inline void Object::AddPosition(Vector3 position) {
-	Matrix4x4 matrix = Matrix4x4();
-	matrix.Translation(Vector4(position.X, position.Y, position.Z, 1));
-
-	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
-
 	Object::Position.X += position.X;
 	Object::Position.Y += position.Y;
 	Object::Position.Z += position.Z;
-
 }
 inline void Object::SetPosition(float X, float Y, float Z) {
 	Vector3 direction = Vector3(X, Y, Z) - Object::Position;
@@ -72,10 +107,7 @@ inline Vector3 Object::GetRotation() {
 	return Rotation;
 }
 inline void Object::AddRotation(float X, float Y, float Z) {
-	Matrix4x4 matrix = Matrix4x4();
-	matrix.Rotation(Vector4(X, Y, Z, 1));
-
-	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
+	Object::_transformMatrix.Rotation(Vector4(X, Y, Z, 1));
 
 	Object::Rotation.X += X;
 	Object::Rotation.Y += Y;
@@ -83,18 +115,15 @@ inline void Object::AddRotation(float X, float Y, float Z) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
+		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
 
-		if (mesh != nullptr && mesh->GetName() == "Mesh") {
-			mesh->_isShifted = true;
+		if (geometry != nullptr) {
+			geometry->_isShifted = true;
 		}
 	}
 }
 inline void Object::AddRotation(Vector3 rotation) {
-	Matrix4x4 matrix = Matrix4x4();
-	matrix.Rotation(Vector4(rotation.X, rotation.Y, rotation.Z, 1));
-
-	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
+	Object::_transformMatrix.Rotation(Vector4(rotation.X, rotation.Y, rotation.Z, 1));
 
 	Object::Rotation.X += rotation.X;
 	Object::Rotation.Y += rotation.Y;
@@ -102,10 +131,10 @@ inline void Object::AddRotation(Vector3 rotation) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
+		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
 
-		if (mesh != nullptr && mesh->GetName() == "Mesh") {
-			mesh->_isShifted = true;
+		if (geometry != nullptr) {
+			geometry->_isShifted = true;
 		}
 	}
 }
@@ -124,53 +153,45 @@ inline void Object::SetRotation(Vector3 rotation) {
 inline Vector3 Object::GetScale() {
 	return Scale;
 }
-inline void Object::AddScale(float X, float Y, float Z) {
-	Matrix4x4 matrix = Matrix4x4();
-	matrix.Scale(Vector4(X,Y,Z,1));
-
-	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
-
-	Object::Scale.X += X;
-	Object::Scale.Y += Y;
-	Object::Scale.Z += Z;
-
-	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
-	{
-		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
-
-		if (mesh != nullptr && mesh->GetName() == "Mesh") {
-			mesh->_isShifted = true;
-		}
-	}
-}
-inline void Object::AddScale(Vector3 scale) {
-	Matrix4x4 matrix = Matrix4x4();
-	matrix.Scale(Vector4(scale.X, scale.Y, scale.Z, 1));
-
-	MatrixMath::MultiplyMatrix(Object::_transformMatrix, Object::_transformMatrix.GetMatrix(), matrix);
-
-	Object::Scale.X += scale.X;
-	Object::Scale.Y += scale.Y;
-	Object::Scale.Z += scale.Z;
-
-	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
-	{
-		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
-
-		if (mesh != nullptr && mesh->GetName() == "Mesh") {
-			mesh->_isShifted = true;
-		}
-	}
-}
 inline void Object::SetScale(float X, float Y, float Z) {
-	Vector3 direction = Vector3(X, Y, Z) - Object::Scale;
+	Vector3 delta = Object::Scale / Vector3(X, Y, Z);
 
-	Object::AddScale(direction);
+	Object::_transformMatrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
+
+	Object::Scale.X = X;
+	Object::Scale.Y = Y;
+	Object::Scale.Z = Z;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
+
+		if (geometry != nullptr) {
+			geometry->_isShifted = true;
+		}
+	}
+
+	Object::ApplyTransform();
 }
 inline void Object::SetScale(Vector3 scale) {
-	Vector3 direction = scale - Object::Scale;
+	Vector3 delta = Object::Scale / scale;
 
-	Object::AddScale(direction);
+	Object::_transformMatrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
+
+	Object::Scale.X = scale.X;
+	Object::Scale.Y = scale.Y;
+	Object::Scale.Z = scale.Z;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
+
+		if (geometry != nullptr) {
+			geometry->_isShifted = true;
+		}
+	}
+
+	Object::ApplyTransform();
 }
 
 
@@ -179,15 +200,10 @@ inline void Object::ApplyTransform() {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		Mesh* mesh = dynamic_cast<Mesh*>(Object::GetModuleByIndex(it));
+		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
 
-		if (mesh != nullptr && mesh->GetName() == "Mesh" && mesh->_isShifted == true) {
-			for (size_t jt = 0; jt < mesh->_vertex.size(); jt++)
-			{
-				Vector3 buffer = mesh->_vertex[jt];
-				MatrixMath::MultiplyMatrix(mesh->_vertex[jt], Object::_transformMatrix , buffer);
-			}
-			mesh->_isShifted = false;
+		if (geometry != nullptr && geometry->_isShifted == true) {
+			geometry->ApplyTransformation();
 		}
 	}
 
@@ -262,6 +278,23 @@ inline void Object::DeleteObject() {
 	}	
 }
 */
+
+inline unsigned long Object::GetGeometryHeaviness() {
+	unsigned long heaviness = 0;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		Object* obj = this;
+		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
+
+		if (geometry != nullptr && geometry->_isShifted == true) {
+			heaviness += geometry->_vertexCount;
+			heaviness += geometry->_normalsCount;
+		}
+	}
+
+	return heaviness;
+}
 
 inline Object::Object() {
 	World::ObjectsOnScene.push_back(this);

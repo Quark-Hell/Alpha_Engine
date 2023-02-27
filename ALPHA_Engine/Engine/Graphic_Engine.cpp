@@ -45,6 +45,9 @@ inline void Render::PrepareToRender() {
     glCullFace(GL_BACK); // cull faces from back
     glFrontFace(GL_CCW); // vertex order (counter clock wise)
 
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_NORMALIZE);
+
     glEnable(GL_COLOR_MATERIAL);
 
     // Enable Z-buffer read and write
@@ -99,19 +102,28 @@ inline void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vect
     //glScalef(Scale.X, Scale.Y, Scale.Z);
 }
 
-inline void Render::RenderMesh(Mesh* mesh) {
-    glBegin(GL_TRIANGLES);
-    //TODO:
-    glColor3f(1, 0, 0);
+inline void Render::RenderMesh(Mesh& mesh) {
+    glColor3f(0.8, 0.8, 0.8);
 
-    for (size_t i = 0; i < mesh->_indices.size(); i++)
-    {
-        Vector3* position = &mesh->GetParentObject()->GetPosition();
-        glNormal3f(mesh->_normals[mesh->_indices[i]].X, mesh->_normals[mesh->_indices[i]].Y, mesh->_normals[mesh->_indices[i]].Z);
-        glVertex3f(mesh->_vertex[mesh->_indices[i]].X + position->X, mesh->_vertex[mesh->_indices[i]].Y + position->Y, mesh->_vertex[mesh->_indices[i]].Z + position->Z);
-    }
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    //glEnableClientState(GL_INDEX_ARRAY);
+    //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     
-    glEnd();
+
+
+    //glBindTexture();
+    //glIndexPointer(GL_UNSIGNED_INT,0, mesh._indices);
+    glNormalPointer(GL_FLOAT, 0, mesh._normals);
+    glVertexPointer(3, GL_FLOAT, 0, mesh._vertex);
+    
+
+    glDrawElements(GL_TRIANGLES,mesh._indicesCount,GL_UNSIGNED_INT, mesh._indices);
+    //glDrawArrays(GL_TRIANGLES,0, mesh._vertexCount);
+    
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    //glDisableClientState(GL_INDEX_ARRAY);
 }
 
 inline void Render::SceneAssembler() {
@@ -122,8 +134,8 @@ inline void Render::SceneAssembler() {
             Mesh* mesh = dynamic_cast<Mesh*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
 
             if (mesh != nullptr && mesh->GetName() == "Mesh") {
-                //Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
-                RenderMesh(mesh);
+                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+                RenderMesh(*mesh);
             }
         }
     }   
@@ -143,6 +155,7 @@ inline void Render::StartRender(Camera* camera) {
     camera->SetCameraInfo(60, 4.0 / 3.0, 1, 300);
 
     _screenClass._screen->setVerticalSyncEnabled(true);
+    _screenClass._screen->setFramerateLimit(60);
 }
 
 
@@ -158,30 +171,4 @@ inline void Render::RenderLoop(Camera* camera) {
 
         _screenClass._screen->display();
     }
-}
-
-inline void Render::RenderVertArray(std::vector<Vector3>* Vertex, std::vector<Vector3>* Normals) {
-    glBegin(GL_TRIANGLES);
-    //TODO:
-    glColor3f(1, 0, 0);
-
-    for (size_t i = 0; i < Vertex->size(); i++)
-    {
-        glNormal3f((*Normals)[i].X, (*Normals)[i].Y, (*Normals)[i].Z);
-        glVertex3f((*Vertex)[i].X, (*Vertex)[i].Y, (*Vertex)[i].Z);
-    }
-
-    glEnd();
-}
-
-inline void Render::DebugRender(std::vector<Vector3>* Vertex, std::vector<Vector3>* Normals, Camera *camera) {
-    Object obj;
-
-    ClearFrameBuffer();
-    ApplyCameraTransform(camera);
-
-    Render::ApplyTransformation(obj.GetPosition(), obj.GetRotation(), obj.GetScale());
-    Render::RenderVertArray(Vertex, Normals);
-
-    _screenClass._screen->display();
 }
