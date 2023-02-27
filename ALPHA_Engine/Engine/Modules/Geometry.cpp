@@ -1,7 +1,7 @@
 #include "Geometry.h"
 
 inline Geometry::Geometry() {
-
+    Geometry::Rename("Geometry");
 }
 inline Geometry::~Geometry() {
 
@@ -196,6 +196,24 @@ inline void Geometry::ApplyTransformation() {
             Geometry::_vertex[jt],
             Geometry::_vertex[jt + 1],
             Geometry::_vertex[jt + 2],
+            w,
+            Geometry::GetParentObject()->_transformMatrix, buffer);
+    }
+
+    for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
+    {
+        std::array<float, 4> buffer;
+        buffer[0] = Geometry::_normals[jt];
+        buffer[1] = Geometry::_normals[jt + 1];
+        buffer[2] = Geometry::_normals[jt + 2];
+        buffer[3] = 1;
+
+        float w = 1;
+
+        MatrixMath::MultiplyMatrix(
+            Geometry::_normals[jt],
+            Geometry::_normals[jt + 1],
+            Geometry::_normals[jt + 2],
             w,
             Geometry::GetParentObject()->_transformMatrix, buffer);
     }

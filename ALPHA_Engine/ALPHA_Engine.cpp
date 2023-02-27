@@ -24,55 +24,26 @@ Render* render = new Render;
 Collision* collision = new Collision;
 InputSystem* InpSys = new InputSystem;
 
-Object object1;
-Object object2;
-Object object3;
-Object object4;
-Object object5;
-Object object6;
-Object object7;
-Object object8;
+std::vector<Object*> objects;
 
 bool IsRotating = true;
 
 void GameFunction::Start() {
     SetControl();
 
-    Mesh* mesh1 = new Mesh; mesh1->Create("\\Models\\Blender.fbx");
-    Mesh* mesh2 = new Mesh; mesh2->Create("\\Models\\Blender.fbx");
-    Mesh* mesh3 = new Mesh; mesh3->Create("\\Models\\Blender.fbx");
-    Mesh* mesh4 = new Mesh; mesh4->Create("\\Models\\Blender.fbx");
-    Mesh* mesh5 = new Mesh; mesh5->Create("\\Models\\Blender.fbx");
-    Mesh* mesh6 = new Mesh; mesh6->Create("\\Models\\Blender.fbx");
-    Mesh* mesh7 = new Mesh; mesh7->Create("\\Models\\Blender.fbx");
-    Mesh* mesh8 = new Mesh; mesh8->Create("\\Models\\Blender.fbx");
+    for (size_t it = 0; it < 3; it++)
+    {
+        Object* obj = new Object;
+        Mesh* mesh = new Mesh; mesh->Create("\\Models\\Blender.fbx");
+        obj->AddModule(mesh);
+        obj->AddPosition(0, (float)it / 2, 0);
 
-    object1.AddModule(mesh1);
-    object2.AddModule(mesh2);
-    object3.AddModule(mesh3);
-    object4.AddModule(mesh4);
-    object5.AddModule(mesh5);
-    object6.AddModule(mesh6);
-    object7.AddModule(mesh7);
-    object8.AddModule(mesh8);
+        objects.push_back(obj);
+    }
 
-    object1.AddPosition(0, 0, 0);
-    object2.AddPosition(0, 1, 0);
-    object3.AddPosition(0, 2, 0);
-    object4.AddPosition(0, 3, 0);
-    object5.AddPosition(0, 4, 0);
-    object6.AddPosition(0, 5, 0);
-    object7.AddPosition(0, 6, 0);
-    object8.AddPosition(0, 7, 0);
-
-    object1.ApplyTransform();
-    object2.ApplyTransform();
-    object3.ApplyTransform();
-    object4.ApplyTransform();
-    object5.ApplyTransform();
-    object6.ApplyTransform();
-    object7.ApplyTransform();
-    object8.ApplyTransform();
+    objects[0]->AddPosition(0, 2, 0);
+    objects[0]->AddRotation(0, 30, 0);
+    objects[0]->SetScale(2, 2, 2);
 
     //object.SetScale(1,1,1);
     //object.AddPosition(0,0,0);
@@ -83,31 +54,18 @@ void GameFunction::Start() {
 
 void GameFunction::Update() {
     if (IsRotating) {
-        for (size_t i = 0; i < 3; i++)
+        for (size_t it = 0; it < objects.size(); it++)
         {
-            object1.AddRotation(0, 1.5, 0);
-            object1.ApplyTransform();
+            objects[it]->AddRotation(0, 0.5, 0);
+            objects[it]->AddPosition(sin(World::GetTimeLong() / 400) / 10, 0, 0);
 
-            object2.AddRotation(0, 1.5, 0);
-            object2.ApplyTransform();
+            objects[it]->SetScale(
+                abs(sin(World::GetTimeLong() / 750) + 2),
+                abs(sin(World::GetTimeLong() / 750) + 2),
+                abs(sin(World::GetTimeLong() / 750) + 2));
 
-            object3.AddRotation(0, 1.5, 0);
-            object3.ApplyTransform();
-
-            object4.AddRotation(0, 1.5, 0);
-            object4.ApplyTransform();
-
-            object5.AddRotation(0, 1.5, 0);
-            object5.ApplyTransform();
-
-            object6.AddRotation(0, 1.5, 0);
-            object6.ApplyTransform();
-
-            object7.AddRotation(0, 1.5, 0);
-            object7.ApplyTransform();
-
-            object8.AddRotation(0, 1.5, 0);
-            object8.ApplyTransform();
+            //objects[it]->AddPosition(sin(World::GetTimeLong() / 350) / 15, 0, 0);
+            //objects[it]->AddPosition(sin(World::GetTimeLong() / 350) / 15, 0, 0);
         }
     }
     
@@ -264,6 +222,7 @@ int main()
         World::StartFrame();
         InpSys->IO_Events();
         Game->Update();
+        World::ApplyingSceneTransformation();
         collision->CollisionLoop();
         render->RenderLoop(camera);
         World::EndFrame();

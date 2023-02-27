@@ -11,6 +11,10 @@
 #include <gl/gl.h>
 #include <gl/glu.h>
 
+inline Camera::Camera() {
+    Camera::Rename("Camera");
+}
+
 inline void Camera::SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar) {
     Camera::Fov = Fov;
     Camera::Aspect = Aspect;

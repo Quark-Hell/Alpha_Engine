@@ -8,6 +8,7 @@
 #include <chrono>
 #include <queue>
 #include <algorithm>
+#include <thread>
 
 #include "Matrix.h"
 #include "Alghoritms.h"
@@ -88,6 +89,8 @@ public:
 	int GetCountOfModules();
 
 	void DeleteObject();
+
+	unsigned long GetGeometryHeaviness();
 };
 
 
@@ -103,10 +106,12 @@ private:
 	static inline std::chrono::steady_clock::time_point _endTime;
 
 public:
+	inline static void BuildTransformationThread(const std::vector<Object*> objects);
+	inline static void ApplyingSceneTransformation();
+
 	inline static void StartFrame();
 	inline static void EndFrame();
 
-public:
 	static inline void CloseGame();
 	/// <summary>
 	/// Return bool IsCloseGame
