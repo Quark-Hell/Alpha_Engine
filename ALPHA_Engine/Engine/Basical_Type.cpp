@@ -82,9 +82,6 @@ inline Vector3 Object::GetPosition() {
 	return Position;
 }
 inline void Object::AddPosition (float X, float Y, float Z) {
-	Matrix4x4 matrix = Matrix4x4();
-	matrix.Translation(Vector4(X, Y, Z, 1));
-
 	//Object::_transformMatrix.Translation(Vector4(X, Y, Z, 1));
 
 	Object::Position.X += X;
