@@ -82,15 +82,11 @@ inline Vector3 Object::GetPosition() {
 	return Position;
 }
 inline void Object::AddPosition (float X, float Y, float Z) {
-	//Object::_transformMatrix.Translation(Vector4(X, Y, Z, 1));
-
 	Object::Position.X += X;
 	Object::Position.Y += Y;
 	Object::Position.Z += Z;
 }
 inline void Object::AddPosition(Vector3 position) {
-	//Object::_transformMatrix.Translation(Vector4(position.X, position.Y, position.Z, 1));
-
 	Object::Position.X += position.X;
 	Object::Position.Y += position.Y;
 	Object::Position.Z += position.Z;
