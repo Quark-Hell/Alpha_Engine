@@ -1,8 +1,9 @@
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-debug/CMakeFiles/edit_cache.dir
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/genna/source/repos/3D-Engine/out/build/x64-debug/ALPHA_Engine/CMakeFiles/Engine.dir
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-debug/ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-debug/ALPHA_Engine/CMakeFiles/copy_dll.dir
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-debug/ALPHA_Engine/CMakeFiles/copy_models.dir
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-debug/ALPHA_Engine/CMakeFiles/edit_cache.dir
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-debug/ALPHA_Engine/CMakeFiles/rebuild_cache.dir
+C:/Users/genna/source/repos/3D-Engine/out/build/x64-debug/ALPHA_Engine/CMakeFiles/ALPHA_Engine_autogen_timestamp_deps.dir
+C:/Users/genna/source/repos/3D-Engine/out/build/x64-debug/ALPHA_Engine/CMakeFiles/ALPHA_Engine_autogen.dir

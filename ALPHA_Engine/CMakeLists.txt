@@ -1,11 +1,21 @@
 ﻿# CMakeList.txt : CMake project for ALPHA_Engine, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.18)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
+#======================= INCLUSION OF Qt =======================#
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_PREFIX_PATH "C:/Qt/6.4.2/mingw_64/lib/cmake")
+set(QT_VERSION 6)
+
+find_package(Qt6Core REQUIRED)
+find_package(Qt6Widgets REQUIRED)
 
 SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/")
 SET (assimpLIB "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/lib/")
@@ -30,56 +40,6 @@ include_directories(${Game})
 include_directories(${SFML})
 #include_directories(${SFMLlib})
 include_directories(${SFMLinclude})
-
-add_library(Engine 
-${SFMLinclude}SFML/Window.hpp
-${SFMLinclude}SFML/OpenGL.hpp
-${SFMLinclude}SFML/Graphics.hpp
-
-${assimpINCLUDE}assimp/Importer.hpp
-${assimpINCLUDE}assimp/scene.h
-${assimpINCLUDE}assimp/postprocess.h
-
-${Engine}Basical_Type.cpp  
-${Engine}Basical_Type.h
-${Engine}Binds.cpp
-${Engine}Binds.h
-${Engine}Modules/Camera.cpp
-${Engine}Modules/Camera.h
-${Engine}Collision.cpp
-${Engine}Collision.h
-${Engine}Graphic_Engine.cpp
-${Engine}Graphic_Engine.h
-${Engine}Modules/Mesh.cpp
-${Engine}Modules/Mesh.h
-${Engine}Collision.h
-${Engine}Collision.cpp
-${Engine}Modules/Physics.h
-${Engine}Modules/Physics.cpp
-
-${Game}GameModels.cpp
-${Game}GameModels.h
- "Engine/Timer.cpp" 
- "Engine/Timer.h" 
- "Engine/Alghoritms.h" 
- "Engine/Alghoritms.cpp"
- "Engine/Material.h" 
- "Engine/Material.cpp" 
- "Engine/Texture.cpp" 
- "Engine/Texture.h"
- "Engine/Vectors.cpp" 
- "Engine/Vectors.h"
- "Engine/Matrix.h" 
- "Engine/Matrix.cpp"  
- "Engine/Modules/Geometry.h" 
- "Engine/Modules/Geometry.cpp")
-
-target_link_libraries(Engine
-PRIVATE ${SFMLlib}sfml-graphics.lib
-PRIVATE ${SFMLlib}sfml-system.lib
-PRIVATE ${SFMLlib}sfml-window.lib
-PRIVATE ${assimpLIB}assimp-vc143-mtd.lib
-)
 
 set(dll_Files "${PROJECT_SOURCE_DIR}/ALPHA_Engine/.dll")
 set(GameModels "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Models")
@@ -121,7 +81,11 @@ PRIVATE sfml-graphics
 PRIVATE sfml-system
 PRIVATE sfml-window
 PRIVATE ${assimpLIB}assimp-vc143-mtd.lib
+PRIVATE Qt6::Core
+PRIVATE Qt6::Widgets
 )
+
+target_compile_options(ALPHA_Engine PUBLIC "/Zc:__cplusplus")
 
 add_custom_target(copy_dll ALL
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
