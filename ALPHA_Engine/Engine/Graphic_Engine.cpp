@@ -1,17 +1,47 @@
 #include "Graphic_Engine.h"
 
 
-inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel,std::string Name, sf::ContextSettings Screen_Settings) {
+inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name) {
     _wight = Wight;
     _height = Height;
     _bitsPerPixel = BitsPerPixel;
     _name = Name;
-    _screen_Settings = Screen_Settings;
 
-    _screen = new sf::RenderWindow(sf::VideoMode(Wight, Height, BitsPerPixel), Name, sf::Style::Resize | sf::Style::Close, Screen_Settings);
+    //GLEW Init
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK)
+    {
+        //TODO: Add exception
+        //std::cout << "Failed to initialize GLEW" << std::endl;
+    }
+
+    glfwInit();
+    
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    
+    ////Todo:
+    ////glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE) if MacOs
+    
+    Screen::_window = glfwCreateWindow(Wight, Height, Name.c_str(), nullptr, nullptr);
+    if (Screen::_window == nullptr)
+    {
+        //TODO: Add exception
+        //std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+    }
+    
+    int width, height;
+    glfwGetFramebufferSize(Screen::_window, &width, &height);
+    glViewport(0, 0, width, height);
+    
+    glfwMakeContextCurrent(Screen::_window);
 }
-inline sf::RenderWindow* Screen::GetScreen() {
-    return Screen::_screen;
+inline GLFWwindow* Screen::GetWindow() {
+    return Screen::_window;
 }
 
 inline Screen* Render::GetScreenClass() {
@@ -111,14 +141,13 @@ inline void Render::RenderMesh(Mesh& mesh) {
     //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     
 
-
     //glBindTexture();
     //glIndexPointer(GL_UNSIGNED_INT,0, mesh._indices);
     glNormalPointer(GL_FLOAT, 0, mesh._normals);
     glVertexPointer(3, GL_FLOAT, 0, mesh._vertex);
     
 
-    glDrawElements(GL_TRIANGLES,mesh._indicesCount,GL_UNSIGNED_INT, mesh._indices);
+    glDrawElements(GL_TRIANGLES, mesh._indicesCount, GL_UNSIGNED_INT, mesh._indices);
     //glDrawArrays(GL_TRIANGLES,0, mesh._vertexCount);
     
     glDisableClientState(GL_NORMAL_ARRAY);
@@ -142,33 +171,35 @@ inline void Render::SceneAssembler() {
 }       
 
 inline void Render::StartRender(Camera* camera) {
-    sf::ContextSettings window_settings;
-    window_settings.depthBits = 24;
-    window_settings.stencilBits = 8;
-    window_settings.antialiasingLevel = 2;
+    //sf::ContextSettings window_settings;
+    //window_settings.depthBits = 24;
+    //window_settings.stencilBits = 8;
+    //window_settings.antialiasingLevel = 2;
 
-    _screenClass.CreateScreen(800, 600, 32, "SFML OpenGL", window_settings);
+    _screenClass.CreateScreen(800, 600, 32, "GLFW OpenGL");
 
     Render::PrepareToRender();
     Render::ApplyCameraTransform(camera);
 
     camera->SetCameraInfo(60, 4.0 / 3.0, 1, 300);
 
-    _screenClass._screen->setVerticalSyncEnabled(true);
-    _screenClass._screen->setFramerateLimit(60);
+    //_screenClass._screen->setVerticalSyncEnabled(true);
+    //_screenClass._screen->setFramerateLimit(60);
 }
 
 
 inline void Render::RenderLoop(Camera* camera) {
-    if (_screenClass._screen->isOpen())
+    if (!glfwWindowShouldClose(_screenClass._window))
     {
-        ClearFrameBuffer();
+        glfwPollEvents();
 
-        //PrepareToRender();
-        ApplyCameraTransform(camera);
+        Render::ClearFrameBuffer();
+
+        Render::PrepareToRender();
+        Render::ApplyCameraTransform(camera);
 
         Render::SceneAssembler();
 
-        _screenClass._screen->display();
+        glfwSwapBuffers(_screenClass._window);
     }
 }

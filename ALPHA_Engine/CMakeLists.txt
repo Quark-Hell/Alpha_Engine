@@ -6,16 +6,11 @@ cmake_minimum_required (VERSION 3.18)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set (GLEW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLEW/")
+set (GLFW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
 
-#======================= INCLUSION OF Qt =======================#
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_PREFIX_PATH "C:/Qt/6.4.2/mingw_64/lib/cmake")
-set(QT_VERSION 6)
-
-find_package(Qt6Core REQUIRED)
-find_package(Qt6Widgets REQUIRED)
+set (GLEWinclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLEW/include/")
+set (GLFWinclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/include/")
 
 SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/")
 SET (assimpLIB "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/lib/")
@@ -27,18 +22,24 @@ SET (SFML "${PROJECT_SOURCE_DIR}/ALPHA_Engine/SFML-2.5.1/")
 SET (SFMLlib "${PROJECT_SOURCE_DIR}/ALPHA_Engine/SFML-2.5.1/lib/")
 SET (SFMLinclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/SFML-2.5.1/include/")
 
-find_package(SFML 2.5.1 REQUIRED COMPONENTS system window graphics PATHS ${SFML})
+find_package(SFML 2.5.1 REQUIRED COMPONENTS system window PATHS ${SFML})
 
-find_package(OpenGL)
-find_package(assimp)
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/GLFW")
+set(CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
 
-#include_directories(${assimpLIB})
+find_package(glew REQUIRED)
+#find_package(GLFW REQUIRED)
+find_package(OpenGL REQUIRED)
+#find_package(ASSIMP REQUIRED)
+
+include_directories(${GLEWinclude})
+include_directories(${GLFWinclude})
+
 include_directories(${assimpINCLUDE})
 include_directories(${Engine})
 include_directories(${Game})
 
 include_directories(${SFML})
-#include_directories(${SFMLlib})
 include_directories(${SFMLinclude})
 
 set(dll_Files "${PROJECT_SOURCE_DIR}/ALPHA_Engine/.dll")
@@ -77,12 +78,12 @@ ${assimpINCLUDE}assimp/postprocess.h
  "Engine/Modules/Geometry.cpp")
 
 target_link_libraries(ALPHA_Engine 
-PRIVATE sfml-graphics
 PRIVATE sfml-system
 PRIVATE sfml-window
+PRIVATE ${GLFW}/glfw3.lib
+PRIVATE ${GLEW}/glew32s.lib
+PRIVATE opengl32.lib
 PRIVATE ${assimpLIB}assimp-vc143-mtd.lib
-PRIVATE Qt6::Core
-PRIVATE Qt6::Widgets
 )
 
 target_compile_options(ALPHA_Engine PUBLIC "/Zc:__cplusplus")

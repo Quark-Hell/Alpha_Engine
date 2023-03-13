@@ -24,26 +24,22 @@ Render* render = new Render;
 Collision* collision = new Collision;
 InputSystem* InpSys = new InputSystem;
 
-std::vector<Object*> objects;
+Object* object = new Object;
 
 bool IsRotating = true;
 
 void GameFunction::Start() {
     SetControl();
 
-    for (size_t it = 0; it < 3; it++)
-    {
-        Object* obj = new Object;
-        Mesh* mesh = new Mesh; mesh->Create("\\Models\\Blender.fbx");
-        obj->AddModule(mesh);
-        obj->AddPosition(0, (float)it / 2, 0);
+    Vector3 pos = Vector3{ 0,0,0 };
+    Vector3 rot = Vector3{ 0,0,0 };
+    Vector3 scale = Vector3{ 1,1,1 };
+    Vector3 color = Vector3{ 0,0,0 };
+    object = Primitives::Sphere(pos, rot, scale, color);
 
-        objects.push_back(obj);
-    }
-
-    objects[0]->AddPosition(0, 2, 0);
-    objects[0]->AddRotation(0, 30, 0);
-    objects[0]->SetScale(2, 2, 2);
+    object->AddPosition(10, 0, 0);
+    object->AddRotation(0, 30, 0);
+    object->SetScale(1, 1, 1);
 
     //object.SetScale(1,1,1);
     //object.AddPosition(0,0,0);
@@ -53,21 +49,21 @@ void GameFunction::Start() {
 }
 
 void GameFunction::Update() {
-    if (IsRotating) {
-        for (size_t it = 0; it < objects.size(); it++)
-        {
-            objects[it]->AddRotation(0, 0.5, 0);
-            objects[it]->AddPosition(sin(World::GetTimeLong() / 400) / 10, 0, 0);
-
-            objects[it]->SetScale(
-                abs(sin(World::GetTimeLong() / 750) + 2),
-                abs(sin(World::GetTimeLong() / 750) + 2),
-                abs(sin(World::GetTimeLong() / 750) + 2));
-
-            //objects[it]->AddPosition(sin(World::GetTimeLong() / 350) / 15, 0, 0);
-            //objects[it]->AddPosition(sin(World::GetTimeLong() / 350) / 15, 0, 0);
-        }
-    }
+    //if (IsRotating) {
+    //    for (size_t it = 0; it < objects.size(); it++)
+    //    {
+    //        objects[it]->AddRotation(0, 0.5, 0);
+    //        objects[it]->AddPosition(sin(World::GetTimeLong() / 400) / 10, 0, 0);
+    //
+    //        objects[it]->SetScale(
+    //            abs(sin(World::GetTimeLong() / 750) + 2),
+    //            abs(sin(World::GetTimeLong() / 750) + 2),
+    //            abs(sin(World::GetTimeLong() / 750) + 2));
+    //
+    //        //objects[it]->AddPosition(sin(World::GetTimeLong() / 350) / 15, 0, 0);
+    //        //objects[it]->AddPosition(sin(World::GetTimeLong() / 350) / 15, 0, 0);
+    //    }
+    //}
     
     //object.SetScale(
     //    abs(sin(World::GetTimeLong() / 350) + 1),
@@ -85,36 +81,34 @@ void SetControl() {
     Player.AddModule(camera);
 
     Bind Switch; Switch.KeyboardBind({ Switcher },{EnumKeyStates::KeyPressed},{sf::Keyboard::U});
-
+    
     Bind LeftMove; LeftMove.KeyboardBind({ LeftMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::A });
     Bind RightMove; RightMove.KeyboardBind({ RightMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::D });
-
+    
     Bind ForwardMove; ForwardMove.KeyboardBind({ ForwardMoveCamera }, { EnumKeyStates::KeyHold, EnumKeyStates::KeyHold }, { sf::Keyboard::W, sf::Keyboard::LShift });
     Bind BackwardMove; BackwardMove.KeyboardBind({ BackwardMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::S });
-
+    
     Bind UpMove; UpMove.KeyboardBind({ UpMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::Q });
     Bind DownMove; DownMove.KeyboardBind({ DownMoveCamera }, { EnumKeyStates::KeyHold }, { sf::Keyboard::E });
-
+    
     Bind CameraRot; CameraRot.MouseSensorBind({ CameraRotate }, EnumMouseSensorStates(MouseKeepMoved | MouseStartMoved));
-
+    
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Keyboard::Escape });
-    Bind CloseGameSecondMethod; CloseGameSecondMethod.MouseButtonsBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { sf::Mouse::Left }, { sf::Event::EventType::Closed });
-
+    
     InpSys->InsertBind(Switch);
-
+    
     InpSys->InsertBind(CameraRot);
-
+    
     InpSys->InsertBind(LeftMove);
     InpSys->InsertBind(RightMove);
-
+    
     InpSys->InsertBind(ForwardMove);
     InpSys->InsertBind(BackwardMove);
-
+    
     InpSys->InsertBind(UpMove);
     InpSys->InsertBind(DownMove);
-
+    
     InpSys->InsertBind(CloseGameFirstMethod);
-    InpSys->InsertBind(CloseGameSecondMethod);
 }
 void LeftMoveCamera() {
     Vector3 newPos = Player.GetPosition();
@@ -189,17 +183,17 @@ void CameraRotate() {
     float sensitive = 0.15;
 
     if (InpSys->GetMouseClass()->IsMouseChangePosition()) {
-
+    
         Vector3 delta;
         delta.X = InpSys->GetMouseClass()->GetMouseDelta().XPos;
         delta.Y = InpSys->GetMouseClass()->GetMouseDelta().YPos;
-
+    
         if (delta.GetMagnitude() < 100) {
             Vector3 newRot = Player.GetRotation();
-
+    
             newRot.X += delta.Y * sensitive;
             newRot.Y += delta.X * sensitive;
-
+    
             Player.SetRotation(newRot);
         }
     }
@@ -213,7 +207,7 @@ int main()
     Game->Start();
     render->StartRender(camera);
 
-    InpSys->Screen = render->GetScreenClass()->GetScreen();
+    InpSys->Window = render->GetScreenClass()->GetWindow();
 
     camera->GetDirectionOfView();
 
@@ -227,4 +221,6 @@ int main()
         render->RenderLoop(camera);
         World::EndFrame();
     }
+
+    glfwTerminate();
 }

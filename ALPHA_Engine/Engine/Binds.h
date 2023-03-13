@@ -1,8 +1,8 @@
 #pragma once
 
 //SFML
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <GLFW/glfw3.h>
 
 struct MousePos {
 public:
@@ -283,11 +283,9 @@ enum EnumMouseSensorStates {
 struct KeyboardKey
 {
 	/*
-	* Definition of key by sfml representation
-	* Example:
-	* sf::Keyboard::A
+	* Definition of key by glfw3 representation
 	*/
-	const sf::Keyboard::Key KEY;
+	const uint16_t KEY;
 
 	/*
 	* Key state enum
@@ -298,74 +296,74 @@ class Keyboard {
 
 #pragma region Keys Definition
 private:
-	KeyboardKey A{ sf::Keyboard::A };								KeyboardKey B{ sf::Keyboard::B };
-	KeyboardKey C{ sf::Keyboard::C };								KeyboardKey D{ sf::Keyboard::D };
-	KeyboardKey E{ sf::Keyboard::E };								KeyboardKey F{ sf::Keyboard::F };
-	KeyboardKey G{ sf::Keyboard::G };								KeyboardKey H{ sf::Keyboard::H };
-	KeyboardKey I{ sf::Keyboard::I };								KeyboardKey J{ sf::Keyboard::J };
-	KeyboardKey K{ sf::Keyboard::K };								KeyboardKey L{ sf::Keyboard::L };
-	KeyboardKey M{ sf::Keyboard::M };								KeyboardKey N{ sf::Keyboard::N };
-	KeyboardKey O{ sf::Keyboard::O };								KeyboardKey P{ sf::Keyboard::P };
-	KeyboardKey Q{ sf::Keyboard::Q };								KeyboardKey R{ sf::Keyboard::R };
-	KeyboardKey S{ sf::Keyboard::S };								KeyboardKey T{ sf::Keyboard::T };
-	KeyboardKey U{ sf::Keyboard::U };								KeyboardKey V{ sf::Keyboard::V };
-	KeyboardKey W{ sf::Keyboard::W };								KeyboardKey X{ sf::Keyboard::X };
-	KeyboardKey Y{ sf::Keyboard::Y };								KeyboardKey Z{ sf::Keyboard::Z };
+	KeyboardKey A{ GLFW_KEY_A };								KeyboardKey B{ GLFW_KEY_B };
+	KeyboardKey C{ GLFW_KEY_C };								KeyboardKey D{ GLFW_KEY_D };
+	KeyboardKey E{ GLFW_KEY_E };								KeyboardKey F{ GLFW_KEY_F };
+	KeyboardKey G{ GLFW_KEY_G };								KeyboardKey H{ GLFW_KEY_H };
+	KeyboardKey I{ GLFW_KEY_I };								KeyboardKey J{ GLFW_KEY_J };
+	KeyboardKey K{ GLFW_KEY_K };								KeyboardKey L{ GLFW_KEY_L };
+	KeyboardKey M{ GLFW_KEY_M };								KeyboardKey N{ GLFW_KEY_N };
+	KeyboardKey O{ GLFW_KEY_O };								KeyboardKey P{ GLFW_KEY_P };
+	KeyboardKey Q{ GLFW_KEY_Q };								KeyboardKey R{ GLFW_KEY_R };
+	KeyboardKey S{ GLFW_KEY_S };								KeyboardKey T{ GLFW_KEY_T };
+	KeyboardKey U{ GLFW_KEY_U };								KeyboardKey V{ GLFW_KEY_V };
+	KeyboardKey W{ GLFW_KEY_W };								KeyboardKey X{ GLFW_KEY_X };
+	KeyboardKey Y{ GLFW_KEY_Y };								KeyboardKey Z{ GLFW_KEY_Z };
 
-	KeyboardKey Num0{ sf::Keyboard::Num0 };					KeyboardKey Num1{ sf::Keyboard::Num1 };
-	KeyboardKey Num2{ sf::Keyboard::Num2 };					KeyboardKey Num3{ sf::Keyboard::Num3 };
-	KeyboardKey Num4{ sf::Keyboard::Num4 };					KeyboardKey Num5{ sf::Keyboard::Num5 };
-	KeyboardKey Num6{ sf::Keyboard::Num6 };					KeyboardKey Num7{ sf::Keyboard::Num7 };
-	KeyboardKey Num8{ sf::Keyboard::Num8 };					KeyboardKey Num9{ sf::Keyboard::Num9 };
+	KeyboardKey Num0{ GLFW_KEY_0 };					            KeyboardKey Num1{ GLFW_KEY_1 };
+	KeyboardKey Num2{ GLFW_KEY_2 };					            KeyboardKey Num3{ GLFW_KEY_3 };
+	KeyboardKey Num4{ GLFW_KEY_4 };					            KeyboardKey Num5{ GLFW_KEY_5 };
+	KeyboardKey Num6{ GLFW_KEY_6 };					            KeyboardKey Num7{ GLFW_KEY_7 };
+	KeyboardKey Num8{ GLFW_KEY_7 };					            KeyboardKey Num9{ GLFW_KEY_9 };
 
-	KeyboardKey Escape{ sf::Keyboard::Escape };
+	KeyboardKey Escape{ GLFW_KEY_ESCAPE };
 	
-	KeyboardKey LControl{ sf::Keyboard::LControl };			KeyboardKey LShift{ sf::Keyboard::LShift };
-	KeyboardKey LAlt{ sf::Keyboard::LAlt };						KeyboardKey LSystem{ sf::Keyboard::LSystem };
+	KeyboardKey LControl{ GLFW_KEY_LEFT_CONTROL };			    KeyboardKey LShift{ GLFW_KEY_LEFT_SHIFT };
+	KeyboardKey LAlt{ GLFW_KEY_LEFT_ALT };						
 	
-	KeyboardKey RControl{ sf::Keyboard::RControl };			KeyboardKey RShift{ sf::Keyboard::RShift };
-	KeyboardKey RAlt{ sf::Keyboard::RAlt };						KeyboardKey RSystem{ sf::Keyboard::RSystem };
+	KeyboardKey RControl{ GLFW_KEY_RIGHT_CONTROL };			    KeyboardKey RShift{ GLFW_KEY_RIGHT_SHIFT };
+	KeyboardKey RAlt{ GLFW_KEY_RIGHT_ALT };						
 	
-	KeyboardKey Menu{ sf::Keyboard::Menu };					KeyboardKey LBracket{ sf::Keyboard::LBracket };
-	KeyboardKey RBracket{ sf::Keyboard::RBracket };		KeyboardKey Semicolon{ sf::Keyboard::Semicolon };
-	KeyboardKey Comma{ sf::Keyboard::Comma };				KeyboardKey Period{ sf::Keyboard::Period };
-	KeyboardKey Quote{ sf::Keyboard::Quote };				KeyboardKey Slash{ sf::Keyboard::Slash };
-	KeyboardKey Backslash { sf::Keyboard::Backslash };	KeyboardKey Tilde{ sf::Keyboard::Tilde };
-	KeyboardKey Equal{ sf::Keyboard::Equal };					KeyboardKey Hyphen{ sf::Keyboard::Hyphen };
+	KeyboardKey Menu{ GLFW_KEY_MENU };					        KeyboardKey LBracket{ GLFW_KEY_LEFT_BRACKET };
+	KeyboardKey RBracket{ GLFW_KEY_RIGHT_BRACKET };		        KeyboardKey Semicolon{ GLFW_KEY_SEMICOLON };
+	KeyboardKey Comma{ GLFW_KEY_COMMA };				        KeyboardKey Period{ GLFW_KEY_PERIOD };
+	KeyboardKey Quote{ GLFW_KEY_COMMA };				        KeyboardKey Slash{ GLFW_KEY_SLASH };
+	KeyboardKey Backslash{ GLFW_KEY_BACKSLASH };	            KeyboardKey Tilde{ GLFW_KEY_GRAVE_ACCENT };
+	KeyboardKey Equal{ GLFW_KEY_EQUAL };					    KeyboardKey Hyphen{ GLFW_KEY_APOSTROPHE };
 	
-	KeyboardKey Space{ sf::Keyboard::Space };					KeyboardKey Enter{ sf::Keyboard::Enter };
-	KeyboardKey Backspace{ sf::Keyboard::Backspace };	KeyboardKey Tab{ sf::Keyboard::Tab };
+	KeyboardKey Space{ GLFW_KEY_SPACE };					    KeyboardKey Enter{ GLFW_KEY_ENTER };
+	KeyboardKey Backspace{ GLFW_KEY_BACKSPACE };	            KeyboardKey Tab{ GLFW_KEY_TAB };
 	
-	KeyboardKey PageUp{ sf::Keyboard::PageUp };				KeyboardKey PageDown{ sf::Keyboard::PageDown };
-	KeyboardKey End{ sf::Keyboard::End };						KeyboardKey Home{ sf::Keyboard::Home };
+	KeyboardKey PageUp{ GLFW_KEY_PAGE_UP };				        KeyboardKey PageDown{ GLFW_KEY_PAGE_DOWN };
+	KeyboardKey End{ GLFW_KEY_END };					 	    KeyboardKey Home{ GLFW_KEY_HOME };
 	
-	KeyboardKey Insert{ sf::Keyboard::Insert };				 KeyboardKey Delete{ sf::Keyboard::Delete };
+	KeyboardKey Insert{ GLFW_KEY_INSERT };				        KeyboardKey Delete{ GLFW_KEY_DELETE };
 	
-	KeyboardKey Add{ sf::Keyboard::Add };						KeyboardKey Subtract{ sf::Keyboard::Subtract };
-	KeyboardKey Multiply{ sf::Keyboard::Multiply };			KeyboardKey Divide{ sf::Keyboard::Divide };
+	KeyboardKey Add{ GLFW_KEY_KP_ADD };						    KeyboardKey Subtract{ GLFW_KEY_KP_SUBTRACT };
+	KeyboardKey Multiply{ GLFW_KEY_KP_MULTIPLY };			    KeyboardKey Divide{ GLFW_KEY_KP_SUBTRACT };
 
-	KeyboardKey Left{ sf::Keyboard::Left };						KeyboardKey Right{ sf::Keyboard::Right };
-	KeyboardKey Up{ sf::Keyboard::Up };							KeyboardKey Down{ sf::Keyboard::Down };
+	KeyboardKey Left{ GLFW_KEY_LEFT };						    KeyboardKey Right{ GLFW_KEY_RIGHT };
+	KeyboardKey Up{ GLFW_KEY_UP };							    KeyboardKey Down{ GLFW_KEY_DOWN };
+															    
+	KeyboardKey Numpad0{ GLFW_KEY_KP_0 };		                KeyboardKey Numpad1{ GLFW_KEY_KP_1 };
+	KeyboardKey Numpad2{ GLFW_KEY_KP_2 };		                KeyboardKey Numpad3{ GLFW_KEY_KP_3 };
+	KeyboardKey Numpad4{ GLFW_KEY_KP_4 };		                KeyboardKey Numpad5{ GLFW_KEY_KP_5 };
+	KeyboardKey Numpad6{ GLFW_KEY_KP_6 };		                KeyboardKey Numpad7{ GLFW_KEY_KP_7 };
+	KeyboardKey Numpad8{ GLFW_KEY_KP_8 };		                KeyboardKey Numpad9{ GLFW_KEY_KP_9 };
 
-	KeyboardKey Numpad0{ sf::Keyboard::Numpad0 };		KeyboardKey Numpad1{ sf::Keyboard::Numpad1 };
-	KeyboardKey Numpad2{ sf::Keyboard::Numpad2 };		KeyboardKey Numpad3{ sf::Keyboard::Numpad3 };
-	KeyboardKey Numpad4{ sf::Keyboard::Numpad4 };		KeyboardKey Numpad5{ sf::Keyboard::Numpad5 };
-	KeyboardKey Numpad6{ sf::Keyboard::Numpad6 };		KeyboardKey Numpad7{ sf::Keyboard::Numpad7 };
-	KeyboardKey Numpad8{ sf::Keyboard::Numpad8 };		KeyboardKey Numpad9{ sf::Keyboard::Numpad9 };
+	KeyboardKey F1{ GLFW_KEY_F1 };								KeyboardKey F2{ GLFW_KEY_F2 };
+	KeyboardKey F3{ GLFW_KEY_F3 };							    KeyboardKey F4{ GLFW_KEY_F4 };
+	KeyboardKey F5{ GLFW_KEY_F5 };							    KeyboardKey F6{ GLFW_KEY_F6 };
+	KeyboardKey F7{ GLFW_KEY_F7 };							    KeyboardKey F8{ GLFW_KEY_F8 };
+	KeyboardKey F9{ GLFW_KEY_F9 };							    KeyboardKey F10{ GLFW_KEY_F10 };
+	KeyboardKey F11{ GLFW_KEY_F11 };							KeyboardKey F12{ GLFW_KEY_F12 };
+	KeyboardKey F13{ GLFW_KEY_F13 };							KeyboardKey F14{ GLFW_KEY_F14 };
+	KeyboardKey F15{ GLFW_KEY_F15 };
 
-	KeyboardKey F1{ sf::Keyboard::F1 };								KeyboardKey F2{ sf::Keyboard::F2 };
-	KeyboardKey F3{ sf::Keyboard::F3 };							KeyboardKey F4{ sf::Keyboard::F4 };
-	KeyboardKey F5{ sf::Keyboard::F5 };							KeyboardKey F6{ sf::Keyboard::F6 };
-	KeyboardKey F7{ sf::Keyboard::F7 };							KeyboardKey F8{ sf::Keyboard::F8 };
-	KeyboardKey F9{ sf::Keyboard::F9 };							KeyboardKey F10{ sf::Keyboard::F10 };
-	KeyboardKey F11{ sf::Keyboard::F11 };							KeyboardKey F12{ sf::Keyboard::F12 };
-	KeyboardKey F13{ sf::Keyboard::F13 };							KeyboardKey F14{ sf::Keyboard::F14 };
-	KeyboardKey F15{ sf::Keyboard::F15 };
-
-	KeyboardKey Pause{ sf::Keyboard::Pause };
+	KeyboardKey Pause{ GLFW_KEY_PAUSE };
 
 private:
-	KeyboardKey* Keys[101] = {
+	KeyboardKey* Keys[99] = {
 		&A, &B, &C, &D,
 		&E,&F, &G, &H,
 		&I, &J, &K, &L,
@@ -376,8 +374,8 @@ private:
 		&Num2 , &Num3 ,&Num4 , &Num5,
 		&Num6 ,&Num7, &Num8 ,&Num9,
 		&Escape  ,&LControl, &LShift  ,&LAlt,
-		&LSystem  ,&RControl, &RShift  ,&RAlt,
-		&RSystem  ,&Menu  ,
+		&RControl, &RShift  ,&RAlt,
+		&Menu  ,
 		&LBracket  ,&RBracket  ,&Semicolon  ,&Comma  ,
 		&Period  ,&Quote  ,&Slash  ,&Backslash  ,
 		&Tilde  ,&Equal ,&Hyphen ,&Space,
@@ -399,7 +397,7 @@ private:
 	friend class InputSystem;
 
 private:
-	inline void UpdateKeysState();
+	inline void UpdateKeysState(GLFWwindow& window);
 
 public:
 	inline Keyboard();
@@ -409,11 +407,9 @@ public:
 struct MouseKey
 {
 	/*
-	* Definition of key by sfml representation
-	* Example:
-	* sf::Mouse::Left
+	* Definition of key by glfw3 representation
 	*/
-	const sf::Mouse::Button KEY;
+	const uint8_t KEY;
 	/*
 	* Key state enum
 	*/
@@ -426,12 +422,12 @@ private:
 	MousePos _mouseDelta;
 
 private:
-	MouseKey _leftButton{sf::Mouse::Left};
-	MouseKey _rightButton{ sf::Mouse::Right };
-	MouseKey _middleButton{ sf::Mouse::Middle };
+	MouseKey _leftButton{ GLFW_MOUSE_BUTTON_LEFT };
+	MouseKey _rightButton{ GLFW_MOUSE_BUTTON_RIGHT };
+	MouseKey _middleButton{ GLFW_MOUSE_BUTTON_MIDDLE };
 
-	MouseKey _firstExtraButton{ sf::Mouse::XButton1 };
-	MouseKey _secondExtraButton{ sf::Mouse::XButton2 };
+	MouseKey _firstExtraButton{ GLFW_MOUSE_BUTTON_4 };
+	MouseKey _secondExtraButton{ GLFW_MOUSE_BUTTON_5 };
 
 	EnumMouseSensorStates MoveSensorState;
 
@@ -453,18 +449,17 @@ public:
 	~Mouse();
 
 private:
-	inline void UpdateMouseState();
+	inline void UpdateMouseState(GLFWwindow& window);
 };
 
 class Bind {
 private:
 	std::vector<void(*)()> _operations;
 
-	sf::Event::EventType _eventType;
 	std::vector<EnumKeyStates> _keyboardKeysState;
-	std::vector<sf::Keyboard::Key> _keyboardKeys;
+	std::vector<uint16_t> _keyboardKeys;
 	std::vector<EnumKeyStates> _mouseKeysState;
-	std::vector<sf::Mouse::Button> _mouseKeys;
+	std::vector<uint8_t> _mouseKeys;
 	EnumMouseSensorStates _mouseSensorState;
 
 public:
@@ -477,23 +472,20 @@ private:
 	void InvokeOperations();
 	void Constructor(std::vector<void(*)()> Operations = {},
 		std::vector<EnumKeyStates> KeysState = {},
-		std::vector<sf::Keyboard::Key> KeyboardKeys = {},
+		std::vector<uint16_t> KeyboardKeys = {},
 		std::vector<EnumKeyStates> MouseKeysState = {},
-		std::vector<sf::Mouse::Button> MouseKeys = {},
-		EnumMouseSensorStates MouseSensorState = (EnumMouseSensorStates)(1),
-		sf::Event::EventType EventType = (sf::Event::EventType)(-1));
-
+		std::vector<uint8_t> MouseKeys = {},
+		EnumMouseSensorStates MouseSensorState = (EnumMouseSensorStates)(1));
 
 	//----------------------------------------------------------------------------//
 #pragma region General constructor
 public:
 	void GeneralBind(std::vector<void(*)()> Operations,
 		std::vector<EnumKeyStates> KeysState,
-		std::vector<sf::Keyboard::Key> KeyboardKeys,
+		std::vector<uint16_t> KeyboardKeys,
 		std::vector<EnumKeyStates> MouseKeysState,
-		std::vector<sf::Mouse::Button> MouseKeys,
-		EnumMouseSensorStates MouseSensorState,
-		sf::Event::EventType EventType);
+		std::vector<uint8_t> MouseKeys,
+		EnumMouseSensorStates MouseSensorState);
 #pragma endregion
 	//----------------------------------------------------------------------------//
 
@@ -505,13 +497,7 @@ public:
 	void KeyboardBind(
 		std::vector<void(*)()> Operations,
 		std::vector<EnumKeyStates> KeysState,
-		std::vector<sf::Keyboard::Key> KeyboardKeys,
-		sf::Event::EventType EventType);
-
-	void KeyboardBind(
-		std::vector<void(*)()> Operations,
-		std::vector<EnumKeyStates> KeysState,
-		std::vector<sf::Keyboard::Key> KeyboardKeys);
+		std::vector<uint16_t> KeyboardKeys);
 #pragma endregion
 	//----------------------------------------------------------------------------//
 
@@ -523,13 +509,7 @@ public:
 	void MouseButtonsBind(
 		std::vector<void(*)()> Operations,
 		std::vector<EnumKeyStates> MouseKeysState,
-		std::vector<sf::Mouse::Button> MouseKeys,
-		sf::Event::EventType EventType);
-
-	void MouseButtonsBind(
-		std::vector<void(*)()> Operations,
-		std::vector<EnumKeyStates> MouseKeysState,
-		std::vector<sf::Mouse::Button> MouseKeys);
+		std::vector<uint8_t> MouseKeys);
 #pragma endregion
 	//----------------------------------------------------------------------------//
 
@@ -540,11 +520,6 @@ public:
 public:
 	void MouseSensorBind(
 		std::vector<void(*)()> Operations,
-		EnumMouseSensorStates MouseSensorState,
-		sf::Event::EventType EventType);
-
-	void MouseSensorBind(
-		std::vector<void(*)()> Operations,
 		EnumMouseSensorStates MouseSensorState);
 #pragma endregion
 	//----------------------------------------------------------------------------//
@@ -553,13 +528,12 @@ public:
 class InputSystem {
 private:
 	std::vector<Bind> _bindsBuff;
-	sf::Event _event;
 
 	Mouse* _mouseClass = new Mouse;
 	Keyboard* _keyboardClass = new Keyboard;
 
 public:
-	sf::RenderWindow* Screen;
+	GLFWwindow* Window;
 
 public:
 	void IO_Events();

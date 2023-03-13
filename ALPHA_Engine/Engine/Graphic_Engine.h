@@ -6,16 +6,11 @@
 #include "Modules/Camera.h"
 #include "GameModels.h"
 
-//SFML
-#include <SFML/Window.hpp>
-#include <SFML/OpenGL.hpp>
-#include <SFML/Graphics.hpp>
+#define GLEW_STATIC
+#include <GL/glew.h>
 
-//OpenGL
-#pragma comment(lib, "opengl32")
-#pragma comment(lib, "glu32")
-#include <gl/gl.h>
-#include <gl/glu.h>
+#include <GLFW/glfw3.h>
+
 
 struct Colors {
 	const Vector3 green { 0.0f, 1.0f, 0.0f }; 
@@ -32,19 +27,18 @@ private:
 	unsigned int _height;
 	unsigned int _bitsPerPixel;
 	std::string _name;
-	sf::ContextSettings _screen_Settings;
 
-	sf::RenderWindow* _screen;
+	GLFWwindow* _window;
 
 private:
 	friend class Render;
 	friend class InputSystem;
 
 private:
-	void CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name, sf::ContextSettings Screen_Settings);
+	void CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name);
 
 public:
-	sf::RenderWindow* GetScreen();
+	GLFWwindow* GetWindow();
 };
 
 class Render {

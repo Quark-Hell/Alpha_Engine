@@ -1,6 +1,5 @@
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-release/CMakeFiles/edit_cache.dir
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-release/CMakeFiles/rebuild_cache.dir
-C:/Users/genna/source/repos/3D-Engine/out/build/x64-release/ALPHA_Engine/CMakeFiles/Engine.dir
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-release/ALPHA_Engine/CMakeFiles/ALPHA_Engine.dir
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-release/ALPHA_Engine/CMakeFiles/copy_dll.dir
 C:/Users/genna/source/repos/3D-Engine/out/build/x64-release/ALPHA_Engine/CMakeFiles/copy_models.dir

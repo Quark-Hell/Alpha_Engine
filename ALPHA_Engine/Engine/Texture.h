@@ -2,9 +2,9 @@
 #include "Basical_Type.h"
 
 //SFML
-#include <SFML/Window.hpp>
-#include <SFML/OpenGL.hpp>
-#include <SFML/Graphics.hpp>
+//#include <SFML/Window.hpp>
+//#include <SFML/OpenGL.hpp>
+//#include <SFML/Graphics.hpp>
 
 enum EnumTypeOfWrapping {
 	Repeat = 0,
@@ -32,7 +32,7 @@ private:
 	std::string _textureLink;
 	std::vector <Vector3> _textureCoords;
 
-	sf::Texture _sfTexture;
+	//sf::Texture _sfTexture;
 	//Other representation(DirectX, Vulkan...)
 
 	EnumTypeOfWrapping _typeOfWrapping;

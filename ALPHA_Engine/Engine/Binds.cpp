@@ -5,14 +5,12 @@
 
 inline void Bind::Constructor(std::vector<void(*)()> Operations,
 	std::vector<EnumKeyStates> KeysState,
-	std::vector<sf::Keyboard::Key> KeyboardKeys,
+	std::vector<uint16_t> KeyboardKeys,
 	std::vector<EnumKeyStates> MouseKeysState,
-	std::vector<sf::Mouse::Button> MouseKeys,
-	EnumMouseSensorStates MouseSensorState,
-	sf::Event::EventType EventType) {
+	std::vector<uint8_t> MouseKeys,
+	EnumMouseSensorStates MouseSensorState) {
 
 	Bind::_operations = Operations;
-	Bind::_eventType = EventType;
 
 	Bind::_keyboardKeysState = KeysState;
 	Bind::_keyboardKeys = KeyboardKeys;
@@ -27,13 +25,12 @@ inline void Bind::Constructor(std::vector<void(*)()> Operations,
 #pragma region General constructor
 inline void Bind::GeneralBind(std::vector<void(*)()> Operations,
 	std::vector<EnumKeyStates> KeysState,
-	std::vector<sf::Keyboard::Key> KeyboardKeys,
+	std::vector<uint16_t> KeyboardKeys,
 	std::vector<EnumKeyStates> MouseKeysState,
-	std::vector<sf::Mouse::Button> MouseKeys,
-	EnumMouseSensorStates MouseSensorState,
-	sf::Event::EventType EventType) {
+	std::vector<uint8_t> MouseKeys,
+	EnumMouseSensorStates MouseSensorState) {
 
-	Bind::Constructor(Operations, KeysState, KeyboardKeys, MouseKeysState, MouseKeys, MouseSensorState, EventType);
+	Bind::Constructor(Operations, KeysState, KeyboardKeys, MouseKeysState, MouseKeys, MouseSensorState);
 }
 #pragma endregion
 //---------------------------------------------------------------//
@@ -44,17 +41,9 @@ inline void Bind::GeneralBind(std::vector<void(*)()> Operations,
 #pragma region Constructor for keyboard bind
 inline void Bind::KeyboardBind(std::vector<void(*)()> Operations,
 	std::vector<EnumKeyStates> KeysState,
-	std::vector<sf::Keyboard::Key> KeyboardKeys,
-	sf::Event::EventType EventType) {
+	std::vector<uint16_t> KeyboardKeys) {
 
-	Bind::Constructor(Operations, KeysState, KeyboardKeys, {}, {}, (EnumMouseSensorStates)(1), EventType);
-}
-
-inline void Bind::KeyboardBind(std::vector<void(*)()> Operations,
-	std::vector<EnumKeyStates> KeysState,
-	std::vector<sf::Keyboard::Key> KeyboardKeys) {
-
-	Bind::Constructor(Operations, KeysState, KeyboardKeys, {}, {}, (EnumMouseSensorStates)(1), (sf::Event::EventType)-1);
+	Bind::Constructor(Operations, KeysState, KeyboardKeys, {}, {}, (EnumMouseSensorStates)(1));
 }
 #pragma endregion
 //---------------------------------------------------------------//
@@ -64,17 +53,9 @@ inline void Bind::KeyboardBind(std::vector<void(*)()> Operations,
 #pragma region Constructor for mouse buttons bind
 inline void Bind::MouseButtonsBind(std::vector<void(*)()> Operations,
 	std::vector<EnumKeyStates> MouseKeysState,
-	std::vector<sf::Mouse::Button> MouseKeys,
-	sf::Event::EventType EventType) {
+	std::vector<uint8_t> MouseKeys) {
 
-	Bind::Constructor(Operations, {}, {}, MouseKeysState, MouseKeys, (EnumMouseSensorStates)(1), EventType);
-}
-
-inline void Bind::MouseButtonsBind(std::vector<void(*)()> Operations,
-	std::vector<EnumKeyStates> MouseKeysState,
-	std::vector<sf::Mouse::Button> MouseKeys) {
-
-	Bind::Constructor(Operations, {}, {}, MouseKeysState, MouseKeys, (EnumMouseSensorStates)(1), (sf::Event::EventType)-1);
+	Bind::Constructor(Operations, {}, {}, MouseKeysState, MouseKeys, (EnumMouseSensorStates)(1));
 }
 #pragma endregion
 //---------------------------------------------------------------//
@@ -83,16 +64,9 @@ inline void Bind::MouseButtonsBind(std::vector<void(*)()> Operations,
 //---------------------------------------------------------------//
 #pragma region Constructor for mouse sensor bind
 inline void Bind::MouseSensorBind(std::vector<void(*)()> Operations,
-	EnumMouseSensorStates MouseSensorState,
-	sf::Event::EventType EventType) {
-
-	Bind::Constructor(Operations, {}, {}, {}, {}, MouseSensorState, EventType);
-}
-
-inline void Bind::MouseSensorBind(std::vector<void(*)()> Operations,
 	EnumMouseSensorStates MouseSensorState) {
 
-	Bind::Constructor(Operations, {}, {}, {}, {}, MouseSensorState, (sf::Event::EventType)-1);
+	Bind::Constructor(Operations, {}, {}, {}, {}, MouseSensorState);
 }
 #pragma endregion
 //---------------------------------------------------------------//
@@ -109,13 +83,13 @@ inline void Bind::InvokeOperations() {
 //----------------------------------------------------------------------------//
 #pragma region InputSystem definitions
 inline void InputSystem::IO_Events() {
-	if (!InputSystem::Screen) { return; }
+	if (!InputSystem::Window) { return; }
 
-	InputSystem::_mouseClass->UpdateMouseState();
-	InputSystem::_keyboardClass->UpdateKeysState();
+	InputSystem::_mouseClass->UpdateMouseState(*InputSystem::Window);
+	InputSystem::_keyboardClass->UpdateKeysState(*InputSystem::Window);
 
-	if (!InputSystem::Screen->isOpen()) { return; }
-	if (InputSystem::Screen->pollEvent(InputSystem::_event)) { }
+	//if (!InputSystem::Screen->isOpen()) { return; }
+	//if (InputSystem::Screen->pollEvent(InputSystem::_event)) { }
 
 
 	//All values
@@ -123,10 +97,6 @@ inline void InputSystem::IO_Events() {
 	{
 		if (InputSystem::_bindsBuff[i].Active == false) { continue; }
 		bool mark = true;
-
-		//Check event type statement
-		if (InputSystem::_bindsBuff[i]._eventType == (sf::Event::EventType)- 1) {}
-		else if (!(InputSystem::_bindsBuff[i]._eventType == _event.type)) { mark = false; }
 
 		//Keyboard statement check
 		for (size_t j = 0; j < InputSystem::_bindsBuff[i]._keyboardKeys.size(); j++)
@@ -162,7 +132,7 @@ inline void InputSystem::InsertBind(Bind bind) {
 }
 
 inline InputSystem::InputSystem() {
-	InputSystem::Screen = Screen;
+	InputSystem::Window = Window;
 }
 inline InputSystem::~InputSystem() {
 
@@ -172,10 +142,10 @@ inline InputSystem::~InputSystem() {
 
 //----------------------------------------------------------------------------//
 #pragma region Keyboard definitions
-inline void Keyboard::UpdateKeysState() {
-	for (size_t i = 0; i < 101; i++)
+inline void Keyboard::UpdateKeysState(GLFWwindow& window) {
+	for (size_t i = 0; i < 99; i++)
 	{		
-		if (sf::Keyboard::isKeyPressed(Keys[i]->KEY)) {
+		if (glfwGetKey(&window, Keys[i]->KEY)) {
 			if (Keys[i]->KeyState & EnumKeyStates::KeyNotPressed) {
 				Keys[i]->KeyState = KeyPressed;
 				std::printf("Pressed");
@@ -215,7 +185,7 @@ inline Mouse* InputSystem::GetMouseClass() {
 	return InputSystem::_mouseClass;
 }
 
-inline void Mouse::UpdateMouseState() {
+inline void Mouse::UpdateMouseState(GLFWwindow& window) {
 	Mouse::_previousMousePos = Mouse::_currentMousePos;
 	Mouse::_currentMousePos = { (float)sf::Mouse::getPosition().x, (float)sf::Mouse::getPosition().y };
 
@@ -243,7 +213,8 @@ inline void Mouse::UpdateMouseState() {
 	//Update mouse buttons state
 	for (size_t i = 0; i < 5; i++)
 	{
-		if (sf::Mouse::isButtonPressed(Buttons[i]->KEY)) {
+		
+		if (glfwGetMouseButton(&window, Buttons[i]->KEY)) {
 			if (Buttons[i]->KeyState & EnumKeyStates::KeyNotPressed) {
 				Buttons[i]->KeyState = (EnumKeyStates)(KeyPressed | KeyHold);
 				continue;
