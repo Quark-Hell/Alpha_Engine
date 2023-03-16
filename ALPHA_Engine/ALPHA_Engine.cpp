@@ -35,17 +35,11 @@ void GameFunction::Start() {
     Vector3 rot = Vector3{ 0,0,0 };
     Vector3 scale = Vector3{ 1,1,1 };
     Vector3 color = Vector3{ 0,0,0 };
-    object = Primitives::Sphere(pos, rot, scale, color);
+    object = Primitives::Cube(pos, rot, scale, color);
 
     object->AddPosition(10, 0, 0);
     object->AddRotation(0, 30, 0);
     object->SetScale(1, 1, 1);
-
-    //object.SetScale(1,1,1);
-    //object.AddPosition(0,0,0);
-    //object.AddRotation(0,0,0);
-    //
-    //object.ApplyTransform();
 }
 
 void GameFunction::Update() {

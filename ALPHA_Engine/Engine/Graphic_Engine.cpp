@@ -18,9 +18,9 @@ inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsign
     glfwInit();
     
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     
     ////Todo:
@@ -37,7 +37,7 @@ inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsign
     int width, height;
     glfwGetFramebufferSize(Screen::_window, &width, &height);
     glViewport(0, 0, width, height);
-    
+
     glfwMakeContextCurrent(Screen::_window);
 }
 inline GLFWwindow* Screen::GetWindow() {
@@ -137,7 +137,6 @@ inline void Render::RenderMesh(Mesh& mesh) {
 
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
-    //glEnableClientState(GL_INDEX_ARRAY);
     //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     
 
@@ -146,13 +145,10 @@ inline void Render::RenderMesh(Mesh& mesh) {
     glNormalPointer(GL_FLOAT, 0, mesh._normals);
     glVertexPointer(3, GL_FLOAT, 0, mesh._vertex);
     
-
     glDrawElements(GL_TRIANGLES, mesh._indicesCount, GL_UNSIGNED_INT, mesh._indices);
-    //glDrawArrays(GL_TRIANGLES,0, mesh._vertexCount);
     
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
-    //glDisableClientState(GL_INDEX_ARRAY);
 }
 
 inline void Render::SceneAssembler() {
@@ -178,10 +174,14 @@ inline void Render::StartRender(Camera* camera) {
 
     _screenClass.CreateScreen(800, 600, 32, "GLFW OpenGL");
 
+    int width, height;
+    glfwGetFramebufferSize(_screenClass._window, &width, &height);
+    glViewport(0, 0, width, height);
+
     Render::PrepareToRender();
     Render::ApplyCameraTransform(camera);
 
-    camera->SetCameraInfo(60, 4.0 / 3.0, 1, 300);
+    camera->SetCameraInfo(60, 4.0 / 3.0, 0.1, 300);
 
     //_screenClass._screen->setVerticalSyncEnabled(true);
     //_screenClass._screen->setFramerateLimit(60);
