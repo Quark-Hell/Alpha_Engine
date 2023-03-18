@@ -13,6 +13,7 @@ inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsign
     {
         //TODO: Add exception
         //std::cout << "Failed to initialize GLEW" << std::endl;
+        //
     }
 
     glfwInit();
