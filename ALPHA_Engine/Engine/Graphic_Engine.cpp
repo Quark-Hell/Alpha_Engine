@@ -17,6 +17,8 @@ inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsign
 
     glfwInit();
     
+    glfwWindowHint(GLFW_SAMPLES,3);
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     
