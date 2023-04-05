@@ -1,10 +1,5 @@
 #include "Camera.h"
 
-//SFML
-#include <SFML/Window.hpp>
-#include <SFML/OpenGL.hpp>
-#include <SFML/Graphics.hpp>
-
 //OpenGL
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")

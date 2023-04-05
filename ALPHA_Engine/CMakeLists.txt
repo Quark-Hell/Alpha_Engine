@@ -18,12 +18,6 @@ SET (assimpINCLUDE "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/include/")
 SET (Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Engine/")
 SET (Game "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Game/")
 
-SET (SFML "${PROJECT_SOURCE_DIR}/ALPHA_Engine/SFML-2.5.1/")
-SET (SFMLlib "${PROJECT_SOURCE_DIR}/ALPHA_Engine/SFML-2.5.1/lib/")
-SET (SFMLinclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/SFML-2.5.1/include/")
-
-find_package(SFML 2.5.1 REQUIRED COMPONENTS system window PATHS ${SFML})
-
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/GLFW")
 set(CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
 
@@ -55,10 +49,6 @@ ALPHA_Engine.h
 
 ${SOURCES}
 
-${SFMLinclude}SFML/Window.hpp
-${SFMLinclude}SFML/OpenGL.hpp
-${SFMLinclude}SFML/Graphics.hpp
-
 ${assimpINCLUDE}assimp/Importer.hpp
 ${assimpINCLUDE}assimp/scene.h
 ${assimpINCLUDE}assimp/postprocess.h
@@ -78,8 +68,6 @@ ${assimpINCLUDE}assimp/postprocess.h
  "Engine/Modules/Geometry.cpp")
 
 target_link_libraries(ALPHA_Engine 
-PRIVATE sfml-system
-PRIVATE sfml-window
 PRIVATE ${GLFW}/glfw3.lib
 PRIVATE ${GLEW}/glew32s.lib
 PRIVATE opengl32.lib

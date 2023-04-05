@@ -101,8 +101,8 @@ inline void InputSystem::IO_Events() {
 		//Keyboard statement check
 		for (size_t j = 0; j < InputSystem::_bindsBuff[i]._keyboardKeys.size(); j++)
 		{
-			int IdCurrentKey = InputSystem::_bindsBuff[i]._keyboardKeys[j];
-			if (! (InputSystem::_bindsBuff[i]._keyboardKeysState[j] & InputSystem::_keyboardClass->Keys[IdCurrentKey]->KeyState)) { mark = false; break; }
+			EnumKeyStates state = InputSystem::_keyboardClass->GetKeyState(InputSystem::_bindsBuff[i]._keyboardKeys[j]);
+			if (! (InputSystem::_bindsBuff[i]._keyboardKeysState[j] & state)) { mark = false; break; }
 		}
 
 		//Mouse button statement check
@@ -142,6 +142,14 @@ inline InputSystem::~InputSystem() {
 
 //----------------------------------------------------------------------------//
 #pragma region Keyboard definitions
+inline EnumKeyStates Keyboard::GetKeyState(uint16_t key) {
+	for (size_t i = 0; i < 99; i++)
+	{
+		if (Keys[i]->KEY == key) { return Keys[i]->KeyState; }
+	}
+	return EnumKeyStates::Unknown;
+}
+
 inline void Keyboard::UpdateKeysState(GLFWwindow& window) {
 	for (size_t i = 0; i < 99; i++)
 	{		
@@ -186,8 +194,11 @@ inline Mouse* InputSystem::GetMouseClass() {
 }
 
 inline void Mouse::UpdateMouseState(GLFWwindow& window) {
+	double xpos, ypos;
+	glfwGetCursorPos(&window, &xpos, &ypos);
+
 	Mouse::_previousMousePos = Mouse::_currentMousePos;
-	Mouse::_currentMousePos = { (float)sf::Mouse::getPosition().x, (float)sf::Mouse::getPosition().y };
+	Mouse::_currentMousePos = { (float)xpos, (float)ypos };
 
 	Mouse::_mouseDelta = MousePos{ _currentMousePos - _previousMousePos };
 

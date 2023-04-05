@@ -1,7 +1,7 @@
 #pragma once
 
-//SFML
-#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <vector>
 #include <GLFW/glfw3.h>
 
 struct MousePos {
@@ -255,6 +255,8 @@ public:
 };
 
 enum EnumKeyStates {
+	Unknown = -1,
+
 	KeyNotPressed = 1 << 0,
 	KeyPressed = 1 << 1,
 	KeyHold = 1 << 2,
@@ -397,6 +399,7 @@ private:
 	friend class InputSystem;
 
 private:
+	inline EnumKeyStates GetKeyState(uint16_t key);
 	inline void UpdateKeysState(GLFWwindow& window);
 
 public:
