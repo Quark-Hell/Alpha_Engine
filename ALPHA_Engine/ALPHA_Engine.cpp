@@ -210,6 +210,7 @@ int main()
         collision->CollisionLoop();
         render->RenderLoop(camera);
         World::EndFrame();
+        std::cout << World::GetDeltaTime() << std::endl;
     }
 
     glfwTerminate();

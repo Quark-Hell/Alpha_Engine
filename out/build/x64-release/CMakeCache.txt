@@ -201,9 +201,6 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
-//Dependencies for the target
-Engine_LIB_DEPENDS:STATIC=general;C:/Users/genna/source/repos/3D-Engine/ALPHA_Engine/SFML-2.5.1/lib/sfml-graphics.lib;general;C:/Users/genna/source/repos/3D-Engine/ALPHA_Engine/SFML-2.5.1/lib/sfml-system.lib;general;C:/Users/genna/source/repos/3D-Engine/ALPHA_Engine/SFML-2.5.1/lib/sfml-window.lib;general;C:/Users/genna/source/repos/3D-Engine/ALPHA_Engine/assimp/lib/assimp-vc143-mtd.lib;
-
 //The directory containing a CMake configuration file for GLEW.
 GLEW_DIR:PATH=GLEW_DIR-NOTFOUND
 
@@ -227,15 +224,6 @@ OPENGL_gl_LIBRARY:STRING=opengl32
 
 //GLU library for win32
 OPENGL_glu_LIBRARY:STRING=glu32
-
-//The directory containing a CMake configuration file for SFML.
-SFML_DIR:PATH=C:/Users/genna/source/repos/3D-Engine/ALPHA_Engine/SFML-2.5.1/lib/cmake/SFML
-
-//Path to a file.
-SFML_DOC_DIR:PATH=SFML_DOC_DIR-NOTFOUND
-
-//The directory containing a CMake configuration file for assimp.
-assimp_DIR:PATH=assimp_DIR-NOTFOUND
 
 
 ########################
