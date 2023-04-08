@@ -41,7 +41,9 @@ inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsign
     glfwGetFramebufferSize(Screen::_window, &width, &height);
     glViewport(0, 0, width, height);
 
+
     glfwMakeContextCurrent(Screen::_window);
+    //glfwSwapInterval(0);
 }
 inline GLFWwindow* Screen::GetWindow() {
     return Screen::_window;

@@ -26,49 +26,25 @@ InputSystem* InpSys = new InputSystem;
 
 Object* object = new Object;
 
-bool IsRotating = true;
 
 void GameFunction::Start() {
     SetControl();
 
-    Vector3 pos = Vector3{ 0,0,0 };
-    Vector3 rot = Vector3{ 0,0,0 };
-    Vector3 scale = Vector3{ 1,1,1 };
-    Vector3 color = Vector3{ 0,0,0 };
-    object = Primitives::Cube(pos, rot, scale, color);
+    Vector3 pos = Vector3(0,0,0);
+    Vector3 rot = Vector3(0, 0, 0);
+    Vector3 scale = Vector3(1, 1, 1);
+    Vector3 color = Vector3(0, 0, 0);
 
-    object->AddPosition(10, 0, 0);
-    object->AddRotation(0, 30, 0);
-    object->SetScale(1, 1, 1);
+    object = Primitives::Cylinder(pos, rot, scale, color);
 }
 
 void GameFunction::Update() {
-    //if (IsRotating) {
-    //    for (size_t it = 0; it < objects.size(); it++)
-    //    {
-    //        objects[it]->AddRotation(0, 0.5, 0);
-    //        objects[it]->AddPosition(sin(World::GetTimeLong() / 400) / 10, 0, 0);
-    //
-    //        objects[it]->SetScale(
-    //            abs(sin(World::GetTimeLong() / 750) + 2),
-    //            abs(sin(World::GetTimeLong() / 750) + 2),
-    //            abs(sin(World::GetTimeLong() / 750) + 2));
-    //
-    //        //objects[it]->AddPosition(sin(World::GetTimeLong() / 350) / 15, 0, 0);
-    //        //objects[it]->AddPosition(sin(World::GetTimeLong() / 350) / 15, 0, 0);
-    //    }
-    //}
-    
-    //object.SetScale(
-    //    abs(sin(World::GetTimeLong() / 350) + 1),
-    //    abs(sin(World::GetTimeLong() / 350) + 1),
-    //    abs(sin(World::GetTimeLong() / 350) + 1));
-    
-    //object.ApplyTransform();
-}
+    object->AddRotation(1.5,0,0);
 
-void Switcher() {
-    IsRotating = !IsRotating;
+    object->SetScale(
+        abs(sin(World::GetTimeLong() / 350) + 1.2),
+        abs(sin(World::GetTimeLong() / 350) + 1.2),
+        abs(sin(World::GetTimeLong() / 350) + 1.2));
 }
 
 void SetControl() {
@@ -204,13 +180,12 @@ int main()
     while (!World::GetStateOfGame())
     {
         World::StartFrame();
-        InpSys->IO_Events();
         Game->Update();
+        InpSys->IO_Events();
         World::ApplyingSceneTransformation();
         collision->CollisionLoop();
         render->RenderLoop(camera);
         World::EndFrame();
-        std::cout << World::GetDeltaTime() << std::endl;
     }
 
     glfwTerminate();

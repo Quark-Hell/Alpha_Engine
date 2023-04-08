@@ -21,9 +21,10 @@ SET (Game "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Game/")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/GLFW")
 set(CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
 
-find_package(glew REQUIRED)
+find_library(GLEW glew)
+#find_package(glew REQUIRED)
 #find_package(GLFW REQUIRED)
-find_package(OpenGL REQUIRED)
+#find_package(OpenGL REQUIRED)
 #find_package(ASSIMP REQUIRED)
 
 include_directories(${GLEWinclude})
