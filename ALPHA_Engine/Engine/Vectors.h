@@ -577,14 +577,14 @@ public:
 	//-----------------------------------------------------------//
 
 	bool operator<(const Vector3 value) {
-		if (GetNonSqrtMagnitude() < GetNonSqrtMagnitude())
+		if (GetNonSqrtMagnitude() < GetNonSqrtMagnitude(value))
 		{
 			return true;
 		}
 		return false;
 	}
 	bool operator<(const Vector3* value) {
-		if (GetNonSqrtMagnitude() < GetNonSqrtMagnitude())
+		if (GetNonSqrtMagnitude() < GetNonSqrtMagnitude(*value))
 		{
 			return true;
 		}

@@ -29,24 +29,55 @@ Camera* camera = new Camera;
 GameFunction* Game = new GameFunction;
 Render* render = new Render;
 Collision* collision = new Collision;
+Physics* physics = new Physics;
 InputSystem* InpSys = new InputSystem;
 
 Object* object = new Object;
+Object* object2 = new Object;
+
+Object* plane = new Object;
+
+RigidBody* rb1 = new RigidBody;
+
+bool IsRotating = true;
 
 
 void GameFunction::Start() {
     SetControl();
 
-    Vector3 pos = Vector3(0,0,0);
-    Vector3 rot = Vector3(0, 0, 0);
-    Vector3 scale = Vector3(1, 1, 1);
-    Vector3 color = Vector3(0, 0, 0);
+    Collider* col1 = new Collider; col1->Create("\\Models\\Primitives\\Cube.fbx");
+    Collider* col2 = new Collider; col2->Create("\\Models\\Primitives\\Cube.fbx");
 
-    object = Primitives::Cylinder(pos, rot, scale, color);
+    Collider* col3 = new Collider; col3->Create("\\Models\\Primitives\\Plane.fbx");
+
+    Vector3 pos = Vector3{ 0,0,-15 };
+    Vector3 rot = Vector3{ 0,0,0 };
+    Vector3 scale = Vector3{ 1,1,1 };
+    Vector3 color = Vector3{ 0,0,0 };
+    object = Primitives::Cube(pos, rot, scale, color);
+
+    plane = Primitives::Plane(pos, rot, scale, color);
+    plane->AddModule(col3);
+    plane->AddPosition(0, -5, 0);
+    plane->AddRotation(-90, 0, 0);
+    plane->SetScale(10, 10, 10);
+
+    object->AddModule(col1);
+    object->AddModule(rb1);
+    object->AddPosition(5, 0, 0);
+    object->AddRotation(0, 0, 0);
+    object->SetScale(1, 1, 1);
+    rb1->CalculateCenterMass();
+
+    object2 = Primitives::Cube(pos, rot, scale, color);
+    object2->AddModule(col2);
+    object2->AddPosition(0, 0, 0);
+    object2->AddRotation(0, 0, 0);
+    object2->SetScale(1, 1, 1);
 }
 
 void GameFunction::Update() {
-    object->AddRotation(1.5,0,0);
+    //object->AddRotation(1.5,0,0);
 
     //object->SetScale(
     //    abs(sin(World::GetTimeLong() / 350) + 1.2),
@@ -190,6 +221,7 @@ int main()
         Game->Update();
         InpSys->IO_Events();
         World::ApplyingSceneTransformation();
+        physics->PhysicsLoop();
         collision->CollisionLoop();
         render->RenderLoop(camera);
         World::EndFrame();

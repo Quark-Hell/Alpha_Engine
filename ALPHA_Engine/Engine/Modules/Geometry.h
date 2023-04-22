@@ -24,6 +24,8 @@ private:
 	friend class Collision;
 	friend class Mesh;
 	friend class Collider;
+	friend class Physics;
+	friend class RigidBody;
 
 public:
 	Geometry();

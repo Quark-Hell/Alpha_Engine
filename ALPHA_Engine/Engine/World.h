@@ -14,6 +14,8 @@ private:
 	static inline std::chrono::steady_clock::time_point _startTime;
 	static inline std::chrono::steady_clock::time_point _endTime;
 
+	static inline float SimulationSpeed = 1;
+
 public:
 	inline static void BuildTransformationThread(const std::vector<Object*> objects);
 	inline static void ApplyingSceneTransformation();
@@ -30,10 +32,14 @@ public:
 	static inline double GetTimeLong();
 	static inline float GetDeltaTime();
 
+	static inline void SetSimulationSpeed(float SimSpeed);
+
 private:
 	friend class Render;
 	friend class Collision;
 	friend class Object;
+	friend class Physics;
+	friend class RigidBody;
 
 	World();
 };

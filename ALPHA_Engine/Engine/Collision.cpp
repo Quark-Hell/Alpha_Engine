@@ -1,6 +1,7 @@
 #include "Collision.h"
 
 #include "World.h"
+#include "Modules/Physics.h"
 #include "Object.h"
 
 inline Simplex::Simplex(std::array<Vector3, 4> points, unsigned size) {
@@ -144,8 +145,11 @@ inline void Collision::CollisionLoop() {
 
                     if (colliderA != nullptr && colliderA->GetName() == "Collider" && colliderB != nullptr && colliderB->GetName() == "Collider" && colliderA != colliderB) {
                         if (Collision::GJK((Collider*)colliderA, (Collider*)colliderB, points)) {
-                            colliderA->GetParentObject()->AddPosition(-(points.Normal.X * points.PenetrationDepth), -(points.Normal.Y * points.PenetrationDepth), -(points.Normal.Z * points.PenetrationDepth));
+                            colliderA->GetParentObject()->AddPosition((-points.Normal.X * points.PenetrationDepth), (-points.Normal.Y * points.PenetrationDepth), (-points.Normal.Z * points.PenetrationDepth));
                             colliderA->GetParentObject()->ApplyTransform();
+
+                            RigidBody* rb = dynamic_cast<RigidBody*>(colliderA->GetParentObject()->GetModuleByName("RigidBody"));
+                            rb->_movementVector = {0,0,0};
                         }
                     }
                 }
@@ -214,7 +218,7 @@ inline CollisionPoints Collision::EPA(Simplex& simplex, Collider* colliderA, Col
         Vector3 support = Support(colliderA, colliderB, minNormal);
         float sDistance = minNormal.DotProduct(support);
 
-        if (abs(sDistance - minDistance) > 0.001f) {
+        if (abs(sDistance - minDistance) >= 0.001f) {
             minDistance = FLT_MAX;
             std::vector<std::pair<size_t, size_t>> uniqueEdges;
 

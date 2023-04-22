@@ -73,3 +73,9 @@ inline void World::ApplyingSceneTransformation() {
 		threads[it].join();
 	}
 }
+
+inline void World::SetSimulationSpeed(float simSpeed) {
+	if (simSpeed < 0) {
+		World::SimulationSpeed = simSpeed;
+	}
+}

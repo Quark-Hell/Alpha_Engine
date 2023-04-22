@@ -47,7 +47,7 @@ inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsign
 
 
     glfwMakeContextCurrent(Screen::_window);
-    //glfwSwapInterval(0);
+    glfwSwapInterval(1);
 }
 inline GLFWwindow* Screen::GetWindow() {
     return Screen::_window;
