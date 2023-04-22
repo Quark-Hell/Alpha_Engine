@@ -1,8 +1,7 @@
 #pragma once
-#include "Basical_Type.h"
+#include "Module.h"
 
 class Physics : public Module {
-
 
 public:
 	Physics();

@@ -1,10 +1,5 @@
 #pragma once
-#include "Basical_Type.h"
-
-//SFML
-//#include <SFML/Window.hpp>
-//#include <SFML/OpenGL.hpp>
-//#include <SFML/Graphics.hpp>
+#include "Modules/Module.h"
 
 enum EnumTypeOfWrapping {
 	Repeat = 0,

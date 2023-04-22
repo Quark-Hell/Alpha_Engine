@@ -1,10 +1,12 @@
 #include "Matrix.h"
 
-Matrix4x4::Matrix4x4() {
+#include "Vectors.h"
+
+inline Matrix4x4::Matrix4x4() {
 	Matrix4x4::Identity();
 }
 
-void Matrix4x4::operator=(const Matrix4x4& matrix4X4)
+inline void Matrix4x4::operator=(const Matrix4x4& matrix4X4)
 {
 	Matrix4x4::_matrix[0][0] = matrix4X4._matrix[0][0];
 	Matrix4x4::_matrix[0][1] = matrix4X4._matrix[0][1];
@@ -27,7 +29,7 @@ void Matrix4x4::operator=(const Matrix4x4& matrix4X4)
 	Matrix4x4::_matrix[3][3] = matrix4X4._matrix[3][3];
 }
 
-void Matrix4x4::Identity()
+inline void Matrix4x4::Identity()
 {
 	//First row
 	Matrix4x4::_matrix[0][0] = 1;
@@ -56,7 +58,7 @@ void Matrix4x4::Identity()
 	Matrix4x4::_matrix[3][2] = 0;
 	Matrix4x4::_matrix[3][3] = 1;
 }
-void Matrix4x4::Zero()
+inline void Matrix4x4::Zero()
 {
 	//First row
 	Matrix4x4::_matrix[0][0] = 0;
@@ -85,7 +87,7 @@ void Matrix4x4::Zero()
 	Matrix4x4::_matrix[3][2] = 0;
 	Matrix4x4::_matrix[3][3] = 0;
 }
-void Matrix4x4::Constant(float value)
+inline void Matrix4x4::Constant(float value)
 {
 	//First row
 	Matrix4x4::_matrix[0][0] = value;
@@ -115,7 +117,7 @@ void Matrix4x4::Constant(float value)
 	Matrix4x4::_matrix[3][3] = value;
 }
 
-void Matrix4x4::Scale(const Vector4& factor)
+inline void Matrix4x4::Scale(const Vector4& factor)
 {
 	Matrix4x4 buffer = Matrix4x4();
 
@@ -126,7 +128,7 @@ void Matrix4x4::Scale(const Vector4& factor)
 
 	MatrixMath::MultiplyMatrix(*this, Matrix4x4::GetMatrix(), buffer);
 }
-void Matrix4x4::Translation(const Vector4& translation)
+inline void Matrix4x4::Translation(const Vector4& translation)
 {
 	Matrix4x4 buffer = Matrix4x4();
 
@@ -137,20 +139,20 @@ void Matrix4x4::Translation(const Vector4& translation)
 
 	MatrixMath::MultiplyMatrix(*this, Matrix4x4::GetMatrix(), buffer);
 }
-void Matrix4x4::Rotation(const Vector4& r)
+inline void Matrix4x4::Rotation(const Vector4& r)
 {
 	Matrix4x4::RotationX(r.X);
 	Matrix4x4::RotationY(r.Y);
 	Matrix4x4::RotationZ(r.Z);
 }
-void Matrix4x4::Rotation(const Vector4& v, float rv)
+inline void Matrix4x4::Rotation(const Vector4& v, float rv)
 {
 	Matrix4x4::RotationX(v.X * rv);
 	Matrix4x4::RotationY(v.Y * rv);
 	Matrix4x4::RotationZ(v.Z * rv);
 }
 
-void Matrix4x4::RotationX(float rx)
+inline void Matrix4x4::RotationX(float rx)
 {
 	Matrix4x4 buffer = Matrix4x4();
 
@@ -163,7 +165,7 @@ void Matrix4x4::RotationX(float rx)
 
 	MatrixMath::MultiplyMatrix(*this, Matrix4x4::GetMatrix(), buffer);
 }
-void Matrix4x4::RotationY(float ry)
+inline void Matrix4x4::RotationY(float ry)
 {
 	Matrix4x4 buffer = Matrix4x4();
 
@@ -176,7 +178,7 @@ void Matrix4x4::RotationY(float ry)
 
 	MatrixMath::MultiplyMatrix(*this, Matrix4x4::GetMatrix(), buffer);
 }
-void Matrix4x4::RotationZ(float rz) {
+inline void Matrix4x4::RotationZ(float rz) {
 	Matrix4x4 buffer = Matrix4x4();
 
 	const float rad = M_PI / 180 * rz;
@@ -194,7 +196,7 @@ inline Matrix4x4 Matrix4x4::GetMatrix() {
 	return *this;
 }
 
-void MatrixMath::MultiplyMatrix(Matrix4x4& outputMatrix, const Matrix4x4& firstMatrix4x4, const Matrix4x4& secondMatrix4x4) {
+inline void MatrixMath::MultiplyMatrix(Matrix4x4& outputMatrix, const Matrix4x4& firstMatrix4x4, const Matrix4x4& secondMatrix4x4) {
 	//First row
 	outputMatrix._matrix[0][0] =
 		firstMatrix4x4._matrix[0][0] * secondMatrix4x4._matrix[0][0] +
@@ -286,7 +288,7 @@ void MatrixMath::MultiplyMatrix(Matrix4x4& outputMatrix, const Matrix4x4& firstM
 		firstMatrix4x4._matrix[3][2] * secondMatrix4x4._matrix[2][3] +
 		firstMatrix4x4._matrix[3][3] * secondMatrix4x4._matrix[3][3];
 }
-void MatrixMath::MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const Matrix4x4& secondMatrix4x1) {
+inline void MatrixMath::MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const Matrix4x4& secondMatrix4x1) {
 	//First row
 	outputMatrix._matrix[0][0] =
 		firstMatrix4x4._matrix[0][0] * secondMatrix4x1._matrix[0][0] +
@@ -309,7 +311,7 @@ void MatrixMath::MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstM
 		firstMatrix4x4._matrix[3][2] * secondMatrix4x1._matrix[2][0] +
 		firstMatrix4x4._matrix[3][3] * secondMatrix4x1._matrix[3][0];
 }
-void MatrixMath::MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const Vector4& secondMatrix4x1) {
+inline void MatrixMath::MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const Vector4& secondMatrix4x1) {
 	//First row
 	outputMatrix._matrix[0][0] =
 		firstMatrix4x4._matrix[0][0] * secondMatrix4x1.X +
@@ -332,7 +334,7 @@ void MatrixMath::MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstM
 		firstMatrix4x4._matrix[3][2] * secondMatrix4x1.Z +
 		firstMatrix4x4._matrix[3][3] * secondMatrix4x1.W;
 }
-void MatrixMath::MultiplyMatrix(Vector4& outputMatrix, const Matrix4x4& firstMatrix4x4, const Vector4& secondMatrix4x1) {
+inline void MatrixMath::MultiplyMatrix(Vector4& outputMatrix, const Matrix4x4& firstMatrix4x4, const Vector4& secondMatrix4x1) {
 	//First row
 	outputMatrix.X =
 		firstMatrix4x4._matrix[0][0] * secondMatrix4x1.X +
@@ -355,7 +357,7 @@ void MatrixMath::MultiplyMatrix(Vector4& outputMatrix, const Matrix4x4& firstMat
 		firstMatrix4x4._matrix[3][2] * secondMatrix4x1.Z +
 		firstMatrix4x4._matrix[3][3] * secondMatrix4x1.W;
 }
-void MatrixMath::MultiplyMatrix(Vector3& outputMatrix, const Matrix4x4& firstMatrix4x4, const Vector3& secondMatrix4x1) {
+inline void MatrixMath::MultiplyMatrix(Vector3& outputMatrix, const Matrix4x4& firstMatrix4x4, const Vector3& secondMatrix4x1) {
 	//First row
 	outputMatrix.X =
 		firstMatrix4x4._matrix[0][0] * secondMatrix4x1.X +
@@ -374,7 +376,7 @@ void MatrixMath::MultiplyMatrix(Vector3& outputMatrix, const Matrix4x4& firstMat
 		firstMatrix4x4._matrix[2][3] * 1;
 }
 
-void MatrixMath::AddMatrix(Matrix4x4& outputMatrix, const Matrix4x4& firstMatrix4x4, const Matrix4x4& secondMatrix4x4) {
+inline void MatrixMath::AddMatrix(Matrix4x4& outputMatrix, const Matrix4x4& firstMatrix4x4, const Matrix4x4& secondMatrix4x4) {
 	//First row
 	outputMatrix._matrix[0][0] = firstMatrix4x4._matrix[0][0] + secondMatrix4x4._matrix[0][0];
 	outputMatrix._matrix[0][1] = firstMatrix4x4._matrix[0][1] + secondMatrix4x4._matrix[0][1];
@@ -401,7 +403,7 @@ void MatrixMath::AddMatrix(Matrix4x4& outputMatrix, const Matrix4x4& firstMatrix
 }
 
 
-void MatrixMath::MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const std::array<float, 4>& secondMatrix4x1) {
+inline void MatrixMath::MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const std::array<float, 4>& secondMatrix4x1) {
 	//First row
 	outputMatrix._matrix[0][0] =
 		firstMatrix4x4._matrix[0][0] * secondMatrix4x1[0] +
@@ -424,7 +426,7 @@ void MatrixMath::MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstM
 		firstMatrix4x4._matrix[3][2] * secondMatrix4x1[2] +
 		firstMatrix4x4._matrix[3][3] * secondMatrix4x1[3];
 }
-void MatrixMath::MultiplyMatrix(std::array<float, 4>& outputMatrix4x1, const Matrix4x4& firstMatrix4x4, const std::array<float, 4>& secondMatrix4x1) {
+inline void MatrixMath::MultiplyMatrix(std::array<float, 4>& outputMatrix4x1, const Matrix4x4& firstMatrix4x4, const std::array<float, 4>& secondMatrix4x1) {
 	//First row
 	outputMatrix4x1[0] =
 		firstMatrix4x4._matrix[0][0] * secondMatrix4x1[0] +
@@ -448,7 +450,7 @@ void MatrixMath::MultiplyMatrix(std::array<float, 4>& outputMatrix4x1, const Mat
 		firstMatrix4x4._matrix[3][3] * secondMatrix4x1[3];
 }
 
-void MatrixMath::MultiplyMatrix(
+inline void MatrixMath::MultiplyMatrix(
 	float& outputMatrix4x1Xvalue,
 	float& outputMatrix4x1Yvalue,
 	float& outputMatrix4x1Zvalue,

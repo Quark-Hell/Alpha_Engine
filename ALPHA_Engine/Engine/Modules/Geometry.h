@@ -1,11 +1,7 @@
 #pragma once
+#include "Module.h"
 
-#include "Basical_Type.h"
-
-//Assimp
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+class Object;
 
 class Geometry : public Module {
 private:

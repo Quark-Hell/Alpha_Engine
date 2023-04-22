@@ -3,18 +3,25 @@
 
 #include "ALPHA_Engine.h"
 
-#include "Basical_Type.h"
-#include "Basical_Type.cpp"
-#include "Graphic_Engine.cpp"
+#include "Engine/Basical_Type.h"
+
+#include "Engine/Alghoritms.cpp"
+#include "Engine/Collision.cpp"
+#include "Engine/Graphic_Engine.cpp"
+
+#include "Engine/World.cpp"
+#include "Engine/Object.cpp"
+#include "Engine/Matrix.cpp"
+
+#include "Engine/Binds.cpp"
 
 #include "GameModels.cpp"
-#include "Modules/Physics.cpp"
+
 #include "Modules/Camera.cpp"
-#include "Collision.cpp"
-
-#include "Binds.cpp"
-
-#include <ctime>
+#include "Modules/Geometry.cpp"
+#include "Modules/Mesh.cpp"
+#include "Modules/Module.cpp"
+#include "Modules/Physics.cpp"
 
 Object Player;
 Camera* camera = new Camera;
@@ -41,10 +48,10 @@ void GameFunction::Start() {
 void GameFunction::Update() {
     object->AddRotation(1.5,0,0);
 
-    object->SetScale(
-        abs(sin(World::GetTimeLong() / 350) + 1.2),
-        abs(sin(World::GetTimeLong() / 350) + 1.2),
-        abs(sin(World::GetTimeLong() / 350) + 1.2));
+    //object->SetScale(
+    //    abs(sin(World::GetTimeLong() / 350) + 1.2),
+    //    abs(sin(World::GetTimeLong() / 350) + 1.2),
+    //    abs(sin(World::GetTimeLong() / 350) + 1.2));
 }
 
 void SetControl() {

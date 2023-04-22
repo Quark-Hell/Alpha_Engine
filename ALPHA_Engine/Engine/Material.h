@@ -1,5 +1,4 @@
 #pragma once
-#include "Basical_Type.h"
 #include "Texture.h"
 
 class Material

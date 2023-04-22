@@ -1,5 +1,7 @@
 #include "Timer.h"
 
+#include "World.h"
+
 inline float Timer::GetDelay() {
 	return Timer::_delay;
 }

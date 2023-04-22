@@ -1,6 +1,5 @@
 #pragma once
-
-#include "Basical_Type.h"
+#include "Module.h"
 
 class Camera : public Module{
 private:

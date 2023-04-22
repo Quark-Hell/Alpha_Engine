@@ -1,16 +1,9 @@
 #pragma once
 
-#include <iostream>
 #include "Basical_Type.h"
-#include "Modules/Mesh.h"
-#include "Modules/Camera.h"
-#include "GameModels.h"
 
-#define GLEW_STATIC
-#include <GL/glew.h>
-
-#include <GLFW/glfw3.h>
-
+class Camera;
+class Mesh;
 
 struct Colors {
 	const Vector3 green { 0.0f, 1.0f, 0.0f }; 
@@ -60,8 +53,4 @@ private:
 	void SceneAssembler();
 	void RenderMesh(Mesh& mesh);
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
-};
-
-class Output {
-
 };

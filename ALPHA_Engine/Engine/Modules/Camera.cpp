@@ -1,10 +1,6 @@
 #include "Camera.h"
 
-//OpenGL
-#pragma comment(lib, "opengl32")
-#pragma comment(lib, "glu32")
-#include <gl/gl.h>
-#include <gl/glu.h>
+#include "Object.h"
 
 inline Camera::Camera() {
     Camera::Rename("Camera");
@@ -43,7 +39,6 @@ inline float Camera::GetZFar() {
 //TODO:
 inline Vector3 Camera::GetDirectionOfView() {
     DirectionOfView = GetParentObject()->GetRotation();
-
 
     //DirectionOfView.NormilizeSelf();
 

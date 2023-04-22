@@ -1,8 +1,6 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <GLFW/glfw3.h>
+#include "Basical_Type.h"
 
 struct MousePos {
 public:
@@ -399,12 +397,12 @@ private:
 	friend class InputSystem;
 
 private:
-	inline EnumKeyStates GetKeyState(uint16_t key);
-	inline void UpdateKeysState(GLFWwindow& window);
+	EnumKeyStates GetKeyState(uint16_t key);
+	void UpdateKeysState(GLFWwindow& window);
 
 public:
-	inline Keyboard();
-	inline ~Keyboard();
+	Keyboard();
+	~Keyboard();
 };
 
 struct MouseKey
@@ -444,15 +442,15 @@ private:
 	friend class InputSystem;
 
 public:
-	inline MousePos GetMousePos();
-	inline MousePos GetMouseDelta();
-	inline bool IsMouseChangePosition();
+	MousePos GetMousePos();
+	MousePos GetMouseDelta();
+	bool IsMouseChangePosition();
 
 	Mouse();
 	~Mouse();
 
 private:
-	inline void UpdateMouseState(GLFWwindow& window);
+	void UpdateMouseState(GLFWwindow& window);
 };
 
 class Bind {

@@ -1,6 +1,7 @@
 #include "Collision.h"
-#include "Modules/Geometry.cpp"
-#include <set>
+
+#include "World.h"
+#include "Object.h"
 
 inline Simplex::Simplex(std::array<Vector3, 4> points, unsigned size) {
     Simplex::_points = points;

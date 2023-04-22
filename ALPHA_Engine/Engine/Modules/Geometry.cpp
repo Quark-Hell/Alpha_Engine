@@ -1,5 +1,13 @@
 #include "Geometry.h"
 
+#include "Object.h"
+#include "Alghoritms.h"
+#include "Matrix.h"
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 inline Geometry::Geometry() {
     Geometry::Rename("Geometry");
 }
@@ -81,15 +89,15 @@ inline void Geometry::MakeUnique() {
     }
 }
 
-//Need refactoring
+/*Not work now*/
 inline std::vector<Mesh*> Geometry::SeparateByLooseParts() {
     struct VertInfo
     {
-        Vector3* Point;
+        Vector3 Point;
         unsigned int TriangleID;
     };
 
-    VertInfo vert;
+    VertInfo vert{};
     std::unordered_map<std::string, VertInfo> vertMap;
     std::vector<bool> triangleBool;
 
@@ -99,22 +107,22 @@ inline std::vector<Mesh*> Geometry::SeparateByLooseParts() {
     std::string hash;
     hash.resize(arr_len * sizeof(float));
 
-    Graph graph{ unsigned int(Geometry::_vertexCount / 3)};
+    Graph graph{ unsigned int(Geometry::_vertexCount)};
 
     unsigned int sizeBeforeInsert;
 
     //Create graph
     for (size_t it = 0; it < Geometry::_vertexCount * 3; it+=3)
     {
-        vert.Point->X = _vertex[it];
-        vert.Point->Y = _vertex[it + 1];
-        vert.Point->Z = _vertex[it + 2];
+        vert.Point.X = _vertex[it];
+        vert.Point.Y = _vertex[it + 1];
+        vert.Point.Z = _vertex[it + 2];
 
         vert.TriangleID = it / 3;
 
-        vertArr[0] = { vert.Point->X };
-        vertArr[1] = { vert.Point->Y };
-        vertArr[2] = { vert.Point->Z };
+        vertArr[0] = { vert.Point.X };
+        vertArr[1] = { vert.Point.Y };
+        vertArr[2] = { vert.Point.Z };
 
         sizeBeforeInsert = vertMap.size();
 
@@ -158,6 +166,9 @@ inline std::vector<Mesh*> Geometry::SeparateByLooseParts() {
             triangleBool[separatedMesh[separatedMesh.size() - 1][i]] = true;
         }
     }
+
+    std::vector<Mesh*> m;
+    return m;
 }
 
 inline Vector3 Geometry::FindFurthestPoint(Vector3 direction) {

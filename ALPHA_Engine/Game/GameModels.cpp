@@ -1,9 +1,9 @@
 #include "GameModels.h"
-#include "Modules/Mesh.h"
+
 
 //TODO: Function normilize color
 
-inline void CreateObject(Vector3 Position, Vector3 Rotation, Vector3 Scale, Object *Obj) {
+inline void Primitives::CreateObject(Vector3 Position, Vector3 Rotation, Vector3 Scale, Object *Obj) {
     Obj->AddPosition(Position);
     Obj->AddRotation(Rotation);
     Obj->SetScale(Scale);

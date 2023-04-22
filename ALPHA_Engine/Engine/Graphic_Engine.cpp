@@ -1,5 +1,9 @@
 #include "Graphic_Engine.h"
 
+#include "World.h"
+#include "Modules/Camera.h"
+#include "Modules/Mesh.h"
+#include "GameModels.h"
 
 inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name) {
     _wight = Wight;

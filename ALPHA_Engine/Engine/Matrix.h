@@ -1,10 +1,11 @@
 #pragma once
-
 #define _USE_MATH_DEFINES
 
 #include <array>
 #include <cmath>
-#include "Vectors.h"
+
+class Vector3;
+class Vector4;
 
 class Matrix3x1 {
 private:

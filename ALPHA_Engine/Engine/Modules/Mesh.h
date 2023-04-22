@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Geometry.h"
 
 class Mesh : public Geometry {
