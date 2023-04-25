@@ -12,9 +12,7 @@ inline void RigidBody::AddForce(const float& x, const float& y, const float& z) 
 }
 
 inline void RigidBody::AddForceWithoutMass(const Vector3& forceVector) {
-	if (RigidBody::_movementVector < Vector3{0.5,0.5,0.5}) {
-		RigidBody::_movementVector += forceVector;
-	}
+	RigidBody::_movementVector += forceVector;
 }
 
 inline void RigidBody::CalculateCenterMass() {
@@ -112,11 +110,7 @@ inline void Physics::PhysicsLoop() {
 			if (rigidBody != NULL) {
 				Physics::ApplyGravity(*rigidBody);
 				Physics::ApplyPhysics(*rigidBody);
-
-				std::cout << rigidBody->GetImpulseVector().Y;
-				std::cout << World::_deltaTime / 1000;
-				std::cout << "\n";
-
+				
 				break;
 			}
 		}
@@ -124,7 +118,19 @@ inline void Physics::PhysicsLoop() {
 }
 
 inline void Physics::ApplyGravity(RigidBody& rb) {
-	rb.AddForceWithoutMass((rb.GetImpulseVector() + rb.Gravity * World::SimulationSpeed) * (World::_deltaTime / 1000));
+	Vector3 add = (rb.Gravity * 4 * World::SimulationSpeed * powf(World::_deltaTime / 1000, 2));
+
+	if (Vector3::DotProduct(rb._movementVector + add, rb.Gravity) / 10 <= powf(rb.Gravity.GetMagnitude() / 10, 2)) {
+		rb.AddForceWithoutMass(add);
+	}
+	else if(Vector3::DotProduct(rb._movementVector, rb.Gravity) <= rb.Gravity.GetMagnitude())
+	{
+		rb._movementVector = rb.Gravity / 10;
+	}
+}
+inline void Physics::Torque(RigidBody& rb, Vector3 colPoint) {
+
+	//float angle = Vector3::GetAngle(rb.);
 }
 
 inline void Physics::ApplyPhysics(RigidBody& rb) {

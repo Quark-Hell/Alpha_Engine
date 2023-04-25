@@ -3,7 +3,7 @@
 class RigidBody : public Module {
 public:
 	float Mass = 1;
-	Vector3 Gravity = Vector3{ 0,-0.5,0 };
+	Vector3 Gravity = Vector3{ 0,-9.81,0 };
 
 private:
 	Vector3 _centerMass;
@@ -30,18 +30,21 @@ private:
 	void SetRotationVector(Vector3 vec);
 
 	friend class Collision;
+	friend class Physics;
 };
 
 class Physics {
 public:
-	void PhysicsLoop();
+	static inline void PhysicsLoop();
 
 	Physics();
 	~Physics();
 
 private:
-	void ApplyGravity(RigidBody& rb);
+	static inline void ApplyGravity(RigidBody& rb);
+	static inline void Torque(RigidBody& rb, Vector3 colPoint);
 
-	void ApplyPhysics(RigidBody& rb);
+	static inline void ApplyPhysics(RigidBody& rb);
+	static inline void ApplyVelocity(RigidBody& rb);
 
 };

@@ -35,38 +35,41 @@ public:
 	static inline bool Tetrahedron(Simplex& points, Vector3& direction);
 };
 
+class CollisionInfo {
+public:
+	Vector3 Normal;
+	float PenetrationDepth;
+	bool HasCollision;
+
+	std::shared_ptr<std::vector<float>> CollisionPoints;
+};
+
 class Collider : public Geometry {
 public:
 	Collider();
 	~Collider();
 
 	bool CreateConvexFrom—oncave(std::string link);
+	CollisionInfo GetCollisionInfo();
 
 private:
 	friend class Collision;
-};
 
-class CollisionPoints {
-public:
-	Vector3 Normal;
-	float PenetrationDepth;
-	bool HasCollision;
+	CollisionInfo collisionInfo;
 };
 
 class Collision{
-private:
-	CollisionPoints _collisionPoints;
-
 public:
-	CollisionPoints GetCollisionPoints();
-	void CollisionLoop();
+	static inline void CollisionLoop();
 
 private:
-	Vector3 Support(Collider* colliderA, Collider* colliderB, Vector3 direction);
-	bool GJK(Collider* colliderA, Collider* colliderB, CollisionPoints& colPoints);
-	CollisionPoints EPA(Simplex& simplex, Collider* colliderA, Collider* ColliderB);
+	static inline Vector3 Support(Collider* colliderA, Collider* colliderB, Vector3 direction);
+	static inline bool GJK(Collider* colliderA, Collider* colliderB, CollisionInfo& colPoints);
+	static inline CollisionInfo EPA(Simplex& simplex, Collider* colliderA, Collider* ColliderB);
 
-	std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
-	void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
+	static inline std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
+	static inline void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
+
+	static inline std::shared_ptr<std::vector<float>> GetContactPoints(Geometry& geometry,Vector3 moveVector);
 };
 

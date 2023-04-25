@@ -129,9 +129,27 @@ inline bool Collider::CreateConvexFrom—oncave(std::string link) {
 
 }
 
+inline CollisionInfo Collider::GetCollisionInfo() {
+    return Collider::collisionInfo;
+}
+
 /*Maybe need refactoring*/
 inline void Collision::CollisionLoop() {
-    CollisionPoints points;
+    //Clear collision Info
+    for (size_t it = 0; it < World::ObjectsOnScene.size() - 1; it++)
+    {
+        for (size_t jt = 0; jt < World::ObjectsOnScene[it]->GetCountOfModules(); jt++)
+        {
+            Collider* collider = dynamic_cast<Collider*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+
+            if (collider != nullptr && collider->GetName() == "Collider") {
+                collider->collisionInfo.HasCollision = false;
+            }
+        }
+    }
+
+
+    CollisionInfo points;
     for (size_t it = 0; it < World::ObjectsOnScene.size()-1; it++)
     {
         for (size_t jt = 0; jt < World::ObjectsOnScene[it]->GetCountOfModules(); jt++)
@@ -144,17 +162,10 @@ inline void Collision::CollisionLoop() {
                     Collider* colliderB = dynamic_cast<Collider*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
 
                     if (colliderA != nullptr && colliderA->GetName() == "Collider" && colliderB != nullptr && colliderB->GetName() == "Collider" && colliderA != colliderB) {
-                        if (Collision::GJK((Collider*)colliderA, (Collider*)colliderB, points)) {
-                            colliderA->GetParentObject()->AddPosition((-points.Normal.X * points.PenetrationDepth), (-points.Normal.Y * points.PenetrationDepth), (-points.Normal.Z * points.PenetrationDepth));
-                            colliderA->GetParentObject()->ApplyTransform();
-
-                            RigidBody* rb = dynamic_cast<RigidBody*>(colliderA->GetParentObject()->GetModuleByName("RigidBody"));
-                            rb->_movementVector = {0,0,0};
-                        }
+                        Collision::GJK(colliderA, colliderB, points);
                     }
                 }
             }
-
         }
     }
 
@@ -167,7 +178,7 @@ inline Vector3 Collision::Support(Collider* colliderA, Collider* colliderB, Vect
         - colliderB->FindFurthestPoint(-direction);
 }
 
-inline bool Collision::GJK(Collider* colliderA, Collider* colliderB, CollisionPoints& colPoints) {
+inline bool Collision::GJK(Collider* colliderA, Collider* colliderB, CollisionInfo& colPoints) {
     // Get initial support point in any direction
     Vector3 support = Support(colliderA, colliderB, {1,0,0});
 
@@ -182,20 +193,27 @@ inline bool Collision::GJK(Collider* colliderA, Collider* colliderB, CollisionPo
         support = Support(colliderA, colliderB, direction);
 
         if (support.DotProduct(direction) < 0) {
-            //printf("false");
             return false; // no collision
         }
 
         points.PushFront(support);
 
         if (Simplex::NextSimplex(points, direction)) {
+            if (colliderA->GetParentObject()->GetModuleByName("RigidBody") != nullptr || colliderB->GetParentObject()->GetModuleByName("RigidBody")) {
+                colPoints = Collision::EPA(points, colliderA, colliderB);
+
+                colliderA->GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
+                colliderA->GetParentObject()->ApplyTransform();
+
+                RigidBody* rb = dynamic_cast<RigidBody*>(colliderA->GetParentObject()->GetModuleByName("RigidBody"));
+                rb->_movementVector = { 0,0,0 };
+            }
             printf("true");
-            colPoints = Collision::EPA(points, colliderA, colliderB);
             return true;
         }
     }
 }
-inline CollisionPoints Collision::EPA(Simplex& simplex, Collider* colliderA, Collider* colliderB)
+inline CollisionInfo Collision::EPA(Simplex& simplex, Collider* colliderA, Collider* colliderB)
 {
     std::vector<Vector3> polytope(simplex.begin(), simplex.end());
     std::vector<size_t>  faces = {
@@ -265,13 +283,23 @@ inline CollisionPoints Collision::EPA(Simplex& simplex, Collider* colliderA, Col
             normals.insert(normals.end(), newNormals.begin(), newNormals.end());
         }
     }
-    CollisionPoints points;
 
-    points.Normal = minNormal;
-    points.PenetrationDepth = minDistance + 0.001f;
-    points.HasCollision = true;
+    //TODO: 
+    CollisionInfo pointsA;
 
-    return points;
+    pointsA.Normal = minNormal;
+    pointsA.PenetrationDepth = minDistance + 0.001f;
+    pointsA.HasCollision = true;
+    pointsA.CollisionPoints = Collision::GetContactPoints(*colliderA, pointsA.Normal);
+
+    CollisionInfo pointsB;
+    
+    pointsB.Normal = minNormal;
+    pointsB.PenetrationDepth = minDistance + 0.001f;
+    pointsB.HasCollision = true;
+    pointsB.CollisionPoints = Collision::GetContactPoints(*colliderB, pointsB.Normal);
+
+    return pointsA;
 }
 
 inline std::pair<std::vector<Vector4>, size_t> Collision::GetFaceNormals(std::vector<Vector3>& polytope,std::vector<size_t>& faces)
@@ -322,4 +350,37 @@ inline void Collision::AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& e
     else {
         edges.emplace_back(faces[a], faces[b]);
     }
+}
+
+inline std::shared_ptr<std::vector<float>> Collision::GetContactPoints(Geometry& geometry, Vector3 moveVector) {
+
+    std::shared_ptr<std::vector<float>> ContactPoints = std::make_shared<std::vector<float>>();
+
+    Vector3 vec = Vector3{ geometry._vertex[0], geometry._vertex[1] , geometry._vertex[2] };
+    float maxDotProduct = Vector3::DotProduct(vec, moveVector);
+
+    ContactPoints->push_back(geometry._vertex[0]);
+    ContactPoints->push_back(geometry._vertex[1]);
+    ContactPoints->push_back(geometry._vertex[2]);
+
+    for (unsigned int i = 3; i < geometry._vertexCount * 3; i+=3) {
+        vec = Vector3{ geometry._vertex[i], geometry._vertex[i + 1] , geometry._vertex[i + 2] };
+        float currentDotProduct = Vector3::DotProduct(vec, moveVector);
+
+        if (maxDotProduct < currentDotProduct) {
+            maxDotProduct = currentDotProduct;
+
+            ContactPoints->clear();
+            ContactPoints->push_back(geometry._vertex[i]);
+            ContactPoints->push_back(geometry._vertex[i + 1]);
+            ContactPoints->push_back(geometry._vertex[i + 2]);
+        }
+        else if (Math::ApproximatelyEqual(maxDotProduct,currentDotProduct, 0.001)) {
+            ContactPoints->push_back(geometry._vertex[i]);
+            ContactPoints->push_back(geometry._vertex[i + 1]);
+            ContactPoints->push_back(geometry._vertex[i + 2]);
+        }
+    }
+
+    return ContactPoints;
 }

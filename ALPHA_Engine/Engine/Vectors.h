@@ -61,6 +61,12 @@ public:
 		return (A.X * B.X) + (A.Y * B.Y);
 	}
 
+	float GetAngle(Vector2 B) {
+		return cos(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
+	}
+	static float GetAngle(Vector2 A, Vector2 B) {
+		return cos(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
+	}
 
 #pragma region Operators
 	//-----------------------------------------------------------//
@@ -361,6 +367,13 @@ public:
 			(A.X * B.Y - A.Y * B.X));
 	}
 
+	float GetAngle(Vector3 B) {
+		return cos(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
+	}
+	static float GetAngle(Vector3 A, Vector3 B) {
+		return cos(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
+	}
+
 #pragma region Operators
 	//-----------------------------------------------------------//
 	void operator=(const Vector3 value) {
@@ -656,6 +669,20 @@ public:
 	}
 	static float DotProduct(Vector4 A, Vector4 B) {
 		return (A.X * B.X) + (A.Y * B.Y) + (A.Z + B.Z) + (A.W + B.W);
+	}
+
+	float GetAngle(Vector4 B) {
+		return cos(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
+	}
+	static float GetAngle(Vector4 A, Vector4 B) {
+		return cos(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
+	}
+
+	static float GetAverage(std::vector<Vector4> vectorOfPoints) {
+
+	}
+	static float GetAverage(std::vector<Vector4>& vectorOfPoints) {
+
 	}
 
 #pragma region Operators

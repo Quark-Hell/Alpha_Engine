@@ -14,6 +14,7 @@
 #include "Engine/Matrix.cpp"
 
 #include "Engine/Binds.cpp"
+#include "Engine/AdditionalMath.cpp"
 
 #include "GameModels.cpp"
 
@@ -28,8 +29,6 @@ Camera* camera = new Camera;
 
 GameFunction* Game = new GameFunction;
 Render* render = new Render;
-Collision* collision = new Collision;
-Physics* physics = new Physics;
 InputSystem* InpSys = new InputSystem;
 
 Object* object = new Object;
@@ -38,9 +37,6 @@ Object* object2 = new Object;
 Object* plane = new Object;
 
 RigidBody* rb1 = new RigidBody;
-
-bool IsRotating = true;
-
 
 void GameFunction::Start() {
     SetControl();
@@ -56,11 +52,13 @@ void GameFunction::Start() {
     Vector3 color = Vector3{ 0,0,0 };
     object = Primitives::Cube(pos, rot, scale, color);
 
+
     plane = Primitives::Plane(pos, rot, scale, color);
     plane->AddModule(col3);
-    plane->AddPosition(0, -5, 0);
+    plane->AddPosition(0, -15, 0);
     plane->AddRotation(-90, 0, 0);
     plane->SetScale(10, 10, 10);
+
 
     object->AddModule(col1);
     object->AddModule(rb1);
@@ -101,6 +99,8 @@ void SetControl() {
     
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { GLFW_KEY_ESCAPE });
     
+    Bind jump; jump.KeyboardBind({ Jump }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_SPACE });
+
     InpSys->InsertBind(CameraRot);
     
     InpSys->InsertBind(LeftMove);
@@ -113,6 +113,8 @@ void SetControl() {
     InpSys->InsertBind(DownMove);
     
     InpSys->InsertBind(CloseGameFirstMethod);
+
+    InpSys->InsertBind(jump);
 }
 void LeftMoveCamera() {
     Vector3 newPos = Player.GetPosition();
@@ -203,6 +205,11 @@ void CameraRotate() {
     }
 }
 
+void Jump() {
+    rb1->AddForce(0,1,0);
+    printf("jump");
+}
+
 int main()
 {
     //HWND hwnd = GetConsoleWindow();
@@ -221,8 +228,8 @@ int main()
         Game->Update();
         InpSys->IO_Events();
         World::ApplyingSceneTransformation();
-        physics->PhysicsLoop();
-        collision->CollisionLoop();
+        Physics::PhysicsLoop();
+        Collision::CollisionLoop();
         render->RenderLoop(camera);
         World::EndFrame();
     }

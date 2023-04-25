@@ -66,7 +66,7 @@ ${Engine}Modules/Geometry.h
 ${Engine}Modules/Mesh.h
 ${Engine}Modules/Module.h
 ${Engine}Modules/Physics.h
-"Game/GameModels.h")
+"Game/GameModels.h" "Engine/AdditionalMath.h" "Engine/AdditionalMath.cpp")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib

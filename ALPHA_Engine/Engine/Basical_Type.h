@@ -14,7 +14,7 @@
 #include <ctime>
 #include <set>
 #include <array>
-#include <cmath>
+#include "AdditionalMath.h"
 
 #include "Vectors.h"
 
