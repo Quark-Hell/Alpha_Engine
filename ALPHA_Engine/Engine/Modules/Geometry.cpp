@@ -174,15 +174,15 @@ inline std::vector<Mesh*> Geometry::SeparateByLooseParts() {
 inline Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
     Vector3 maxPoint = { 0,0,0 };
     float maxDistance = -FLT_MAX;
-    Vector3* vertexPos = new Vector3;
+    Vector3 vertexPos = { 0,0,0 };
 
     for (size_t it = 0; it < Geometry::_vertexCount * 3; it+=3) {
 
-        vertexPos->X = Geometry::_vertex[it];
-        vertexPos->Y = Geometry::_vertex[it + 1];
-        vertexPos->Z = Geometry::_vertex[it + 2];
+        vertexPos.X = Geometry::_vertex[it];
+        vertexPos.Y = Geometry::_vertex[it + 1];
+        vertexPos.Z = Geometry::_vertex[it + 2];
   
-        float distance = Vector3::DotProduct(*vertexPos, direction);
+        float distance = Vector3::DotProduct(vertexPos, direction);
         if (distance > maxDistance) {
             maxDistance = distance;
             maxPoint = vertexPos;

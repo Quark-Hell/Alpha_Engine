@@ -160,9 +160,9 @@ inline void Collision::CollisionLoop() {
                 for (size_t mt = 0; mt < World::ObjectsOnScene[kt]->GetCountOfModules(); mt++)
                 {
                     Collider* colliderB = dynamic_cast<Collider*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
-
+                    
                     if (colliderA != nullptr && colliderA->GetName() == "Collider" && colliderB != nullptr && colliderB->GetName() == "Collider" && colliderA != colliderB) {
-                        Collision::GJK(colliderA, colliderB, points);
+                        Collision::GJK(*colliderA, *colliderB, points);
                     }
                 }
             }
@@ -172,13 +172,13 @@ inline void Collision::CollisionLoop() {
 
 }
 
-inline Vector3 Collision::Support(Collider* colliderA, Collider* colliderB, Vector3 direction) 
+inline Vector3 Collision::Support(Collider& colliderA, Collider& colliderB, Vector3 direction) 
 {
-    return colliderA->FindFurthestPoint(direction)
-        - colliderB->FindFurthestPoint(-direction);
+    return colliderA.FindFurthestPoint(direction)
+        - colliderB.FindFurthestPoint(-direction);
 }
 
-inline bool Collision::GJK(Collider* colliderA, Collider* colliderB, CollisionInfo& colPoints) {
+inline bool Collision::GJK(Collider& colliderA, Collider& colliderB, CollisionInfo& colPoints) {
     // Get initial support point in any direction
     Vector3 support = Support(colliderA, colliderB, {1,0,0});
 
@@ -199,21 +199,20 @@ inline bool Collision::GJK(Collider* colliderA, Collider* colliderB, CollisionIn
         points.PushFront(support);
 
         if (Simplex::NextSimplex(points, direction)) {
-            if (colliderA->GetParentObject()->GetModuleByName("RigidBody") != nullptr || colliderB->GetParentObject()->GetModuleByName("RigidBody")) {
+            if (colliderA.GetParentObject()->GetModuleByName("RigidBody") != nullptr || colliderB.GetParentObject()->GetModuleByName("RigidBody")) {
                 colPoints = Collision::EPA(points, colliderA, colliderB);
-
-                colliderA->GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
-                colliderA->GetParentObject()->ApplyTransform();
-
-                RigidBody* rb = dynamic_cast<RigidBody*>(colliderA->GetParentObject()->GetModuleByName("RigidBody"));
+            
+                colliderA.GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
+                colliderA.GetParentObject()->ApplyTransform();
+            
+                RigidBody* rb = dynamic_cast<RigidBody*>(colliderA.GetParentObject()->GetModuleByName("RigidBody"));
                 rb->_movementVector = { 0,0,0 };
             }
-            printf("true");
             return true;
         }
     }
 }
-inline CollisionInfo Collision::EPA(Simplex& simplex, Collider* colliderA, Collider* colliderB)
+inline CollisionInfo Collision::EPA(Simplex& simplex, Collider& colliderA, Collider& colliderB)
 {
     std::vector<Vector3> polytope(simplex.begin(), simplex.end());
     std::vector<size_t>  faces = {
@@ -290,14 +289,14 @@ inline CollisionInfo Collision::EPA(Simplex& simplex, Collider* colliderA, Colli
     pointsA.Normal = minNormal;
     pointsA.PenetrationDepth = minDistance + 0.001f;
     pointsA.HasCollision = true;
-    pointsA.CollisionPoints = Collision::GetContactPoints(*colliderA, pointsA.Normal);
+    //pointsA.CollisionPoints = Collision::GetContactPoints(*colliderA, pointsA.Normal);
 
     CollisionInfo pointsB;
     
     pointsB.Normal = minNormal;
     pointsB.PenetrationDepth = minDistance + 0.001f;
     pointsB.HasCollision = true;
-    pointsB.CollisionPoints = Collision::GetContactPoints(*colliderB, pointsB.Normal);
+    //pointsB.CollisionPoints = Collision::GetContactPoints(*colliderB, pointsB.Normal);
 
     return pointsA;
 }

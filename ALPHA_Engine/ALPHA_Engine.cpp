@@ -55,23 +55,19 @@ void GameFunction::Start() {
 
     plane = Primitives::Plane(pos, rot, scale, color);
     plane->AddModule(col3);
-    plane->AddPosition(0, -15, 0);
+    plane->AddPosition(0, -5, 0);
     plane->AddRotation(-90, 0, 0);
     plane->SetScale(10, 10, 10);
 
 
     object->AddModule(col1);
     object->AddModule(rb1);
-    object->AddPosition(5, 0, 0);
-    object->AddRotation(0, 0, 0);
-    object->SetScale(1, 1, 1);
+    object->AddPosition(0, -2, 0);
     rb1->CalculateCenterMass();
 
     object2 = Primitives::Cube(pos, rot, scale, color);
     object2->AddModule(col2);
-    object2->AddPosition(0, 0, 0);
-    object2->AddRotation(0, 0, 0);
-    object2->SetScale(1, 1, 1);
+    object2->AddPosition(0, 3, 0);
 }
 
 void GameFunction::Update() {
@@ -100,6 +96,7 @@ void SetControl() {
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { GLFW_KEY_ESCAPE });
     
     Bind jump; jump.KeyboardBind({ Jump }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_SPACE });
+    Bind stop; stop.KeyboardBind({ Stop }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_G });
 
     InpSys->InsertBind(CameraRot);
     
@@ -114,6 +111,7 @@ void SetControl() {
     
     InpSys->InsertBind(CloseGameFirstMethod);
 
+    InpSys->InsertBind(stop);
     InpSys->InsertBind(jump);
 }
 void LeftMoveCamera() {
@@ -205,8 +203,11 @@ void CameraRotate() {
     }
 }
 
+void Stop() {
+    rb1->AddForce(0, -1, 0);
+}
 void Jump() {
-    rb1->AddForce(0,1,0);
+    rb1->AddForce(0,0.8,0);
     printf("jump");
 }
 

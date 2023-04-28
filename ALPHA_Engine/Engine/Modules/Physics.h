@@ -4,6 +4,8 @@ class RigidBody : public Module {
 public:
 	float Mass = 1;
 	Vector3 Gravity = Vector3{ 0,-9.81,0 };
+	float BaseFriction = 0.995;
+	float MaxSpeed = 2;
 
 private:
 	Vector3 _centerMass;
@@ -42,6 +44,7 @@ public:
 
 private:
 	static inline void ApplyGravity(RigidBody& rb);
+	static inline void ApplyBaseFriction(RigidBody& rb);
 	static inline void Torque(RigidBody& rb, Vector3 colPoint);
 
 	static inline void ApplyPhysics(RigidBody& rb);

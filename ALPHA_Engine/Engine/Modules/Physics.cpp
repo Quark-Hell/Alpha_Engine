@@ -99,6 +99,14 @@ inline RigidBody::~RigidBody() {
 
 #pragma region Phisycs Define
 inline void Physics::PhysicsLoop() {
+	//TODO: Bug: the object sometimes is rapidly accelerating.
+	// speed logs:
+	// -0.181993
+	// -0.191078
+	// -0.54995          // WTF?
+	// -0.547201
+	// -0.544621
+
 	for (size_t it = 0; it < World::ObjectsOnScene.size(); it++)
 	{
 		Object* obj = World::ObjectsOnScene[it];
@@ -109,6 +117,7 @@ inline void Physics::PhysicsLoop() {
 			rigidBody = dynamic_cast<RigidBody*>(obj->GetModuleByIndex(i));
 			if (rigidBody != NULL) {
 				Physics::ApplyGravity(*rigidBody);
+				Physics::ApplyBaseFriction(*rigidBody);
 				Physics::ApplyPhysics(*rigidBody);
 				
 				break;
@@ -119,22 +128,31 @@ inline void Physics::PhysicsLoop() {
 
 inline void Physics::ApplyGravity(RigidBody& rb) {
 	Vector3 add = (rb.Gravity * 4 * World::SimulationSpeed * powf(World::_deltaTime / 1000, 2));
+	rb.AddForceWithoutMass(add);
 
-	if (Vector3::DotProduct(rb._movementVector + add, rb.Gravity) / 10 <= powf(rb.Gravity.GetMagnitude() / 10, 2)) {
-		rb.AddForceWithoutMass(add);
-	}
-	else if(Vector3::DotProduct(rb._movementVector, rb.Gravity) <= rb.Gravity.GetMagnitude())
-	{
-		rb._movementVector = rb.Gravity / 10;
-	}
 }
 inline void Physics::Torque(RigidBody& rb, Vector3 colPoint) {
 
 	//float angle = Vector3::GetAngle(rb.);
 }
 
+inline void Physics::ApplyBaseFriction(RigidBody& rb) {
+	rb._movementVector *= rb.BaseFriction;
+}
+
 inline void Physics::ApplyPhysics(RigidBody& rb) {
-	rb.GetParentObject()->AddPosition(rb.GetImpulseVector());
+	if (rb._movementVector.GetMagnitude() > rb.MaxSpeed) {
+		Vector3::GetNormalize(rb._movementVector) *= rb._movementVector;
+
+		rb.GetParentObject()->AddPosition(rb.GetImpulseVector());
+	}
+	else
+	{
+		rb.GetParentObject()->AddPosition(rb.GetImpulseVector());
+	}
+
+	//std::cout << rb._movementVector.Y;
+	//std::cout << "\n";
 }
 
 inline Physics::Physics() {

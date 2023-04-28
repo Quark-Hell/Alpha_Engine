@@ -78,6 +78,15 @@ public:
 		X = value->X;
 		Y = value->Y;
 	}
+
+	void operator=(const float value) {
+		X = value;
+		Y = value;
+	}
+	void operator=(const float* value) {
+		X = *value;
+		Y = *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -88,6 +97,15 @@ public:
 	void operator+=(const Vector2* value) {
 		X += value->X;
 		Y += value->Y;
+	}
+
+	void operator+=(const float value) {
+		X += value;
+		Y += value;
+	}
+	void operator+=(const float* value) {
+		X += *value;
+		Y += *value;
 	}
 	//-----------------------------------------------------------//
 
@@ -100,6 +118,15 @@ public:
 		X -= value->X;
 		Y -= value->Y;
 	}
+
+	void operator-=(const float value) {
+		X -= value;
+		Y -= value;
+	}
+	void operator-=(const float* value) {
+		X -= *value;
+		Y -= *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -111,6 +138,15 @@ public:
 		X *= value->X;
 		Y *= value->Y;
 	}
+
+	void operator*=(const float value) {
+		X *= value;
+		Y *= value;
+	}
+	void operator*=(const float* value) {
+		X *= *value;
+		Y *= *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -121,6 +157,15 @@ public:
 	void operator/=(const Vector2* value) {
 		X /= value->X;
 		Y /= value->Y;
+	}
+
+	void operator/=(const float value) {
+		X /= value;
+		Y /= value;
+	}
+	void operator/=(const float* value) {
+		X /= *value;
+		Y /= *value;
 	}
 	//-----------------------------------------------------------//
 
@@ -324,15 +369,14 @@ public:
 		Z *= inv_length;
 	}
 	static Vector3 GetNormalize(Vector3 vector) {
-		Vector3 newVector;
-		float locLength = Vector3::GetMagnitude(newVector);
+		float locLength = Vector3::GetMagnitude(vector);
 		float inv_length = (1 / locLength);
 
-		newVector.X *= inv_length;
-		newVector.Y *= inv_length;
-		newVector.Z *= inv_length;
+		vector.X *= inv_length;
+		vector.Y *= inv_length;
+		vector.Z *= inv_length;
 
-		return newVector;
+		return vector;
 	}
 
 	static Vector3 LinearInteprolation(Vector3 A, Vector3 B, float T) {
@@ -386,6 +430,18 @@ public:
 		Y = value->Y;
 		Z = value->Z;
 	}
+
+	void operator=(const float value) {
+		X = value;
+		Y = value;
+		Z = value;
+
+	}
+	void operator=(const float* value) {
+		X = *value;
+		Y = *value;
+		Z = *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -398,6 +454,18 @@ public:
 		X += value->X;
 		Y += value->Y;
 		Z += value->Z;
+	}
+
+	void operator+=(const float value) {
+		X += value;
+		Y += value;
+		Z += value;
+
+	}
+	void operator+=(const float* value) {
+		X += *value;
+		Y += *value;
+		Z += *value;
 	}
 	//-----------------------------------------------------------//
 
@@ -412,6 +480,18 @@ public:
 		Y -= value->Y;
 		Z -= value->Z;
 	}
+
+	void operator-=(const float value) {
+		X -= value;
+		Y -= value;
+		Z -= value;
+
+	}
+	void operator-=(const float* value) {
+		X -= *value;
+		Y -= *value;
+		Z -= *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -425,6 +505,18 @@ public:
 		Y *= value->Y;
 		Z *= value->Z;
 	}
+
+	void operator*=(const float value) {
+		X *= value;
+		Y *= value;
+		Z *= value;
+
+	}
+	void operator*=(const float* value) {
+		X *= *value;
+		Y *= *value;
+		Z *= *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -437,6 +529,18 @@ public:
 		X /= value->X;
 		Y /= value->Y;
 		Z /= value->Z;
+	}
+
+	void operator/=(const float value) {
+		X /= value;
+		Y /= value;
+		Z /= value;
+
+	}
+	void operator/=(const float* value) {
+		X /= *value;
+		Y /= *value;
+		Z /= *value;
 	}
 	//-----------------------------------------------------------//
 
@@ -699,6 +803,20 @@ public:
 		Z = value->Z;
 		W = value->W;
 	}
+
+	void operator=(const float value) {
+		X = value;
+		Y = value;
+		Z = value;
+		W = value;
+
+	}
+	void operator=(const float* value) {
+		X = *value;
+		Y = *value;
+		Z = *value;
+		W = *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -713,6 +831,20 @@ public:
 		Y += value->Y;
 		Z += value->Z;
 		W += value->W;
+	}
+
+	void operator+=(const float value) {
+		X += value;
+		Y += value;
+		Z += value;
+		W += value;
+
+	}
+	void operator+=(const float* value) {
+		X += *value;
+		Y += *value;
+		Z += *value;
+		W += *value;
 	}
 	//-----------------------------------------------------------//
 
@@ -729,6 +861,20 @@ public:
 		Z -= value->Z;
 		W -= value->W;
 	}
+
+	void operator-=(const float value) {
+		X -= value;
+		Y -= value;
+		Z -= value;
+		W -= value;
+
+	}
+	void operator-=(const float* value) {
+		X -= *value;
+		Y -= *value;
+		Z -= *value;
+		W -= *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -744,6 +890,20 @@ public:
 		Z *= value->Z;
 		W *= value->W;
 	}
+
+	void operator*=(const float value) {
+		X *= value;
+		Y *= value;
+		Z *= value;
+		W *= value;
+
+	}
+	void operator*=(const float* value) {
+		X *= *value;
+		Y *= *value;
+		Z *= *value;
+		W *= *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -758,6 +918,20 @@ public:
 		Y /= value->Y;
 		Z /= value->Z;
 		W /= value->W;
+	}
+
+	void operator/=(const float value) {
+		X /= value;
+		Y /= value;
+		Z /= value;
+		W /= value;
+
+	}
+	void operator/=(const float* value) {
+		X /= *value;
+		Y /= *value;
+		Z /= *value;
+		W /= *value;
 	}
 	//-----------------------------------------------------------//
 
