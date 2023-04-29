@@ -5,6 +5,10 @@ public:
 	float Mass = 1;
 	Vector3 Gravity = Vector3{ 0,-9.81,0 };
 	float BaseFriction = 0.995;
+	/*Description:
+	if = 1 than body movement reflect
+	if = 0 than body stop*/
+	float ElasticityCoefficient = 0.8;
 	float MaxSpeed = 2;
 
 private:
@@ -47,7 +51,11 @@ private:
 	static inline void ApplyBaseFriction(RigidBody& rb);
 	static inline void Torque(RigidBody& rb, Vector3 colPoint);
 
+	static inline void Contact(RigidBody& rb1, Vector3 contactNormal = 0);
+	static inline void Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNormal = 0);
+
 	static inline void ApplyPhysics(RigidBody& rb);
 	static inline void ApplyVelocity(RigidBody& rb);
 
+	friend class Collision;
 };

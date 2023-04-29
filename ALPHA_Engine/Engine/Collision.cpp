@@ -189,7 +189,7 @@ inline bool Collision::GJK(Collider& colliderA, Collider& colliderB, CollisionIn
     // New direction is towards the origin
     Vector3 direction = -support;
 
-    while (true) {
+    for (unsigned int i = 0; i < Collision::GJKaccurate; i++) {
         support = Support(colliderA, colliderB, direction);
 
         if (support.DotProduct(direction) < 0) {
@@ -199,14 +199,35 @@ inline bool Collision::GJK(Collider& colliderA, Collider& colliderB, CollisionIn
         points.PushFront(support);
 
         if (Simplex::NextSimplex(points, direction)) {
-            if (colliderA.GetParentObject()->GetModuleByName("RigidBody") != nullptr || colliderB.GetParentObject()->GetModuleByName("RigidBody")) {
+            RigidBody* rb1 = dynamic_cast<RigidBody*>(colliderA.GetParentObject()->GetModuleByName("RigidBody"));
+            RigidBody* rb2 = dynamic_cast<RigidBody*>(colliderB.GetParentObject()->GetModuleByName("RigidBody"));
+
+            if (rb1 != nullptr && rb2 == nullptr) {
                 colPoints = Collision::EPA(points, colliderA, colliderB);
-            
+
                 colliderA.GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
                 colliderA.GetParentObject()->ApplyTransform();
-            
-                RigidBody* rb = dynamic_cast<RigidBody*>(colliderA.GetParentObject()->GetModuleByName("RigidBody"));
-                rb->_movementVector = { 0,0,0 };
+
+                Physics::Contact(*rb1, -colPoints.Normal);
+                //rb1->_movementVector = { 0,0,0 };
+            }
+            else if (rb1 == nullptr && rb2 != nullptr) {
+                colPoints = Collision::EPA(points, colliderA, colliderB);
+                colPoints.Normal = rb2->_movementVector;
+
+                colliderA.GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
+                colliderA.GetParentObject()->ApplyTransform();
+
+                Physics::Contact(*rb2, -colPoints.Normal);
+                //rb2->_movementVector = { 0,0,0 };
+            }
+            else if (rb1 != nullptr && rb2 != nullptr) {
+                colPoints = Collision::EPA(points, colliderA, colliderB);
+
+                colliderA.GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
+                colliderA.GetParentObject()->ApplyTransform();
+
+                Physics::Contact(*rb1, *rb2, -colPoints.Normal);
             }
             return true;
         }
@@ -228,59 +249,66 @@ inline CollisionInfo Collision::EPA(Simplex& simplex, Collider& colliderA, Colli
     Vector3 minNormal;
     float   minDistance = FLT_MAX;
 
-    while (minDistance == FLT_MAX) {
-        minNormal = normals[minFace];
-        minDistance = normals[minFace].W;
+    for (unsigned int i = 0; i < Collision::EPAaccurate; i++) {
+        if (minDistance == FLT_MAX) {
+            minNormal = normals[minFace];
+            minDistance = normals[minFace].W;
 
-        Vector3 support = Support(colliderA, colliderB, minNormal);
-        float sDistance = minNormal.DotProduct(support);
+            Vector3 support = Support(colliderA, colliderB, minNormal);
+            float sDistance = minNormal.DotProduct(support);
 
-        if (abs(sDistance - minDistance) >= 0.001f) {
-            minDistance = FLT_MAX;
-            std::vector<std::pair<size_t, size_t>> uniqueEdges;
+            if (abs(sDistance - minDistance) >= 0.001f) {
+                minDistance = FLT_MAX;
+                std::vector<std::pair<size_t, size_t>> uniqueEdges;
 
-            for (size_t i = 0; i < normals.size(); i++) {
-                if (Simplex::SameDirection(normals[i], support)) {
-                    size_t f = i * 3;
+                for (size_t i = 0; i < normals.size(); i++) {
+                    if (Simplex::SameDirection(normals[i], support)) {
+                        size_t f = i * 3;
 
-                    AddIfUniqueEdge(uniqueEdges, faces, f, f + 1);
-                    AddIfUniqueEdge(uniqueEdges, faces, f + 1, f + 2);
-                    AddIfUniqueEdge(uniqueEdges, faces, f + 2, f);
+                        AddIfUniqueEdge(uniqueEdges, faces, f, f + 1);
+                        AddIfUniqueEdge(uniqueEdges, faces, f + 1, f + 2);
+                        AddIfUniqueEdge(uniqueEdges, faces, f + 2, f);
 
-                    faces[f + 2] = faces.back(); faces.pop_back();
-                    faces[f + 1] = faces.back(); faces.pop_back();
-                    faces[f] = faces.back(); faces.pop_back();
+                        faces[f + 2] = faces.back(); faces.pop_back();
+                        faces[f + 1] = faces.back(); faces.pop_back();
+                        faces[f] = faces.back(); faces.pop_back();
 
-                    normals[i] = normals.back(); normals.pop_back();
+                        normals[i] = normals.back(); normals.pop_back();
 
-                    i--;
+                        i--;
+                    }
                 }
-            }
-            std::vector<size_t> newFaces;
-            for (auto [edgeIndex1, edgeIndex2] : uniqueEdges) {
-                newFaces.push_back(edgeIndex1);
-                newFaces.push_back(edgeIndex2);
-                newFaces.push_back(polytope.size());
-            }
-
-            polytope.push_back(support);
-
-            auto [newNormals, newMinFace] = GetFaceNormals(polytope, newFaces);
-            float oldMinDistance = FLT_MAX;
-            for (size_t i = 0; i < normals.size(); i++) {
-                if (normals[i].W < oldMinDistance) {
-                    oldMinDistance = normals[i].W;
-                    minFace = i;
+                std::vector<size_t> newFaces;
+                for (auto [edgeIndex1, edgeIndex2] : uniqueEdges) {
+                    newFaces.push_back(edgeIndex1);
+                    newFaces.push_back(edgeIndex2);
+                    newFaces.push_back(polytope.size());
                 }
-            }
 
-            if (newNormals[newMinFace].W < oldMinDistance) {
-                minFace = newMinFace + normals.size();
-            }
+                polytope.push_back(support);
 
-            faces.insert(faces.end(), newFaces.begin(), newFaces.end());
-            normals.insert(normals.end(), newNormals.begin(), newNormals.end());
+                auto [newNormals, newMinFace] = GetFaceNormals(polytope, newFaces);
+                float oldMinDistance = FLT_MAX;
+                for (size_t i = 0; i < normals.size(); i++) {
+                    if (normals[i].W < oldMinDistance) {
+                        oldMinDistance = normals[i].W;
+                        minFace = i;
+                    }
+                }
+
+                if (newNormals[newMinFace].W < oldMinDistance) {
+                    minFace = newMinFace + normals.size();
+                }
+
+                faces.insert(faces.end(), newFaces.begin(), newFaces.end());
+                normals.insert(normals.end(), newNormals.begin(), newNormals.end());
+            }
         }
+    }
+
+    if (minDistance == FLT_MAX) {
+        std::cout << std::endl << "not" << std::endl;
+        minDistance = 0;
     }
 
     //TODO: 

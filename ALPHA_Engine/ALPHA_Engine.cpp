@@ -37,12 +37,13 @@ Object* object2 = new Object;
 Object* plane = new Object;
 
 RigidBody* rb1 = new RigidBody;
+RigidBody* rb2 = new RigidBody;
 
 void GameFunction::Start() {
     SetControl();
 
-    Collider* col1 = new Collider; col1->Create("\\Models\\Primitives\\Cube.fbx");
-    Collider* col2 = new Collider; col2->Create("\\Models\\Primitives\\Cube.fbx");
+    Collider* col1 = new Collider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
+    Collider* col2 = new Collider; col2->Create("\\Models\\Primitives\\Sphere.fbx");
 
     Collider* col3 = new Collider; col3->Create("\\Models\\Primitives\\Plane.fbx");
 
@@ -50,24 +51,24 @@ void GameFunction::Start() {
     Vector3 rot = Vector3{ 0,0,0 };
     Vector3 scale = Vector3{ 1,1,1 };
     Vector3 color = Vector3{ 0,0,0 };
-    object = Primitives::Cube(pos, rot, scale, color);
 
+    object = Primitives::Sphere(pos, rot, scale, color);
+    object->AddModule(col1);
+    object->AddModule(rb1);
+    object->AddPosition(2, 3, 0);
+    rb1->CalculateCenterMass();
+
+    object2 = Primitives::Sphere(pos, rot, scale, color);
+    object2->AddModule(col2);
+    object2->AddModule(rb2);
+    object2->AddPosition(-2, 3, 0);
+    rb2->CalculateCenterMass();
 
     plane = Primitives::Plane(pos, rot, scale, color);
     plane->AddModule(col3);
-    plane->AddPosition(0, -5, 0);
+    plane->AddPosition(0, -5, 5);
     plane->AddRotation(-90, 0, 0);
-    plane->SetScale(10, 10, 10);
-
-
-    object->AddModule(col1);
-    object->AddModule(rb1);
-    object->AddPosition(0, -2, 0);
-    rb1->CalculateCenterMass();
-
-    object2 = Primitives::Cube(pos, rot, scale, color);
-    object2->AddModule(col2);
-    object2->AddPosition(0, 3, 0);
+    plane->SetScale(100, 100, 100);
 }
 
 void GameFunction::Update() {
@@ -77,6 +78,9 @@ void GameFunction::Update() {
     //    abs(sin(World::GetTimeLong() / 350) + 1.2),
     //    abs(sin(World::GetTimeLong() / 350) + 1.2),
     //    abs(sin(World::GetTimeLong() / 350) + 1.2));
+
+    //std::cout << object->GetPosition().Z;
+    //std::cout << "\n";
 }
 
 void SetControl() {
@@ -204,10 +208,10 @@ void CameraRotate() {
 }
 
 void Stop() {
-    rb1->AddForce(0, -1, 0);
+    rb1->AddForce(0, 0.3, 0);
 }
 void Jump() {
-    rb1->AddForce(0,0.8,0);
+    rb1->AddForce(-0.2,0,0);
     printf("jump");
 }
 

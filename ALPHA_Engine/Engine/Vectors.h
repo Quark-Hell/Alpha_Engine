@@ -61,11 +61,16 @@ public:
 		return (A.X * B.X) + (A.Y * B.Y);
 	}
 
-	float GetAngle(Vector2 B) {
-		return cos(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
+	float GetAngle(Vector2 B = { 1,0 }) {
+		return cosf(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
 	}
-	static float GetAngle(Vector2 A, Vector2 B) {
-		return cos(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
+	static float GetAngle(Vector2 A = { 1,0 }, Vector2 B = { 1,0 }) {
+		return cosf(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
+	}
+
+	static Vector2 ReflectVector(Vector2 vector, Vector2 normal) {
+		normal.NormilizeSelf();
+		return normal * Vector2::DotProduct(vector, normal) * 2 - vector;
 	}
 
 #pragma region Operators
@@ -412,10 +417,15 @@ public:
 	}
 
 	float GetAngle(Vector3 B) {
-		return cos(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
+		return cosf(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
 	}
 	static float GetAngle(Vector3 A, Vector3 B) {
-		return cos(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
+		return cosf(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
+	}
+
+	static Vector3 ReflectVector(Vector3 vector, Vector3 normal) {
+		normal.NormilizeSelf();
+		return vector - vector * Vector3::DotProduct(vector, normal) * 2;
 	}
 
 #pragma region Operators
@@ -775,18 +785,16 @@ public:
 		return (A.X * B.X) + (A.Y * B.Y) + (A.Z + B.Z) + (A.W + B.W);
 	}
 
-	float GetAngle(Vector4 B) {
-		return cos(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
+	float GetAngle(Vector4 B = { 1,0,0 }) {
+		return cosf(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
 	}
-	static float GetAngle(Vector4 A, Vector4 B) {
-		return cos(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
+	static float GetAngle(Vector4 A, Vector4 B = { 1,0,0 }) {
+		return cosf(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
 	}
 
-	static float GetAverage(std::vector<Vector4> vectorOfPoints) {
-
-	}
-	static float GetAverage(std::vector<Vector4>& vectorOfPoints) {
-
+	static Vector4 ReflectVector(Vector4 vector, Vector4 normal) {
+		normal.NormilizeSelf();
+		return vector - ((vector * normal * 2) / normal.GetMagnitude()) * normal;
 	}
 
 #pragma region Operators

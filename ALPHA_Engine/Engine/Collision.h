@@ -62,6 +62,9 @@ class Collision{
 public:
 	static inline void CollisionLoop();
 
+	static inline unsigned int GJKaccurate = 100;
+	static inline unsigned int EPAaccurate = 100;
+
 private:
 	static inline Vector3 Support(Collider& colliderA, Collider& colliderB, Vector3 direction);
 	static inline bool GJK(Collider& colliderA, Collider& colliderB, CollisionInfo& colPoints);

@@ -120,6 +120,9 @@ inline void Physics::PhysicsLoop() {
 				Physics::ApplyBaseFriction(*rigidBody);
 				Physics::ApplyPhysics(*rigidBody);
 				
+				std::cout << rigidBody->_movementVector.X;
+				std::cout << "\n";
+
 				break;
 			}
 		}
@@ -134,6 +137,29 @@ inline void Physics::ApplyGravity(RigidBody& rb) {
 inline void Physics::Torque(RigidBody& rb, Vector3 colPoint) {
 
 	//float angle = Vector3::GetAngle(rb.);
+}
+
+inline void Physics::Contact(RigidBody& rb1, Vector3 contactNormal) {
+	contactNormal.NormilizeSelf();
+	Math::RemoveError(contactNormal);
+
+	float u1 = Vector3::DotProduct(rb1._movementVector, contactNormal);
+	Vector3 newRb1Vector = rb1._movementVector + contactNormal * (2 * 1 * (0 - u1) / (rb1.Mass + 0)) * rb1.ElasticityCoefficient;
+
+	rb1._movementVector = newRb1Vector;
+}
+inline void Physics::Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNormal) {
+	contactNormal.NormilizeSelf();
+	Math::RemoveError(contactNormal);
+
+	float u1 = Vector3::DotProduct(rb1._movementVector, contactNormal);
+	float u2 = Vector3::DotProduct(rb2._movementVector, contactNormal);
+
+	Vector3 newRb1Vector = rb1._movementVector + contactNormal * (2 * rb2.Mass * (u2 - u1) / (rb1.Mass + rb2.Mass));
+	Vector3 newRb2Vector = rb2._movementVector + contactNormal * (2 * rb1.Mass * (u1 - u2) / (rb2.Mass + rb1.Mass));
+
+	rb1._movementVector = newRb1Vector;
+	rb2._movementVector = newRb2Vector;
 }
 
 inline void Physics::ApplyBaseFriction(RigidBody& rb) {
