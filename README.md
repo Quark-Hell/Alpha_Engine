@@ -1,4 +1,4 @@
-# 3D-Engine
+# Alpha Engine
 Game Engine For Simulators
 
 <p align="center">
@@ -8,6 +8,8 @@ Game Engine For Simulators
 <p align="center">
    <img src="https://img.shields.io/badge/Version-v0.1--Alpha-blue" alt="Engine Version">
    <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+   <img src="https://img.shields.io/github/last-commit/Quark-Hell/Alpha_Engine" alt="Last Update">
+   <img src="https://img.shields.io/github/languages/code-size/Quark-Hell/Alpha_Engine" alt="Size">
 </p>
 
 ## About
