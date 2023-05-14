@@ -27,8 +27,11 @@ void BackwardMoveCamera();
 void UpMoveCamera();
 void DownMoveCamera();
 
-void Stop();
 void Jump();
+void Down();
+
+void Left();
+void Right();
 
 void CameraRotate();
 

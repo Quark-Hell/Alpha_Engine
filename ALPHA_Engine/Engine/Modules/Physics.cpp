@@ -98,7 +98,7 @@ inline RigidBody::~RigidBody() {
 #pragma endregion
 
 #pragma region Phisycs Define
-inline void Physics::PhysicsLoop() {
+void Physics::PhysicsLoop() {
 	//TODO: Bug: the object sometimes is rapidly accelerating.
 	// speed logs:
 	// -0.181993
@@ -119,9 +119,6 @@ inline void Physics::PhysicsLoop() {
 				Physics::ApplyGravity(*rigidBody);
 				Physics::ApplyBaseFriction(*rigidBody);
 				Physics::ApplyPhysics(*rigidBody);
-				
-				std::cout << rigidBody->_movementVector.X;
-				std::cout << "\n";
 
 				break;
 			}
@@ -130,9 +127,8 @@ inline void Physics::PhysicsLoop() {
 }
 
 inline void Physics::ApplyGravity(RigidBody& rb) {
-	Vector3 add = (rb.Gravity * 4 * World::SimulationSpeed * powf(World::_deltaTime / 1000, 2));
-	rb.AddForceWithoutMass(add);
-
+	Vector3 add = rb.Gravity * 4 * World::SimulationSpeed * powf(World::_deltaTime / 1000, 2);
+	//rb.AddForceWithoutMass(add);
 }
 inline void Physics::Torque(RigidBody& rb, Vector3 colPoint) {
 
@@ -141,16 +137,16 @@ inline void Physics::Torque(RigidBody& rb, Vector3 colPoint) {
 
 inline void Physics::Contact(RigidBody& rb1, Vector3 contactNormal) {
 	contactNormal.NormilizeSelf();
-	Math::RemoveError(contactNormal);
+	Math::RemoveError(contactNormal, 0.0001);
 
 	float u1 = Vector3::DotProduct(rb1._movementVector, contactNormal);
-	Vector3 newRb1Vector = rb1._movementVector + contactNormal * (2 * 1 * (0 - u1) / (rb1.Mass + 0)) * rb1.ElasticityCoefficient;
+	Vector3 newRb1Vector = rb1._movementVector + contactNormal * (2 * 10000 * (0 - u1) / (rb1.Mass + 10000)) * rb1.ElasticityCoefficient;
 
 	rb1._movementVector = newRb1Vector;
 }
 inline void Physics::Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNormal) {
 	contactNormal.NormilizeSelf();
-	Math::RemoveError(contactNormal);
+	Math::RemoveError(contactNormal, 0.0001);
 
 	float u1 = Vector3::DotProduct(rb1._movementVector, contactNormal);
 	float u2 = Vector3::DotProduct(rb2._movementVector, contactNormal);
@@ -163,10 +159,12 @@ inline void Physics::Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNorm
 }
 
 inline void Physics::ApplyBaseFriction(RigidBody& rb) {
-	rb._movementVector *= rb.BaseFriction;
+	//rb._movementVector *= rb.BaseFriction;
 }
-
 inline void Physics::ApplyPhysics(RigidBody& rb) {
+	//rb._movementVector = Vector3::GetNormalize(rb.GetImpulseVector()) * rb.GetImpulseVector().GetMagnitude() * (World::_deltaTime / 1000.0)* World::SimulationSpeed;
+	//rb.GetParentObject()->AddPosition(rb._movementVector);
+
 	if (rb._movementVector.GetMagnitude() > rb.MaxSpeed) {
 		Vector3::GetNormalize(rb._movementVector) *= rb._movementVector;
 
@@ -176,14 +174,17 @@ inline void Physics::ApplyPhysics(RigidBody& rb) {
 	{
 		rb.GetParentObject()->AddPosition(rb.GetImpulseVector());
 	}
-
-	//std::cout << rb._movementVector.Y;
-	//std::cout << "\n";
 }
 
-inline Physics::Physics() {
+inline void RKM(RigidBody& rb) {
+	float k1, k2, k3, k4;
+
 
 }
-inline Physics::~Physics() {
+
+Physics::Physics() {
+
+}
+Physics::~Physics() {
 
 }

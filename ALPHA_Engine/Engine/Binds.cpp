@@ -156,12 +156,12 @@ inline void Keyboard::UpdateKeysState(GLFWwindow& window) {
 		if (glfwGetKey(&window, Keys[i]->KEY)) {
 			if (Keys[i]->KeyState & EnumKeyStates::KeyNotPressed) {
 				Keys[i]->KeyState = KeyPressed;
-				std::printf("Pressed");
+				//std::printf("Pressed");
 				continue;
 			}
 			else if (Keys[i]->KeyState & EnumKeyStates::KeyPressed) {
 				Keys[i]->KeyState = KeyHold;
-				std::printf("Hold");
+				//std::printf("Hold");
 				continue;
 			}
 		}
@@ -169,7 +169,7 @@ inline void Keyboard::UpdateKeysState(GLFWwindow& window) {
 		{
 			if (Keys[i]->KeyState & EnumKeyStates::KeyHold || Keys[i]->KeyState & EnumKeyStates::KeyPressed) {
 				Keys[i]->KeyState = KeyReleased;
-				std::printf("Released");
+				//std::printf("Released");
 				continue;
 			}
 			Keys[i]->KeyState = KeyNotPressed;

@@ -39,7 +39,7 @@ private:
 	friend class Physics;
 };
 
-class Physics {
+static class Physics {
 public:
 	static inline void PhysicsLoop();
 
@@ -56,6 +56,8 @@ private:
 
 	static inline void ApplyPhysics(RigidBody& rb);
 	static inline void ApplyVelocity(RigidBody& rb);
+
+	static inline void RKM(RigidBody& rb);
 
 	friend class Collision;
 };

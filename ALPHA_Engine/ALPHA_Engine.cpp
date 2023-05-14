@@ -55,13 +55,17 @@ void GameFunction::Start() {
     object = Primitives::Sphere(pos, rot, scale, color);
     object->AddModule(col1);
     object->AddModule(rb1);
-    object->AddPosition(2, 3, 0);
+    object->AddPosition(2, 1, 0);
+    rb1->Mass = 1;
+    //rb1->Gravity = {0,0,0};
     rb1->CalculateCenterMass();
 
     object2 = Primitives::Sphere(pos, rot, scale, color);
     object2->AddModule(col2);
     object2->AddModule(rb2);
-    object2->AddPosition(-2, 3, 0);
+    object2->AddPosition(-2, 1, 0);
+    rb2->Mass = 100000;
+    //rb2->Gravity = { 0,0,0 };
     rb2->CalculateCenterMass();
 
     plane = Primitives::Plane(pos, rot, scale, color);
@@ -72,6 +76,8 @@ void GameFunction::Start() {
 }
 
 void GameFunction::Update() {
+    //std::cout << object2->GetPosition().Y << std::endl;
+
     //object->AddRotation(1.5,0,0);
 
     //object->SetScale(
@@ -99,8 +105,11 @@ void SetControl() {
     
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { GLFW_KEY_ESCAPE });
     
-    Bind jump; jump.KeyboardBind({ Jump }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_SPACE });
-    Bind stop; stop.KeyboardBind({ Stop }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_G });
+    Bind jump; jump.KeyboardBind({ Jump }, { EnumKeyStates::KeyHold }, { GLFW_KEY_SPACE });
+    Bind down; down.KeyboardBind({ Down }, { EnumKeyStates::KeyHold }, { GLFW_KEY_N });
+
+    Bind left; left.KeyboardBind({ Left }, { EnumKeyStates::KeyHold }, { GLFW_KEY_G });
+    Bind right; right.KeyboardBind({ Right }, { EnumKeyStates::KeyHold }, { GLFW_KEY_H });
 
     InpSys->InsertBind(CameraRot);
     
@@ -115,8 +124,11 @@ void SetControl() {
     
     InpSys->InsertBind(CloseGameFirstMethod);
 
-    InpSys->InsertBind(stop);
     InpSys->InsertBind(jump);
+    InpSys->InsertBind(down);
+
+    InpSys->InsertBind(left);
+    InpSys->InsertBind(right);
 }
 void LeftMoveCamera() {
     Vector3 newPos = Player.GetPosition();
@@ -207,12 +219,17 @@ void CameraRotate() {
     }
 }
 
-void Stop() {
-    rb1->AddForce(0, 0.3, 0);
-}
 void Jump() {
-    rb1->AddForce(-0.2,0,0);
-    printf("jump");
+    rb1->AddForce(0, 0.005, 0);
+}
+void Down() {
+    rb1->AddForce(0, -0.005, 0);
+}
+void Left() {
+    rb1->AddForce(-0.02,0,0);
+}
+void Right() {
+    rb1->AddForce(0.02, 0, 0);
 }
 
 int main()
