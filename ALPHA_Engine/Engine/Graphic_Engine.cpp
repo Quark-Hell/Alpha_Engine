@@ -167,7 +167,7 @@ inline void Render::SceneAssembler() {
         {
             Mesh* mesh = dynamic_cast<Mesh*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
 
-            if (mesh != nullptr && mesh->GetName() == "Mesh") {
+            if (mesh != nullptr && mesh->GetType() == ModulesList::MeshType) {
                 Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
                 RenderMesh(*mesh);
             }

@@ -9,10 +9,14 @@
 #include <assimp/postprocess.h>
 
 inline Geometry::Geometry() {
-    Geometry::Rename("Geometry");
+
 }
 inline Geometry::~Geometry() {
 
+}
+
+inline ModulesList Geometry::GetType() {
+    return ModulesList::GeometryType;
 }
 
 inline bool Geometry::Create(std::string linkToFBX) {

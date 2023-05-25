@@ -123,9 +123,8 @@ inline bool Simplex::Tetrahedron(Simplex& points, Vector3& direction) {
 }
 
 inline Collider::Collider() {
-    Collider::Rename("Collider");
 }
-inline bool Collider::CreateConvexFrom—oncave(std::string link) {
+inline bool Collider::CreateConvexFromConcave(std::string link) {
 
 }
 

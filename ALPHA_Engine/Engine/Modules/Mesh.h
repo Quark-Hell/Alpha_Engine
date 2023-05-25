@@ -6,6 +6,8 @@ private:
 	friend class Object;
 
 public:
+	ModulesList GetType() override;
+
 	Mesh();
 	~Mesh();
 

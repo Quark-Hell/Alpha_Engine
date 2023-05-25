@@ -49,8 +49,7 @@ public:
 	Collider();
 	~Collider();
 
-	bool CreateConvexFrom—oncave(std::string link);
-	CollisionInfo GetCollisionInfo();
+	bool CreateConvexFromConcave(std::string link);
 
 private:
 	friend class Collision;

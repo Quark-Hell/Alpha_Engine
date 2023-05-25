@@ -87,7 +87,7 @@ inline Vector3 RigidBody::GetImpulseVector() {
 }
 
 inline RigidBody::RigidBody() {
-	RigidBody::Rename("RigidBody");
+
 
 	//RigidBody::CalculateCenterMass();
 }

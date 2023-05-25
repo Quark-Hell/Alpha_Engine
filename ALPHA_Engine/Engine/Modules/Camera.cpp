@@ -3,7 +3,10 @@
 #include "Object.h"
 
 inline Camera::Camera() {
-    Camera::Rename("Camera");
+
+}
+inline Camera::~Camera() {
+
 }
 
 inline void Camera::SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar) {
@@ -21,6 +24,10 @@ inline void Camera::GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float
     *Aspect = Camera::Aspect;
     *ZNear = Camera::ZNear;
     *ZFar = Camera::ZFar;
+}
+
+inline ModulesList Camera::GetType() {
+    return ModulesList::CameraType;
 }
 
 inline float Camera::GetFov() {
