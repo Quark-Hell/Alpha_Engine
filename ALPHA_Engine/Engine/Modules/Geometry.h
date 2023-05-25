@@ -29,6 +29,8 @@ public:
 	Geometry();
 	~Geometry();
 
+	ModulesList GetType() override;
+
 	virtual bool Create(std::string linkToFBX);
 	//virtual void Delete();
 

@@ -122,9 +122,8 @@ inline bool Simplex::Tetrahedron(Simplex& points, Vector3& direction) {
 }
 
 inline Collider::Collider() {
-    Collider::Rename("Collider");
 }
-inline bool Collider::CreateConvexFrom—oncave(std::string link) {
+inline bool Collider::CreateConvexFromConcave(std::string link) {
 
 }
 
@@ -142,7 +141,7 @@ inline void Collision::CollisionLoop() {
                 {
                     Collider* colliderB = dynamic_cast<Collider*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
 
-                    if (colliderA != nullptr && colliderA->GetName() == "Collider" && colliderB != nullptr && colliderB->GetName() == "Collider" && colliderA != colliderB) {
+                    if (colliderA != nullptr && colliderA->GetType() == ModulesList::ColliderType && colliderB != nullptr && colliderB->GetType() == ModulesList::ColliderType && colliderA != colliderB) {
                         if (Collision::GJK((Collider*)colliderA, (Collider*)colliderB, points)) {
                             colliderA->GetParentObject()->AddPosition(-(points.Normal.X * points.PenetrationDepth), -(points.Normal.Y * points.PenetrationDepth), -(points.Normal.Z * points.PenetrationDepth));
                             colliderA->GetParentObject()->ApplyTransform();

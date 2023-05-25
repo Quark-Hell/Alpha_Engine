@@ -138,13 +138,6 @@ inline void Object::ApplyTransform() {
 	}
 
 	Object::_transformMatrix.Identity();
-	//Vector4 posMatrix = Position;
-	//Vector4 rotMatrix = Rotation;
-	//Vector4 scaleMatrix = Scale;
-
-	//MatrixMath::MultiplyMatrix(Position, buffer, posMatrix);
-	//MatrixMath::MultiplyMatrix(Rotation, buffer, rotMatrix);
-	//MatrixMath::MultiplyMatrix(Scale,	 buffer, scaleMatrix);
 }
 
 inline bool Object::AddModule(class Module* some_module) {
@@ -157,9 +150,10 @@ inline int Object::GetCountOfModules() {
 	return Object::Modules.size();
 }
 
-inline bool Object::DeleteModuleByName(std::string name) {
+
+inline bool Object::DeleteModuleByType(ModulesList type) {
 	for (size_t i = 0; i < Object::Modules.size(); i++) {
-		if (name == Object::Modules[i]->GetName()) {
+		if (type == Object::Modules[i]->GetType()) {
 			Object::Modules.erase(Object::Modules.begin() + i);
 			return true;
 		}
@@ -176,9 +170,9 @@ inline bool Object::DeleteModuleByIndex(int index) {
 	return false;
 }
 
-inline Module* Object::GetModuleByName(std::string name) {
+inline Module* Object::GetModuleByType(ModulesList type) {
 	for (size_t i = 0; i < Object::Modules.size(); i++) {
-		if (name == Object::Modules[i]->GetName()) {
+		if (type == Object::Modules[i]->GetType()) {
 			return Object::Modules[i];
 		}
 	}

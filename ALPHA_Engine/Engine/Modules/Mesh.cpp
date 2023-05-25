@@ -6,11 +6,14 @@
 
 #pragma region Mesh Define
 inline Mesh::Mesh() {
-	Mesh::Rename("Mesh");
-}
 
+}
 inline Mesh::~Mesh() {
 
+}
+
+inline ModulesList Mesh::GetType() {
+	return ModulesList::MeshType;
 }
 
 inline bool Mesh::Create(std::string linkToFBX) {

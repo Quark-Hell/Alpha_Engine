@@ -51,11 +51,12 @@ public:
 	void ApplyTransform();
 
 	bool AddModule(class Module* some_module);
+	bool AddModule(std::string moduleName);
 
-	bool DeleteModuleByName(std::string name);
+	bool DeleteModuleByType(ModulesList type);
 	bool DeleteModuleByIndex(int index);
 
-	Module* GetModuleByName(std::string name);
+	Module* GetModuleByType(ModulesList type);
 	Module* GetModuleByIndex(size_t index);
 
 	int GetCountOfModules();
