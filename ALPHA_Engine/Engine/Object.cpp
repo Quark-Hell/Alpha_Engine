@@ -145,6 +145,34 @@ inline bool Object::AddModule(class Module* some_module) {
 	some_module->ParentObject = this;
 	return true;
 }
+inline bool Object::AddModule(ModulesList moduleType) {
+	switch (moduleType)
+	{
+	case ModuleType:
+		return false;
+		break;
+	case CameraType:
+		Object::AddModule(new Camera);
+		break;
+	case RigidBodyType:
+		//Object::AddModule(new RigidBody);
+		break;
+	case GeometryType:
+		Object::AddModule(new Geometry);
+		break;
+	case ColliderType:
+		Object::AddModule(new Collider);
+		break;
+	case MeshType:
+		Object::AddModule(new Mesh);
+		break;
+	default:
+		return false;
+		break;
+	}
+
+	return true;
+}
 
 inline int Object::GetCountOfModules() {
 	return Object::Modules.size();

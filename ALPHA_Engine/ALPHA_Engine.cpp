@@ -43,6 +43,7 @@ void GameFunction::Start() {
     Vector3 color = Vector3(0, 0, 0);
 
     object = Primitives::Cylinder(pos, rot, scale, color);
+    object->AddModule(ModulesList::ColliderType);
 }
 
 void GameFunction::Update() {

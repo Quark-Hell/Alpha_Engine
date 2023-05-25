@@ -14,9 +14,9 @@ private:
 	float* _normals;
 	unsigned int* _indices;
 
-	unsigned int _vertexCount;
-	unsigned int _normalsCount;
-	unsigned int _indicesCount;
+	unsigned int _vertexCount = 0;
+	unsigned int _normalsCount = 0;
+	unsigned int _indicesCount = 0;
 
 private:
 	friend class Object;
