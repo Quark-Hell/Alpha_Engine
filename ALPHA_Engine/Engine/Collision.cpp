@@ -128,8 +128,8 @@ inline bool Collider::CreateConvexFromConcave(std::string link) {
 
 }
 
-inline CollisionInfo Collider::GetCollisionInfo() {
-    return Collider::collisionInfo;
+inline ModulesList Collider::GetType() {
+    return ModulesList::ColliderType;
 }
 
 /*Maybe need refactoring*/
@@ -141,7 +141,7 @@ inline void Collision::CollisionLoop() {
         {
             Collider* collider = dynamic_cast<Collider*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
 
-            if (collider != nullptr && collider->GetName() == "Collider") {
+            if (collider != nullptr && collider->GetType() == ModulesList::ColliderType) {
                 collider->collisionInfo.HasCollision = false;
             }
         }
@@ -160,7 +160,7 @@ inline void Collision::CollisionLoop() {
                 {
                     Collider* colliderB = dynamic_cast<Collider*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
                     
-                    if (colliderA != nullptr && colliderA->GetName() == "Collider" && colliderB != nullptr && colliderB->GetName() == "Collider" && colliderA != colliderB) {
+                    if (colliderA != nullptr && colliderA->GetType() == ModulesList::ColliderType && colliderB != nullptr && colliderB->GetType() == ColliderType && colliderA != colliderB) {
                         Collision::GJK(*colliderA, *colliderB, points);
                     }
                 }
@@ -198,8 +198,8 @@ inline bool Collision::GJK(Collider& colliderA, Collider& colliderB, CollisionIn
         points.PushFront(support);
 
         if (Simplex::NextSimplex(points, direction)) {
-            RigidBody* rb1 = dynamic_cast<RigidBody*>(colliderA.GetParentObject()->GetModuleByName("RigidBody"));
-            RigidBody* rb2 = dynamic_cast<RigidBody*>(colliderB.GetParentObject()->GetModuleByName("RigidBody"));
+            RigidBody* rb1 = dynamic_cast<RigidBody*>(colliderA.GetParentObject()->GetModuleByType(ModulesList::RigidBodyType));
+            RigidBody* rb2 = dynamic_cast<RigidBody*>(colliderB.GetParentObject()->GetModuleByType(ModulesList::RigidBodyType));
 
             if (rb1 != nullptr && rb2 == nullptr) {
                 colPoints = Collision::EPA(points, colliderA, colliderB);

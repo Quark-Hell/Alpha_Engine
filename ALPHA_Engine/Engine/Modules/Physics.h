@@ -22,6 +22,7 @@ public:
 	void AddForce(const float& x, const float& y, const float& z);
 
 	void AddForceWithoutMass(const Vector3& forceVector);
+	ModulesList GetType() override;
 
 	void CalculateCenterMass();
 

@@ -2,9 +2,6 @@
 #include "Module.h"
 
 class Camera : public Module{
-public:
-	const ModulesList _type = ModulesList::CameraType;
-
 private:
 	float Fov = 90;
 	float Aspect = 1;

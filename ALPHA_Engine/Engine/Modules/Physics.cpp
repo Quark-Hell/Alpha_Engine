@@ -15,6 +15,10 @@ inline void RigidBody::AddForceWithoutMass(const Vector3& forceVector) {
 	RigidBody::_movementVector += forceVector;
 }
 
+inline ModulesList RigidBody::GetType() {
+	return ModulesList::RigidBodyType;
+}
+
 inline void RigidBody::CalculateCenterMass() {
 	Object* object = RigidBody::GetParentObject();
 	RigidBody::_centerMass = Vector3(0, 0, 0);

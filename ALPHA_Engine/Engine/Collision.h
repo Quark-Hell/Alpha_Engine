@@ -49,6 +49,8 @@ public:
 	Collider();
 	~Collider();
 
+	ModulesList GetType();
+
 	bool CreateConvexFromConcave(std::string link);
 
 private:
