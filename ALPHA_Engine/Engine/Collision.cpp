@@ -122,13 +122,13 @@ inline bool Simplex::Tetrahedron(Simplex& points, Vector3& direction) {
     return true;
 }
 
-inline Collider::Collider() {
+inline MeshCollider::MeshCollider() {
 }
-inline bool Collider::CreateConvexFromConcave(std::string link) {
+inline bool MeshCollider::CreateConvexFromConcave(std::string link) {
 
 }
 
-inline ModulesList Collider::GetType() {
+inline ModulesList MeshCollider::GetType() {
     return ModulesList::ColliderType;
 }
 
@@ -139,7 +139,7 @@ inline void Collision::CollisionLoop() {
     {
         for (size_t jt = 0; jt < World::ObjectsOnScene[it]->GetCountOfModules(); jt++)
         {
-            Collider* collider = dynamic_cast<Collider*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+            MeshCollider* collider = dynamic_cast<MeshCollider*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
 
             if (collider != nullptr && collider->GetType() == ModulesList::ColliderType) {
                 collider->collisionInfo.HasCollision = false;
@@ -153,12 +153,12 @@ inline void Collision::CollisionLoop() {
     {
         for (size_t jt = 0; jt < World::ObjectsOnScene[it]->GetCountOfModules(); jt++)
         {
-            Collider* colliderA = dynamic_cast<Collider*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+            MeshCollider* colliderA = dynamic_cast<MeshCollider*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
             for (size_t kt = 1; kt < World::ObjectsOnScene.size(); kt++)
             {
                 for (size_t mt = 0; mt < World::ObjectsOnScene[kt]->GetCountOfModules(); mt++)
                 {
-                    Collider* colliderB = dynamic_cast<Collider*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
+                    MeshCollider* colliderB = dynamic_cast<MeshCollider*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
                     
                     if (colliderA != nullptr && colliderA->GetType() == ModulesList::ColliderType && colliderB != nullptr && colliderB->GetType() == ColliderType && colliderA != colliderB) {
                         Collision::GJK(*colliderA, *colliderB, points);
@@ -171,13 +171,13 @@ inline void Collision::CollisionLoop() {
 
 }
 
-inline Vector3 Collision::Support(Collider& colliderA, Collider& colliderB, Vector3 direction) 
+inline Vector3 Collision::Support(MeshCollider& colliderA, MeshCollider& colliderB, Vector3 direction) 
 {
     return colliderA.FindFurthestPoint(direction)
         - colliderB.FindFurthestPoint(-direction);
 }
 
-inline bool Collision::GJK(Collider& colliderA, Collider& colliderB, CollisionInfo& colPoints) {
+inline bool Collision::GJK(MeshCollider& colliderA, MeshCollider& colliderB, CollisionInfo& colPoints) {
     // Get initial support point in any direction
     Vector3 support = Support(colliderA, colliderB, {1,0,0});
 
@@ -212,7 +212,6 @@ inline bool Collision::GJK(Collider& colliderA, Collider& colliderB, CollisionIn
             }
             else if (rb1 == nullptr && rb2 != nullptr) {
                 colPoints = Collision::EPA(points, colliderA, colliderB);
-                colPoints.Normal = rb2->_movementVector;
 
                 colliderA.GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
                 colliderA.GetParentObject()->ApplyTransform();
@@ -232,7 +231,7 @@ inline bool Collision::GJK(Collider& colliderA, Collider& colliderB, CollisionIn
         }
     }
 }
-inline CollisionInfo Collision::EPA(Simplex& simplex, Collider& colliderA, Collider& colliderB)
+inline CollisionInfo Collision::EPA(Simplex& simplex, MeshCollider& colliderA, MeshCollider& colliderB)
 {
     std::vector<Vector3> polytope(simplex.begin(), simplex.end());
     std::vector<size_t>  faces = {
@@ -330,7 +329,6 @@ inline CollisionInfo Collision::EPA(Simplex& simplex, Collider& colliderA, Colli
 
 inline std::pair<std::vector<Vector4>, size_t> Collision::GetFaceNormals(std::vector<Vector3>& polytope,std::vector<size_t>& faces)
 {
-
     std::vector<Vector4> normals;
     size_t minTriangle = 0;
     float  minDistance = FLT_MAX;

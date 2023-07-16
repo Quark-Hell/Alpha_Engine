@@ -14,6 +14,10 @@ inline ModulesList Module::GetType() {
 	return ModulesList::ModuleType;
 }
 
+inline void Module::SetParentObject(const Object& parent) {
+	ParentObject = const_cast<Object*>(&parent);
+}
+
 inline Module::Module() {
 
 }

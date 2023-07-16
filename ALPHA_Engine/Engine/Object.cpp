@@ -140,37 +140,41 @@ inline void Object::ApplyTransform() {
 	Object::_transformMatrix.Identity();
 }
 
-inline bool Object::AddModule(class Module* some_module) {
-	Object::Modules.push_back(some_module);
-	some_module->ParentObject = this;
+inline bool Object::AddModule(class Module* someModule) {
+	Object::Modules.push_back(someModule);
+	someModule->SetParentObject(*this);
 	return true;
 }
-inline bool Object::AddModule(ModulesList moduleType) {
+inline bool Object::AddModule(ModulesList moduleType, Module& outputModule) {
+	Module *someModule;
+
 	switch (moduleType)
 	{
 	case ModuleType:
 		return false;
 		break;
 	case CameraType:
-		Object::AddModule(new Camera);
+		someModule = new Camera;
 		break;
 	case RigidBodyType:
-		//Object::AddModule(new RigidBody);
+		someModule = new RigidBody;
 		break;
 	case GeometryType:
-		Object::AddModule(new Geometry);
+		someModule = new Geometry;
 		break;
 	case ColliderType:
-		Object::AddModule(new Collider);
+		someModule = new MeshCollider;
 		break;
 	case MeshType:
-		Object::AddModule(new Mesh);
+		someModule = new Mesh;
 		break;
 	default:
 		return false;
 		break;
 	}
 
+	Object::AddModule(someModule);
+	someModule->SetParentObject(*this);
 	return true;
 }
 

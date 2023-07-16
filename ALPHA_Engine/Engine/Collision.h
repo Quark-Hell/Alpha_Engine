@@ -44,10 +44,10 @@ public:
 	//std::shared_ptr<std::vector<float>> CollisionPoints;
 };
 
-class Collider : public Geometry {
+class MeshCollider : public Geometry {
 public:
-	Collider();
-	~Collider();
+	MeshCollider();
+	~MeshCollider();
 
 	ModulesList GetType();
 
@@ -67,9 +67,9 @@ public:
 	static inline unsigned int EPAaccurate = 100;
 
 private:
-	static inline Vector3 Support(Collider& colliderA, Collider& colliderB, Vector3 direction);
-	static inline bool GJK(Collider& colliderA, Collider& colliderB, CollisionInfo& colPoints);
-	static inline CollisionInfo EPA(Simplex& simplex, Collider& colliderA, Collider& ColliderB);
+	static inline Vector3 Support(MeshCollider& colliderA, MeshCollider& colliderB, Vector3 direction);
+	static inline bool GJK(MeshCollider& colliderA, MeshCollider& colliderB, CollisionInfo& colPoints);
+	static inline CollisionInfo EPA(Simplex& simplex, MeshCollider& colliderA, MeshCollider& ColliderB);
 
 	static inline std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
 	static inline void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);

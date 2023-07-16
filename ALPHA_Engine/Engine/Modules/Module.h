@@ -17,7 +17,7 @@ class Module
 public:
 	std::string Name = "Undefined";
 
-private:
+protected:
 	Object* ParentObject = nullptr;
 
 private:
@@ -28,6 +28,8 @@ private:
 public:
 	virtual ModulesList GetType();
 	Object* GetParentObject();
+
+	virtual void SetParentObject(const Object& parent);
 	
 	Module();
 	~Module();

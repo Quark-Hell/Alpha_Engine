@@ -13,21 +13,21 @@ public:
 	}
 
 public:
-	float GetMagnitude() {
+	virtual float GetMagnitude() {
 		return sqrtf(powf(X, 2) + powf(Y, 2));
 	}
 	static float GetMagnitude(Vector2 Vector) {
 		return sqrtf(powf(Vector.X, 2) + powf(Vector.Y, 2));
 	}
 
-	float GetNonSqrtMagnitude() {
+	virtual float GetNonSqrtMagnitude() {
 		return powf(X, 2) + powf(Y, 2);
 	}
 	static float GetNonSqrtMagnitude(Vector2 Vector) {
 		return powf(Vector.X, 2) + powf(Vector.Y, 2);
 	}
 
-	void NormilizeSelf() {
+	virtual void NormilizeSelf() {
 		float locLength = GetMagnitude();
 		float inv_length = (1 / locLength);
 
@@ -54,14 +54,14 @@ public:
 		return newVector;
 	}
 
-	float DotProduct(Vector2 B) {
+	virtual float DotProduct(Vector2 B) {
 		return (X * B.X) + (Y * B.Y);
 	}
 	static float DotProduct(Vector2 A, Vector2 B) {
 		return (A.X * B.X) + (A.Y * B.Y);
 	}
 
-	float GetAngle(Vector2 B = { 1,0 }) {
+	virtual float GetAngle(Vector2 B = { 1,0 }) {
 		return cosf(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
 	}
 	static float GetAngle(Vector2 A = { 1,0 }, Vector2 B = { 1,0 }) {
@@ -351,21 +351,21 @@ public:
 	}
 
 public:
-	float GetMagnitude() {
+	virtual float GetMagnitude() override {
 		return sqrtf(powf(X, 2) + powf(Y, 2) + powf(Z, 2));
 	}
 	static float GetMagnitude(Vector3 Vector) {
 		return sqrtf(powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2));
 	}
 
-	float GetNonSqrtMagnitude() {
+	virtual float GetNonSqrtMagnitude() override {
 		return powf(X, 2) + powf(Y, 2) + powf(Z, 2);
 	}
 	static float GetNonSqrtMagnitude(Vector3 Vector) {
 		return powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2);
 	}
 
-	void NormilizeSelf() {
+	virtual void NormilizeSelf() override {
 		float locLength = GetMagnitude();
 		float inv_length = (1 / locLength);
 
@@ -402,14 +402,12 @@ public:
 	}
 
 	Vector3 CrossProduct(Vector3 B) {
-		//TODO
 		return Vector3(
 			(Y * B.Z - Z * B.Y),
 			(Z * B.X - X * B.Z),
 			(X * B.Y - Y * B.X));
 	}
 	static Vector3 CrossProduct(Vector3 A, Vector3 B) {
-		//TODO
 		return Vector3(
 			(A.Y * B.Z - A.Z * B.Y),
 			(A.Z * B.X - A.X * B.Z),
@@ -733,21 +731,21 @@ public:
 	}
 
 public:
-	float GetMagnitude() {
+	virtual float GetMagnitude() override {
 		return sqrtf(powf(X, 2) + powf(Y, 2) + powf(Z, 2) + powf(Z,2));
 	}
 	static float GetMagnitude(Vector3 Vector) {
 		return sqrtf(powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2));
 	}
 
-	float GetNonSqrtMagnitude() {
+	virtual float GetNonSqrtMagnitude() override {
 		return powf(X, 2) + powf(Y, 2) + powf(Z, 2);
 	}
 	static float GetNonSqrtMagnitude(Vector3 Vector) {
 		return powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2);
 	}
 
-	void NormilizeSelf() {
+	virtual void NormilizeSelf() override {
 		float locLength = GetMagnitude();
 		float inv_length = (1 / locLength);
 

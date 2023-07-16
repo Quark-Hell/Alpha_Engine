@@ -5,14 +5,10 @@
 #include "World.h"
 
 inline void RigidBody::AddForce(const Vector3& forceVector) {
-	RigidBody::_movementVector += forceVector * RigidBody::Mass;
+	RigidBody::_force += forceVector;
 }
 inline void RigidBody::AddForce(const float& x, const float& y, const float& z) {
-	RigidBody::_movementVector += Vector3(x, y, z) * RigidBody::Mass;
-}
-
-inline void RigidBody::AddForceWithoutMass(const Vector3& forceVector) {
-	RigidBody::_movementVector += forceVector;
+	RigidBody::_force += Vector3(x, y, z);
 }
 
 inline ModulesList RigidBody::GetType() {
@@ -86,14 +82,22 @@ inline Vector3 RigidBody::GetCenterMass() {
 	return RigidBody::_centerMass;
 }
 
-inline Vector3 RigidBody::GetImpulseVector() {
-	return RigidBody::_movementVector;
+inline void RigidBody::SetParentObject(const Object& parent) {
+	RigidBody::ParentObject = const_cast<Object*>(&parent);
+	RigidBody::CalculateCenterMass();
+
+	RigidBody::_velocity = {0,0,0};
+}
+
+inline Vector3 RigidBody::GetVelocity() {
+	return RigidBody::_velocity;
+}
+inline Vector3 RigidBody::GetPosition() {
+	return RigidBody::GetParentObject()->GetPosition();
 }
 
 inline RigidBody::RigidBody() {
 
-
-	//RigidBody::CalculateCenterMass();
 }
 
 inline RigidBody::~RigidBody() {
@@ -103,14 +107,6 @@ inline RigidBody::~RigidBody() {
 
 #pragma region Phisycs Define
 inline void Physics::PhysicsLoop() {
-	//TODO: Bug: the object sometimes is rapidly accelerating.
-	// speed logs:
-	// -0.181993
-	// -0.191078
-	// -0.54995          // WTF?
-	// -0.547201
-	// -0.544621
-
 	for (size_t it = 0; it < World::ObjectsOnScene.size(); it++)
 	{
 		Object* obj = World::ObjectsOnScene[it];
@@ -120,12 +116,11 @@ inline void Physics::PhysicsLoop() {
 		{
 			rigidBody = dynamic_cast<RigidBody*>(obj->GetModuleByIndex(i));
 			if (rigidBody != NULL) {
-				Physics::ApplyGravity(*rigidBody);
-				Physics::ApplyBaseFriction(*rigidBody);
+				//Physics::ApplyBaseFriction(*rigidBody);
 				Physics::ApplyPhysics(*rigidBody);
 				
-				std::cout << rigidBody->_movementVector.X;
-				std::cout << "\n";
+				//std::cout << rigidBody->_movementVector.X;
+				//std::cout << "\n";
 
 				break;
 			}
@@ -134,10 +129,15 @@ inline void Physics::PhysicsLoop() {
 }
 
 inline void Physics::ApplyGravity(RigidBody& rb) {
-	Vector3 add = (rb.Gravity * 4 * World::SimulationSpeed * powf(World::_deltaTime / 1000, 2));
-	rb.AddForceWithoutMass(add);
-
+	rb.AddForce(rb.Gravity * rb.Mass * Physics::fixTimeStep);
 }
+inline void Physics::ApplyBaseFriction(RigidBody& rb) {
+	//Vector3 quadSpeed = rb._velocity * rb._velocity;
+	//Vector3 resistForce = quadSpeed * 0.5 * 5.29 * 1 * 1;
+	//rb.AddForce(resistForce);
+	//rb._force *= rb.BaseFriction;
+}
+
 inline void Physics::Torque(RigidBody& rb, Vector3 colPoint) {
 
 	//float angle = Vector3::GetAngle(rb.);
@@ -146,43 +146,156 @@ inline void Physics::Torque(RigidBody& rb, Vector3 colPoint) {
 inline void Physics::Contact(RigidBody& rb1, Vector3 contactNormal) {
 	contactNormal.NormilizeSelf();
 	Math::RemoveError(contactNormal);
+	
+	float u1 = Vector3::DotProduct(rb1._velocity, contactNormal);
+	Vector3 newVelocity = rb1._velocity + contactNormal * (2 * 1 * (0 - u1) / (rb1.Mass + 0)) * rb1.ElasticityCoefficient;
+	
+	rb1._velocity = newVelocity;
 
-	float u1 = Vector3::DotProduct(rb1._movementVector, contactNormal);
-	Vector3 newRb1Vector = rb1._movementVector + contactNormal * (2 * 1 * (0 - u1) / (rb1.Mass + 0)) * rb1.ElasticityCoefficient;
-
-	rb1._movementVector = newRb1Vector;
+	std::cout << World::GetTimeLong() << " contact " << contactNormal.Y << "\n";
 }
 inline void Physics::Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNormal) {
-	contactNormal.NormilizeSelf();
-	Math::RemoveError(contactNormal);
-
-	float u1 = Vector3::DotProduct(rb1._movementVector, contactNormal);
-	float u2 = Vector3::DotProduct(rb2._movementVector, contactNormal);
-
-	Vector3 newRb1Vector = rb1._movementVector + contactNormal * (2 * rb2.Mass * (u2 - u1) / (rb1.Mass + rb2.Mass));
-	Vector3 newRb2Vector = rb2._movementVector + contactNormal * (2 * rb1.Mass * (u1 - u2) / (rb2.Mass + rb1.Mass));
-
-	rb1._movementVector = newRb1Vector;
-	rb2._movementVector = newRb2Vector;
+	//contactNormal.NormilizeSelf();
+	//Math::RemoveError(contactNormal);
+	//
+	//float u1 = Vector3::DotProduct(rb1._acceleration, contactNormal);
+	//float u2 = Vector3::DotProduct(rb2._acceleration, contactNormal);
+	//
+	//Vector3 newRb1Vector = rb1._acceleration + contactNormal * (2 * rb2.Mass * (u2 - u1) / (rb1.Mass + rb2.Mass));
+	//Vector3 newRb2Vector = rb2._acceleration + contactNormal * (2 * rb1.Mass * (u1 - u2) / (rb2.Mass + rb1.Mass));
+	//
+	//rb1._acceleration = newRb1Vector;
+	//rb2._acceleration = newRb2Vector;
 }
 
-inline void Physics::ApplyBaseFriction(RigidBody& rb) {
-	rb._movementVector *= rb.BaseFriction;
-}
 
 inline void Physics::ApplyPhysics(RigidBody& rb) {
-	if (rb._movementVector.GetMagnitude() > rb.MaxSpeed) {
-		Vector3::GetNormalize(rb._movementVector) *= rb._movementVector;
-
-		rb.GetParentObject()->AddPosition(rb.GetImpulseVector());
-	}
-	else
+	switch (Physics::IntegrateMethod)
 	{
-		rb.GetParentObject()->AddPosition(rb.GetImpulseVector());
+	case SemiImplicitEuler:
+		Physics::SemiImplicitIntegrate(rb);
+		break;
+	case RK4:
+		RK4Integrate(rb);
+		break;
+	default:
+		break;
+	}
+}
+
+inline void Physics::SemiImplicitIntegrate(RigidBody& rb) {
+	double accumulator = World::GetDeltaTime();
+
+	while (accumulator >= Physics::fixTimeStep)
+	{
+		Physics::ApplyGravity(rb);
+
+		Vector3 newVelocity = rb.GetVelocity() + (rb._force / rb.Mass);
+
+		if (newVelocity > rb.MaxSpeed) {
+			rb._velocity = Vector3::GetNormalize(newVelocity) * rb.MaxSpeed;
+			rb.GetParentObject()->AddPosition(rb.GetVelocity() * Physics::fixTimeStep);
+		}
+		else
+		{
+			rb._velocity = newVelocity;
+			Vector3 SFD = rb.GetVelocity() * Physics::fixTimeStep;
+			rb.GetParentObject()->AddPosition(rb.GetVelocity() * Physics::fixTimeStep);
+		}
+
+		std::cout << rb._velocity.Y << " speed\t" << rb.GetParentObject()->GetPosition().Y << " Ypos\t" << rb._force.Y << " force\t" << "\n";
+
+		accumulator -= Physics::fixTimeStep;
+		rb._force = { 0,0,0 };
 	}
 
-	//std::cout << rb._movementVector.Y;
-	//std::cout << "\n";
+	if (accumulator != 0) {
+		const double alpha = accumulator / Physics::fixTimeStep;
+		
+		Physics::ApplyGravity(rb);
+		
+		Vector3 newVelocity = rb.GetVelocity() + (rb._force / rb.Mass);
+		
+		if (newVelocity > rb.MaxSpeed) {
+			rb._velocity = Vector3::GetNormalize(newVelocity) * rb.MaxSpeed;
+			rb.GetParentObject()->AddPosition(rb.GetVelocity() * Physics::fixTimeStep * alpha);
+		}
+		else
+		{
+			rb._velocity += (newVelocity - rb._velocity) * alpha;
+			rb.GetParentObject()->AddPosition(rb.GetVelocity() * Physics::fixTimeStep * alpha);
+		}
+	}
+
+	rb._force = { 0,0,0 };
+	//std::cout << World::GetTimeLong() << " worldTime\n";
+}
+
+inline void Physics::RK4Integrate(RigidBody& rb) {
+	auto evaluate = [](const State& initial, float dt, const Derivative& d, Vector3 force, float mass) {
+		State state;
+		state.Position = initial.Position + d.dx * dt;
+		state.Velocity = initial.Velocity + d.dv;
+
+		Derivative output;
+		output.dx = state.Velocity;
+		output.dv = force / mass;
+		return output;
+	};
+
+	auto integrate = [evaluate](State& state, float dt, Vector3 force, float mass)
+	{
+		Derivative a, b, c, d;
+
+		a = evaluate(state, 0.0f, Derivative(), force, mass);
+		b = evaluate(state, dt * 0.5f, a, force, mass);
+		c = evaluate(state, dt * 0.5f, b, force, mass);
+		d = evaluate(state, dt, c, force, mass);
+
+		Vector3 dxdt = (a.dx + (b.dx + c.dx) * 2.0f + d.dx) * (1.0f / 6.0f);
+		Vector3 dvdt = (a.dv + (b.dv + c.dv) * 2.0f + d.dv) * (1.0f / 6.0f);
+
+		state.Position = state.Position + dxdt * dt;
+		state.Velocity = state.Velocity + dvdt;
+	};
+
+	double accumulator = World::GetDeltaTime();
+
+	State state;
+	state.Position = rb.GetParentObject()->GetPosition();
+	state.Velocity = rb._velocity;
+
+	while (accumulator >= Physics::fixTimeStep)
+	{
+		state.Position = rb.GetParentObject()->GetPosition();
+		state.Velocity = rb._velocity;
+
+		Physics::ApplyGravity(rb);
+		integrate(state, Physics::fixTimeStep, rb._force, rb.Mass);
+		
+		rb._velocity = state.Velocity;
+		rb.GetParentObject()->SetPosition(state.Position);
+
+		std::cout << state.Velocity.Y << " speed\t" << rb.GetParentObject()->GetPosition().Y << " Ypos\t" << rb._force.Y << " force\t" << "\n";
+
+		accumulator -= Physics::fixTimeStep;
+		rb._force = { 0,0,0 };
+	}
+	if (accumulator != 0) {
+		const double alpha = accumulator / Physics::fixTimeStep;
+		
+		state.Position = rb.GetParentObject()->GetPosition();
+		state.Velocity = rb._velocity;
+		
+		Physics::ApplyGravity(rb);
+		integrate(state, Physics::fixTimeStep, rb._force, rb.Mass);
+		
+		rb._velocity += (state.Velocity - rb._velocity) * alpha;
+		rb.GetParentObject()->AddPosition(state.Velocity * Physics::fixTimeStep * alpha);
+	}
+
+	rb._force = { 0,0,0 };
+	//std::cout << World::GetTimeLong() << " worldTime\n";
 }
 
 inline Physics::Physics() {

@@ -27,8 +27,8 @@ inline void World::StartFrame() {
 }
 inline void World::EndFrame() {
 	World::_endTime = std::chrono::high_resolution_clock::now();
-	World::_deltaTime = std::chrono::duration_cast	<std::chrono::milliseconds>(World::_endTime - World::_startTime).count();
-	World::_timeLong += std::chrono::duration_cast	<std::chrono::milliseconds>(World::_endTime - World::_startTime).count();
+	World::_deltaTime = std::chrono::duration_cast	<std::chrono::microseconds>(World::_endTime - World::_startTime).count() * 0.000001f;
+	World::_timeLong += World::_deltaTime;
 }
 
 inline void World::BuildTransformationThread(const std::vector<Object*> objects) {

@@ -50,8 +50,8 @@ public:
 	*/
 	void ApplyTransform();
 
-	bool AddModule(class Module* some_module);
-	bool AddModule(ModulesList moduleType);
+	bool AddModule(class Module* someModule);
+	bool AddModule(ModulesList moduleType, Module& outputModule);
 
 	bool DeleteModuleByType(ModulesList type);
 	bool DeleteModuleByIndex(int index);

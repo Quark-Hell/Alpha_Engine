@@ -36,27 +36,27 @@ Object* object2 = new Object;
 
 Object* plane = new Object;
 
-RigidBody* rb1 = new RigidBody;
+
 RigidBody* rb2 = new RigidBody;
 
 void GameFunction::Start() {
     SetControl();
 
-    Collider* col1 = new Collider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
-    Collider* col2 = new Collider; col2->Create("\\Models\\Primitives\\Sphere.fbx");
+    MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
+    MeshCollider* col2 = new MeshCollider; col2->Create("\\Models\\Primitives\\Sphere.fbx");
 
-    Collider* col3 = new Collider; col3->Create("\\Models\\Primitives\\Plane.fbx");
+    MeshCollider* col3 = new MeshCollider; col3->Create("\\Models\\Primitives\\Cube.fbx");
 
     Vector3 pos = Vector3{ 0,0,-15 };
     Vector3 rot = Vector3{ 0,0,0 };
     Vector3 scale = Vector3{ 1,1,1 };
     Vector3 color = Vector3{ 0,0,0 };
 
-    object = Primitives::Sphere(pos, rot, scale, color);
-    object->AddModule(col1);
-    object->AddModule(rb1);
-    object->AddPosition(2, 3, 0);
-    rb1->CalculateCenterMass();
+    //object = Primitives::Sphere(pos, rot, scale, color);
+    //object->AddModule(col1);
+    //object->AddModule(rb1);
+    //object->AddPosition(9, 3, 0);
+    //rb1->CalculateCenterMass();
 
     object2 = Primitives::Sphere(pos, rot, scale, color);
     object2->AddModule(col2);
@@ -64,11 +64,11 @@ void GameFunction::Start() {
     object2->AddPosition(-2, 3, 0);
     rb2->CalculateCenterMass();
 
-    plane = Primitives::Plane(pos, rot, scale, color);
+    plane = Primitives::Cube(pos, rot, scale, color);
     plane->AddModule(col3);
     plane->AddPosition(0, -5, 5);
     plane->AddRotation(-90, 0, 0);
-    plane->SetScale(100, 100, 100);
+    plane->SetScale(10, 10, 0.5);
 }
 
 void GameFunction::Update() {
@@ -208,10 +208,10 @@ void CameraRotate() {
 }
 
 void Stop() {
-    rb1->AddForce(0, 0.3, 0);
+    //rb1->AddForce(0, 100, 0);
 }
 void Jump() {
-    rb1->AddForce(-0.2,0,0);
+    //rb1->AddForce(-0.2,0,0);
     printf("jump");
 }
 
@@ -237,6 +237,7 @@ int main()
         Collision::CollisionLoop();
         render->RenderLoop(camera);
         World::EndFrame();
+        //std::cout << World::GetTimeLong() << "\t" << World::GetDeltaTime() << "\n";
     }
 
     glfwTerminate();

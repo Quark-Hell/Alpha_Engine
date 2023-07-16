@@ -23,7 +23,7 @@ private:
 	friend class Render;
 	friend class Collision;
 	friend class Mesh;
-	friend class Collider;
+	friend class MeshCollider;
 	friend class Physics;
 	friend class RigidBody;
 
