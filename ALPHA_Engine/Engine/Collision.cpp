@@ -4,19 +4,19 @@
 #include "Modules/Physics.h"
 #include "Object.h"
 
-inline Simplex::Simplex(std::array<Vector3, 4> points, unsigned size) {
+Simplex::Simplex(std::array<Vector3, 4> points, unsigned size) {
     Simplex::_points = points;
     Simplex::_size = size;
 }
-inline void Simplex::PushFront(Vector3 point) {
+void Simplex::PushFront(Vector3 point) {
     _points = { point, _points[0], _points[1], _points[2] };
     _size = std::min(_size + 1, 4u);
 }
-inline unsigned Simplex::GetSize() {
+unsigned Simplex::GetSize() {
     return _size;
 }
 
-inline bool Simplex::NextSimplex(Simplex& points, Vector3& direction) {
+bool Simplex::NextSimplex(Simplex& points, Vector3& direction) {
     switch (points.GetSize()) {
     case 2: return Line(points, direction);
     case 3: return Triangle(points, direction);
@@ -26,11 +26,11 @@ inline bool Simplex::NextSimplex(Simplex& points, Vector3& direction) {
     // never should be here
     return false;
 }
-inline bool Simplex::SameDirection(const Vector3& direction, const Vector3& ao) {
+bool Simplex::SameDirection(const Vector3& direction, const Vector3& ao) {
     return Vector3::DotProduct(direction,ao) > 0;
 }
 
-inline bool Simplex::Line(Simplex& points, Vector3& direction) {
+bool Simplex::Line(Simplex& points, Vector3& direction) {
     Vector3 a = points[0];
     Vector3 b = points[1];
 
@@ -48,7 +48,7 @@ inline bool Simplex::Line(Simplex& points, Vector3& direction) {
 
     return false;
 }
-inline bool Simplex::Triangle(Simplex& points, Vector3& direction) {
+bool Simplex::Triangle(Simplex& points, Vector3& direction) {
     Vector3 a = points[0];
     Vector3 b = points[1];
     Vector3 c = points[2];
@@ -92,7 +92,7 @@ inline bool Simplex::Triangle(Simplex& points, Vector3& direction) {
 
     return false;
 }
-inline bool Simplex::Tetrahedron(Simplex& points, Vector3& direction) {
+bool Simplex::Tetrahedron(Simplex& points, Vector3& direction) {
     Vector3 a = points[0];
     Vector3 b = points[1];
     Vector3 c = points[2];
@@ -122,18 +122,18 @@ inline bool Simplex::Tetrahedron(Simplex& points, Vector3& direction) {
     return true;
 }
 
-inline MeshCollider::MeshCollider() {
+MeshCollider::MeshCollider() {
 }
-inline bool MeshCollider::CreateConvexFromConcave(std::string link) {
-
+bool MeshCollider::CreateConvexFromConcave(std::string link) {
+    return false;
 }
 
-inline ModulesList MeshCollider::GetType() {
+ModulesList MeshCollider::GetType() {
     return ModulesList::ColliderType;
 }
 
 /*Maybe need refactoring*/
-inline void Collision::CollisionLoop() {
+void Collision::CollisionLoop() {
     //Clear collision Info
     for (size_t it = 0; it < World::ObjectsOnScene.size() - 1; it++)
     {
@@ -171,13 +171,13 @@ inline void Collision::CollisionLoop() {
 
 }
 
-inline Vector3 Collision::Support(MeshCollider& colliderA, MeshCollider& colliderB, Vector3 direction) 
+Vector3 Collision::Support(MeshCollider& colliderA, MeshCollider& colliderB, Vector3 direction) 
 {
     return colliderA.FindFurthestPoint(direction)
         - colliderB.FindFurthestPoint(-direction);
 }
 
-inline bool Collision::GJK(MeshCollider& colliderA, MeshCollider& colliderB, CollisionInfo& colPoints) {
+bool Collision::GJK(MeshCollider& colliderA, MeshCollider& colliderB, CollisionInfo& colPoints) {
     // Get initial support point in any direction
     Vector3 support = Support(colliderA, colliderB, {1,0,0});
 
@@ -211,7 +211,7 @@ inline bool Collision::GJK(MeshCollider& colliderA, MeshCollider& colliderB, Col
                 //rb1->_movementVector = { 0,0,0 };
             }
             else if (rb1 == nullptr && rb2 != nullptr) {
-                colPoints = Collision::EPA(points, colliderA, colliderB);
+                colPoints = Collision::EPA(points, colliderA, colliderB); 
 
                 colliderA.GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
                 colliderA.GetParentObject()->ApplyTransform();
@@ -231,7 +231,7 @@ inline bool Collision::GJK(MeshCollider& colliderA, MeshCollider& colliderB, Col
         }
     }
 }
-inline CollisionInfo Collision::EPA(Simplex& simplex, MeshCollider& colliderA, MeshCollider& colliderB)
+CollisionInfo Collision::EPA(Simplex& simplex, MeshCollider& colliderA, MeshCollider& colliderB)
 {
     std::vector<Vector3> polytope(simplex.begin(), simplex.end());
     std::vector<size_t>  faces = {
@@ -327,7 +327,7 @@ inline CollisionInfo Collision::EPA(Simplex& simplex, MeshCollider& colliderA, M
     return pointsA;
 }
 
-inline std::pair<std::vector<Vector4>, size_t> Collision::GetFaceNormals(std::vector<Vector3>& polytope,std::vector<size_t>& faces)
+std::pair<std::vector<Vector4>, size_t> Collision::GetFaceNormals(std::vector<Vector3>& polytope,std::vector<size_t>& faces)
 {
     std::vector<Vector4> normals;
     size_t minTriangle = 0;
@@ -359,7 +359,7 @@ inline std::pair<std::vector<Vector4>, size_t> Collision::GetFaceNormals(std::ve
 
     return { normals, minTriangle };
 }
-inline void Collision::AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges,std::vector<size_t>& faces,size_t a,size_t b)
+void Collision::AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges,std::vector<size_t>& faces,size_t a,size_t b)
 {
     auto reverse = std::find(             
         edges.begin(),                    
@@ -376,7 +376,7 @@ inline void Collision::AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& e
     }
 }
 
-inline std::shared_ptr<std::vector<float>> Collision::GetContactPoints(Geometry& geometry, Vector3 moveVector) {
+std::shared_ptr<std::vector<float>> Collision::GetContactPoints(Geometry& geometry, Vector3 moveVector) {
 
     std::shared_ptr<std::vector<float>> ContactPoints = std::make_shared<std::vector<float>>();
 

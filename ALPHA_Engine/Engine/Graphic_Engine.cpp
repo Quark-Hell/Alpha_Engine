@@ -5,7 +5,7 @@
 #include "Modules/Mesh.h"
 #include "GameModels.h"
 
-inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name) {
+void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name) {
     _wight = Wight;
     _height = Height;
     _bitsPerPixel = BitsPerPixel;
@@ -48,15 +48,15 @@ inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsign
     glfwMakeContextCurrent(Screen::_window);
     glfwSwapInterval(0);
 }
-inline GLFWwindow* Screen::GetWindow() {
+GLFWwindow* Screen::GetWindow() {
     return Screen::_window;
 }
 
-inline Screen* Render::GetScreenClass() {
+Screen* Render::GetScreenClass() {
     return &(Render::_screenClass);
 }
 
-inline void Render::PrepareToRender() {
+void Render::PrepareToRender() {
     glClearColor(0.3f, 0.3f, 0.3f, 0.f);
 
     //Light
@@ -98,7 +98,7 @@ inline void Render::PrepareToRender() {
     glFrustum(-ratio, ratio, -1.f, 1.f, 1.0f, 500.f);
 }
 
-inline void Render::ApplyCameraTransform(Camera* camera) {
+void Render::ApplyCameraTransform(Camera* camera) {
     Vector3 Position = camera->GetParentObject()->GetPosition();
     Vector3 Rotation = camera->GetParentObject()->GetRotation();
 
@@ -121,13 +121,13 @@ inline void Render::ApplyCameraTransform(Camera* camera) {
     glTranslatef(Position.X, Position.Y, Position.Z);
 }
 
-inline void Render::ClearFrameBuffer() {
+void Render::ClearFrameBuffer() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
 
-inline void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
+void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -140,7 +140,7 @@ inline void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vect
     //glScalef(Scale.X, Scale.Y, Scale.Z);
 }
 
-inline void Render::RenderMesh(Mesh& mesh) {
+void Render::RenderMesh(Mesh& mesh) {
     glColor3f(0.8, 0.8, 0.8);
 
     glEnableClientState(GL_NORMAL_ARRAY);
@@ -159,7 +159,7 @@ inline void Render::RenderMesh(Mesh& mesh) {
     glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-inline void Render::SceneAssembler() {
+void Render::SceneAssembler() {
     for (size_t i = 0; i < World::ObjectsOnScene.size(); i++)
     {
         for (size_t j = 0; j < World::ObjectsOnScene[i]->GetCountOfModules(); j++)
@@ -174,7 +174,7 @@ inline void Render::SceneAssembler() {
     }   
 }       
 
-inline void Render::StartRender(Camera* camera) {
+void Render::StartRender(Camera* camera) {
     //sf::ContextSettings window_settings;
     //window_settings.depthBits = 24;
     //window_settings.stencilBits = 8;
@@ -196,7 +196,7 @@ inline void Render::StartRender(Camera* camera) {
 }
 
 
-inline void Render::RenderLoop(Camera* camera) {
+void Render::RenderLoop(Camera* camera) {
     if (!glfwWindowShouldClose(_screenClass._window))
     {
         glfwPollEvents();

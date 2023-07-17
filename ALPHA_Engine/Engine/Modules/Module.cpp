@@ -2,25 +2,25 @@
 
 #include "Object.h"
 
-inline Object* Module::GetParentObject() {
+Object* Module::GetParentObject() {
 	return ParentObject;
 }
 
-inline void Module::Test() {
+void Module::Test() {
 
 }
 
-inline ModulesList Module::GetType() {
+ModulesList Module::GetType() {
 	return ModulesList::ModuleType;
 }
 
-inline void Module::SetParentObject(const Object& parent) {
+void Module::SetParentObject(const Object& parent) {
 	ParentObject = const_cast<Object*>(&parent);
 }
 
-inline Module::Module() {
+Module::Module() {
 
 }
-inline Module::~Module() {
+Module::~Module() {
 
 }

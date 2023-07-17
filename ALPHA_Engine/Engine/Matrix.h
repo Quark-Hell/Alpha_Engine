@@ -37,6 +37,27 @@ private:
 
 private:
     friend class MatrixMath;
+
+public:
+    Matrix3x3();
+
+    void operator=(const Matrix3x3& matrix4X4);
+
+    void Identity();
+    void Zero();
+    void Constant(float value);
+
+    void Scale(const Vector4& factor);
+    void Translation(const Vector4& translation);
+    void Rotation(const Vector4& r);
+    void Rotation(const Vector4& v, float rv);
+
+    void RotationX(float rx);
+    void RotationY(float ry);
+    void RotationZ(float rz);
+
+    /*Get new example of current matrix*/
+    Matrix3x3 GetMatrix();
 };
 
 class Matrix4x4 {
@@ -74,6 +95,24 @@ public:
 
 static class MatrixMath {
 public:
+    static void MultiplyMatrix(Matrix3x1& outputMatrix, const Matrix3x3& firstMatrix3x3, const std::array<float, 3>& secondMatrix3x1);
+    static void MultiplyMatrix(std::array<float, 3>& outputMatrix3x1, const Matrix3x3& firstMatrix3x3, const std::array<float, 3>& secondMatrix3x1);
+
+    static void MultiplyMatrix(
+        float& outputMatrix3x1Xvalue,
+        float& outputMatrix3x1Yvalue,
+        float& outputMatrix3x1Zvalue,
+        const Matrix3x3& firstMatrix3x3,
+        const std::array<float, 3>& secondMatrix3x1);
+
+    static void MultiplyMatrix(Matrix3x3& outputMatrix, const Matrix3x3& firstMatrix3x3, const Matrix3x3& secondMatrix3x3);
+    static void MultiplyMatrix(Matrix3x1& outputMatrix, const Matrix3x3& firstMatrix3x3, const Matrix3x1& secondMatrix3x1);
+    static void MultiplyMatrix(Matrix3x1& outputMatrix, const Matrix3x3& firstMatrix3x3, const Vector3& secondMatrix3x1);
+    static void MultiplyMatrix(Vector3& outputMatrix, const Matrix3x3& firstMatrix3x3, const Vector3& secondMatrix3x1);
+
+    static void AddMatrix(Matrix3x3& outputMatrix, const Matrix3x3& firstMatrix3x3, const Matrix3x3& secondMatrix3x3);
+
+public:
     static void MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const std::array<float, 4>& secondMatrix4x1);
     static void MultiplyMatrix(std::array<float, 4>& outputMatrix4x1, const Matrix4x4& firstMatrix4x4, const std::array<float, 4>& secondMatrix4x1);
     
@@ -86,7 +125,7 @@ public:
         const std::array<float, 4>& secondMatrix4x1);
 
     static void MultiplyMatrix(Matrix4x4& outputMatrix , const Matrix4x4& firstMatrix4x4, const Matrix4x4& secondMatrix4x4);
-    static void MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const Matrix4x4& secondMatrix4x1);
+    static void MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const Matrix4x1& secondMatrix4x1);
     static void MultiplyMatrix(Matrix4x1& outputMatrix, const Matrix4x4& firstMatrix4x4, const Vector4& secondMatrix4x1);
     static void MultiplyMatrix(Vector4& outputMatrix, const Matrix4x4& firstMatrix4x4, const Vector4& secondMatrix4x1);
     static void MultiplyMatrix(Vector3& outputMatrix, const Matrix4x4& firstMatrix4x4, const Vector3& secondMatrix4x1);

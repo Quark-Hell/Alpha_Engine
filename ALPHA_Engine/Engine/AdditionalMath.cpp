@@ -2,7 +2,7 @@
 #include <cmath>
 #include "Vectors.h"
 
-inline bool Math::ApproximatelyEqual(float a, float b, float epsilon) {
+bool Math::ApproximatelyEqual(float a, float b, float epsilon) {
 	if (abs(a - b) < epsilon) {
 		return true;
 	}
@@ -10,7 +10,7 @@ inline bool Math::ApproximatelyEqual(float a, float b, float epsilon) {
 	return false;
 }
 
-inline void Math::RemoveError(Vector3& vector) {
+void Math::RemoveError(Vector3& vector) {
 	if (Math::ApproximatelyEqual(vector.X, 0, 4.76837130e-06)) {
 		vector.X = 0;
 	}
@@ -22,7 +22,7 @@ inline void Math::RemoveError(Vector3& vector) {
 	}
 }
 
-inline void Math::RemoveError(float& num) {
+void Math::RemoveError(float& num) {
 	if (Math::ApproximatelyEqual(num, 0, 4.76837130e-06)) {
 		num = 0;
 	}

@@ -8,35 +8,35 @@
 
 #include "World.h"
 
-inline Vector3 Object::GetPosition() {
+Vector3 Object::GetPosition() {
 	return Position;
 }
-inline void Object::AddPosition(float X, float Y, float Z) {
+void Object::AddPosition(float X, float Y, float Z) {
 	Object::Position.X += X;
 	Object::Position.Y += Y;
 	Object::Position.Z += Z;
 }
-inline void Object::AddPosition(Vector3 position) {
+void Object::AddPosition(Vector3 position) {
 	Object::Position.X += position.X;
 	Object::Position.Y += position.Y;
 	Object::Position.Z += position.Z;
 }
-inline void Object::SetPosition(float X, float Y, float Z) {
+void Object::SetPosition(float X, float Y, float Z) {
 	Vector3 direction = Vector3(X, Y, Z) - Object::Position;
 
 	Object::AddPosition(direction);
 }
-inline void Object::SetPosition(Vector3 position) {
+void Object::SetPosition(Vector3 position) {
 	Vector3 direction = position - Object::Position;
 
 	Object::AddPosition(direction);
 }
 
 
-inline Vector3 Object::GetRotation() {
+Vector3 Object::GetRotation() {
 	return Rotation;
 }
-inline void Object::AddRotation(float X, float Y, float Z) {
+void Object::AddRotation(float X, float Y, float Z) {
 	Object::_transformMatrix.Rotation(Vector4(X, Y, Z, 1));
 
 	Object::Rotation.X += X;
@@ -52,7 +52,7 @@ inline void Object::AddRotation(float X, float Y, float Z) {
 		}
 	}
 }
-inline void Object::AddRotation(Vector3 rotation) {
+void Object::AddRotation(Vector3 rotation) {
 	Object::_transformMatrix.Rotation(Vector4(rotation.X, rotation.Y, rotation.Z, 1));
 
 	Object::Rotation.X += rotation.X;
@@ -68,22 +68,22 @@ inline void Object::AddRotation(Vector3 rotation) {
 		}
 	}
 }
-inline void Object::SetRotation(float X, float Y, float Z) {
+void Object::SetRotation(float X, float Y, float Z) {
 	Vector3 direction = Vector3(X, Y, Z) - Object::Rotation;
 
 	Object::AddRotation(direction);
 }
-inline void Object::SetRotation(Vector3 rotation) {
+void Object::SetRotation(Vector3 rotation) {
 	Vector3 direction = rotation - Object::Rotation;
 
 	Object::AddRotation(direction);
 }
 
 
-inline Vector3 Object::GetScale() {
+Vector3 Object::GetScale() {
 	return Scale;
 }
-inline void Object::SetScale(float X, float Y, float Z) {
+void Object::SetScale(float X, float Y, float Z) {
 	Vector3 delta = Object::Scale / Vector3(X, Y, Z);
 
 	Object::_transformMatrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
@@ -103,7 +103,7 @@ inline void Object::SetScale(float X, float Y, float Z) {
 
 	Object::ApplyTransform();
 }
-inline void Object::SetScale(Vector3 scale) {
+void Object::SetScale(Vector3 scale) {
 	Vector3 delta = Object::Scale / scale;
 
 	Object::_transformMatrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
@@ -125,7 +125,7 @@ inline void Object::SetScale(Vector3 scale) {
 }
 
 
-inline void Object::ApplyTransform() {
+void Object::ApplyTransform() {
 	Matrix4x4 buffer = Object::_transformMatrix.GetMatrix();
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
@@ -140,12 +140,12 @@ inline void Object::ApplyTransform() {
 	Object::_transformMatrix.Identity();
 }
 
-inline bool Object::AddModule(class Module* someModule) {
+bool Object::AddModule(class Module* someModule) {
 	Object::Modules.push_back(someModule);
 	someModule->SetParentObject(*this);
 	return true;
 }
-inline bool Object::AddModule(ModulesList moduleType, Module& outputModule) {
+bool Object::AddModule(ModulesList moduleType, Module& outputModule) {
 	Module *someModule;
 
 	switch (moduleType)
@@ -178,12 +178,12 @@ inline bool Object::AddModule(ModulesList moduleType, Module& outputModule) {
 	return true;
 }
 
-inline int Object::GetCountOfModules() {
+int Object::GetCountOfModules() {
 	return Object::Modules.size();
 }
 
 
-inline bool Object::DeleteModuleByType(ModulesList type) {
+bool Object::DeleteModuleByType(ModulesList type) {
 	for (size_t i = 0; i < Object::Modules.size(); i++) {
 		if (type == Object::Modules[i]->GetType()) {
 			Object::Modules.erase(Object::Modules.begin() + i);
@@ -193,7 +193,7 @@ inline bool Object::DeleteModuleByType(ModulesList type) {
 
 	return false;
 }
-inline bool Object::DeleteModuleByIndex(int index) {
+bool Object::DeleteModuleByIndex(int index) {
 	if (index >= 0 && index < Object::Modules.size()) {
 		Object::Modules.erase(Object::Modules.begin() + index);
 		return true;
@@ -202,7 +202,7 @@ inline bool Object::DeleteModuleByIndex(int index) {
 	return false;
 }
 
-inline Module* Object::GetModuleByType(ModulesList type) {
+Module* Object::GetModuleByType(ModulesList type) {
 	for (size_t i = 0; i < Object::Modules.size(); i++) {
 		if (type == Object::Modules[i]->GetType()) {
 			return Object::Modules[i];
@@ -211,7 +211,7 @@ inline Module* Object::GetModuleByType(ModulesList type) {
 
 	return nullptr;
 }
-inline Module* Object::GetModuleByIndex(size_t index) {
+Module* Object::GetModuleByIndex(size_t index) {
 	if (index >= 0 && index < Object::Modules.size()) {
 		return Object::Modules[index];
 	}
@@ -219,7 +219,7 @@ inline Module* Object::GetModuleByIndex(size_t index) {
 	return nullptr;
 }
 
-inline void Object::DeleteObject() {
+void Object::DeleteObject() {
 	Object::~Object();
 }
 
@@ -235,7 +235,7 @@ inline void Object::DeleteObject() {
 }
 */
 
-inline unsigned long Object::GetGeometryHeaviness() {
+unsigned long Object::GetGeometryHeaviness() {
 	unsigned long heaviness = 0;
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
@@ -252,12 +252,12 @@ inline unsigned long Object::GetGeometryHeaviness() {
 	return heaviness;
 }
 
-inline Object::Object() {
+Object::Object() {
 	Object::_transformMatrix = Matrix4x4();
 
 	World::ObjectsOnScene.push_back(this);
 }
 
-inline Object::~Object() {
+Object::~Object() {
 
 }

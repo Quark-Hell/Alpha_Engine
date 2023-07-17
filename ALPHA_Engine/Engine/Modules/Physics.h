@@ -1,4 +1,6 @@
 #pragma once
+#include "Matrix.h"
+
 class State {
 public:
 	Vector3 Position;
@@ -29,10 +31,20 @@ private:
 	Vector3 _centerMass;
 
 	Vector3 _rotationVector{ 0,0,0 };
+	Vector4 _orientation{ 0,0,0 };
+	Vector3 _angularForce{ 0,0,0 };
+	Matrix3x3 _inertiaMatrix;
 
 public:
 	void AddForce(const Vector3& forceVector);
 	void AddForce(const float& x, const float& y, const float& z);
+
+	void AddAngularForce(const Vector3& forceVector, Vector3 relativePoint);
+	void AddAngularForce(const float& x, const float& y, const float& z, Vector3 relativePoint);
+
+	//void SetInertiaMatrix(Matrix3x3 matrix);
+	void ResetInertiaMatrix();
+	//Matrix3x3 GetInertiaMatrix();
 
 	ModulesList GetType() override;
 
@@ -67,10 +79,10 @@ public:
 	//60 frame per second
 	const static inline unsigned int SimulationSpeed = 60;
 
-	static inline IntegrateMethods IntegrateMethod = IntegrateMethods::RK4;
+	static inline IntegrateMethods IntegrateMethod = IntegrateMethods::SemiImplicitEuler;
 
 private:
-	static inline const float fixTimeStep = 1.0f / 100.0f;
+	static inline const float fixTimeStep = 1.0f / 60.0f;
 
 public:
 	static inline void PhysicsLoop();
@@ -81,7 +93,7 @@ public:
 private:
 	static inline void ApplyGravity(RigidBody& rb);
 	static inline void ApplyBaseFriction(RigidBody& rb);
-	static inline void Torque(RigidBody& rb, Vector3 colPoint);
+	static inline void ApplyTorque(RigidBody& rb);
 
 	static inline void Contact(RigidBody& rb1, Vector3 contactNormal = 0);
 	static inline void Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNormal = 0);

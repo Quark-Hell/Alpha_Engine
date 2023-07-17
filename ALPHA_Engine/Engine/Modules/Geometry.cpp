@@ -8,18 +8,18 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-inline Geometry::Geometry() {
+Geometry::Geometry() {
 
 }
-inline Geometry::~Geometry() {
+Geometry::~Geometry() {
 
 }
 
-inline ModulesList Geometry::GetType() {
+ModulesList Geometry::GetType() {
     return ModulesList::GeometryType;
 }
 
-inline bool Geometry::Create(std::string linkToFBX) {
+bool Geometry::Create(std::string linkToFBX) {
     Assimp::Importer importer;
     std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
 
@@ -52,7 +52,7 @@ inline bool Geometry::Create(std::string linkToFBX) {
 }
 
 /*Recommended not use now. Work so slow*/
-inline void Geometry::MakeUnique() {
+void Geometry::MakeUnique() {
     const int arr_len = 3;
     std::array<float, arr_len> buffer;
 
@@ -94,7 +94,7 @@ inline void Geometry::MakeUnique() {
 }
 
 /*Not work now*/
-inline std::vector<Mesh*> Geometry::SeparateByLooseParts() {
+std::vector<Mesh*> Geometry::SeparateByLooseParts() {
     struct VertInfo
     {
         Vector3 Point;
@@ -175,7 +175,7 @@ inline std::vector<Mesh*> Geometry::SeparateByLooseParts() {
     return m;
 }
 
-inline Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
+Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
     Vector3 maxPoint = { 0,0,0 };
     float maxDistance = -FLT_MAX;
     Vector3 vertexPos = { 0,0,0 };
@@ -196,7 +196,7 @@ inline Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
     return maxPoint + Geometry::GetParentObject()->GetPosition();
 }
 
-inline void Geometry::ApplyTransformation() {
+void Geometry::ApplyTransformation() {
     for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
     {
         std::array<float, 4> buffer;

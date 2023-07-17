@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------------//
 #pragma region Bind definitions
 
-inline void Bind::Constructor(std::vector<void(*)()> Operations,
+void Bind::Constructor(std::vector<void(*)()> Operations,
 	std::vector<EnumKeyStates> KeysState,
 	std::vector<uint16_t> KeyboardKeys,
 	std::vector<EnumKeyStates> MouseKeysState,
@@ -23,7 +23,7 @@ inline void Bind::Constructor(std::vector<void(*)()> Operations,
 
 //---------------------------------------------------------------//
 #pragma region General constructor
-inline void Bind::GeneralBind(std::vector<void(*)()> Operations,
+void Bind::GeneralBind(std::vector<void(*)()> Operations,
 	std::vector<EnumKeyStates> KeysState,
 	std::vector<uint16_t> KeyboardKeys,
 	std::vector<EnumKeyStates> MouseKeysState,
@@ -39,7 +39,7 @@ inline void Bind::GeneralBind(std::vector<void(*)()> Operations,
 
 //---------------------------------------------------------------//
 #pragma region Constructor for keyboard bind
-inline void Bind::KeyboardBind(std::vector<void(*)()> Operations,
+void Bind::KeyboardBind(std::vector<void(*)()> Operations,
 	std::vector<EnumKeyStates> KeysState,
 	std::vector<uint16_t> KeyboardKeys) {
 
@@ -51,7 +51,7 @@ inline void Bind::KeyboardBind(std::vector<void(*)()> Operations,
 
 //---------------------------------------------------------------//
 #pragma region Constructor for mouse buttons bind
-inline void Bind::MouseButtonsBind(std::vector<void(*)()> Operations,
+void Bind::MouseButtonsBind(std::vector<void(*)()> Operations,
 	std::vector<EnumKeyStates> MouseKeysState,
 	std::vector<uint8_t> MouseKeys) {
 
@@ -63,7 +63,7 @@ inline void Bind::MouseButtonsBind(std::vector<void(*)()> Operations,
 
 //---------------------------------------------------------------//
 #pragma region Constructor for mouse sensor bind
-inline void Bind::MouseSensorBind(std::vector<void(*)()> Operations,
+void Bind::MouseSensorBind(std::vector<void(*)()> Operations,
 	EnumMouseSensorStates MouseSensorState) {
 
 	Bind::Constructor(Operations, {}, {}, {}, {}, MouseSensorState);
@@ -71,7 +71,7 @@ inline void Bind::MouseSensorBind(std::vector<void(*)()> Operations,
 #pragma endregion
 //---------------------------------------------------------------//
 
-inline void Bind::InvokeOperations() {
+void Bind::InvokeOperations() {
 	for (size_t i = 0; i < Bind::_operations.size(); i++)
 	{
 		Bind::_operations[i]();
@@ -82,7 +82,7 @@ inline void Bind::InvokeOperations() {
 
 //----------------------------------------------------------------------------//
 #pragma region InputSystem definitions
-inline void InputSystem::IO_Events() {
+void InputSystem::IO_Events() {
 	if (!InputSystem::Window) { return; }
 
 	InputSystem::_mouseClass->UpdateMouseState(*InputSystem::Window);
@@ -120,21 +120,21 @@ inline void InputSystem::IO_Events() {
 	}
 }
 
-inline void InputSystem::ClearBindsBuffer() {
+void InputSystem::ClearBindsBuffer() {
 	InputSystem::_bindsBuff.clear();
 }
-inline void InputSystem::InsertBindWithClear(Bind bind) {
+void InputSystem::InsertBindWithClear(Bind bind) {
 	ClearBindsBuffer();
 	InputSystem::_bindsBuff.push_back(bind);
 }
-inline void InputSystem::InsertBind(Bind bind) {
+void InputSystem::InsertBind(Bind bind) {
 	InputSystem::_bindsBuff.push_back(bind);
 }
 
-inline InputSystem::InputSystem() {
+InputSystem::InputSystem() {
 	InputSystem::Window = Window;
 }
-inline InputSystem::~InputSystem() {
+InputSystem::~InputSystem() {
 
 }
 #pragma endregion
@@ -142,7 +142,7 @@ inline InputSystem::~InputSystem() {
 
 //----------------------------------------------------------------------------//
 #pragma region Keyboard definitions
-inline EnumKeyStates Keyboard::GetKeyState(uint16_t key) {
+EnumKeyStates Keyboard::GetKeyState(uint16_t key) {
 	for (size_t i = 0; i < 99; i++)
 	{
 		if (Keys[i]->KEY == key) { return Keys[i]->KeyState; }
@@ -150,7 +150,7 @@ inline EnumKeyStates Keyboard::GetKeyState(uint16_t key) {
 	return EnumKeyStates::Unknown;
 }
 
-inline void Keyboard::UpdateKeysState(GLFWwindow& window) {
+void Keyboard::UpdateKeysState(GLFWwindow& window) {
 	for (size_t i = 0; i < 99; i++)
 	{		
 		if (glfwGetKey(&window, Keys[i]->KEY)) {
@@ -178,22 +178,22 @@ inline void Keyboard::UpdateKeysState(GLFWwindow& window) {
 	}
 }
 
-inline Keyboard::Keyboard() {
+Keyboard::Keyboard() {
 
 }
 
-inline Keyboard::~Keyboard() {
+Keyboard::~Keyboard() {
 }
 #pragma endregion
 //----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
 #pragma region Mouse definitions
-inline Mouse* InputSystem::GetMouseClass() {
+Mouse* InputSystem::GetMouseClass() {
 	return InputSystem::_mouseClass;
 }
 
-inline void Mouse::UpdateMouseState(GLFWwindow& window) {
+void Mouse::UpdateMouseState(GLFWwindow& window) {
 	double xpos, ypos;
 	glfwGetCursorPos(&window, &xpos, &ypos);
 
@@ -247,23 +247,23 @@ inline void Mouse::UpdateMouseState(GLFWwindow& window) {
 	}
 }
 
-inline MousePos Mouse::GetMouseDelta() {
+MousePos Mouse::GetMouseDelta() {
 	return _mouseDelta;
 }
-inline MousePos Mouse::GetMousePos() {
+MousePos Mouse::GetMousePos() {
 	return _currentMousePos;
 }
-inline bool Mouse::IsMouseChangePosition() {
+bool Mouse::IsMouseChangePosition() {
 	if (Mouse::_mouseDelta == MousePos{ 0,0 }) {
 		return false;
 	}
 	return true;
 }
 
-inline Mouse::Mouse() {
+Mouse::Mouse() {
 
 }
-inline Mouse::~Mouse() {
+Mouse::~Mouse() {
 
 }
 

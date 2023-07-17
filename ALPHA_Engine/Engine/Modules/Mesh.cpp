@@ -5,7 +5,7 @@
 #include <assimp/postprocess.h>
 
 #pragma region Mesh Define
-inline Mesh::Mesh() {
+Mesh::Mesh() {
 
 }
 inline Mesh::~Mesh() {
@@ -16,7 +16,7 @@ inline ModulesList Mesh::GetType() {
 	return ModulesList::MeshType;
 }
 
-inline bool Mesh::Create(std::string linkToFBX) {
+bool Mesh::Create(std::string linkToFBX) {
 	Assimp::Importer importer;
 	std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
 

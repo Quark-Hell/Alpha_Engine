@@ -3,7 +3,7 @@
 
 //TODO: Function normilize color
 
-inline void Primitives::CreateObject(Vector3 Position, Vector3 Rotation, Vector3 Scale, Object *Obj) {
+void Primitives::CreateObject(Vector3 Position, Vector3 Rotation, Vector3 Scale, Object *Obj) {
     Obj->AddPosition(Position);
     Obj->AddRotation(Rotation);
     Obj->SetScale(Scale);
@@ -12,7 +12,7 @@ inline void Primitives::CreateObject(Vector3 Position, Vector3 Rotation, Vector3
     Obj->AddModule(mesh);
 }
 
-inline Object* Primitives::Plane(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+Object* Primitives::Plane(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
     Object* obj = new Object;
     CreateObject(Position, Rotation, Scale, obj);
 
@@ -22,7 +22,7 @@ inline Object* Primitives::Plane(Vector3 Position, Vector3 Rotation, Vector3 Sca
     return obj;
 }
 
-inline Object* Primitives::Cube(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+Object* Primitives::Cube(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
     Object* obj = new Object;
     CreateObject(Position, Rotation, Scale, obj);
 
@@ -32,7 +32,7 @@ inline Object* Primitives::Cube(Vector3 Position, Vector3 Rotation, Vector3 Scal
     return obj;
 }
 
-inline Object* Primitives::Circle(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+Object* Primitives::Circle(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
     Object* obj = new Object;
     CreateObject(Position, Rotation, Scale, obj);
 
@@ -42,7 +42,7 @@ inline Object* Primitives::Circle(Vector3 Position, Vector3 Rotation, Vector3 Sc
     return obj;
 }
 
-inline Object* Primitives::Sphere(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+Object* Primitives::Sphere(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
     Object* obj = new Object;
     CreateObject(Position, Rotation, Scale, obj);
 
@@ -52,7 +52,7 @@ inline Object* Primitives::Sphere(Vector3 Position, Vector3 Rotation, Vector3 Sc
     return obj;
 }
 
-inline Object* Primitives::Cylinder(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+Object* Primitives::Cylinder(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
     Object* obj = new Object;
     CreateObject(Position, Rotation, Scale, obj);
 
@@ -62,7 +62,7 @@ inline Object* Primitives::Cylinder(Vector3 Position, Vector3 Rotation, Vector3 
     return obj;
 }
 
-inline Object* Primitives::Cone(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+Object* Primitives::Cone(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
     Object* obj = new Object;
     CreateObject(Position, Rotation, Scale, obj);
 
@@ -72,7 +72,7 @@ inline Object* Primitives::Cone(Vector3 Position, Vector3 Rotation, Vector3 Scal
     return obj;
 }
 
-inline Object* Primitives::Torus(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+Object* Primitives::Torus(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
     Object* obj = new Object;
     CreateObject(Position, Rotation, Scale, obj);
 

@@ -2,20 +2,28 @@
 
 #include "Basical_Type.h"
 #include "Geometry.h"
+#include "Matrix.h"
 #include "World.h"
 
-inline void RigidBody::AddForce(const Vector3& forceVector) {
+void RigidBody::AddForce(const Vector3& forceVector) {
 	RigidBody::_force += forceVector;
 }
-inline void RigidBody::AddForce(const float& x, const float& y, const float& z) {
+void RigidBody::AddForce(const float& x, const float& y, const float& z) {
 	RigidBody::_force += Vector3(x, y, z);
 }
 
-inline ModulesList RigidBody::GetType() {
+void RigidBody::AddAngularForce(const Vector3& forceVector, Vector3 relativePoint) {
+	RigidBody::_angularForce += forceVector * (relativePoint - RigidBody::_centerMass);
+}
+void RigidBody::AddAngularForce(const float& x, const float& y, const float& z, Vector3 relativePoint) {
+	RigidBody::_angularForce += Vector3(x, y, z) * (relativePoint - RigidBody::_centerMass);
+}
+
+ModulesList RigidBody::GetType() {
 	return ModulesList::RigidBodyType;
 }
 
-inline void RigidBody::CalculateCenterMass() {
+void RigidBody::CalculateCenterMass() {
 	Object* object = RigidBody::GetParentObject();
 	RigidBody::_centerMass = Vector3(0, 0, 0);
 	std::vector<Geometry*> geometries;
@@ -78,35 +86,40 @@ inline void RigidBody::CalculateCenterMass() {
 	RigidBody::_centerMass /= geometries.size();
 }
 
-inline Vector3 RigidBody::GetCenterMass() {
+Vector3 RigidBody::GetCenterMass() {
 	return RigidBody::_centerMass;
 }
 
-inline void RigidBody::SetParentObject(const Object& parent) {
+void RigidBody::SetParentObject(const Object& parent) {
 	RigidBody::ParentObject = const_cast<Object*>(&parent);
 	RigidBody::CalculateCenterMass();
 
 	RigidBody::_velocity = {0,0,0};
+	RigidBody::ResetInertiaMatrix();
 }
 
-inline Vector3 RigidBody::GetVelocity() {
+Vector3 RigidBody::GetVelocity() {
 	return RigidBody::_velocity;
 }
-inline Vector3 RigidBody::GetPosition() {
+Vector3 RigidBody::GetPosition() {
 	return RigidBody::GetParentObject()->GetPosition();
 }
 
-inline RigidBody::RigidBody() {
+void RigidBody::ResetInertiaMatrix() {
+	RigidBody::_inertiaMatrix.Identity();
+}
+
+RigidBody::RigidBody() {
 
 }
 
-inline RigidBody::~RigidBody() {
+RigidBody::~RigidBody() {
 
 }
 #pragma endregion
 
 #pragma region Phisycs Define
-inline void Physics::PhysicsLoop() {
+void Physics::PhysicsLoop() {
 	for (size_t it = 0; it < World::ObjectsOnScene.size(); it++)
 	{
 		Object* obj = World::ObjectsOnScene[it];
@@ -128,22 +141,22 @@ inline void Physics::PhysicsLoop() {
 	}
 }
 
-inline void Physics::ApplyGravity(RigidBody& rb) {
+void Physics::ApplyGravity(RigidBody& rb) {
 	rb.AddForce(rb.Gravity * rb.Mass * Physics::fixTimeStep);
 }
-inline void Physics::ApplyBaseFriction(RigidBody& rb) {
+void Physics::ApplyBaseFriction(RigidBody& rb) {
 	//Vector3 quadSpeed = rb._velocity * rb._velocity;
 	//Vector3 resistForce = quadSpeed * 0.5 * 5.29 * 1 * 1;
 	//rb.AddForce(resistForce);
 	//rb._force *= rb.BaseFriction;
 }
 
-inline void Physics::Torque(RigidBody& rb, Vector3 colPoint) {
-
+void Physics::ApplyTorque(RigidBody& rb) {
+	
 	//float angle = Vector3::GetAngle(rb.);
 }
 
-inline void Physics::Contact(RigidBody& rb1, Vector3 contactNormal) {
+void Physics::Contact(RigidBody& rb1, Vector3 contactNormal) {
 	contactNormal.NormilizeSelf();
 	Math::RemoveError(contactNormal);
 	
@@ -154,7 +167,7 @@ inline void Physics::Contact(RigidBody& rb1, Vector3 contactNormal) {
 
 	std::cout << World::GetTimeLong() << " contact " << contactNormal.Y << "\n";
 }
-inline void Physics::Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNormal) {
+void Physics::Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNormal) {
 	//contactNormal.NormilizeSelf();
 	//Math::RemoveError(contactNormal);
 	//
@@ -169,7 +182,7 @@ inline void Physics::Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNorm
 }
 
 
-inline void Physics::ApplyPhysics(RigidBody& rb) {
+void Physics::ApplyPhysics(RigidBody& rb) {
 	switch (Physics::IntegrateMethod)
 	{
 	case SemiImplicitEuler:
@@ -183,7 +196,7 @@ inline void Physics::ApplyPhysics(RigidBody& rb) {
 	}
 }
 
-inline void Physics::SemiImplicitIntegrate(RigidBody& rb) {
+void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 	double accumulator = World::GetDeltaTime();
 
 	while (accumulator >= Physics::fixTimeStep)
@@ -203,7 +216,7 @@ inline void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 			rb.GetParentObject()->AddPosition(rb.GetVelocity() * Physics::fixTimeStep);
 		}
 
-		std::cout << rb._velocity.Y << " speed\t" << rb.GetParentObject()->GetPosition().Y << " Ypos\t" << rb._force.Y << " force\t" << "\n";
+		std::cout << rb._velocity.Y << " speed\t" << rb._force.Y << " force\t" << "\n";
 
 		accumulator -= Physics::fixTimeStep;
 		rb._force = { 0,0,0 };
@@ -225,13 +238,15 @@ inline void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 			rb._velocity += (newVelocity - rb._velocity) * alpha;
 			rb.GetParentObject()->AddPosition(rb.GetVelocity() * Physics::fixTimeStep * alpha);
 		}
+
+		std::cout << rb._velocity.Y << " speed\t" << rb._force.Y << " force\t" << "\n";
 	}
 
 	rb._force = { 0,0,0 };
 	//std::cout << World::GetTimeLong() << " worldTime\n";
 }
 
-inline void Physics::RK4Integrate(RigidBody& rb) {
+void Physics::RK4Integrate(RigidBody& rb) {
 	auto evaluate = [](const State& initial, float dt, const Derivative& d, Vector3 force, float mass) {
 		State state;
 		state.Position = initial.Position + d.dx * dt;
@@ -276,7 +291,7 @@ inline void Physics::RK4Integrate(RigidBody& rb) {
 		rb._velocity = state.Velocity;
 		rb.GetParentObject()->SetPosition(state.Position);
 
-		std::cout << state.Velocity.Y << " speed\t" << rb.GetParentObject()->GetPosition().Y << " Ypos\t" << rb._force.Y << " force\t" << "\n";
+		std::cout << state.Velocity.Y << " speed\t" << rb._force.Y << " force\t" << "\n";
 
 		accumulator -= Physics::fixTimeStep;
 		rb._force = { 0,0,0 };
@@ -292,15 +307,17 @@ inline void Physics::RK4Integrate(RigidBody& rb) {
 		
 		rb._velocity += (state.Velocity - rb._velocity) * alpha;
 		rb.GetParentObject()->AddPosition(state.Velocity * Physics::fixTimeStep * alpha);
+
+		std::cout << state.Velocity.Y << " speed\t" << rb._force.Y << " force\t" << "\n";
 	}
 
 	rb._force = { 0,0,0 };
-	//std::cout << World::GetTimeLong() << " worldTime\n";
+	std::cout << World::GetTimeLong() << " worldTime\n";
 }
 
-inline Physics::Physics() {
+Physics::Physics() {
 
 }
-inline Physics::~Physics() {
+Physics::~Physics() {
 
 }
