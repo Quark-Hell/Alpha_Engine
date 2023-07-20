@@ -1,5 +1,6 @@
 #pragma once
-#include "Matrix.h"
+#include "AdditionalMath.h"
+
 
 class State {
 public:
@@ -32,18 +33,19 @@ private:
 
 	Vector3 _rotationVector{ 0,0,0 };
 	Vector4 _orientation{ 0,0,0 };
-	Vector3 _angularForce{ 0,0,0 };
-	Matrix3x3 _inertiaMatrix;
+	Vector3 _angularMomentum{ 0,0,0 };
+	Vector3 _angularVelocity{ 0,0,0 };
+	//Matrix3x3 _inertiaMatrix;
 
 public:
 	void AddForce(const Vector3& forceVector);
 	void AddForce(const float& x, const float& y, const float& z);
 
-	void AddAngularForce(const Vector3& forceVector, Vector3 relativePoint);
-	void AddAngularForce(const float& x, const float& y, const float& z, Vector3 relativePoint);
+	void AddAngularMomentum(const Vector3& forceVector, Vector3 relativePoint);
+	void AddAngularMomentum(const float& x, const float& y, const float& z, Vector3 relativePoint);
 
 	//void SetInertiaMatrix(Matrix3x3 matrix);
-	void ResetInertiaMatrix();
+	//void ResetInertiaMatrix();
 	//Matrix3x3 GetInertiaMatrix();
 
 	ModulesList GetType() override;
@@ -72,8 +74,6 @@ enum IntegrateMethods {
 	RK4 = 1
 };
 static class Physics {
-
-
 
 public:
 	//60 frame per second

@@ -24,29 +24,40 @@ bool Geometry::Create(std::string linkToFBX) {
     std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
 
     //TODO: Check if fbx
-    const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate);
+    const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
     aiMesh* mesh = s->mMeshes[0];
 
     Geometry::_vertexCount = mesh->mNumVertices;
     Geometry::_normalsCount = mesh->mNumVertices;
+    Geometry::_indicesCount = mesh->mNumFaces * 3;
 
     Geometry::_vertex = new float[Geometry::_vertexCount * 3];
     Geometry::_normals = new float[Geometry::_normalsCount * 3];
+    Geometry::_indices = new unsigned int[Geometry::_indicesCount];
+
+    for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
+        for (size_t jt = 0; jt < mesh->mFaces[it].mNumIndices; jt++)
+        {
+            Geometry::_indices[(it * 3) + jt] = mesh->mFaces[it].mIndices[jt];
+        }
+    }
 
     for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
         if (mesh->HasPositions()) {
-            Geometry::_vertex[it]     = mesh->mVertices[it / 3].x;
+            Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
             Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
             Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
         }
         if (mesh->HasNormals()) {
-            Geometry::_normals[it]     = mesh->mNormals[it / 3].x;
+            Geometry::_normals[it] = mesh->mNormals[it / 3].x;
             Geometry::_normals[it + 1] = mesh->mNormals[it / 3].y;
             Geometry::_normals[it + 2] = mesh->mNormals[it / 3].z;
         }
     }
 
-    Geometry::MakeUnique();
+    Geometry::_isIndexed = true;
+    //Mesh::MakeUnique();
+    //Mesh::_isShifted = true;
 
     return true;
 }
@@ -199,38 +210,59 @@ Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
 void Geometry::ApplyTransformation() {
     for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
     {
-        std::array<float, 4> buffer;
-        buffer[0] = Geometry::_vertex[jt];
-        buffer[1] = Geometry::_vertex[jt + 1];
-        buffer[2] = Geometry::_vertex[jt + 2];
-        buffer[3] = 1;
+        //std::array<float, 4> buffer;
+        //buffer[0] = Geometry::_vertex[jt];
+        //buffer[1] = Geometry::_vertex[jt + 1];
+        //buffer[2] = Geometry::_vertex[jt + 2];
+        //buffer[3] = 1;
 
-        float w = 1;
+        //float w = 1;
 
-        MatrixMath::MultiplyMatrix(
-            Geometry::_vertex[jt],
-            Geometry::_vertex[jt + 1],
-            Geometry::_vertex[jt + 2],
-            w,
-            Geometry::GetParentObject()->_transformMatrix, buffer);
+        glm::vec4 buf(Geometry::_vertex[jt], Geometry::_vertex[jt + 1], Geometry::_vertex[jt + 2], 1);
+
+        glm::vec4 res;
+        res = Geometry::GetParentObject()->_transformMatrix * buf;
+        Geometry::_vertex[jt] = res.x;
+        Geometry::_vertex[jt + 1] = res.y;
+        Geometry::_vertex[jt + 2] = res.z;
+
+        //std::cout << Geometry::_normals[jt] << "\n" << Geometry::_normals[jt + 1] << "\n" << Geometry::_normals[jt + 2];
+
+        //std::cout << glm::to_string(Geometry::GetParentObject()->_transformMatrix) << std::endl;
+
+        //MatrixMath::MultiplyMatrix(
+        //    Geometry::_vertex[jt],
+        //    Geometry::_vertex[jt + 1],
+        //    Geometry::_vertex[jt + 2],
+        //    w,
+        //    Geometry::GetParentObject()->_transformMatrix, buffer);
     }
 
     for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
     {
-        std::array<float, 4> buffer;
-        buffer[0] = Geometry::_normals[jt];
-        buffer[1] = Geometry::_normals[jt + 1];
-        buffer[2] = Geometry::_normals[jt + 2];
-        buffer[3] = 1;
+        //std::array<float, 4> buffer;
+        //buffer[0] = Geometry::_normals[jt];
+        //buffer[1] = Geometry::_normals[jt + 1];
+        //buffer[2] = Geometry::_normals[jt + 2];
+        //buffer[3] = 1;
+        //
+        //float w = 1;
 
-        float w = 1;
+        glm::vec4 buf(Geometry::_normals[jt], Geometry::_normals[jt + 1], Geometry::_normals[jt + 2], 1);
 
-        MatrixMath::MultiplyMatrix(
-            Geometry::_normals[jt],
-            Geometry::_normals[jt + 1],
-            Geometry::_normals[jt + 2],
-            w,
-            Geometry::GetParentObject()->_transformMatrix, buffer);
+        glm::vec4 res;
+        res = Geometry::GetParentObject()->_transformMatrix * buf;
+        Geometry::_normals[jt] = res.x;
+        Geometry::_normals[jt + 1] = res.y;
+        Geometry::_normals[jt + 2] = res.z;
+
+
+        //MatrixMath::MultiplyMatrix(
+        //    Geometry::_normals[jt],
+        //    Geometry::_normals[jt + 1],
+        //    Geometry::_normals[jt + 2],
+        //    w,
+        //    Geometry::GetParentObject()->_transformMatrix, buffer);
     }
     Geometry::_isShifted = false;
 }

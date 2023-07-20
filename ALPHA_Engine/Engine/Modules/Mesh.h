@@ -6,10 +6,10 @@ private:
 	friend class Object;
 
 public:
-	ModulesList GetType() override;
-
 	Mesh();
 	~Mesh();
+
+	ModulesList GetType() override;
 
 	bool Create(std::string linkToFBX) override;
 

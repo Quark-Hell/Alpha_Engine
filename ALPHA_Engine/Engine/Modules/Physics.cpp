@@ -12,11 +12,11 @@ void RigidBody::AddForce(const float& x, const float& y, const float& z) {
 	RigidBody::_force += Vector3(x, y, z);
 }
 
-void RigidBody::AddAngularForce(const Vector3& forceVector, Vector3 relativePoint) {
-	RigidBody::_angularForce += forceVector * (relativePoint - RigidBody::_centerMass);
+void RigidBody::AddAngularMomentum(const Vector3& forceVector, Vector3 relativePoint) {
+	RigidBody::_angularMomentum += forceVector * (relativePoint - RigidBody::_centerMass);
 }
-void RigidBody::AddAngularForce(const float& x, const float& y, const float& z, Vector3 relativePoint) {
-	RigidBody::_angularForce += Vector3(x, y, z) * (relativePoint - RigidBody::_centerMass);
+void RigidBody::AddAngularMomentum(const float& x, const float& y, const float& z, Vector3 relativePoint) {
+	RigidBody::_angularMomentum += Vector3(x, y, z) * (relativePoint - RigidBody::_centerMass);
 }
 
 ModulesList RigidBody::GetType() {
@@ -95,7 +95,7 @@ void RigidBody::SetParentObject(const Object& parent) {
 	RigidBody::CalculateCenterMass();
 
 	RigidBody::_velocity = {0,0,0};
-	RigidBody::ResetInertiaMatrix();
+	//RigidBody::ResetInertiaMatrix();
 }
 
 Vector3 RigidBody::GetVelocity() {
@@ -105,9 +105,16 @@ Vector3 RigidBody::GetPosition() {
 	return RigidBody::GetParentObject()->GetPosition();
 }
 
-void RigidBody::ResetInertiaMatrix() {
-	RigidBody::_inertiaMatrix.Identity();
-}
+//void RigidBody::SetInertiaMatrix(Matrix3x3 matrix) {
+//	RigidBody::_inertiaMatrix = matrix;
+//}
+//void RigidBody::ResetInertiaMatrix() {
+//	RigidBody::_inertiaMatrix.Identity();
+//}
+//Matrix3x3 RigidBody::GetInertiaMatrix() {
+//	return RigidBody::_inertiaMatrix;
+//}
+
 
 RigidBody::RigidBody() {
 
@@ -152,7 +159,13 @@ void Physics::ApplyBaseFriction(RigidBody& rb) {
 }
 
 void Physics::ApplyTorque(RigidBody& rb) {
-	
+	//Recalculate angular velocity
+	//Eigen::Matrix3f inverseMatrix;
+	//if (MatrixMath::GetInverseMatrix3x3(rb._inertiaMatrix, inverseMatrix) == false)
+		//return;
+
+	//MatrixMath::MultiplyMatrix(rb._angularVelocity, rb._angularMomentum, inverseMatrix);
+
 	//float angle = Vector3::GetAngle(rb.);
 }
 
@@ -164,6 +177,10 @@ void Physics::Contact(RigidBody& rb1, Vector3 contactNormal) {
 	Vector3 newVelocity = rb1._velocity + contactNormal * (2 * 1 * (0 - u1) / (rb1.Mass + 0)) * rb1.ElasticityCoefficient;
 	
 	rb1._velocity = newVelocity;
+
+	//Calculate torque
+	Vector3 contactPoint;
+	
 
 	std::cout << World::GetTimeLong() << " contact " << contactNormal.Y << "\n";
 }
@@ -201,7 +218,7 @@ void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 
 	while (accumulator >= Physics::fixTimeStep)
 	{
-		Physics::ApplyGravity(rb);
+		//Physics::ApplyGravity(rb);
 
 		Vector3 newVelocity = rb.GetVelocity() + (rb._force / rb.Mass);
 
@@ -225,7 +242,7 @@ void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 	if (accumulator != 0) {
 		const double alpha = accumulator / Physics::fixTimeStep;
 		
-		Physics::ApplyGravity(rb);
+		//Physics::ApplyGravity(rb);
 		
 		Vector3 newVelocity = rb.GetVelocity() + (rb._force / rb.Mass);
 		
@@ -285,7 +302,7 @@ void Physics::RK4Integrate(RigidBody& rb) {
 		state.Position = rb.GetParentObject()->GetPosition();
 		state.Velocity = rb._velocity;
 
-		Physics::ApplyGravity(rb);
+		//Physics::ApplyGravity(rb);
 		integrate(state, Physics::fixTimeStep, rb._force, rb.Mass);
 		
 		rb._velocity = state.Velocity;

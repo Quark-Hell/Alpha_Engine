@@ -8,9 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set (GLEW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLEW/")
 set (GLFW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
+set (glm "${PROJECT_SOURCE_DIR}/ALPHA_Engine/glm/")
 
 set (GLEWinclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLEW/include/")
 set (GLFWinclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/include/")
+set (glmInclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/glm/glm/")
 
 SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/")
 SET (assimpLIB "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/lib/")
@@ -29,10 +31,12 @@ find_library(GLEW glew)
 
 include_directories(${GLEWinclude})
 include_directories(${GLFWinclude})
+include_directories(${glmInclude})
 
 include_directories(${assimpINCLUDE})
 include_directories(${Engine})
 include_directories(${Game})
+include_directories(${glm})
 
 include_directories(${SFML})
 include_directories(${SFMLinclude})
@@ -66,7 +70,13 @@ ${Engine}Modules/Geometry.h
 ${Engine}Modules/Mesh.h
 ${Engine}Modules/Module.h
 ${Engine}Modules/Physics.h
-"Game/GameModels.h" "Engine/AdditionalMath.h" "Engine/AdditionalMath.cpp")
+"Game/GameModels.h" 
+"Engine/AdditionalMath.h" 
+"Engine/AdditionalMath.cpp" 
+"Engine/Modules/BoxCollider.cpp" 
+"Engine/Modules/BoxCollider.h"
+${glm}glm.hpp
+)
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib

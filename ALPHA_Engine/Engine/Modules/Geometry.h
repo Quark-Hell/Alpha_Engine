@@ -2,9 +2,10 @@
 #include "Module.h"
 
 class Object;
+class Mesh;
 
 class Geometry : public Module {
-private:
+protected:
 	bool _isShifted = false;
 	bool _isIndexed = false;
 
@@ -18,12 +19,12 @@ private:
 	unsigned int _normalsCount = 0;
 	unsigned int _indicesCount = 0;
 
-private:
+
+
+protected:
 	friend class Object;
 	friend class Render;
 	friend class Collision;
-	friend class Mesh;
-	friend class MeshCollider;
 	friend class Physics;
 	friend class RigidBody;
 
@@ -36,11 +37,13 @@ public:
 	virtual bool Create(std::string linkToFBX);
 	//virtual void Delete();
 
+	void ApplyTransformation();
+
 	Vector3 FindFurthestPoint(Vector3 direction);
 
 	std::vector<Mesh*> SeparateByLooseParts();
 
 	/*Recommended not use now. Work so slow*/
 	void MakeUnique();
-	void ApplyTransformation();
+
 };

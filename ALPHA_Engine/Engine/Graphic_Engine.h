@@ -52,5 +52,6 @@ private:
 	void ApplyCameraTransform(Camera* camera);
 	void SceneAssembler();
 	void RenderMesh(Mesh& mesh);
+	void RenderCollider(Geometry& collider);
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
 };

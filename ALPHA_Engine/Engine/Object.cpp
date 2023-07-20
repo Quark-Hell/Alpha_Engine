@@ -37,7 +37,15 @@ Vector3 Object::GetRotation() {
 	return Rotation;
 }
 void Object::AddRotation(float X, float Y, float Z) {
-	Object::_transformMatrix.Rotation(Vector4(X, Y, Z, 1));
+	const float radX = M_PI / 180 * X;
+	const float radY = M_PI / 180 * Y;
+	const float radZ = M_PI / 180 * Z;
+
+	Object::_transformMatrix = glm::rotate(Object::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+	Object::_transformMatrix = glm::rotate(Object::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+	Object::_transformMatrix = glm::rotate(Object::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+	
+	//Object::_transformMatrix.Rotation(Vector4(X, Y, Z, 1));
 
 	Object::Rotation.X += X;
 	Object::Rotation.Y += Y;
@@ -53,7 +61,14 @@ void Object::AddRotation(float X, float Y, float Z) {
 	}
 }
 void Object::AddRotation(Vector3 rotation) {
-	Object::_transformMatrix.Rotation(Vector4(rotation.X, rotation.Y, rotation.Z, 1));
+	//Object::_transformMatrix.Rotation(Vector4(rotation.X, rotation.Y, rotation.Z, 1));
+	const float radX = M_PI / 180 * rotation.X;
+	const float radY = M_PI / 180 * rotation.Y;
+	const float radZ = M_PI / 180 * rotation.Z;
+
+	Object::_transformMatrix = glm::rotate(Object::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+	Object::_transformMatrix = glm::rotate(Object::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+	Object::_transformMatrix = glm::rotate(Object::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
 
 	Object::Rotation.X += rotation.X;
 	Object::Rotation.Y += rotation.Y;
@@ -85,8 +100,8 @@ Vector3 Object::GetScale() {
 }
 void Object::SetScale(float X, float Y, float Z) {
 	Vector3 delta = Object::Scale / Vector3(X, Y, Z);
-
-	Object::_transformMatrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
+	Object::_transformMatrix = glm::scale(Object::_transformMatrix, glm::vec3(1 / delta.X, 1/ delta.Y, 1 / delta.Z));
+	//Object::_transformMatrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
 
 	Object::Scale.X = X;
 	Object::Scale.Y = Y;
@@ -105,8 +120,8 @@ void Object::SetScale(float X, float Y, float Z) {
 }
 void Object::SetScale(Vector3 scale) {
 	Vector3 delta = Object::Scale / scale;
-
-	Object::_transformMatrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
+	Object::_transformMatrix = glm::scale(Object::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
+	//Object::_transformMatrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
 
 	Object::Scale.X = scale.X;
 	Object::Scale.Y = scale.Y;
@@ -126,8 +141,6 @@ void Object::SetScale(Vector3 scale) {
 
 
 void Object::ApplyTransform() {
-	Matrix4x4 buffer = Object::_transformMatrix.GetMatrix();
-
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
 		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
@@ -137,7 +150,7 @@ void Object::ApplyTransform() {
 		}
 	}
 
-	Object::_transformMatrix.Identity();
+	Object::_transformMatrix = glm::mat4x4(1.0f);
 }
 
 bool Object::AddModule(class Module* someModule) {
@@ -253,7 +266,7 @@ unsigned long Object::GetGeometryHeaviness() {
 }
 
 Object::Object() {
-	Object::_transformMatrix = Matrix4x4();
+	Object::_transformMatrix = glm::mat4x4(1.0f);
 
 	World::ObjectsOnScene.push_back(this);
 }

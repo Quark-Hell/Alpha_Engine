@@ -14,7 +14,7 @@ private:
 	Vector4 Rotation{ 0,0,0,1 };
 	Vector3 Scale{ 1,1,1 };
 
-	Matrix4x4 _transformMatrix{};
+	glm::mat4x4 _transformMatrix{};
 
 	std::vector<Module*> Modules;
 

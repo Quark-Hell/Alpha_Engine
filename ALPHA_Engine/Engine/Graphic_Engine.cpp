@@ -5,6 +5,7 @@
 #include "Modules/Mesh.h"
 #include "GameModels.h"
 
+
 void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name) {
     _wight = Wight;
     _height = Height;
@@ -46,7 +47,7 @@ void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int 
     glViewport(0, 0, width, height);
 
     glfwMakeContextCurrent(Screen::_window);
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
 }
 GLFWwindow* Screen::GetWindow() {
     return Screen::_window;
@@ -146,7 +147,7 @@ void Render::RenderMesh(Mesh& mesh) {
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
     //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    
+   
 
     //glBindTexture();
     //glIndexPointer(GL_UNSIGNED_INT,0, mesh._indices);
@@ -158,17 +159,41 @@ void Render::RenderMesh(Mesh& mesh) {
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
+void Render::RenderCollider(Geometry& collider) {
+    glColor3f(0.2, 0.8, 0.2);
+
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+
+    //glBindTexture();
+    //glIndexPointer(GL_UNSIGNED_INT,0, mesh._indices);
+    glNormalPointer(GL_FLOAT, 0, collider._normals);
+    glVertexPointer(3, GL_FLOAT, 0, collider._vertex);
+
+    glDrawElements(GL_LINE_STRIP, collider._indicesCount, GL_UNSIGNED_INT, collider._indices);
+
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+}
 
 void Render::SceneAssembler() {
     for (size_t i = 0; i < World::ObjectsOnScene.size(); i++)
     {
         for (size_t j = 0; j < World::ObjectsOnScene[i]->GetCountOfModules(); j++)
         {
-            Mesh* mesh = dynamic_cast<Mesh*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+            ModulesList type = World::ObjectsOnScene[i]->GetModuleByIndex(j)->GetType();
 
-            if (mesh != nullptr && mesh->GetType() == ModulesList::MeshType) {
+            if (type == MeshType) {
+                Mesh* mesh = dynamic_cast<Mesh*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
                 Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
                 RenderMesh(*mesh);
+            }
+            else if (type == ColliderType) {
+                MeshCollider* collider = dynamic_cast<MeshCollider*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+                RenderCollider(*collider);
             }
         }
     }   
