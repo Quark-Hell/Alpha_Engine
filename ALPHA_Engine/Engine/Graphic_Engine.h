@@ -3,7 +3,9 @@
 #include "Basical_Type.h"
 
 class Camera;
+class Geometry;
 class Mesh;
+class Vector3;
 
 struct Colors {
 	const Vector3 green { 0.0f, 1.0f, 0.0f }; 
@@ -49,9 +51,12 @@ public:
 	Screen* GetScreenClass();
 
 private:
-	void ApplyCameraTransform(Camera* camera);
 	void SceneAssembler();
+
 	void RenderMesh(Mesh& mesh);
-	void RenderCollider(Geometry& collider);
+	void RenderMeshCollider(Geometry& collider);
+	//void RenderCollider(ColliderPresets& collider);
+
+	void ApplyCameraTransform(Camera* camera);
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
 };

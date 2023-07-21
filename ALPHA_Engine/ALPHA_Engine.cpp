@@ -1,28 +1,29 @@
 ﻿// ALPHA_Engine.cpp : Defines the entry point for the application.
 //
-
+#pragma once
 #include "ALPHA_Engine.h"
 
+#include "Engine/Alghoritms.h"
 #include "Engine/Basical_Type.h"
 
-#include "Engine/Alghoritms.cpp"
-#include "Engine/Collision.cpp"
-#include "Engine/Graphic_Engine.cpp"
+#include "Engine/World.h"
+#include "Engine/Object.h"
 
-#include "Engine/World.cpp"
-#include "Engine/Object.cpp"
-#include "Engine/Matrix.cpp"
+#include "Engine/Collision.h"
+#include "Engine/Graphic_Engine.h"
 
-#include "Engine/Binds.cpp"
-#include "Engine/AdditionalMath.cpp"
+#include "Engine/Binds.h"
+#include "Engine/AdditionalMath.h"
 
-#include "GameModels.cpp"
+#include "GameModels.h"
 
-#include "Modules/Camera.cpp"
-#include "Modules/Geometry.cpp"
-#include "Modules/Mesh.cpp"
-#include "Modules/Module.cpp"
-#include "Modules/Physics.cpp"
+#include "Modules/Camera.h"
+#include "Modules/Geometry.h"
+#include "Modules/Mesh.h"
+#include "Modules/Module.h"
+#include "Modules/Physics.h"
+#include "Modules/ColliderPresets.h"
+#include "Modules/BoxCollider.h"
 
 Object Player;
 Camera* camera = new Camera;
@@ -47,6 +48,8 @@ void GameFunction::Start() {
 
     MeshCollider* col3 = new MeshCollider; col3->Create("\\Models\\Primitives\\Cube.fbx");
 
+    BoxCollider* bx = new BoxCollider;
+
     Vector3 pos = Vector3{ 0,0,-15 };
     Vector3 rot = Vector3{ 0,0,0 };
     Vector3 scale = Vector3{ 1,1,1 };
@@ -58,17 +61,18 @@ void GameFunction::Start() {
     //object->AddPosition(9, 3, 0);
     //rb1->CalculateCenterMass();
 
+    plane = Primitives::Cube(pos, rot, scale, color);
+    //plane->AddModule(col3);
+    plane->AddModule(bx);
+    plane->AddPosition(0, -5, 5);
+    plane->AddRotation(90, 0, 0);
+    plane->SetScale(10, 10, 0.5);
+
     object2 = Primitives::Sphere(pos, rot, scale, color);
     object2->AddModule(col2);
     object2->AddModule(rb2);
     object2->AddPosition(-2, 3, 0);
     rb2->CalculateCenterMass();
-
-    plane = Primitives::Cube(pos, rot, scale, color);
-    plane->AddModule(col3);
-    plane->AddPosition(0, -5, 5);
-    plane->AddRotation(-90, 0, 0);
-    plane->SetScale(10, 10, 0.5);
 }
 
 void GameFunction::Update() {

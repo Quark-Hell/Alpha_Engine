@@ -2,11 +2,6 @@
 
 #include "Object.h"
 #include "Alghoritms.h"
-#include "Matrix.h"
-
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 
 Geometry::Geometry() {
 
@@ -210,14 +205,6 @@ Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
 void Geometry::ApplyTransformation() {
     for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
     {
-        //std::array<float, 4> buffer;
-        //buffer[0] = Geometry::_vertex[jt];
-        //buffer[1] = Geometry::_vertex[jt + 1];
-        //buffer[2] = Geometry::_vertex[jt + 2];
-        //buffer[3] = 1;
-
-        //float w = 1;
-
         glm::vec4 buf(Geometry::_vertex[jt], Geometry::_vertex[jt + 1], Geometry::_vertex[jt + 2], 1);
 
         glm::vec4 res;
@@ -225,29 +212,10 @@ void Geometry::ApplyTransformation() {
         Geometry::_vertex[jt] = res.x;
         Geometry::_vertex[jt + 1] = res.y;
         Geometry::_vertex[jt + 2] = res.z;
-
-        //std::cout << Geometry::_normals[jt] << "\n" << Geometry::_normals[jt + 1] << "\n" << Geometry::_normals[jt + 2];
-
-        //std::cout << glm::to_string(Geometry::GetParentObject()->_transformMatrix) << std::endl;
-
-        //MatrixMath::MultiplyMatrix(
-        //    Geometry::_vertex[jt],
-        //    Geometry::_vertex[jt + 1],
-        //    Geometry::_vertex[jt + 2],
-        //    w,
-        //    Geometry::GetParentObject()->_transformMatrix, buffer);
     }
 
     for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
     {
-        //std::array<float, 4> buffer;
-        //buffer[0] = Geometry::_normals[jt];
-        //buffer[1] = Geometry::_normals[jt + 1];
-        //buffer[2] = Geometry::_normals[jt + 2];
-        //buffer[3] = 1;
-        //
-        //float w = 1;
-
         glm::vec4 buf(Geometry::_normals[jt], Geometry::_normals[jt + 1], Geometry::_normals[jt + 2], 1);
 
         glm::vec4 res;
@@ -255,14 +223,6 @@ void Geometry::ApplyTransformation() {
         Geometry::_normals[jt] = res.x;
         Geometry::_normals[jt + 1] = res.y;
         Geometry::_normals[jt + 2] = res.z;
-
-
-        //MatrixMath::MultiplyMatrix(
-        //    Geometry::_normals[jt],
-        //    Geometry::_normals[jt + 1],
-        //    Geometry::_normals[jt + 2],
-        //    w,
-        //    Geometry::GetParentObject()->_transformMatrix, buffer);
     }
     Geometry::_isShifted = false;
 }

@@ -8,8 +8,9 @@ enum ModulesList {
 	CameraType = 1,
 	RigidBodyType = 2,
 	GeometryType = 3,
-	ColliderType = 4,
-	MeshType = 5
+	MeshColliderType = 4,
+	MeshType = 5,
+	BoxColliderType = 6,
 };
 
 class Module

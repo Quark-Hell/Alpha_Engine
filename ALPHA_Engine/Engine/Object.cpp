@@ -1,8 +1,14 @@
 #include "Object.h"
 
-#include "Modules/Geometry.h"
 #include "Modules/Module.h"
+#include "Modules/Camera.h"
+#include "Modules/Geometry.h"
+#include "Modules/Mesh.h"
+#include "Modules/Physics.h"
+#include "Modules/ColliderPresets.h"
+#include "Modules/BoxCollider.h"
 
+#include "Collision.h"
 
 #include "Vectors.h"
 
@@ -101,7 +107,6 @@ Vector3 Object::GetScale() {
 void Object::SetScale(float X, float Y, float Z) {
 	Vector3 delta = Object::Scale / Vector3(X, Y, Z);
 	Object::_transformMatrix = glm::scale(Object::_transformMatrix, glm::vec3(1 / delta.X, 1/ delta.Y, 1 / delta.Z));
-	//Object::_transformMatrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
 
 	Object::Scale.X = X;
 	Object::Scale.Y = Y;
@@ -121,7 +126,6 @@ void Object::SetScale(float X, float Y, float Z) {
 void Object::SetScale(Vector3 scale) {
 	Vector3 delta = Object::Scale / scale;
 	Object::_transformMatrix = glm::scale(Object::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
-	//Object::_transformMatrix.Scale(Vector4(1 / delta.X, 1 / delta.Y, 1 / delta.Z, 1));
 
 	Object::Scale.X = scale.X;
 	Object::Scale.Y = scale.Y;
@@ -175,11 +179,11 @@ bool Object::AddModule(ModulesList moduleType, Module& outputModule) {
 	case GeometryType:
 		someModule = new Geometry;
 		break;
-	case ColliderType:
+	case MeshColliderType:
 		someModule = new MeshCollider;
 		break;
-	case MeshType:
-		someModule = new Mesh;
+	case BoxColliderType:
+		someModule = new BoxCollider;
 		break;
 	default:
 		return false;

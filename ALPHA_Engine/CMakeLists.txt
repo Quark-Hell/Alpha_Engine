@@ -53,30 +53,51 @@ ${assimpINCLUDE}assimp/Importer.hpp
 ${assimpINCLUDE}assimp/scene.h
 ${assimpINCLUDE}assimp/postprocess.h
 
+${Game}GameModels.h 
+${Game}GameModels.cpp 
+
+${Engine}Binds.h
+${Engine}Binds.cpp
+
 ${Engine}Alghoritms.h
+${Engine}Alghoritms.cpp
 ${Engine}Basical_Type.h
+${Engine}Basical_Type.cpp
 ${Engine}Collision.h
+${Engine}Collision.cpp
 ${Engine}Graphic_Engine.h
+${Engine}Graphic_Engine.cpp
 ${Engine}Material.h
-${Engine}Matrix.h  
+${Engine}Material.cpp
+
 ${Engine}Object.h 
+${Engine}Object.cpp   
 ${Engine}Texture.h 
+${Engine}Texture.cpp
 ${Engine}Timer.h
+${Engine}Timer.cpp
 ${Engine}Vectors.h
+${Engine}Vectors.cpp
 ${Engine}World.h  
+${Engine}World.cpp 
 
 ${Engine}Modules/Camera.h
+${Engine}Modules/Camera.cpp
 ${Engine}Modules/Geometry.h
+${Engine}Modules/Geometry.cpp
 ${Engine}Modules/Mesh.h
+${Engine}Modules/Mesh.cpp
 ${Engine}Modules/Module.h
+${Engine}Modules/Module.cpp
 ${Engine}Modules/Physics.h
-"Game/GameModels.h" 
+${Engine}Modules/Physics.cpp
 "Engine/AdditionalMath.h" 
 "Engine/AdditionalMath.cpp" 
-"Engine/Modules/BoxCollider.cpp" 
 "Engine/Modules/BoxCollider.h"
-${glm}glm.hpp
-)
+"Engine/Modules/BoxCollider.cpp" 
+${glm}glm.hpp 
+ "Engine/Modules/ColliderPresets.h"
+ "Engine/Modules/ColliderPresets.cpp")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib

@@ -1,6 +1,10 @@
 #pragma once
 #include "Module.h"
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 class Object;
 class Mesh;
 
@@ -18,7 +22,6 @@ protected:
 	unsigned int _vertexCount = 0;
 	unsigned int _normalsCount = 0;
 	unsigned int _indicesCount = 0;
-
 
 
 protected:

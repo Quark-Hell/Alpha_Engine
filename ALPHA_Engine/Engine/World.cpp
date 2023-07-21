@@ -1,7 +1,5 @@
 #include "World.h"
 
-#include "Object.h"
-
 World::World() {
 
 }

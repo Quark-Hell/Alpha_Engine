@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-struct Vector2 {
+class Vector2 {
 
 public:
 	float X;
@@ -340,7 +340,7 @@ public:
 #pragma endregion
 };
 
-struct Vector3 : public Vector2 {
+class Vector3 : public Vector2 {
 public:
 	float Z;
 
@@ -351,21 +351,21 @@ public:
 	}
 
 public:
-	virtual float GetMagnitude() override {
+	virtual inline float GetMagnitude() override {
 		return sqrtf(powf(X, 2) + powf(Y, 2) + powf(Z, 2));
 	}
-	static float GetMagnitude(Vector3 Vector) {
+	static inline float GetMagnitude(Vector3 Vector) {
 		return sqrtf(powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2));
 	}
 
-	virtual float GetNonSqrtMagnitude() override {
+	virtual inline float GetNonSqrtMagnitude() override {
 		return powf(X, 2) + powf(Y, 2) + powf(Z, 2);
 	}
-	static float GetNonSqrtMagnitude(Vector3 Vector) {
+	static inline float GetNonSqrtMagnitude(Vector3 Vector) {
 		return powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2);
 	}
 
-	virtual void NormilizeSelf() override {
+	virtual inline void NormilizeSelf() override {
 		float locLength = GetMagnitude();
 		float inv_length = (1 / locLength);
 
@@ -373,7 +373,7 @@ public:
 		Y *= inv_length;
 		Z *= inv_length;
 	}
-	static Vector3 GetNormalize(Vector3 vector) {
+	static inline Vector3 GetNormalize(Vector3 vector) {
 		float locLength = Vector3::GetMagnitude(vector);
 		float inv_length = (1 / locLength);
 
@@ -384,7 +384,7 @@ public:
 		return vector;
 	}
 
-	static Vector3 LinearInteprolation(Vector3 A, Vector3 B, float T) {
+	static inline Vector3 LinearInteprolation(Vector3 A, Vector3 B, float T) {
 		Vector3 newVector;
 
 		newVector.X = (A.X * (1.0f - T)) + (B.X * T);
@@ -394,34 +394,34 @@ public:
 		return newVector;
 	}
 
-	float DotProduct(Vector3 B) {
+	float inline DotProduct(Vector3 B) {
 		return (X * B.X) + (Y * B.Y) + (Z * B.Z);
 	}
-	static float DotProduct(Vector3 A, Vector3 B) {
+	static inline float DotProduct(Vector3 A, Vector3 B) {
 		return (A.X * B.X) + (A.Y * B.Y) + (A.Z * B.Z);
 	}
 
-	Vector3 CrossProduct(Vector3 B) {
+	inline Vector3 CrossProduct(Vector3 B) {
 		return Vector3(
 			(Y * B.Z - Z * B.Y),
 			(Z * B.X - X * B.Z),
 			(X * B.Y - Y * B.X));
 	}
-	static Vector3 CrossProduct(Vector3 A, Vector3 B) {
+	static inline Vector3 CrossProduct(Vector3 A, Vector3 B) {
 		return Vector3(
 			(A.Y * B.Z - A.Z * B.Y),
 			(A.Z * B.X - A.X * B.Z),
 			(A.X * B.Y - A.Y * B.X));
 	}
 
-	float GetAngle(Vector3 B) {
+	float inline GetAngle(Vector3 B) {
 		return cosf(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
 	}
-	static float GetAngle(Vector3 A, Vector3 B) {
+	static inline float GetAngle(Vector3 A, Vector3 B) {
 		return cosf(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
 	}
 
-	static Vector3 ReflectVector(Vector3 vector, Vector3 normal) {
+	static inline Vector3 ReflectVector(Vector3 vector, Vector3 normal) {
 		normal.NormilizeSelf();
 		return vector - vector * Vector3::DotProduct(vector, normal) * 2;
 	}
@@ -718,7 +718,7 @@ public:
 #pragma endregion
 };
 
-struct Vector4 : public Vector3 {
+class Vector4 : public Vector3 {
 
 public:
 	float W;
@@ -731,21 +731,21 @@ public:
 	}
 
 public:
-	virtual float GetMagnitude() override {
+	virtual inline float GetMagnitude() override {
 		return sqrtf(powf(X, 2) + powf(Y, 2) + powf(Z, 2) + powf(Z,2));
 	}
-	static float GetMagnitude(Vector3 Vector) {
+	static inline float GetMagnitude(Vector3 Vector) {
 		return sqrtf(powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2));
 	}
 
-	virtual float GetNonSqrtMagnitude() override {
+	virtual inline float GetNonSqrtMagnitude() override {
 		return powf(X, 2) + powf(Y, 2) + powf(Z, 2);
 	}
-	static float GetNonSqrtMagnitude(Vector3 Vector) {
+	static inline float GetNonSqrtMagnitude(Vector3 Vector) {
 		return powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2);
 	}
 
-	virtual void NormilizeSelf() override {
+	virtual inline void NormilizeSelf() override {
 		float locLength = GetMagnitude();
 		float inv_length = (1 / locLength);
 
@@ -753,7 +753,7 @@ public:
 		Y *= inv_length;
 		Z *= inv_length;
 	}
-	static Vector3 GetNormalize(Vector3 vector) {
+	static inline Vector3 GetNormalize(Vector3 vector) {
 		Vector3 newVector;
 		float locLength = Vector3::GetMagnitude(newVector);
 		float inv_length = (1 / locLength);
@@ -765,7 +765,7 @@ public:
 		return newVector;
 	}
 
-	static Vector4 LinearInteprolation(Vector4 A, Vector4 B, float T) {
+	static inline Vector4 LinearInteprolation(Vector4 A, Vector4 B, float T) {
 		Vector4 newVector;
 
 		newVector.X = (A.X * (1.0f - T)) + (B.X * T);
@@ -776,21 +776,21 @@ public:
 		return newVector;
 	}
 
-	float DotProduct(Vector4 B) {
+	float inline DotProduct(Vector4 B) {
 		return (X * B.X) + (Y * B.Y) + (Z + B.Z) + (W + B.W);
 	}
-	static float DotProduct(Vector4 A, Vector4 B) {
+	static float inline DotProduct(Vector4 A, Vector4 B) {
 		return (A.X * B.X) + (A.Y * B.Y) + (A.Z + B.Z) + (A.W + B.W);
 	}
 
-	float GetAngle(Vector4 B = { 1,0,0 }) {
+	float inline GetAngle(Vector4 B = { 1,0,0 }) {
 		return cosf(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
 	}
-	static float GetAngle(Vector4 A, Vector4 B = { 1,0,0 }) {
+	static float inline GetAngle(Vector4 A, Vector4 B = { 1,0,0 }) {
 		return cosf(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
 	}
 
-	static Vector4 ReflectVector(Vector4 vector, Vector4 normal) {
+	static inline Vector4 ReflectVector(Vector4 vector, Vector4 normal) {
 		normal.NormilizeSelf();
 		return vector - ((vector * normal * 2) / normal.GetMagnitude()) * normal;
 	}

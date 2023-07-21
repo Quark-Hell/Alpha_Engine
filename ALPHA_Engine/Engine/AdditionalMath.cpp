@@ -1,6 +1,4 @@
 #include "AdditionalMath.h"
-#include <cmath>
-#include "Vectors.h"
 
 bool Math::ApproximatelyEqual(float a, float b, float epsilon) {
 	if (abs(a - b) < epsilon) {
