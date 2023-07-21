@@ -2,8 +2,11 @@
 
 #include "World.h"
 #include "Modules/Camera.h"
+#include "Modules/Geometry.h"
 #include "Modules/Mesh.h"
-//#include "Modules/BoxCollider.h"
+#include "Modules/BoxCollider.h"
+
+#include "Collision.h"
 
 #include "GameModels.h"
 

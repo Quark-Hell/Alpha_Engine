@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Basical_Type.h"
+#include "Modules/Geometry.h"
 
 class Camera;
 class Mesh;

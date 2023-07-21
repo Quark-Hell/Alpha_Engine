@@ -1,8 +1,14 @@
 #include "Object.h"
 
 #include "Modules/Module.h"
+#include "Modules/Camera.h"
 #include "Modules/Geometry.h"
+#include "Modules/Mesh.h"
+#include "Modules/Physics.h"
+#include "Modules/ColliderPresets.h"
 #include "Modules/BoxCollider.h"
+
+#include "Collision.h"
 
 #include "Vectors.h"
 
@@ -165,16 +171,16 @@ bool Object::AddModule(ModulesList moduleType, Module& outputModule) {
 		return false;
 		break;
 	case CameraType:
-		someModule = new ModulesList::Camera;
+		someModule = new Camera;
 		break;
 	case RigidBodyType:
-		someModule = new ModulesList::RigidBody;
+		someModule = new RigidBody;
 		break;
 	case GeometryType:
 		someModule = new Geometry;
 		break;
 	case MeshColliderType:
-		someModule = new ModulesList::MeshCollider;
+		someModule = new MeshCollider;
 		break;
 	case BoxColliderType:
 		someModule = new BoxCollider;
