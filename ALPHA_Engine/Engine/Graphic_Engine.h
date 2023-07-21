@@ -49,9 +49,12 @@ public:
 	Screen* GetScreenClass();
 
 private:
-	void ApplyCameraTransform(Camera* camera);
 	void SceneAssembler();
+
 	void RenderMesh(Mesh& mesh);
-	void RenderCollider(Geometry& collider);
+	void RenderMeshCollider(Geometry& collider);
+	//void RenderCollider(ColliderPresets& collider);
+
+	void ApplyCameraTransform(Camera* camera);
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
 };

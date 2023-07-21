@@ -3,6 +3,8 @@
 #include "World.h"
 #include "Modules/Camera.h"
 #include "Modules/Mesh.h"
+//#include "Modules/BoxCollider.h"
+
 #include "GameModels.h"
 
 
@@ -95,7 +97,7 @@ void Render::PrepareToRender() {
     glClearDepth(1.f);
     glDepthFunc(GL_LEQUAL);
     
-    float ratio = 4 / 3;
+    float ratio = 4.0f / 3.0f;
     glFrustum(-ratio, ratio, -1.f, 1.f, 1.0f, 500.f);
 }
 
@@ -159,7 +161,7 @@ void Render::RenderMesh(Mesh& mesh) {
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
-void Render::RenderCollider(Geometry& collider) {
+void Render::RenderMeshCollider(Geometry& collider) {
     glColor3f(0.2, 0.8, 0.2);
 
     glEnableClientState(GL_NORMAL_ARRAY);
@@ -177,6 +179,15 @@ void Render::RenderCollider(Geometry& collider) {
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
+//void Render::RenderCollider(ColliderPresets& collider) {
+//    glColor3f(0.2, 0.8, 0.2);
+//
+//    glEnableClientState(GL_VERTEX_ARRAY);
+//
+//    glDrawArrays(GL_LINE_STRIP, *collider._vertex, collider._vertexCount);
+//
+//    glDisableClientState(GL_VERTEX_ARRAY);
+//}
 
 void Render::SceneAssembler() {
     for (size_t i = 0; i < World::ObjectsOnScene.size(); i++)
@@ -190,22 +201,22 @@ void Render::SceneAssembler() {
                 Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
                 RenderMesh(*mesh);
             }
-            else if (type == ColliderType) {
+            else if (type == MeshColliderType) {
                 MeshCollider* collider = dynamic_cast<MeshCollider*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
                 Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
-                RenderCollider(*collider);
+                RenderMeshCollider(*collider);
+            }
+            else if (type == BoxColliderType) {
+                //BoxCollider* collider = dynamic_cast<BoxCollider*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+                //RenderCollider(*collider);
             }
         }
     }   
 }       
 
 void Render::StartRender(Camera* camera) {
-    //sf::ContextSettings window_settings;
-    //window_settings.depthBits = 24;
-    //window_settings.stencilBits = 8;
-    //window_settings.antialiasingLevel = 2;
-
-    _screenClass.CreateScreen(800, 600, 32, "GLFW OpenGL");
+    _screenClass.CreateScreen(1280, 720, 32, "GLFW OpenGL");
 
     int width, height;
     glfwGetFramebufferSize(_screenClass._window, &width, &height);
@@ -214,10 +225,7 @@ void Render::StartRender(Camera* camera) {
     Render::PrepareToRender();
     Render::ApplyCameraTransform(camera);
 
-    camera->SetCameraInfo(60, 4.0 / 3.0, 0.1, 300);
-
-    //_screenClass._screen->setVerticalSyncEnabled(true);
-    //_screenClass._screen->setFramerateLimit(60);
+    camera->SetCameraInfo(60, 16.0 / 9.0, 0.1, 300);
 }
 
 

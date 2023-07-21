@@ -129,7 +129,7 @@ bool MeshCollider::CreateConvexFromConcave(std::string link) {
 }
 
 ModulesList MeshCollider::GetType() {
-    return ModulesList::ColliderType;
+    return ModulesList::MeshColliderType;
 }
 
 /*Maybe need refactoring*/
@@ -141,7 +141,7 @@ void Collision::CollisionLoop() {
         {
             MeshCollider* collider = dynamic_cast<MeshCollider*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
 
-            if (collider != nullptr && collider->GetType() == ModulesList::ColliderType) {
+            if (collider != nullptr && collider->GetType() == ModulesList::MeshColliderType) {
                 collider->collisionInfo.HasCollision = false;
             }
         }
@@ -160,7 +160,7 @@ void Collision::CollisionLoop() {
                 {
                     MeshCollider* colliderB = dynamic_cast<MeshCollider*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
                     
-                    if (colliderA != nullptr && colliderA->GetType() == ModulesList::ColliderType && colliderB != nullptr && colliderB->GetType() == ColliderType && colliderA != colliderB) {
+                    if (colliderA != nullptr && colliderA->GetType() == ModulesList::MeshColliderType && colliderB != nullptr && colliderB->GetType() == MeshColliderType && colliderA != colliderB) {
                         Collision::GJK(*colliderA, *colliderB, points);
                     }
                 }

@@ -11,7 +11,6 @@
 
 #include "Engine/World.cpp"
 #include "Engine/Object.cpp"
-#include "Engine/Matrix.cpp"
 
 #include "Engine/Binds.cpp"
 #include "Engine/AdditionalMath.cpp"
@@ -23,6 +22,8 @@
 #include "Modules/Mesh.cpp"
 #include "Modules/Module.cpp"
 #include "Modules/Physics.cpp"
+#include "Modules/ColliderPresets.cpp"
+#include "Modules/BoxCollider.cpp"
 
 Object Player;
 Camera* camera = new Camera;
@@ -47,6 +48,8 @@ void GameFunction::Start() {
 
     MeshCollider* col3 = new MeshCollider; col3->Create("\\Models\\Primitives\\Cube.fbx");
 
+    BoxCollider* bx = new BoxCollider;
+
     Vector3 pos = Vector3{ 0,0,-15 };
     Vector3 rot = Vector3{ 0,0,0 };
     Vector3 scale = Vector3{ 1,1,1 };
@@ -58,17 +61,18 @@ void GameFunction::Start() {
     //object->AddPosition(9, 3, 0);
     //rb1->CalculateCenterMass();
 
+    plane = Primitives::Cube(pos, rot, scale, color);
+    //plane->AddModule(col3);
+    plane->AddModule(bx);
+    plane->AddPosition(0, -5, 5);
+    plane->AddRotation(90, 0, 0);
+    plane->SetScale(10, 10, 0.5);
+
     object2 = Primitives::Sphere(pos, rot, scale, color);
     object2->AddModule(col2);
     object2->AddModule(rb2);
     object2->AddPosition(-2, 3, 0);
     rb2->CalculateCenterMass();
-
-    plane = Primitives::Cube(pos, rot, scale, color);
-    plane->AddModule(col3);
-    plane->AddPosition(0, -5, 5);
-    plane->AddRotation(-90, 0, 0);
-    plane->SetScale(10, 10, 0.5);
 }
 
 void GameFunction::Update() {

@@ -58,7 +58,7 @@ ${Engine}Basical_Type.h
 ${Engine}Collision.h
 ${Engine}Graphic_Engine.h
 ${Engine}Material.h
-${Engine}Matrix.h  
+  
 ${Engine}Object.h 
 ${Engine}Texture.h 
 ${Engine}Timer.h
@@ -76,7 +76,7 @@ ${Engine}Modules/Physics.h
 "Engine/Modules/BoxCollider.cpp" 
 "Engine/Modules/BoxCollider.h"
 ${glm}glm.hpp
-)
+ "Engine/Modules/ColliderPresets.cpp" "Engine/Modules/ColliderPresets.h")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib

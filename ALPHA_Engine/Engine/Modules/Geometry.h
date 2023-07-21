@@ -20,7 +20,6 @@ protected:
 	unsigned int _indicesCount = 0;
 
 
-
 protected:
 	friend class Object;
 	friend class Render;
