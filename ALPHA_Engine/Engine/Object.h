@@ -1,5 +1,6 @@
 #pragma once
 #include "Basical_Type.h"
+#include "Modules/Module.h"
 
 class Module;
 class Vector4;

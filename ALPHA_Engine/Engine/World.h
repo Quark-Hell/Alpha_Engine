@@ -1,5 +1,6 @@
 #pragma once
 #include "Basical_Type.h"
+#include "Object.h"
 
 class Object;
 
@@ -17,22 +18,22 @@ private:
 	static inline float SimulationSpeed = 1;
 
 public:
-	inline static void BuildTransformationThread(const std::vector<Object*> objects);
-	inline static void ApplyingSceneTransformation();
+	static void BuildTransformationThread(const std::vector<Object*> objects);
+	static void ApplyingSceneTransformation();
 
-	inline static void StartFrame();
-	inline static void EndFrame();
+	static void StartFrame();
+	static void EndFrame();
 
-	static inline void CloseGame();
+	static void CloseGame();
 	/// <summary>
 	/// Return bool IsCloseGame
 	/// </summary>
-	static inline bool GetStateOfGame();
+	static bool GetStateOfGame();
 
-	static inline double GetTimeLong();
-	static inline float GetDeltaTime();
+	static double GetTimeLong();
+	static float GetDeltaTime();
 
-	static inline void SetSimulationSpeed(float SimSpeed);
+	static void SetSimulationSpeed(float SimSpeed);
 
 private:
 	friend class Render;

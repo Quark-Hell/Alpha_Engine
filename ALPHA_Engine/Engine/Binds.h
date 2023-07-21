@@ -16,7 +16,7 @@ public:
 		return(MousePos{XPos,YPos});
 	}
 
-	inline MousePos(float XPos = 0, float YPos = 0) {
+	MousePos(float XPos = 0, float YPos = 0) {
 		MousePos::XPos = XPos;
 		MousePos::YPos = YPos;
 	}

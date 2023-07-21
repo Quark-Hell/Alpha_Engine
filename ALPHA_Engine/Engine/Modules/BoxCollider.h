@@ -14,7 +14,7 @@ public:
 	BoxCollider(float height = 1, float width = 1, float length = 1);
 	~BoxCollider();
 
-	inline float GetHeight();
+	float GetHeight();
 	void SetHeight(float heigth);
 
 	float GetWidth();

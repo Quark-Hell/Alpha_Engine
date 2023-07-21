@@ -85,24 +85,24 @@ private:
 	static inline const float fixTimeStep = 1.0f / 60.0f;
 
 public:
-	static inline void PhysicsLoop();
+	static void PhysicsLoop();
 
 	Physics();
 	~Physics();
 
 private:
-	static inline void ApplyGravity(RigidBody& rb);
-	static inline void ApplyBaseFriction(RigidBody& rb);
-	static inline void ApplyTorque(RigidBody& rb);
+	static void ApplyGravity(RigidBody& rb);
+	static void ApplyBaseFriction(RigidBody& rb);
+	static void ApplyTorque(RigidBody& rb);
 
-	static inline void Contact(RigidBody& rb1, Vector3 contactNormal = 0);
-	static inline void Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNormal = 0);
+	static void Contact(RigidBody& rb1, Vector3 contactNormal = 0);
+	static void Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNormal = 0);
 
-	static inline void ApplyPhysics(RigidBody& rb);
-	static inline void ApplyVelocity(RigidBody& rb);
+	static void ApplyPhysics(RigidBody& rb);
+	static void ApplyVelocity(RigidBody& rb);
 
-	static inline void SemiImplicitIntegrate(RigidBody& rb);
-	static inline void RK4Integrate(RigidBody& rb);
+	static void SemiImplicitIntegrate(RigidBody& rb);
+	static void RK4Integrate(RigidBody& rb);
 
 	friend class Collision;
 };

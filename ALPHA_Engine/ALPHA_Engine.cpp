@@ -1,29 +1,29 @@
 ﻿// ALPHA_Engine.cpp : Defines the entry point for the application.
 //
-
+#pragma once
 #include "ALPHA_Engine.h"
 
+#include "Engine/Alghoritms.h"
 #include "Engine/Basical_Type.h"
 
-#include "Engine/Alghoritms.cpp"
-#include "Engine/Collision.cpp"
-#include "Engine/Graphic_Engine.cpp"
+#include "Engine/World.h"
+#include "Engine/Object.h"
 
-#include "Engine/World.cpp"
-#include "Engine/Object.cpp"
+#include "Engine/Collision.h"
+#include "Engine/Graphic_Engine.h"
 
-#include "Engine/Binds.cpp"
-#include "Engine/AdditionalMath.cpp"
+#include "Engine/Binds.h"
+#include "Engine/AdditionalMath.h"
 
-#include "GameModels.cpp"
+#include "GameModels.h"
 
-#include "Modules/Camera.cpp"
-#include "Modules/Geometry.cpp"
-#include "Modules/Mesh.cpp"
-#include "Modules/Module.cpp"
-#include "Modules/Physics.cpp"
-#include "Modules/ColliderPresets.cpp"
-#include "Modules/BoxCollider.cpp"
+#include "Modules/Camera.h"
+#include "Modules/Geometry.h"
+#include "Modules/Mesh.h"
+#include "Modules/Module.h"
+#include "Modules/Physics.h"
+#include "Modules/ColliderPresets.h"
+#include "Modules/BoxCollider.h"
 
 Object Player;
 Camera* camera = new Camera;
