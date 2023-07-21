@@ -53,6 +53,12 @@ ${assimpINCLUDE}assimp/Importer.hpp
 ${assimpINCLUDE}assimp/scene.h
 ${assimpINCLUDE}assimp/postprocess.h
 
+${Game}GameModels.h 
+${Game}GameModels.cpp 
+
+${Engine}Binds.h
+${Engine}Binds.cpp
+
 ${Engine}Alghoritms.h
 ${Engine}Alghoritms.cpp
 ${Engine}Basical_Type.h
@@ -85,8 +91,6 @@ ${Engine}Modules/Module.h
 ${Engine}Modules/Module.cpp
 ${Engine}Modules/Physics.h
 ${Engine}Modules/Physics.cpp
-"Game/GameModels.h" 
-"Game/GameModels.cpp" 
 "Engine/AdditionalMath.h" 
 "Engine/AdditionalMath.cpp" 
 "Engine/Modules/BoxCollider.h"
