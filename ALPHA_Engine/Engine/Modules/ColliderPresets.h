@@ -1,13 +1,11 @@
 #pragma once
 #include "Modules/Module.h"
+#include "Modules/Geometry.h"
 
-class ColliderPresets : public Module {
+class ColliderPresets : public Geometry {
 protected:
 	//position relative to parent
 	Vector3 _position{ 0,0,0 };
-
-	float* _vertex;
-	unsigned int _vertexCount;
 
 	glm::mat4x4 _transformMatrix = glm::mat4x4(1.0f);
 
@@ -19,7 +17,7 @@ private:
 	friend class Render;
 
 public:
-	ColliderPresets(unsigned int vertexCount);
+	ColliderPresets();
 	~ColliderPresets();
 
 	Vector3 GetPosition();

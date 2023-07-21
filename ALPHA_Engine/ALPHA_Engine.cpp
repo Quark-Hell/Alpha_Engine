@@ -43,6 +43,8 @@ RigidBody* rb2 = new RigidBody;
 void GameFunction::Start() {
     SetControl();
 
+    World::DebugRenderEnable = true;
+
     MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
     MeshCollider* col2 = new MeshCollider; col2->Create("\\Models\\Primitives\\Sphere.fbx");
 
@@ -63,16 +65,16 @@ void GameFunction::Start() {
 
     plane = Primitives::Cube(pos, rot, scale, color);
     //plane->AddModule(col3);
-    plane->AddModule(bx);
+    //plane->AddModule(bx);
     plane->AddPosition(0, -5, 5);
     plane->AddRotation(90, 0, 0);
     plane->SetScale(10, 10, 0.5);
 
     object2 = Primitives::Sphere(pos, rot, scale, color);
     object2->AddModule(col2);
-    object2->AddModule(rb2);
+    //object2->AddModule(rb2);
+    object2->AddModule(bx);
     object2->AddPosition(-2, 3, 0);
-    rb2->CalculateCenterMass();
 }
 
 void GameFunction::Update() {

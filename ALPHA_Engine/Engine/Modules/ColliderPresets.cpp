@@ -1,7 +1,7 @@
 #include "ColliderPresets.h"
 
-ColliderPresets::ColliderPresets(unsigned int vertexCount) : _vertexCount(vertexCount) {
-	ColliderPresets::_vertex = new float[ColliderPresets::_vertexCount];
+ColliderPresets::ColliderPresets() {
+
 }
 ColliderPresets::~ColliderPresets() {
 

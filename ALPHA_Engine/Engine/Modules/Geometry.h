@@ -37,7 +37,7 @@ public:
 
 	ModulesList GetType() override;
 
-	virtual bool Create(std::string linkToFBX);
+	virtual bool Create(std::string linkToFBX, bool vertexInit = true, bool normalsInit = true);
 	//virtual void Delete();
 
 	void ApplyTransformation();

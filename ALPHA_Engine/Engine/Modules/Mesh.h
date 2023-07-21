@@ -11,8 +11,6 @@ public:
 
 	ModulesList GetType() override;
 
-	bool Create(std::string linkToFBX) override;
-
 	//bool Create(std::string linkToFBX) override;
 	//void DeleteMesh() override;
 };

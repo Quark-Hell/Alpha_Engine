@@ -14,6 +14,8 @@ public:
 	BoxCollider(float height = 1, float width = 1, float length = 1);
 	~BoxCollider();
 
+	ModulesList GetType() override;
+
 	float GetHeight();
 	void SetHeight(float heigth);
 

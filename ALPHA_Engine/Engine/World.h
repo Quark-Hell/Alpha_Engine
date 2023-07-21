@@ -5,7 +5,6 @@
 class Object;
 
 static class World {
-
 private:
 	static inline std::vector<Object*> ObjectsOnScene;
 	static inline bool IsCloseGame = false;
@@ -16,6 +15,9 @@ private:
 	static inline std::chrono::steady_clock::time_point _endTime;
 
 	static inline float SimulationSpeed = 1;
+
+public:
+	static inline bool DebugRenderEnable = false;
 
 public:
 	static void BuildTransformationThread(const std::vector<Object*> objects);

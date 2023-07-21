@@ -14,7 +14,7 @@ ModulesList Geometry::GetType() {
     return ModulesList::GeometryType;
 }
 
-bool Geometry::Create(std::string linkToFBX) {
+bool Geometry::Create(std::string linkToFBX, bool vertexInit, bool normalsInit) {
     Assimp::Importer importer;
     std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
 
@@ -22,12 +22,7 @@ bool Geometry::Create(std::string linkToFBX) {
     const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
     aiMesh* mesh = s->mMeshes[0];
 
-    Geometry::_vertexCount = mesh->mNumVertices;
-    Geometry::_normalsCount = mesh->mNumVertices;
     Geometry::_indicesCount = mesh->mNumFaces * 3;
-
-    Geometry::_vertex = new float[Geometry::_vertexCount * 3];
-    Geometry::_normals = new float[Geometry::_normalsCount * 3];
     Geometry::_indices = new unsigned int[Geometry::_indicesCount];
 
     for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
@@ -37,16 +32,29 @@ bool Geometry::Create(std::string linkToFBX) {
         }
     }
 
-    for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
-        if (mesh->HasPositions()) {
-            Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
-            Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
-            Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
+    if (vertexInit) {
+        Geometry::_vertexCount = mesh->mNumVertices;
+        Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+
+        for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
+            if (mesh->HasPositions()) {
+                Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
+                Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
+                Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
+            }
         }
-        if (mesh->HasNormals()) {
-            Geometry::_normals[it] = mesh->mNormals[it / 3].x;
-            Geometry::_normals[it + 1] = mesh->mNormals[it / 3].y;
-            Geometry::_normals[it + 2] = mesh->mNormals[it / 3].z;
+    }
+
+    if (normalsInit) {
+        Geometry::_normalsCount = mesh->mNumVertices;
+        Geometry::_normals = new float[Geometry::_normalsCount * 3];
+
+        for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
+            if (mesh->HasNormals()) {
+                Geometry::_normals[it] = mesh->mNormals[it / 3].x;
+                Geometry::_normals[it + 1] = mesh->mNormals[it / 3].y;
+                Geometry::_normals[it + 2] = mesh->mNormals[it / 3].z;
+            }
         }
     }
 
