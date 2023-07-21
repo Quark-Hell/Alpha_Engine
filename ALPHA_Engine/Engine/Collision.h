@@ -61,19 +61,19 @@ private:
 
 class Collision{
 public:
-	static inline void CollisionLoop();
+	static void CollisionLoop();
 
 	static inline unsigned int GJKaccurate = 100;
 	static inline unsigned int EPAaccurate = 100;
 
 private:
-	static inline Vector3 Support(MeshCollider& colliderA, MeshCollider& colliderB, Vector3 direction);
-	static inline bool GJK(MeshCollider& colliderA, MeshCollider& colliderB, CollisionInfo& colPoints);
-	static inline CollisionInfo EPA(Simplex& simplex, MeshCollider& colliderA, MeshCollider& ColliderB);
+	static Vector3 Support(MeshCollider& colliderA, MeshCollider& colliderB, Vector3 direction);
+	static bool GJK(MeshCollider& colliderA, MeshCollider& colliderB, CollisionInfo& colPoints);
+	static CollisionInfo EPA(Simplex& simplex, MeshCollider& colliderA, MeshCollider& ColliderB);
 
-	static inline std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
-	static inline void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
+	static std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
+	static void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
 
-	static inline std::shared_ptr<std::vector<float>> GetContactPoints(Geometry& geometry,Vector3 moveVector);
+	static std::shared_ptr<std::vector<float>> GetContactPoints(Geometry& geometry,Vector3 moveVector);
 };
 

@@ -1,11 +1,12 @@
 #pragma once
+#include <cmath>
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtx/transform.hpp>
 #include <gtx/string_cast.hpp>
 
-class Vector3;
+#include "Vectors.h"
 
 class Math
 {

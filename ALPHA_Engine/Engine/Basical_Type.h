@@ -1,7 +1,6 @@
 #pragma once
 #define _USE_MATH_DEFINES
 
-#include <iostream>
 #include <vector>
 #include <filesystem>
 #include <string>  
@@ -15,8 +14,6 @@
 #include <set>
 #include <array>
 #include "AdditionalMath.h"
-
-#include "Vectors.h"
 
 #define GLEW_STATIC
 #include <GL/glew.h>

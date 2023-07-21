@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Basical_Type.h"
-#include "Modules/Geometry.h"
 
 class Camera;
+class Geometry;
 class Mesh;
+class Vector3;
 
 struct Colors {
 	const Vector3 green { 0.0f, 1.0f, 0.0f }; 
