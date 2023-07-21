@@ -1,10 +1,12 @@
 #pragma once
 #include "Basical_Type.h"
-#include "Modules/Module.h"
+
+enum ModulesList;
 
 class Module;
 class Vector4;
 class Vector3;
+
 
 class Object {
 

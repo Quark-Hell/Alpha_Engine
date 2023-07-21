@@ -1,6 +1,6 @@
 #pragma once
 #include "AdditionalMath.h"
-
+class Vector3;
 
 class State {
 public:
