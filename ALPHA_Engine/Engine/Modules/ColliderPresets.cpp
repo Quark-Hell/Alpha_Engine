@@ -50,13 +50,6 @@ bool ColliderPresets::Create(std::string linkToFBX) {
     return true;
 }
 
-Vector3 ColliderPresets::GetPosition() {
-	return ColliderPresets::_position;
-}
-void ColliderPresets::SetPosition(Vector3 newPosition) {
-	ColliderPresets::_position = newPosition;
-}
-
 void ColliderPresets::ApplyTransformation() {
 	for (size_t it = 0; it < ColliderPresets::_vertexCount * 3; it += 3)
 	{

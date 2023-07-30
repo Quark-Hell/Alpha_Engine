@@ -17,7 +17,7 @@ Object* Primitives::Plane(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vec
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Plane.fbx");
-    obj->ApplyTransform();
+    obj->ApplyTransformation();
 
     return obj;
 }
@@ -27,7 +27,7 @@ Object* Primitives::Cube(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vect
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Cube.fbx");
-    obj->ApplyTransform();
+    obj->ApplyTransformation();
 
     return obj;
 }
@@ -37,7 +37,7 @@ Object* Primitives::Circle(Vector3 Position, Vector3 Rotation, Vector3 Scale, Ve
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Circe.fbx");
-    obj->ApplyTransform();
+    obj->ApplyTransformation();
 
     return obj;
 }
@@ -47,7 +47,7 @@ Object* Primitives::Sphere(Vector3 Position, Vector3 Rotation, Vector3 Scale, Ve
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Sphere.fbx");
-    obj->ApplyTransform();
+    obj->ApplyTransformation();
 
     return obj;
 }
@@ -57,7 +57,7 @@ Object* Primitives::Cylinder(Vector3 Position, Vector3 Rotation, Vector3 Scale, 
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Cylinder.fbx");
-    obj->ApplyTransform();
+    obj->ApplyTransformation();
 
     return obj;
 }
@@ -67,7 +67,7 @@ Object* Primitives::Cone(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vect
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Cone.fbx");
-    obj->ApplyTransform();
+    obj->ApplyTransformation();
 
     return obj;
 }
@@ -77,7 +77,7 @@ Object* Primitives::Torus(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vec
     CreateObject(Position, Rotation, Scale, obj);
 
     ((Mesh*)obj->GetModuleByIndex(0))->Create("\\Models\\Primitives\\Torus.fbx");
-    obj->ApplyTransform();
+    obj->ApplyTransformation();
 
     return obj;
 }

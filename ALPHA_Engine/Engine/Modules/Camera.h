@@ -15,6 +15,9 @@ public:
 
 	ModulesList GetType() override;
 
+	Object* GetParentObject() override;
+	void SetParentObject(const Object& parent) override;
+
 	float GetFov();
 	float GetAspect();
 	float GetZNear();

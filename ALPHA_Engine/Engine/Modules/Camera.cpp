@@ -30,6 +30,13 @@ ModulesList Camera::GetType() {
     return ModulesList::CameraType;
 }
 
+Object* Camera::GetParentObject() {
+    return Module::GetParentObject();
+}
+void Camera::SetParentObject(const Object& parent) {
+    Module::SetParentObject(parent);
+}
+
 float Camera::GetFov() {
     return Camera::Fov;
 }
@@ -41,13 +48,4 @@ float Camera::GetZNear() {
 }
 float Camera::GetZFar() {
     return Camera::ZFar;
-}
-
-//TODO:
-Vector3 Camera::GetDirectionOfView() {
-    DirectionOfView = GetParentObject()->GetRotation();
-
-    //DirectionOfView.NormilizeSelf();
-
-    return DirectionOfView;
 }

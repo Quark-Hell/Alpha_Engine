@@ -58,6 +58,7 @@ public:
 	Vector3 GetForce();
 	Vector3 GetPosition();
 
+	Object* GetParentObject() override;
 	void SetParentObject(const Object& parent) override;
 
 	RigidBody();

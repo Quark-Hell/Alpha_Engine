@@ -9,7 +9,10 @@ BoxCollider::BoxCollider(float height, float width, float length) {
 	BoxCollider::_vertex = new float[BoxCollider::_vertexCount];
 
 	BoxCollider::InitCollider(false);
+	//TODO: Work only if debug build
 	BoxCollider::Create("\\Models\\Primitives\\Cube.fbx");
+
+
 }
 BoxCollider::~BoxCollider() {
 

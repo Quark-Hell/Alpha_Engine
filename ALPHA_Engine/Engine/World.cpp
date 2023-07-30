@@ -32,7 +32,7 @@ void World::EndFrame() {
 void World::BuildTransformationThread(const std::vector<Object*> objects) {
 	for (size_t it = 0; it < objects.size(); it++)
 	{
-		objects[it]->ApplyTransform();
+		objects[it]->ApplyTransformation();
 	}
 }
 

@@ -25,6 +25,7 @@
 #include "Modules/ColliderPresets.h"
 #include "Modules/BoxCollider.h"
 #include "Modules/MeshCollider.h"
+#include "Modules/Transform.h"
 
 Object Player;
 Camera* camera = new Camera;
@@ -235,7 +236,7 @@ int main()
 
     InpSys->Window = render->GetScreenClass()->GetWindow();
 
-    camera->GetDirectionOfView();
+    //camera->GetDirectionOfView();
 
     while (!World::GetStateOfGame())
     {

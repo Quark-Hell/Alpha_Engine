@@ -1,7 +1,12 @@
 #include "MeshCollider.h"
 
 MeshCollider::MeshCollider() {
+
 }
+MeshCollider::~MeshCollider() {
+
+}
+
 bool MeshCollider::CreateConvexFromConcave(std::string link) {
     return false;
 }

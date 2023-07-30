@@ -1,5 +1,6 @@
 #pragma once
 #include "Basical_Type.h"
+#include "Modules/Transform.h"
 
 enum ModulesList;
 
@@ -7,16 +8,8 @@ class Module;
 class Vector4;
 class Vector3;
 
-
-class Object {
-
+class Object : public Transform {
 private:
-	Vector3 Position{ 0,0,0 };
-	Vector4 Rotation{ 0,0,0,1 };
-	Vector3 Scale{ 1,1,1 };
-
-	glm::mat4x4 _transformMatrix{};
-
 	std::vector<Module*> Modules;
 
 private:
@@ -26,30 +19,32 @@ public:
 	Object();
 	~Object();
 
-	Vector3 GetPosition();
-	void AddPosition(float X, float Y, float Z);
-	void AddPosition(Vector3 position);
+#pragma region Redifine from Transfom
+	Vector3 GetPosition() override;
+	void AddPosition(float X, float Y, float Z) override;
+	void AddPosition(Vector3 position) override;
 
-	void SetPosition(float X, float Y, float Z);
-	void SetPosition(Vector3 position);
-
-
-	Vector3 GetRotation();
-	void AddRotation(float X, float Y, float Z);
-	void AddRotation(Vector3 rotation);
-
-	void SetRotation(float X, float Y, float Z);
-	void SetRotation(Vector3 rotation);
+	void SetPosition(float X, float Y, float Z) override;
+	void SetPosition(Vector3 position) override;
 
 
-	Vector3 GetScale();
-	void SetScale(float X, float Y, float Z);
-	void SetScale(Vector3 scale);
+	Vector3 GetRotation() override;
+	void AddRotation(float X, float Y, float Z) override;
+	void AddRotation(Vector3 rotation) override;
+
+	void SetRotation(float X, float Y, float Z) override;
+	void SetRotation(Vector3 rotation) override;
+
+
+	Vector3 GetScale() override;
+	void SetScale(float X, float Y, float Z) override;
+	void SetScale(Vector3 scale) override;
 
 	/*SetPosition, SetRotation and SetScale functions only change matrix of _transformMatrix.
 	So this function apply transformation to object and recalculate vertex relative position;
 	*/
-	void ApplyTransform();
+	void ApplyTransformation() override;
+#pragma endregion
 
 	bool AddModule(class Module* someModule);
 	bool AddModule(ModulesList moduleType, Module& outputModule);

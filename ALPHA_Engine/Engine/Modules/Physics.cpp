@@ -6,6 +6,18 @@
 #include "Geometry.h"
 #include "World.h"
 
+#pragma region RigidBody definee
+Object* RigidBody::GetParentObject() {
+	return Module::GetParentObject();
+}
+void RigidBody::SetParentObject(const Object& parent) {
+	RigidBody::ParentObject = const_cast<Object*>(&parent);
+	RigidBody::CalculateCenterMass();
+
+	RigidBody::_velocity = { 0,0,0 };
+	//RigidBody::ResetInertiaMatrix();
+}
+
 void RigidBody::AddForce(const Vector3& forceVector) {
 	RigidBody::_force += forceVector;
 }
@@ -86,17 +98,8 @@ void RigidBody::CalculateCenterMass() {
 
 	RigidBody::_centerMass /= geometries.size();
 }
-
 Vector3 RigidBody::GetCenterMass() {
 	return RigidBody::_centerMass;
-}
-
-void RigidBody::SetParentObject(const Object& parent) {
-	RigidBody::ParentObject = const_cast<Object*>(&parent);
-	RigidBody::CalculateCenterMass();
-
-	RigidBody::_velocity = {0,0,0};
-	//RigidBody::ResetInertiaMatrix();
 }
 
 Vector3 RigidBody::GetVelocity() {
@@ -120,7 +123,6 @@ Vector3 RigidBody::GetPosition() {
 RigidBody::RigidBody() {
 
 }
-
 RigidBody::~RigidBody() {
 
 }

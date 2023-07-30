@@ -236,7 +236,7 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB, CollisionInfo& col
                 colPoints = Collision::EPA(points, colliderA, colliderB);
 
                 colliderA.GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
-                colliderA.GetParentObject()->ApplyTransform();
+                colliderA.GetParentObject()->ApplyTransformation();
 
                 Physics::Contact(*rb1, -colPoints.Normal);
                 //rb1->_movementVector = { 0,0,0 };
@@ -245,7 +245,7 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB, CollisionInfo& col
                 colPoints = Collision::EPA(points, colliderA, colliderB); 
 
                 colliderB.GetParentObject()->AddPosition((colPoints.Normal.X * colPoints.PenetrationDepth), (colPoints.Normal.Y * colPoints.PenetrationDepth), (colPoints.Normal.Z * colPoints.PenetrationDepth));
-                colliderB.GetParentObject()->ApplyTransform();
+                colliderB.GetParentObject()->ApplyTransformation();
 
                 Physics::Contact(*rb2, -colPoints.Normal);
                 //rb2->_movementVector = { 0,0,0 };
@@ -254,7 +254,7 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB, CollisionInfo& col
                 colPoints = Collision::EPA(points, colliderB, colliderA);
 
                 colliderA.GetParentObject()->AddPosition((colPoints.Normal.X * colPoints.PenetrationDepth), (colPoints.Normal.Y * colPoints.PenetrationDepth), (colPoints.Normal.Z * colPoints.PenetrationDepth));
-                colliderA.GetParentObject()->ApplyTransform();
+                colliderA.GetParentObject()->ApplyTransformation();
 
                 Physics::Contact(*rb1, *rb2, -colPoints.Normal);
             }

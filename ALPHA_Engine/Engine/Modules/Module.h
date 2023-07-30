@@ -26,15 +26,13 @@ private:
 	friend class Collision;
 	friend class Object;
 
-public:
-	virtual ModulesList GetType();
-	Object* GetParentObject();
-
-	virtual void SetParentObject(const Object& parent);
-	
+protected:
 	Module();
 	~Module();
 
-private:
-	virtual void Test();
+public:
+	virtual ModulesList GetType();
+
+	virtual Object* GetParentObject();
+	virtual void SetParentObject(const Object& parent);
 };
