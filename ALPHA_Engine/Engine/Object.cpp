@@ -6,6 +6,8 @@
 #include "Modules/Mesh.h"
 #include "Modules/Physics.h"
 #include "Modules/ColliderPresets.h"
+
+#include "Modules/MeshCollider.h"
 #include "Modules/BoxCollider.h"
 
 #include "Collision.h"

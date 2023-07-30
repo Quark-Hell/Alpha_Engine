@@ -4,6 +4,12 @@
 
 class Object;
 
+enum DebugRenderModes {
+	Disable = 0,
+	LinesRender = 1,
+	PointsRender = 2
+};
+
 static class World {
 private:
 	static inline std::vector<Object*> ObjectsOnScene;
@@ -17,7 +23,7 @@ private:
 	static inline float SimulationSpeed = 1;
 
 public:
-	static inline bool DebugRenderEnable = false;
+	static inline DebugRenderModes DebugRenderMode = DebugRenderModes::Disable;
 
 public:
 	static void BuildTransformationThread(const std::vector<Object*> objects);

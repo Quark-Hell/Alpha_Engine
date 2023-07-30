@@ -24,6 +24,7 @@
 #include "Modules/Physics.h"
 #include "Modules/ColliderPresets.h"
 #include "Modules/BoxCollider.h"
+#include "Modules/MeshCollider.h"
 
 Object Player;
 Camera* camera = new Camera;
@@ -43,14 +44,11 @@ RigidBody* rb2 = new RigidBody;
 void GameFunction::Start() {
     SetControl();
 
-    World::DebugRenderEnable = true;
+    World::DebugRenderMode = PointsRender;
 
-    MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
-    MeshCollider* col2 = new MeshCollider; col2->Create("\\Models\\Primitives\\Sphere.fbx");
-
-    MeshCollider* col3 = new MeshCollider; col3->Create("\\Models\\Primitives\\Cube.fbx");
-
-    BoxCollider* bx = new BoxCollider;
+    //MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
+    BoxCollider* col2 = new BoxCollider;
+    BoxCollider* col3 = new BoxCollider;
 
     Vector3 pos = Vector3{ 0,0,-15 };
     Vector3 rot = Vector3{ 0,0,0 };
@@ -62,19 +60,25 @@ void GameFunction::Start() {
     //object->AddModule(rb1);
     //object->AddPosition(9, 3, 0);
     //rb1->CalculateCenterMass();
+    
+    //Object* sphere2 = Primitives::Sphere(pos, rot, scale, color);
+    //RigidBody* shhr2RB = new RigidBody;
+    //BoxCollider* sphr2 = new BoxCollider;
+    //sphere2->AddModule(sphr2);
+    //sphere2->AddModule(shhr2RB);
+    //sphere2->AddPosition(0, 8, 0);
+
 
     plane = Primitives::Cube(pos, rot, scale, color);
-    //plane->AddModule(col3);
-    //plane->AddModule(bx);
+    plane->AddModule(col3);
     plane->AddPosition(0, -5, 5);
     plane->AddRotation(90, 0, 0);
     plane->SetScale(10, 10, 0.5);
 
-    object2 = Primitives::Sphere(pos, rot, scale, color);
+    object2 = Primitives::Cube(pos, rot, scale, color);
     object2->AddModule(col2);
-    //object2->AddModule(rb2);
-    object2->AddModule(bx);
-    object2->AddPosition(-2, 3, 0);
+    object2->AddModule(rb2);
+    object2->AddPosition(0, -1, 5);
 }
 
 void GameFunction::Update() {

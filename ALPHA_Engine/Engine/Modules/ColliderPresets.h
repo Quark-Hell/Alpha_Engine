@@ -6,12 +6,12 @@ class ColliderPresets : public Geometry {
 protected:
 	//position relative to parent
 	Vector3 _position{ 0,0,0 };
-
 	glm::mat4x4 _transformMatrix = glm::mat4x4(1.0f);
 
 protected:
-	virtual void CreateMeshModel();
 	void ApplyTransformation();
+	bool Create(std::string linkToFBX) override;
+	virtual void InitCollider(bool isExpand = true);
 
 private:
 	friend class Render;

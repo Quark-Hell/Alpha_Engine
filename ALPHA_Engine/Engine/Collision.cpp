@@ -2,6 +2,8 @@
 
 #include "World.h"
 #include "Modules/Physics.h"
+#include "Modules/MeshCollider.h"
+#include "Modules/BoxCollider.h"
 #include "Object.h"
 
 Simplex::Simplex(std::array<Vector3, 4> points, unsigned size) {
@@ -122,16 +124,6 @@ bool Simplex::Tetrahedron(Simplex& points, Vector3& direction) {
     return true;
 }
 
-MeshCollider::MeshCollider() {
-}
-bool MeshCollider::CreateConvexFromConcave(std::string link) {
-    return false;
-}
-
-ModulesList MeshCollider::GetType() {
-    return ModulesList::MeshColliderType;
-}
-
 /*Maybe need refactoring*/
 void Collision::CollisionLoop() {
     //Clear collision Info
@@ -149,18 +141,56 @@ void Collision::CollisionLoop() {
 
 
     CollisionInfo points;
+
+    Geometry* colliderA;
+    Geometry* colliderB;
+
     for (size_t it = 0; it < World::ObjectsOnScene.size()-1; it++)
     {
         for (size_t jt = 0; jt < World::ObjectsOnScene[it]->GetCountOfModules(); jt++)
         {
-            MeshCollider* colliderA = dynamic_cast<MeshCollider*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+            ModulesList typeA = World::ObjectsOnScene[it]->GetModuleByIndex(jt)->GetType();
+
+            switch (typeA)
+            {
+            case MeshColliderType:
+                colliderA = dynamic_cast<Geometry*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+                break;
+            case BoxColliderType:
+                colliderA = dynamic_cast<Geometry*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+                break;
+            default:
+                continue;
+                break;
+            }
+
+            
             for (size_t kt = 1; kt < World::ObjectsOnScene.size(); kt++)
             {
                 for (size_t mt = 0; mt < World::ObjectsOnScene[kt]->GetCountOfModules(); mt++)
                 {
-                    MeshCollider* colliderB = dynamic_cast<MeshCollider*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
+                    ModulesList typeB = World::ObjectsOnScene[kt]->GetModuleByIndex(mt)->GetType();
+
+                    switch (typeB)
+                    {
+                    case MeshColliderType:
+                        colliderB = dynamic_cast<Geometry*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
+                        break;
+                    case BoxColliderType:
+                        colliderB = dynamic_cast<Geometry*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
+                        break;
+                    default:
+                        continue;
+                        break;
+                    }
+
+                    if (colliderA == colliderB)
+                        continue;
                     
-                    if (colliderA != nullptr && colliderA->GetType() == ModulesList::MeshColliderType && colliderB != nullptr && colliderB->GetType() == MeshColliderType && colliderA != colliderB) {
+                    if (typeA == ModulesList::MeshColliderType && typeB == MeshColliderType) {
+                        Collision::GJK(*colliderA, *colliderB, points);
+                    }
+                    else if (typeA == ModulesList::BoxColliderType && typeB == BoxColliderType) {
                         Collision::GJK(*colliderA, *colliderB, points);
                     }
                 }
@@ -171,13 +201,14 @@ void Collision::CollisionLoop() {
 
 }
 
-Vector3 Collision::Support(MeshCollider& colliderA, MeshCollider& colliderB, Vector3 direction) 
+
+Vector3 Collision::Support(Geometry& colliderA, Geometry& colliderB, Vector3 direction)
 {
     return colliderA.FindFurthestPoint(direction)
         - colliderB.FindFurthestPoint(-direction);
 }
 
-bool Collision::GJK(MeshCollider& colliderA, MeshCollider& colliderB, CollisionInfo& colPoints) {
+bool Collision::GJK(Geometry& colliderA, Geometry& colliderB, CollisionInfo& colPoints) {
     // Get initial support point in any direction
     Vector3 support = Support(colliderA, colliderB, {1,0,0});
 
@@ -213,16 +244,16 @@ bool Collision::GJK(MeshCollider& colliderA, MeshCollider& colliderB, CollisionI
             else if (rb1 == nullptr && rb2 != nullptr) {
                 colPoints = Collision::EPA(points, colliderA, colliderB); 
 
-                colliderA.GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
-                colliderA.GetParentObject()->ApplyTransform();
+                colliderB.GetParentObject()->AddPosition((colPoints.Normal.X * colPoints.PenetrationDepth), (colPoints.Normal.Y * colPoints.PenetrationDepth), (colPoints.Normal.Z * colPoints.PenetrationDepth));
+                colliderB.GetParentObject()->ApplyTransform();
 
                 Physics::Contact(*rb2, -colPoints.Normal);
                 //rb2->_movementVector = { 0,0,0 };
             }
             else if (rb1 != nullptr && rb2 != nullptr) {
-                colPoints = Collision::EPA(points, colliderA, colliderB);
+                colPoints = Collision::EPA(points, colliderB, colliderA);
 
-                colliderA.GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
+                colliderA.GetParentObject()->AddPosition((colPoints.Normal.X * colPoints.PenetrationDepth), (colPoints.Normal.Y * colPoints.PenetrationDepth), (colPoints.Normal.Z * colPoints.PenetrationDepth));
                 colliderA.GetParentObject()->ApplyTransform();
 
                 Physics::Contact(*rb1, *rb2, -colPoints.Normal);
@@ -231,7 +262,7 @@ bool Collision::GJK(MeshCollider& colliderA, MeshCollider& colliderB, CollisionI
         }
     }
 }
-CollisionInfo Collision::EPA(Simplex& simplex, MeshCollider& colliderA, MeshCollider& colliderB)
+CollisionInfo Collision::EPA(Simplex& simplex, Geometry& colliderA, Geometry& colliderB)
 {
     std::vector<Vector3> polytope(simplex.begin(), simplex.end());
     std::vector<size_t>  faces = {
@@ -306,7 +337,7 @@ CollisionInfo Collision::EPA(Simplex& simplex, MeshCollider& colliderA, MeshColl
 
     if (minDistance == FLT_MAX) {
         std::cout << std::endl << "not" << std::endl;
-        minDistance = 0;
+        minDistance = normals[minFace].W;
     }
 
     //TODO: 

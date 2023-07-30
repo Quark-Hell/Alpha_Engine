@@ -37,12 +37,12 @@ public:
 
 	ModulesList GetType() override;
 
-	virtual bool Create(std::string linkToFBX, bool vertexInit = true, bool normalsInit = true);
+	virtual bool Create(std::string linkToFBX);
 	//virtual void Delete();
 
 	void ApplyTransformation();
 
-	Vector3 FindFurthestPoint(Vector3 direction);
+	virtual Vector3 FindFurthestPoint(Vector3 direction);
 
 	std::vector<Mesh*> SeparateByLooseParts();
 

@@ -97,7 +97,7 @@ ${Engine}Modules/Physics.cpp
 "Engine/Modules/BoxCollider.cpp" 
 ${glm}glm.hpp 
  "Engine/Modules/ColliderPresets.h"
- "Engine/Modules/ColliderPresets.cpp")
+ "Engine/Modules/ColliderPresets.cpp" "Engine/Modules/MeshCollider.h" "Engine/Modules/MeshCollider.cpp")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib

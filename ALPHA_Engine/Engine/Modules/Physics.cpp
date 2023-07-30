@@ -186,17 +186,17 @@ void Physics::Contact(RigidBody& rb1, Vector3 contactNormal) {
 	std::cout << World::GetTimeLong() << " contact " << contactNormal.Y << "\n";
 }
 void Physics::Contact(RigidBody& rb1, RigidBody& rb2, Vector3 contactNormal) {
-	//contactNormal.NormilizeSelf();
-	//Math::RemoveError(contactNormal);
-	//
-	//float u1 = Vector3::DotProduct(rb1._acceleration, contactNormal);
-	//float u2 = Vector3::DotProduct(rb2._acceleration, contactNormal);
-	//
-	//Vector3 newRb1Vector = rb1._acceleration + contactNormal * (2 * rb2.Mass * (u2 - u1) / (rb1.Mass + rb2.Mass));
-	//Vector3 newRb2Vector = rb2._acceleration + contactNormal * (2 * rb1.Mass * (u1 - u2) / (rb2.Mass + rb1.Mass));
-	//
-	//rb1._acceleration = newRb1Vector;
-	//rb2._acceleration = newRb2Vector;
+	contactNormal.NormilizeSelf();
+	Math::RemoveError(contactNormal);
+	
+	float u1 = Vector3::DotProduct(rb1._velocity, -contactNormal);
+	float u2 = Vector3::DotProduct(rb2._velocity, contactNormal);
+	
+	Vector3 newRb1Vector = rb1._velocity + contactNormal * (2 * rb2.Mass * (u2 - u1) / (rb1.Mass + rb2.Mass)) * rb1.ElasticityCoefficient;
+	Vector3 newRb2Vector = rb2._velocity + contactNormal * (2 * rb1.Mass * (u1 - u2) / (rb2.Mass + rb1.Mass)) * rb2.ElasticityCoefficient;
+
+	rb1._velocity = newRb1Vector;
+	rb1._velocity = newRb2Vector;
 }
 
 
@@ -219,7 +219,7 @@ void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 
 	while (accumulator >= Physics::fixTimeStep)
 	{
-		//Physics::ApplyGravity(rb);
+		Physics::ApplyGravity(rb);
 
 		Vector3 newVelocity = rb.GetVelocity() + (rb._force / rb.Mass);
 
@@ -243,7 +243,7 @@ void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 	if (accumulator != 0) {
 		const double alpha = accumulator / Physics::fixTimeStep;
 		
-		//Physics::ApplyGravity(rb);
+		Physics::ApplyGravity(rb);
 		
 		Vector3 newVelocity = rb.GetVelocity() + (rb._force / rb.Mass);
 		
@@ -303,7 +303,7 @@ void Physics::RK4Integrate(RigidBody& rb) {
 		state.Position = rb.GetParentObject()->GetPosition();
 		state.Velocity = rb._velocity;
 
-		//Physics::ApplyGravity(rb);
+		Physics::ApplyGravity(rb);
 		integrate(state, Physics::fixTimeStep, rb._force, rb.Mass);
 		
 		rb._velocity = state.Velocity;

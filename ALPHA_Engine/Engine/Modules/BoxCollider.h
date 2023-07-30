@@ -7,8 +7,11 @@ private:
 	float _width = 1;
 	float _lenght = 1;
 
+public:
+	float* _points = new float[24];
+
 private:
-	void CreateMeshModel() override;
+	void InitCollider(bool isExpand = true);
 
 public:
 	BoxCollider(float height = 1, float width = 1, float length = 1);
@@ -24,6 +27,8 @@ public:
 
 	float GetLength();
 	void SetLength(float length);
+
+	Vector3 FindFurthestPoint(Vector3 direction) override;
 };
 
 

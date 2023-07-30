@@ -5,6 +5,7 @@
 class Camera;
 class Geometry;
 class ColliderPresets;
+class BoxCollider;
 class Mesh;
 class Vector3;
 
@@ -57,6 +58,7 @@ private:
 	void RenderMesh(Mesh& mesh);
 	void RenderMeshCollider(Geometry& collider);
 	void RenderCollider(ColliderPresets& collider);
+	void RenderBoxCollider(BoxCollider& collider);
 
 	void ApplyCameraTransform(Camera* camera);
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);

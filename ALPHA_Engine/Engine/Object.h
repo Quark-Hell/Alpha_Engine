@@ -58,6 +58,7 @@ public:
 	bool DeleteModuleByIndex(int index);
 
 	Module* GetModuleByType(ModulesList type);
+	Module* GetModuleByType(ModulesList typesArray[]);
 	Module* GetModuleByIndex(size_t index);
 
 	int GetCountOfModules();

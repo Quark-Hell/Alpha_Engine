@@ -14,7 +14,7 @@ ModulesList Geometry::GetType() {
     return ModulesList::GeometryType;
 }
 
-bool Geometry::Create(std::string linkToFBX, bool vertexInit, bool normalsInit) {
+bool Geometry::Create(std::string linkToFBX) {
     Assimp::Importer importer;
     std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
 
@@ -32,31 +32,30 @@ bool Geometry::Create(std::string linkToFBX, bool vertexInit, bool normalsInit) 
         }
     }
 
-    if (vertexInit) {
-        Geometry::_vertexCount = mesh->mNumVertices;
-        Geometry::_vertex = new float[Geometry::_vertexCount * 3];
 
-        for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
-            if (mesh->HasPositions()) {
-                Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
-                Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
-                Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
-            }
+    Geometry::_vertexCount = mesh->mNumVertices;
+    Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+
+    for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
+        if (mesh->HasPositions()) {
+            Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
+            Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
+            Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
         }
     }
 
-    if (normalsInit) {
-        Geometry::_normalsCount = mesh->mNumVertices;
-        Geometry::_normals = new float[Geometry::_normalsCount * 3];
 
-        for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
-            if (mesh->HasNormals()) {
-                Geometry::_normals[it] = mesh->mNormals[it / 3].x;
-                Geometry::_normals[it + 1] = mesh->mNormals[it / 3].y;
-                Geometry::_normals[it + 2] = mesh->mNormals[it / 3].z;
-            }
+    Geometry::_normalsCount = mesh->mNumVertices;
+    Geometry::_normals = new float[Geometry::_normalsCount * 3];
+
+    for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
+        if (mesh->HasNormals()) {
+            Geometry::_normals[it] = mesh->mNormals[it / 3].x;
+            Geometry::_normals[it + 1] = mesh->mNormals[it / 3].y;
+            Geometry::_normals[it + 2] = mesh->mNormals[it / 3].z;
         }
     }
+
 
     Geometry::_isIndexed = true;
     //Mesh::MakeUnique();
@@ -67,16 +66,18 @@ bool Geometry::Create(std::string linkToFBX, bool vertexInit, bool normalsInit) 
 
 /*Recommended not use now. Work so slow*/
 void Geometry::MakeUnique() {
+    
+
     const int arr_len = 3;
     std::array<float, arr_len> buffer;
-
+    
     unsigned int count = 0;
-
+    
     std::unordered_map<std::string, std::array<float,arr_len>> uniqueMap;
-
+    
     std::string hash;
     hash.resize(arr_len * sizeof(float));
-
+    
     //delete same vertex by use hash map
     for (size_t it = 0; it < Geometry::_vertexCount * 3; it += 3)
     {
@@ -84,23 +85,33 @@ void Geometry::MakeUnique() {
         buffer[0] = Geometry::_vertex[it];
         buffer[1] = Geometry::_vertex[it + 1];
         buffer[2] = Geometry::_vertex[it + 2];
-
+    
         memcpy((char*)hash.data(), &buffer, arr_len * sizeof(float));
-
+    
         std::pair<std::string, std::array<float, arr_len>> vertPair(hash, buffer);
-
+    
         uniqueMap.insert(vertPair);
     }
-
+    
     Geometry::_vertexCount = uniqueMap.size();
     free(Geometry::_vertex);
     Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+
+    //int it = 0;
+    //for (const auto& pair : uniqueMap) {
+    //    if (it < Geometry::_vertexCount * 3) {
+    //        Geometry::_vertex[it] = pair.second[0];
+    //        Geometry::_vertex[it + 1] = pair.second[1];
+    //        Geometry::_vertex[it + 2] = pair.second[2];
+    //        it+=3;
+    //    }
+    //}
 
     for (size_t it = 0; it < uniqueMap.size() * 3; it+=3)
     {
         auto begin = uniqueMap.begin();
         std::advance(begin, it / 3);
-
+    
         Geometry::_vertex[it]   = begin->second[0];
         Geometry::_vertex[it+1] = begin->second[1];
         Geometry::_vertex[it+2] = begin->second[2];
@@ -222,7 +233,7 @@ void Geometry::ApplyTransformation() {
         Geometry::_vertex[jt + 2] = res.z;
     }
 
-    for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
+    for (size_t jt = 0; jt < Geometry::_normalsCount * 3; jt += 3)
     {
         glm::vec4 buf(Geometry::_normals[jt], Geometry::_normals[jt + 1], Geometry::_normals[jt + 2], 1);
 

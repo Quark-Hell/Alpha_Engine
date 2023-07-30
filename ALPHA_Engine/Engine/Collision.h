@@ -1,6 +1,9 @@
 #pragma once
 #include "Modules/Geometry.h"
 
+class MeshCollider;
+class CollisionInfo;
+
 class Simplex
 {
 private:
@@ -35,30 +38,6 @@ public:
 	static inline bool Tetrahedron(Simplex& points, Vector3& direction);
 };
 
-class CollisionInfo {
-public:
-	Vector3 Normal;
-	float PenetrationDepth;
-	bool HasCollision;
-
-	//std::shared_ptr<std::vector<float>> CollisionPoints;
-};
-
-class MeshCollider : public Geometry {
-public:
-	MeshCollider();
-	~MeshCollider();
-
-	ModulesList GetType();
-
-	bool CreateConvexFromConcave(std::string link);
-
-private:
-	friend class Collision;
-
-	CollisionInfo collisionInfo;
-};
-
 class Collision{
 public:
 	static void CollisionLoop();
@@ -67,9 +46,13 @@ public:
 	static inline unsigned int EPAaccurate = 100;
 
 private:
-	static Vector3 Support(MeshCollider& colliderA, MeshCollider& colliderB, Vector3 direction);
-	static bool GJK(MeshCollider& colliderA, MeshCollider& colliderB, CollisionInfo& colPoints);
-	static CollisionInfo EPA(Simplex& simplex, MeshCollider& colliderA, MeshCollider& ColliderB);
+	//static bool BoxToBox(BoxCollider& colliderA, BoxCollider& colliderB);
+	//static bool SphereToSphere(Geometry& colliderA, Geometry& colliderB);
+	//static bool SphereToBox(Geometry& colliderA, Geometry& colliderB);
+
+	static Vector3 Support(Geometry& colliderA, Geometry& colliderB, Vector3 direction);
+	static bool GJK(Geometry& colliderA, Geometry& colliderB, CollisionInfo& colPoints);
+	static CollisionInfo EPA(Simplex& simplex, Geometry& colliderA, Geometry& ColliderB);
 
 	static std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
 	static void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
