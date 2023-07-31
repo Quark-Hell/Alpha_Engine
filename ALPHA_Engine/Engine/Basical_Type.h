@@ -4,6 +4,7 @@
 #include <vector>
 #include <filesystem>
 #include <string>  
+#include <memory>
 #include <unordered_map>
 #include <unordered_set>
 #include <chrono>

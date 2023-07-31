@@ -1,24 +1,26 @@
 #include "BoxCollider.h"
 #include "Object.h"
+#include "Modules/Mesh.h"
 
-BoxCollider::BoxCollider(float height, float width, float length) {
-	BoxCollider::_height = height;
-	BoxCollider::_width = width;
-	BoxCollider::_lenght = length;
-
+BoxCollider::BoxCollider() {
 	BoxCollider::_vertex = new float[BoxCollider::_vertexCount];
 
-	BoxCollider::InitCollider(false);
+	BoxCollider::InitCollider();
+	BoxCollider::SetScale(Vector3{ 1,1,1 });
 	//TODO: Work only if debug build
 	BoxCollider::Create("\\Models\\Primitives\\Cube.fbx");
-
-
 }
+
 BoxCollider::~BoxCollider() {
 
 }
 
-void BoxCollider::InitCollider(bool isExpand) {
+void BoxCollider::ReExpandedCollider() {
+	BoxCollider::SetRotation(BoxCollider::GetParentObject()->GetRotation());
+	BoxCollider::SetScale(BoxCollider::CalculateCoverScale());
+}
+
+void BoxCollider::InitCollider() {
 	//front side
 	BoxCollider::_points[0] = -0.5f;
 	BoxCollider::_points[1] = -0.5f;
@@ -52,10 +54,32 @@ void BoxCollider::InitCollider(bool isExpand) {
 	BoxCollider::_points[21] = 0.5f;
 	BoxCollider::_points[22] = -0.5f;
 	BoxCollider::_points[23] = -0.5f;
+}
+Vector3 BoxCollider::CalculateCoverScale() {
+	//std::vector<std::shared_ptr<Module>> buffer = BoxCollider::GetParentObject()->GetModuleByTypes({ MeshType });
+	Vector3 maxSize(0, 0, 0);
+	//
+	//for (size_t i = 0; i < buffer.size(); i++) {
+	//	Vector3 currentScale = std::dynamic_pointer_cast<Mesh>(buffer[i])->GetScale();
+	//	if (maxSize.X < currentScale.X)
+	//		maxSize.X = currentScale.X;
+	//
+	//	if (maxSize.Y < currentScale.Y)
+	//		maxSize.Y = currentScale.Y;
+	//
+	//	if (maxSize.Z < currentScale.Z)
+	//		maxSize.Z = currentScale.Z;
+	//}
+	if (maxSize.X < BoxCollider::GetParentObject()->GetScale().X)
+		maxSize.X = BoxCollider::GetParentObject()->GetScale().X;
 
-	if (isExpand) {
+	if (maxSize.Y < BoxCollider::GetParentObject()->GetScale().Y)
+		maxSize.Y = BoxCollider::GetParentObject()->GetScale().Y;
 
-	}
+	if (maxSize.Z < BoxCollider::GetParentObject()->GetScale().Z)
+		maxSize.Z = BoxCollider::GetParentObject()->GetScale().Z;
+
+	return maxSize;
 }
 
 Vector3 BoxCollider::FindFurthestPoint(Vector3 direction) {
@@ -79,42 +103,32 @@ Vector3 BoxCollider::FindFurthestPoint(Vector3 direction) {
 	return maxPoint + BoxCollider::_position + BoxCollider::GetParentObject()->GetPosition();
 }
 
+void BoxCollider::ApplyTransformation() {
+	for (size_t jt = 0; jt < BoxCollider::_vertexCount * 3; jt += 3)
+	{
+		glm::vec4 buf(BoxCollider::_vertex[jt], BoxCollider::_vertex[jt + 1], BoxCollider::_vertex[jt + 2], 1);
+
+		glm::vec4 res;
+		res = BoxCollider::_transformMatrix * buf;
+		BoxCollider::_vertex[jt] = res.x;
+		BoxCollider::_vertex[jt + 1] = res.y;
+		BoxCollider::_vertex[jt + 2] = res.z;
+	}
+
+	for (size_t jt = 0; jt < 24; jt += 3)
+	{
+		glm::vec4 buf(BoxCollider::_points[jt], BoxCollider::_points[jt + 1], BoxCollider::_points[jt + 2], 1);
+
+		glm::vec4 res;
+		res = BoxCollider::_transformMatrix * buf;
+		BoxCollider::_points[jt] = res.x;
+		BoxCollider::_points[jt + 1] = res.y;
+		BoxCollider::_points[jt + 2] = res.z;
+	}
+
+	BoxCollider::_transformMatrix = glm::mat4x4(1.0f);
+}
+
 ModulesList BoxCollider::GetType() {
 	return::BoxColliderType;
-}
-
-float BoxCollider::GetHeight() {
-	return BoxCollider::_height;
-}
-void BoxCollider::SetHeight(float heigth) {
-	float delta = BoxCollider::_height / heigth;
-
-	BoxCollider::_height = heigth;
-	BoxCollider::_transformMatrix = glm::scale(BoxCollider::_transformMatrix, glm::vec3(1, 1 / delta, 1));
-
-	BoxCollider::ApplyTransformation();
-}
-
-float BoxCollider::GetWidth() {
-	return BoxCollider::_width;
-}
-void BoxCollider::SetWidth(float width) {
-	float delta = BoxCollider::_width / width;
-
-	BoxCollider::_width = width;
-	BoxCollider::_transformMatrix = glm::scale(BoxCollider::_transformMatrix, glm::vec3(1, 1, 1 / delta));
-
-	BoxCollider::ApplyTransformation();
-}
-
-float BoxCollider::GetLength() {
-	return BoxCollider::_lenght;
-}
-void BoxCollider::SetLength(float length) {
-	float delta = BoxCollider::_lenght / length;
-
-	BoxCollider::_lenght = length;
-	BoxCollider::_transformMatrix = glm::scale(BoxCollider::_transformMatrix, glm::vec3(1 / delta, 1, 1));
-
-	BoxCollider::ApplyTransformation();
 }

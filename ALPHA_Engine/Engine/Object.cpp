@@ -59,7 +59,7 @@ void Object::AddRotation(float X, float Y, float Z) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr) {
 			geometry->_isShifted = true;
@@ -80,8 +80,8 @@ void Object::AddRotation(Vector3 rotation) {
 	Object::_rotation.Z += rotation.Z;
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
-	{
-		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
+	{	
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr) {
 			geometry->_isShifted = true;
@@ -113,7 +113,7 @@ void Object::SetScale(float X, float Y, float Z) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr) {
 			geometry->_isShifted = true;
@@ -132,7 +132,7 @@ void Object::SetScale(Vector3 scale) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr) {
 			geometry->_isShifted = true;
@@ -145,7 +145,7 @@ void Object::SetScale(Vector3 scale) {
 void Object::ApplyTransformation() {
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr && geometry->_isShifted == true) {
 			geometry->ApplyTransformation();
@@ -155,13 +155,13 @@ void Object::ApplyTransformation() {
 	Object::_transformMatrix = glm::mat4x4(1.0f);
 }
 
-bool Object::AddModule(class Module* someModule) {
+bool Object::AddModule(std::shared_ptr<Module> someModule) {
 	Object::Modules.push_back(someModule);
 	someModule->SetParentObject(*this);
 	return true;
 }
 bool Object::AddModule(ModulesList moduleType, Module& outputModule) {
-	Module *someModule;
+	std::shared_ptr<Module> someModule;
 
 	switch (moduleType)
 	{
@@ -169,19 +169,19 @@ bool Object::AddModule(ModulesList moduleType, Module& outputModule) {
 		return false;
 		break;
 	case CameraType:
-		someModule = new Camera;
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<Camera>());
 		break;
 	case RigidBodyType:
-		someModule = new RigidBody;
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<RigidBody>());
 		break;
 	case GeometryType:
-		someModule = new Geometry;
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<Geometry>());
 		break;
 	case MeshColliderType:
-		someModule = new MeshCollider;
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<MeshCollider>());
 		break;
 	case BoxColliderType:
-		someModule = new BoxCollider;
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<BoxCollider>());
 		break;
 	default:
 		return false;
@@ -217,7 +217,7 @@ bool Object::DeleteModuleByIndex(int index) {
 	return false;
 }
 
-Module* Object::GetModuleByType(ModulesList type) {
+std::shared_ptr<Module> Object::GetModuleByType(ModulesList type) {
 	for (size_t i = 0; i < Object::Modules.size(); i++) {
 		if (type == Object::Modules[i]->GetType()) {
 			return Object::Modules[i];
@@ -226,7 +226,21 @@ Module* Object::GetModuleByType(ModulesList type) {
 
 	return nullptr;
 }
-Module* Object::GetModuleByIndex(size_t index) {
+std::vector<std::shared_ptr<Module>> Object::GetModuleByTypes(std::vector<ModulesList> typesArray) {
+	std::vector<std::shared_ptr<Module>> buffer;
+
+	for (size_t i = 0; i < Object::Modules.size(); i++) {
+		for (size_t j = 0; j < typesArray.size(); j++) {
+			if (typesArray[j] == Object::Modules[i]->GetType()) {
+				buffer.push_back(Object::Modules[i]);
+			}
+		}
+	}
+
+	return buffer;
+}
+
+std::shared_ptr<Module> Object::GetModuleByIndex(size_t index) {
 	if (index >= 0 && index < Object::Modules.size()) {
 		return Object::Modules[index];
 	}
@@ -256,7 +270,7 @@ unsigned long Object::GetGeometryHeaviness() {
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
 		Object* obj = this;
-		Geometry* geometry = dynamic_cast<Geometry*>(Object::GetModuleByIndex(it));
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr && geometry->_isShifted == true) {
 			heaviness += geometry->_vertexCount;

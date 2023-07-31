@@ -28,19 +28,16 @@
 #include "Modules/Transform.h"
 
 Object Player;
-Camera* camera = new Camera;
+std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 
 GameFunction* Game = new GameFunction;
 Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
 
-Object* object = new Object;
-Object* object2 = new Object;
+std::shared_ptr<Object> object2 = std::make_shared<Object>();
+std::shared_ptr<Object> plane = std::make_shared<Object>();
 
-Object* plane = new Object;
-
-
-RigidBody* rb2 = new RigidBody;
+std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 
 void GameFunction::Start() {
     SetControl();
@@ -48,8 +45,8 @@ void GameFunction::Start() {
     World::DebugRenderMode = PointsRender;
 
     //MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
-    BoxCollider* col2 = new BoxCollider;
-    BoxCollider* col3 = new BoxCollider;
+    std::shared_ptr<BoxCollider> col2 = std::make_shared<BoxCollider>();
+    std::shared_ptr<BoxCollider> col3 = std::make_shared<BoxCollider>();
 
     Vector3 pos = Vector3{ 0,0,-15 };
     Vector3 rot = Vector3{ 0,0,0 };
@@ -71,14 +68,15 @@ void GameFunction::Start() {
 
 
     plane = Primitives::Cube(pos, rot, scale, color);
-    plane->AddModule(col3);
+    plane->AddModule(std::static_pointer_cast<Module>(col3));
     plane->AddPosition(0, -5, 5);
     plane->AddRotation(90, 0, 0);
     plane->SetScale(10, 10, 0.5);
+    col3->ReExpandedCollider();
 
     object2 = Primitives::Cube(pos, rot, scale, color);
-    object2->AddModule(col2);
-    object2->AddModule(rb2);
+    object2->AddModule(std::static_pointer_cast<Module>(col2));
+    object2->AddModule(std::static_pointer_cast<Module>(rb2));
     object2->AddPosition(0, -1, 5);
 }
 
@@ -95,7 +93,7 @@ void GameFunction::Update() {
 }
 
 void SetControl() {
-    Player.AddModule(camera);
+    Player.AddModule(std::static_pointer_cast<Module>(camera));
     
     Bind LeftMove; LeftMove.KeyboardBind({ LeftMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_A });
     Bind RightMove; RightMove.KeyboardBind({ RightMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_D });
@@ -233,11 +231,9 @@ int main()
 
     Game->Start();
     render->StartRender(camera);
-
+    
     InpSys->Window = render->GetScreenClass()->GetWindow();
-
-    //camera->GetDirectionOfView();
-
+    
     while (!World::GetStateOfGame())
     {
         World::StartFrame();

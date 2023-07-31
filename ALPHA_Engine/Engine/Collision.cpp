@@ -131,7 +131,7 @@ void Collision::CollisionLoop() {
     {
         for (size_t jt = 0; jt < World::ObjectsOnScene[it]->GetCountOfModules(); jt++)
         {
-            MeshCollider* collider = dynamic_cast<MeshCollider*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+            std::shared_ptr<MeshCollider> collider = std::dynamic_pointer_cast<MeshCollider>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
 
             if (collider != nullptr && collider->GetType() == ModulesList::MeshColliderType) {
                 collider->collisionInfo.HasCollision = false;
@@ -142,8 +142,8 @@ void Collision::CollisionLoop() {
 
     CollisionInfo points;
 
-    Geometry* colliderA;
-    Geometry* colliderB;
+    std::shared_ptr<Geometry> colliderA;
+    std::shared_ptr<Geometry> colliderB;
 
     for (size_t it = 0; it < World::ObjectsOnScene.size()-1; it++)
     {
@@ -154,10 +154,10 @@ void Collision::CollisionLoop() {
             switch (typeA)
             {
             case MeshColliderType:
-                colliderA = dynamic_cast<Geometry*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+                colliderA = std::dynamic_pointer_cast<Geometry>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
                 break;
             case BoxColliderType:
-                colliderA = dynamic_cast<Geometry*>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+                colliderA = std::dynamic_pointer_cast<Geometry>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
                 break;
             default:
                 continue;
@@ -174,10 +174,10 @@ void Collision::CollisionLoop() {
                     switch (typeB)
                     {
                     case MeshColliderType:
-                        colliderB = dynamic_cast<Geometry*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
+                        colliderB = std::dynamic_pointer_cast<Geometry>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
                         break;
                     case BoxColliderType:
-                        colliderB = dynamic_cast<Geometry*>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
+                        colliderB = std::dynamic_pointer_cast<Geometry>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
                         break;
                     default:
                         continue;
@@ -229,8 +229,8 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB, CollisionInfo& col
         points.PushFront(support);
 
         if (Simplex::NextSimplex(points, direction)) {
-            RigidBody* rb1 = dynamic_cast<RigidBody*>(colliderA.GetParentObject()->GetModuleByType(ModulesList::RigidBodyType));
-            RigidBody* rb2 = dynamic_cast<RigidBody*>(colliderB.GetParentObject()->GetModuleByType(ModulesList::RigidBodyType));
+            std::shared_ptr<RigidBody> rb1 = std::dynamic_pointer_cast<RigidBody>(colliderA.GetParentObject()->GetModuleByType(ModulesList::RigidBodyType));
+            std::shared_ptr<RigidBody> rb2 = std::dynamic_pointer_cast<RigidBody>(colliderB.GetParentObject()->GetModuleByType(ModulesList::RigidBodyType));
 
             if (rb1 != nullptr && rb2 == nullptr) {
                 colPoints = Collision::EPA(points, colliderA, colliderB);

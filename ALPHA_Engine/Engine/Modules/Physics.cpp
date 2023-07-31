@@ -39,11 +39,11 @@ ModulesList RigidBody::GetType() {
 void RigidBody::CalculateCenterMass() {
 	Object* object = RigidBody::GetParentObject();
 	RigidBody::_centerMass = Vector3(0, 0, 0);
-	std::vector<Geometry*> geometries;
+	std::vector<std::shared_ptr<Geometry>> geometries;
 
 	for (size_t i = 0; i < object->GetCountOfModules(); i++)
 	{
-		Geometry* geometry = dynamic_cast<Geometry*>(object->GetModuleByIndex(i));
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(object->GetModuleByIndex(i));
 		if (geometry != nullptr) {
 			geometries.push_back(geometry);
 		}
@@ -133,11 +133,11 @@ void Physics::PhysicsLoop() {
 	for (size_t it = 0; it < World::ObjectsOnScene.size(); it++)
 	{
 		Object* obj = World::ObjectsOnScene[it];
-		RigidBody* rigidBody;
+		std::shared_ptr<RigidBody> rigidBody;
 
 		for (size_t i = 0; i < obj->GetCountOfModules(); i++)
 		{
-			rigidBody = dynamic_cast<RigidBody*>(obj->GetModuleByIndex(i));
+			rigidBody = std::dynamic_pointer_cast<RigidBody>(obj->GetModuleByIndex(i));
 			if (rigidBody != NULL) {
 				//Physics::ApplyBaseFriction(*rigidBody);
 				Physics::ApplyPhysics(*rigidBody);

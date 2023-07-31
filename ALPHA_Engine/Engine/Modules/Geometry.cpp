@@ -302,8 +302,6 @@ void Geometry::SetScale(float X, float Y, float Z) {
     Transform::_scale.Y = Y;
     Transform::_scale.Z = Z;
 
-    Geometry::_isShifted = true;
-
     Geometry::ApplyTransformation();
 }
 void Geometry::SetScale(Vector3 scale) {
@@ -314,9 +312,7 @@ void Geometry::SetScale(Vector3 scale) {
     Geometry::_scale.Y = scale.Y;
     Geometry::_scale.Z = scale.Z;
 
-    Geometry::_isShifted = true;
-
-    Geometry::ApplyTransformation();
+    ApplyTransformation();
 }
 
 void Geometry::ApplyTransformation() {
@@ -341,5 +337,6 @@ void Geometry::ApplyTransformation() {
         Geometry::_normals[jt + 1] = res.y;
         Geometry::_normals[jt + 2] = res.z;
     }
-    Geometry::_isShifted = false;
+
+    Geometry::_transformMatrix = glm::mat4x4(1.0f);
 }

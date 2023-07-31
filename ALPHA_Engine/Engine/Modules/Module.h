@@ -26,11 +26,10 @@ private:
 	friend class Collision;
 	friend class Object;
 
-protected:
+public:
 	Module();
 	~Module();
 
-public:
 	virtual ModulesList GetType();
 
 	virtual Object* GetParentObject();

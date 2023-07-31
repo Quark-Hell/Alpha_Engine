@@ -106,7 +106,7 @@ void Render::PrepareToRender() {
     glFrustum(-ratio, ratio, -1.f, 1.f, 1.0f, 500.f);
 }
 
-void Render::ApplyCameraTransform(Camera* camera) {
+void Render::ApplyCameraTransform(std::shared_ptr<Camera> camera) {
     Vector3 Position = camera->GetParentObject()->GetPosition();
     Vector3 Rotation = camera->GetParentObject()->GetRotation();
 
@@ -227,18 +227,18 @@ void Render::SceneAssembler() {
             ModulesList type = World::ObjectsOnScene[i]->GetModuleByIndex(j)->GetType();
 
             if (type == MeshType) {
-                Mesh* mesh = dynamic_cast<Mesh*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+                std::shared_ptr<Mesh> mesh = std::dynamic_pointer_cast<Mesh>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
                 Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
                 RenderMesh(*mesh);
             }
             else if (type == MeshColliderType && World::DebugRenderMode != Disable) {
-                MeshCollider* collider = dynamic_cast<MeshCollider*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+                std::shared_ptr<MeshCollider> mesh = std::dynamic_pointer_cast<MeshCollider>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
                 //Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
                 //RenderMeshCollider(*collider);
             }
             else if (type == BoxColliderType && World::DebugRenderMode != Disable) {
-                BoxCollider* collider = dynamic_cast<BoxCollider*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
-                ColliderPresets* mcollider = dynamic_cast<ColliderPresets*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+                std::shared_ptr<BoxCollider> collider = std::dynamic_pointer_cast<BoxCollider>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+                std::shared_ptr<ColliderPresets> mcollider = std::dynamic_pointer_cast<ColliderPresets>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
                 Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
                 RenderBoxCollider(*collider);
                 RenderCollider(*mcollider);
@@ -247,7 +247,7 @@ void Render::SceneAssembler() {
     }   
 }       
 
-void Render::StartRender(Camera* camera) {
+void Render::StartRender(std::shared_ptr<Camera>  camera) {
     _screenClass.CreateScreen(1280, 720, 32, "GLFW OpenGL");
 
     int width, height;
@@ -261,7 +261,7 @@ void Render::StartRender(Camera* camera) {
 }
 
 
-void Render::RenderLoop(Camera* camera) {
+void Render::RenderLoop(std::shared_ptr<Camera>  camera) {
     if (!glfwWindowShouldClose(_screenClass._window))
     {
         glfwPollEvents();

@@ -7,14 +7,14 @@
 
 class Primitives {
 public: 
-	static Object* Plane(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
-	static Object* Cube(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
-	static Object* Circle(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
-	static Object* Sphere(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
-	static Object* Cylinder(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
-	static Object* Cone(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
-	static Object* Torus(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
+	static std::shared_ptr<Object> Plane(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
+	static std::shared_ptr<Object> Cube(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
+	static std::shared_ptr<Object> Circle(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
+	static std::shared_ptr<Object> Sphere(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
+	static std::shared_ptr<Object> Cylinder(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
+	static std::shared_ptr<Object> Cone(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
+	static std::shared_ptr<Object> Torus(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);
 
 private:
-	static void CreateObject(Vector3 Position, Vector3 Rotation, Vector3 Scale, Object* Obj);
+	static void CreateObject(Vector3 Position, Vector3 Rotation, Vector3 Scale, std::shared_ptr<Object> Obj);
 };

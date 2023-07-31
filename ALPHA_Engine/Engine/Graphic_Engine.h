@@ -48,8 +48,8 @@ private:
 	void ClearFrameBuffer();
 
 public:
-	void StartRender(Camera* camera);
-	void RenderLoop(Camera* camera);
+	void StartRender(std::shared_ptr<Camera> camera);
+	void RenderLoop(std::shared_ptr<Camera>  camera);
 	Screen* GetScreenClass();
 
 private:
@@ -60,6 +60,6 @@ private:
 	void RenderCollider(ColliderPresets& collider);
 	void RenderBoxCollider(BoxCollider& collider);
 
-	void ApplyCameraTransform(Camera* camera);
+	void ApplyCameraTransform(std::shared_ptr<Camera>  camera);
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
 };

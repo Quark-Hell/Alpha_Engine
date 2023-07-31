@@ -10,7 +10,7 @@ class Vector3;
 
 class Object : public Transform {
 private:
-	std::vector<Module*> Modules;
+	std::vector<std::shared_ptr<Module>> Modules;
 
 private:
 	friend class Geometry;
@@ -46,15 +46,15 @@ public:
 	void ApplyTransformation() override;
 #pragma endregion
 
-	bool AddModule(class Module* someModule);
+	bool AddModule(std::shared_ptr<Module> someModule);
 	bool AddModule(ModulesList moduleType, Module& outputModule);
 
 	bool DeleteModuleByType(ModulesList type);
 	bool DeleteModuleByIndex(int index);
 
-	Module* GetModuleByType(ModulesList type);
-	Module* GetModuleByType(ModulesList typesArray[]);
-	Module* GetModuleByIndex(size_t index);
+	std::shared_ptr<Module> GetModuleByType(ModulesList type);
+	std::vector<std::shared_ptr<Module>> GetModuleByTypes(std::vector<ModulesList> typesArray);
+	std::shared_ptr<Module> GetModuleByIndex(size_t index);
 
 	int GetCountOfModules();
 
