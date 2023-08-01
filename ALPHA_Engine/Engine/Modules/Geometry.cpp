@@ -10,6 +10,10 @@ Geometry::~Geometry() {
 
 }
 
+void Geometry::SetParentObject(const Object& parent) {
+    ParentObject = const_cast<Object*>(&parent);
+}
+
 ModulesList Geometry::GetType() {
     return ModulesList::GeometryType;
 }
@@ -316,6 +320,9 @@ void Geometry::SetScale(Vector3 scale) {
 }
 
 void Geometry::ApplyTransformation() {
+    if (GetParentObject() == nullptr)
+        return;
+
     for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
     {
         glm::vec4 buf(Geometry::_vertex[jt], Geometry::_vertex[jt + 1], Geometry::_vertex[jt + 2], 1);

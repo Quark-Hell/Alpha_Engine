@@ -34,15 +34,16 @@ GameFunction* Game = new GameFunction;
 Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
 
-std::shared_ptr<Object> object2 = std::make_shared<Object>();
-std::shared_ptr<Object> plane = std::make_shared<Object>();
+std::shared_ptr<Object> object2;
+std::shared_ptr<Object> plane;
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 
 void GameFunction::Start() {
     SetControl();
 
-    World::DebugRenderMode = PointsRender;
+    World::DebugRenderEnabled = true;
+    World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
 
     //MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
     std::shared_ptr<BoxCollider> col2 = std::make_shared<BoxCollider>();
@@ -244,7 +245,7 @@ int main()
         Collision::CollisionLoop();
         render->RenderLoop(camera);
         World::EndFrame();
-        //std::cout << World::GetTimeLong() << "\t" << World::GetDeltaTime() << "\n";
+        std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << "\n";
     }
 
     glfwTerminate();

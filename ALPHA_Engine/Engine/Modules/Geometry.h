@@ -37,6 +37,8 @@ public:
 	Geometry();
 	~Geometry();
 
+	void SetParentObject(const Object& parent) override;
+
 #pragma region Redifine from Transfom
 	Vector3 GetPosition() override;
 	void AddPosition(float X, float Y, float Z) override;

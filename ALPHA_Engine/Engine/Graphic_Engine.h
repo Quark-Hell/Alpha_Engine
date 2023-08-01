@@ -55,6 +55,9 @@ public:
 private:
 	void SceneAssembler();
 
+	void SetMeshRenderOptions();
+	void SetDebugRenderOptions();
+
 	void RenderMesh(Mesh& mesh);
 	void RenderMeshCollider(Geometry& collider);
 	void RenderCollider(ColliderPresets& collider);

@@ -15,6 +15,12 @@ BoxCollider::~BoxCollider() {
 
 }
 
+void BoxCollider::SetParentObject(const Object& parent) {
+	BoxCollider::ApplyTransformation();
+	ParentObject = const_cast<Object*>(&parent);
+	BoxCollider::ReExpandedCollider();
+}
+
 void BoxCollider::ReExpandedCollider() {
 	BoxCollider::SetRotation(BoxCollider::GetParentObject()->GetRotation());
 	BoxCollider::SetScale(BoxCollider::CalculateCoverScale());

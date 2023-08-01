@@ -12,4 +12,8 @@ inline ModulesList Mesh::GetType() {
 	return ModulesList::MeshType;
 }
 
+void Mesh::SetParentObject(const Object& parent) {
+	ParentObject = const_cast<Object*>(&parent);
+}
+
 #pragma endregion

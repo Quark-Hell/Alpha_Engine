@@ -282,9 +282,23 @@ unsigned long Object::GetGeometryHeaviness() {
 }
 
 Object::Object() {
+	bool isHave = false;
+	for (size_t i = 0; i < World::ObjectsOnScene.size(); i++) {
+		if (this == World::ObjectsOnScene[i]) {
+			isHave = true;
+		}
+	}
+
+	if (isHave == true)
+		return;
+
 	World::ObjectsOnScene.push_back(this);
 }
 
 Object::~Object() {
-
+	for (size_t i = 0; i < World::ObjectsOnScene.size(); i++) {
+		if (this == World::ObjectsOnScene[i]) {
+			World::ObjectsOnScene.erase(World::ObjectsOnScene.begin() + i);
+		}
+	}
 }

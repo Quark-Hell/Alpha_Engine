@@ -11,6 +11,8 @@ public:
 
 	ModulesList GetType() override;
 
+	void SetParentObject(const Object& parent) override;
+
 	//bool Create(std::string linkToFBX) override;
 	//void DeleteMesh() override;
 };

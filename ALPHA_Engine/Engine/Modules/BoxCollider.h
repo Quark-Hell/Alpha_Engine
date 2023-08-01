@@ -14,6 +14,8 @@ public:
 	BoxCollider();
 	~BoxCollider();
 
+	void SetParentObject(const Object& parent) override;
+
 	void ReExpandedCollider();
 
 	void ApplyTransformation() override;
@@ -21,6 +23,7 @@ public:
 	ModulesList GetType() override;
 
 	Vector3 FindFurthestPoint(Vector3 direction) override;
+
 };
 
 

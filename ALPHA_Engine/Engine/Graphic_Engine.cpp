@@ -148,17 +148,25 @@ void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Sca
     //glScalef(Scale.X, Scale.Y, Scale.Z);
 }
 
-void Render::RenderMesh(Mesh& mesh) {
-    glColor3f(0.8, 0.8, 0.8);
+void Render::SetMeshRenderOptions() {
     glPolygonMode(GL_FRONT, GL_FILL);
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
+}
+void Render::SetDebugRenderOptions() {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+}
+
+void Render::RenderMesh(Mesh& mesh) {
+    glColor3f(0.8, 0.8, 0.8);
+    Render::SetMeshRenderOptions();
 
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
     //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
    
-
     //glBindTexture();
     //glIndexPointer(GL_UNSIGNED_INT,0, mesh._indices);
     glNormalPointer(GL_FLOAT, 0, mesh._normals);
@@ -171,9 +179,7 @@ void Render::RenderMesh(Mesh& mesh) {
 }
 void Render::RenderMeshCollider(Geometry& collider) {
     glColor3f(0.2, 0.8, 0.2);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glDisable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
+    Render::SetDebugRenderOptions();
 
     glEnableClientState(GL_VERTEX_ARRAY);
     //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -189,9 +195,7 @@ void Render::RenderMeshCollider(Geometry& collider) {
 }
 void Render::RenderCollider(ColliderPresets& collider) {
     glColor3f(0.2, 0.8, 0.2);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glDisable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
+    Render::SetDebugRenderOptions();
     
     glEnableClientState(GL_VERTEX_ARRAY);
     
@@ -203,9 +207,7 @@ void Render::RenderCollider(ColliderPresets& collider) {
 }
 void Render::RenderBoxCollider(BoxCollider& collider) {
     glColor3f(0.8, 0.2, 0.2);
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glDisable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
+    Render::SetDebugRenderOptions();
 
     glPointSize(10);
 
@@ -231,18 +233,29 @@ void Render::SceneAssembler() {
                 Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
                 RenderMesh(*mesh);
             }
-            else if (type == MeshColliderType && World::DebugRenderMode != Disable) {
+
+
+#pragma region DebugRender
+#ifdef _DEBUG
+            if (World::DebugRenderEnabled == false)
+                continue;
+
+            if (type == MeshColliderType) {
                 std::shared_ptr<MeshCollider> mesh = std::dynamic_pointer_cast<MeshCollider>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
                 //Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
                 //RenderMeshCollider(*collider);
             }
-            else if (type == BoxColliderType && World::DebugRenderMode != Disable) {
+
+            if (type == BoxColliderType) {
                 std::shared_ptr<BoxCollider> collider = std::dynamic_pointer_cast<BoxCollider>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
                 std::shared_ptr<ColliderPresets> mcollider = std::dynamic_pointer_cast<ColliderPresets>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
                 Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+
                 RenderBoxCollider(*collider);
                 RenderCollider(*mcollider);
             }
+#endif
+#pragma endregion
         }
     }   
 }       

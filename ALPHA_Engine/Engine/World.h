@@ -5,9 +5,8 @@
 class Object;
 
 enum DebugRenderModes {
-	Disable = 0,
-	LinesRender = 1,
-	PointsRender = 2
+	LinesRender = 1 << 0,
+	PointsRender = 1 << 1
 };
 
 static class World {
@@ -23,9 +22,10 @@ private:
 	static inline float SimulationSpeed = 1;
 
 public:
-	static inline DebugRenderModes DebugRenderMode = DebugRenderModes::Disable;
+	///TODO: In next update debug render will not work in release build
+	static inline bool DebugRenderEnabled = false;
+	static inline DebugRenderModes DebugRenderMode;
 
-public:
 	static void BuildTransformationThread(const std::vector<Object*> objects);
 	static void ApplyingSceneTransformation();
 
