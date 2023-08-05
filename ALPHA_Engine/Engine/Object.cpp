@@ -15,6 +15,9 @@
 #include "Vectors.h"
 #include "World.h"
 
+const BoxCollider& Object::GetInertiaCollider() {
+	return Object::InertiaCollider;
+}
 
 Vector3 Object::GetPosition() {
 	return Object::_position;
@@ -246,6 +249,10 @@ std::shared_ptr<Module> Object::GetModuleByIndex(size_t index) {
 	}
 
 	return nullptr;
+}
+
+glm::mat4x4& Object::GetTransformationMatrix() {
+	return Object::_transformMatrix;
 }
 
 void Object::DeleteObject() {

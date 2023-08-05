@@ -109,6 +109,25 @@ Vector3 RigidBody::GetPosition() {
 	return RigidBody::GetParentObject()->GetPosition();
 }
 
+bool RigidBody::GetContactPoints(std::vector<Vector3>& contactPoint) {
+	if (!RigidBody::_hasCollision)
+		return false;
+
+	contactPoint = { _contactPoints.begin(), _contactPoints.end() };
+	return true;
+}
+
+void RigidBody::AddContactPoints(std::vector<Vector3>& points) {
+	for (size_t i = 0; i < points.size(); i++) {
+		RigidBody::_contactPoints.push_back(points[i]);
+	}
+}
+
+void RigidBody::ClearCollisinInfo() {
+	RigidBody::_hasCollision = false;
+	RigidBody::_contactPoints.clear();
+}
+
 //void RigidBody::SetInertiaMatrix(Matrix3x3 matrix) {
 //	RigidBody::_inertiaMatrix = matrix;
 //}
@@ -134,7 +153,6 @@ void Physics::PhysicsLoop() {
 	for (size_t it = 0; it < World::ObjectsOnScene.size(); it++)
 	{
 		Object* obj = World::ObjectsOnScene[it];
-		std::cout << obj << "\n";
 		std::shared_ptr<RigidBody> rigidBody = std::dynamic_pointer_cast<RigidBody>(obj->GetModuleByType(RigidBodyType));
 
 		if (rigidBody == nullptr)
@@ -213,20 +231,16 @@ void Physics::ApplyPhysics(RigidBody& rb) {
 	}
 }
 
-int PhysCounter = 0;
-int GenCounter = 0;
 void Physics::SemiImplicitIntegrate(RigidBody& rb) {
-	GenCounter++;
 	double accumulator = World::GetDeltaTime();
 	if (accumulator > 1)
 		accumulator = Physics::fixTimeStep;
 
 	while (accumulator >= Physics::fixTimeStep)
 	{
-		//Physics::ApplyGravity(rb);
-		PhysCounter++;
+		Physics::ApplyGravity(rb);
 
-		Vector3 newVelocity = rb.GetVelocity() + (rb.Gravity * Physics::fixTimeStep);
+		Vector3 newVelocity = rb.GetVelocity() + rb._force / rb.Mass;
 
 		if (newVelocity > rb.MaxSpeed) {
 			rb._velocity = Vector3::GetNormalize(newVelocity) * rb.MaxSpeed;
@@ -244,11 +258,10 @@ void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 
 	if (accumulator != 0) {
 		const double alpha = accumulator / Physics::fixTimeStep;
-		PhysCounter++;
 		
-		//Physics::ApplyGravity(rb);
+		Physics::ApplyGravity(rb);
 		
-		Vector3 newVelocity = rb.GetVelocity() + (rb.Gravity * Physics::fixTimeStep);
+		Vector3 newVelocity = rb.GetVelocity() + rb._force / rb.Mass;
 		
 		if (newVelocity > rb.MaxSpeed) {
 			rb._velocity = Vector3::GetNormalize(newVelocity) * rb.MaxSpeed;
@@ -263,7 +276,7 @@ void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 		}
 	}
 
-	//std::cout << rb.GetParentObject()->GetPosition().Y << " YPos\t" << rb._velocity.Y << " speed\t" << rb._force.Y << " force\t" << PhysCounter << " Count\t" << GenCounter << " GenCount\t" << World::GetDeltaTime() << " DeltaTime\t" << World::GetTimeLong() << " \TimeLong" << "\n";
+	//std::cout << rb.GetParentObject()->GetPosition().Y << " YPos\t" << rb._velocity.Y << " speed\t" << rb._force.Y << " force\t" << World::GetDeltaTime() << " DeltaTime\t" << World::GetTimeLong() << " \TimeLong" << "\n";
 
 	rb._force = { 0,0,0 };
 	//std::cout << World::GetTimeLong() << " worldTime\n";

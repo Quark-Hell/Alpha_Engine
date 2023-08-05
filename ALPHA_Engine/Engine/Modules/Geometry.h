@@ -37,6 +37,7 @@ public:
 	Geometry();
 	~Geometry();
 
+	Object* GetParentObject() override;
 	void SetParentObject(const Object& parent) override;
 
 #pragma region Redifine from Transfom

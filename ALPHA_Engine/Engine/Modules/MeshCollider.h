@@ -1,16 +1,7 @@
 #pragma once
-#include "Modules/Geometry.h"
+#include "Modules/ColliderPresets.h"
 
-class CollisionInfo {
-public:
-	Vector3 Normal;
-	float PenetrationDepth;
-	bool HasCollision;
-
-	//std::shared_ptr<std::vector<float>> CollisionPoints;
-};
-
-class MeshCollider : public Geometry {
+class MeshCollider : public ColliderPresets {
 public:
 	MeshCollider();
 	~MeshCollider();
@@ -19,10 +10,8 @@ public:
 
 	bool CreateConvexFromConcave(std::string link);
 
-	bool Create(std::string linkToFBX) override;
+	//bool Create(std::string linkToFBX) override;
 
 private:
 	friend class Collision;
-
-	CollisionInfo collisionInfo;
 };

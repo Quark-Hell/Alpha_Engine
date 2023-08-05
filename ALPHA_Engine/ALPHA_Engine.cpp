@@ -36,6 +36,8 @@ InputSystem* InpSys = new InputSystem;
 
 std::shared_ptr<Object> object2;
 std::shared_ptr<Object> plane;
+std::shared_ptr<Object> plane1;
+std::shared_ptr<Object> plane3;
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 
@@ -46,8 +48,10 @@ void GameFunction::Start() {
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
 
     //MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
-    std::shared_ptr<BoxCollider> col2 = std::make_shared<BoxCollider>();
-    std::shared_ptr<BoxCollider> col3 = std::make_shared<BoxCollider>();
+    std::shared_ptr<BoxCollider> col2 = std::make_shared<BoxCollider>(); col2->Create("\\Models\\Primitives\\Cube.fbx");
+    std::shared_ptr<MeshCollider> col3 = std::make_shared<MeshCollider>(); col3->Create("\\Models\\Primitives\\Cube.fbx");
+    std::shared_ptr<MeshCollider> col4 = std::make_shared<MeshCollider>(); col4->Create("\\Models\\Primitives\\Cube.fbx");
+    std::shared_ptr<MeshCollider> col5 = std::make_shared<MeshCollider>(); col5->Create("\\Models\\Primitives\\Cube.fbx");
 
     Vector3 pos = Vector3{ 0,0,-15 };
     Vector3 rot = Vector3{ 0,0,0 };
@@ -59,26 +63,31 @@ void GameFunction::Start() {
     //object->AddModule(rb1);
     //object->AddPosition(9, 3, 0);
     //rb1->CalculateCenterMass();
-    
-    //Object* sphere2 = Primitives::Sphere(pos, rot, scale, color);
-    //RigidBody* shhr2RB = new RigidBody;
-    //BoxCollider* sphr2 = new BoxCollider;
-    //sphere2->AddModule(sphr2);
-    //sphere2->AddModule(shhr2RB);
-    //sphere2->AddPosition(0, 8, 0);
 
+    plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane1->AddModule(std::static_pointer_cast<Module>(col4));
+    plane1->AddPosition(-0.5, -6, -10);
+    plane1->AddRotation(90, 0, 0);
+    plane1->SetScale(10, 10, 0.5);
 
-    plane = Primitives::Cube(pos, rot, scale, color);
+    plane = Primitives::Cube({0,0,0}, rot, scale, color);
     plane->AddModule(std::static_pointer_cast<Module>(col3));
-    plane->AddPosition(0, -5, 5);
-    plane->AddRotation(90, 0, 0);
-    plane->SetScale(10, 10, 0.5);
-    col3->ReExpandedCollider();
-
-    object2 = Primitives::Cube(pos, rot, scale, color);
+    plane->AddPosition(0, -3, -10);
+    plane->AddRotation(90, 30, 60);
+    plane->SetScale(5, 5, 0.5);
+    
+    plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane3->AddModule(std::static_pointer_cast<Module>(col5));
+    plane3->AddPosition(-3, -4.5, -10);
+    plane3->AddRotation(0, 0, 5);
+    plane3->SetScale(3, 3, 0.5);
+    
+    object2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     object2->AddModule(std::static_pointer_cast<Module>(col2));
     object2->AddModule(std::static_pointer_cast<Module>(rb2));
-    object2->AddPosition(0, -1, 5);
+    object2->AddRotation(0, 1, 0);
+    object2->AddPosition(-2.5f, -1, -10);
+    object2->SetScale(1, 1, 1);
 }
 
 void GameFunction::Update() {
@@ -111,6 +120,12 @@ void SetControl() {
     
     Bind jump; jump.KeyboardBind({ Jump }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_SPACE });
     Bind stop; stop.KeyboardBind({ Stop }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_G });
+
+    Bind toLeft; toLeft.KeyboardBind({ LeftMoveTestObject }, { EnumKeyStates::KeyHold }, { GLFW_KEY_H });
+    Bind toRight; toRight.KeyboardBind({ RightMoveTestObject }, { EnumKeyStates::KeyHold }, { GLFW_KEY_J });
+
+    InpSys->InsertBind(toLeft);
+    InpSys->InsertBind(toRight);
 
     InpSys->InsertBind(CameraRot);
     
@@ -195,6 +210,13 @@ void DownMoveCamera() {
     newPos.Y -= 0.1;
 
     Player.SetPosition(newPos);
+}
+
+void LeftMoveTestObject() {
+    object2->AddPosition(-0.02,0,0);
+}
+void RightMoveTestObject() {
+    object2->AddPosition(0.02, 0, 0);
 }
 
 void CameraRotate() {

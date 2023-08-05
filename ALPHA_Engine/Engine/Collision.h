@@ -38,6 +38,13 @@ public:
 	static inline bool Tetrahedron(Simplex& points, Vector3& direction);
 };
 
+class CollisionInfo {
+public:
+	Vector3 Normal;
+	float PenetrationDepth;
+	std::vector<Vector3> collisionPoints;
+};
+
 class Collision{
 public:
 	static void CollisionLoop();
@@ -51,12 +58,14 @@ private:
 	//static bool SphereToBox(Geometry& colliderA, Geometry& colliderB);
 
 	static Vector3 Support(Geometry& colliderA, Geometry& colliderB, Vector3 direction);
-	static bool GJK(Geometry& colliderA, Geometry& colliderB, CollisionInfo& colPoints);
-	static CollisionInfo EPA(Simplex& simplex, Geometry& colliderA, Geometry& ColliderB);
+	static bool GJK(Geometry& colliderA, Geometry& colliderB);
+	static bool EPA(Simplex& simplex, Geometry& colliderA, Geometry& ColliderB, CollisionInfo& colInfo);
 
 	static std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
 	static void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
 
-	static std::shared_ptr<std::vector<float>> GetContactPoints(Geometry& geometry,Vector3 moveVector);
+	static std::shared_ptr<std::vector<float>> GetContactPoints(Geometry& geometry, Vector3 moveVector);
+
+	static void CalculateContactPoints(Geometry& contactGeometry1, Geometry& contactObject2, CollisionInfo& colInfo);
 };
 

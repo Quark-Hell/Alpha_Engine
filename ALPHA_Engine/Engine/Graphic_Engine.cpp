@@ -8,6 +8,8 @@
 #include "Modules/MeshCollider.h"
 #include "Modules/BoxCollider.h"
 
+#include "Modules/Physics.h"
+
 #include "Collision.h"
 
 #include "GameModels.h"
@@ -177,48 +179,43 @@ void Render::RenderMesh(Mesh& mesh) {
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
-void Render::RenderMeshCollider(Geometry& collider) {
-    glColor3f(0.2, 0.8, 0.2);
-    Render::SetDebugRenderOptions();
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-
-    //glBindTexture();
-    //glIndexPointer(GL_UNSIGNED_INT,0, mesh._indices);
-    glVertexPointer(3, GL_FLOAT, 0, collider._vertex);
-
-    glDrawElements(GL_TRIANGLES, collider._indicesCount, GL_UNSIGNED_INT, collider._indices);
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-}
 void Render::RenderCollider(ColliderPresets& collider) {
     glColor3f(0.2, 0.8, 0.2);
     Render::SetDebugRenderOptions();
     
     glEnableClientState(GL_VERTEX_ARRAY);
     
-    glVertexPointer(3, GL_FLOAT, 0, collider._vertex);
+    glVertexPointer(3, GL_FLOAT, 0, &collider._debugVertex[0]);
+    glDrawElements(GL_TRIANGLES, collider._debugIndices.size(), GL_UNSIGNED_INT, &collider._debugIndices[0]);
 
-    glDrawElements(GL_TRIANGLES, collider._indicesCount, GL_UNSIGNED_INT, collider._indices);
+    glColor3f(0.8, 0.2, 0.2);
+    glPointSize(7);
+    glDrawArrays(GL_POINTS, 0, 8);
     
     glDisableClientState(GL_VERTEX_ARRAY);
-}
-void Render::RenderBoxCollider(BoxCollider& collider) {
-    glColor3f(0.8, 0.2, 0.2);
-    Render::SetDebugRenderOptions();
 
+
+}
+void Render::RenderRigidBodyInfo(RigidBody& rb) {
+    std::vector<Vector3> contactPoint;
+    if (!rb.GetContactPoints(contactPoint))
+        return;
+
+    Render::SetDebugRenderOptions();
+    glDisable(GL_DEPTH_TEST);
+    glColor3f(0.2, 0.2, 0.7);
     glPointSize(10);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
+    std::cout << contactPoint.size() << " Size\n";
 
-    glVertexPointer(3, GL_FLOAT, 0, collider._points);
-    glDrawArrays(GL_POINTS, 0, 8);
+    for (size_t i = 0; i < contactPoint.size(); i++) {
+        Vector3 relativeContactPointPos = (rb.GetParentObject()->GetPosition() * -1) + contactPoint[i];
 
-    //glDrawElements(GL_TRIANGLES, collider._indicesCount, GL_UNSIGNED_INT, collider._indices);
+        glBegin(GL_POINTS);
+        glVertex3f(relativeContactPointPos.X, relativeContactPointPos.Y, relativeContactPointPos.Z);
+        glEnd();
+    }
 
-    glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void Render::SceneAssembler() {
@@ -240,19 +237,18 @@ void Render::SceneAssembler() {
             if (World::DebugRenderEnabled == false)
                 continue;
 
-            if (type == MeshColliderType) {
-                std::shared_ptr<MeshCollider> mesh = std::dynamic_pointer_cast<MeshCollider>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
-                //Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
-                //RenderMeshCollider(*collider);
+            std::shared_ptr<ColliderPresets> collider = std::dynamic_pointer_cast<ColliderPresets>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+
+            if (collider != nullptr) {
+                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+                RenderCollider(*collider);
             }
 
-            if (type == BoxColliderType) {
-                std::shared_ptr<BoxCollider> collider = std::dynamic_pointer_cast<BoxCollider>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
-                std::shared_ptr<ColliderPresets> mcollider = std::dynamic_pointer_cast<ColliderPresets>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
-                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+            std::shared_ptr<RigidBody> rb = std::dynamic_pointer_cast<RigidBody>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
 
-                RenderBoxCollider(*collider);
-                RenderCollider(*mcollider);
+            if (rb != nullptr) {
+                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+                RenderRigidBodyInfo(*rb);
             }
 #endif
 #pragma endregion

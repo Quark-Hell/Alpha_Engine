@@ -2,8 +2,9 @@
 #include "ColliderPresets.h"
 
 class BoxCollider : public ColliderPresets {
-public:
-	float* _points = new float[24];
+private:
+	friend Render;
+	friend Collision;
 
 private:
 	void InitCollider();
@@ -18,12 +19,7 @@ public:
 
 	void ReExpandedCollider();
 
-	void ApplyTransformation() override;
-
 	ModulesList GetType() override;
-
-	Vector3 FindFurthestPoint(Vector3 direction) override;
-
 };
 
 

@@ -10,6 +10,9 @@ Geometry::~Geometry() {
 
 }
 
+Object* Geometry::GetParentObject() {
+    return ParentObject;
+}
 void Geometry::SetParentObject(const Object& parent) {
     ParentObject = const_cast<Object*>(&parent);
 }
@@ -70,8 +73,6 @@ bool Geometry::Create(std::string linkToFBX) {
 
 /*Recommended not use now. Work so slow*/
 void Geometry::MakeUnique() {
-    
-
     const int arr_len = 3;
     std::array<float, arr_len> buffer;
     

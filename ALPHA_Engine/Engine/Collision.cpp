@@ -127,78 +127,42 @@ bool Simplex::Tetrahedron(Simplex& points, Vector3& direction) {
 /*Maybe need refactoring*/
 void Collision::CollisionLoop() {
     //Clear collision Info
-    for (size_t it = 0; it < World::ObjectsOnScene.size() - 1; it++)
+    for (size_t it = 0; it < World::ObjectsOnScene.size(); it++)
     {
-        for (size_t jt = 0; jt < World::ObjectsOnScene[it]->GetCountOfModules(); jt++)
-        {
-            std::shared_ptr<MeshCollider> collider = std::dynamic_pointer_cast<MeshCollider>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+        std::shared_ptr<RigidBody> RigidModule =
+            std::static_pointer_cast<RigidBody>(World::ObjectsOnScene[it]->GetModuleByType(RigidBodyType));
 
-            if (collider != nullptr && collider->GetType() == ModulesList::MeshColliderType) {
-                collider->collisionInfo.HasCollision = false;
-            }
+        if (RigidModule != nullptr) {
+            RigidModule->ClearCollisinInfo();
         }
     }
-
-
-    CollisionInfo points;
 
     std::shared_ptr<Geometry> colliderA;
     std::shared_ptr<Geometry> colliderB;
 
-    for (size_t it = 0; it < World::ObjectsOnScene.size()-1; it++)
+    for (size_t it = 0; it < World::ObjectsOnScene.size() - 1; it++)
     {
         for (size_t jt = 0; jt < World::ObjectsOnScene[it]->GetCountOfModules(); jt++)
         {
-            ModulesList typeA = World::ObjectsOnScene[it]->GetModuleByIndex(jt)->GetType();
+            colliderA = std::dynamic_pointer_cast<ColliderPresets>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
 
-            switch (typeA)
-            {
-            case MeshColliderType:
-                colliderA = std::dynamic_pointer_cast<Geometry>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
-                break;
-            case BoxColliderType:
-                colliderA = std::dynamic_pointer_cast<Geometry>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
-                break;
-            default:
-                continue;
-                break;
-            }
-
-            
             for (size_t kt = 1; kt < World::ObjectsOnScene.size(); kt++)
             {
                 for (size_t mt = 0; mt < World::ObjectsOnScene[kt]->GetCountOfModules(); mt++)
                 {
-                    ModulesList typeB = World::ObjectsOnScene[kt]->GetModuleByIndex(mt)->GetType();
-
-                    switch (typeB)
-                    {
-                    case MeshColliderType:
-                        colliderB = std::dynamic_pointer_cast<Geometry>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
-                        break;
-                    case BoxColliderType:
-                        colliderB = std::dynamic_pointer_cast<Geometry>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
-                        break;
-                    default:
-                        continue;
-                        break;
-                    }
+                    colliderB = std::dynamic_pointer_cast<ColliderPresets>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
 
                     if (colliderA == colliderB)
                         continue;
-                    
-                    if (typeA == ModulesList::MeshColliderType && typeB == MeshColliderType) {
-                        Collision::GJK(*colliderA, *colliderB, points);
-                    }
-                    else if (typeA == ModulesList::BoxColliderType && typeB == BoxColliderType) {
-                        Collision::GJK(*colliderA, *colliderB, points);
-                    }
+
+                    if (colliderA == nullptr || colliderB == nullptr)
+                        continue;
+
+                    Collision::GJK(*colliderA, *colliderB);
                 }
             }
         }
     }
-
-
 }
 
 
@@ -208,7 +172,9 @@ Vector3 Collision::Support(Geometry& colliderA, Geometry& colliderB, Vector3 dir
         - colliderB.FindFurthestPoint(-direction);
 }
 
-bool Collision::GJK(Geometry& colliderA, Geometry& colliderB, CollisionInfo& colPoints) {
+bool Collision::GJK(Geometry& colliderA, Geometry& colliderB) {
+    CollisionInfo colInfo;
+
     // Get initial support point in any direction
     Vector3 support = Support(colliderA, colliderB, {1,0,0});
 
@@ -233,36 +199,59 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB, CollisionInfo& col
             std::shared_ptr<RigidBody> rb2 = std::dynamic_pointer_cast<RigidBody>(colliderB.GetParentObject()->GetModuleByType(ModulesList::RigidBodyType));
 
             if (rb1 != nullptr && rb2 == nullptr) {
-                colPoints = Collision::EPA(points, colliderA, colliderB);
+                if (Collision::EPA(points, colliderA, colliderB, colInfo)) {
+                    colliderA.GetParentObject()->AddPosition(-colInfo.Normal * colInfo.PenetrationDepth);
+                    rb1->_pullingVectors.push_back(-colInfo.Normal * colInfo.PenetrationDepth);
+                    Collision::CalculateContactPoints(colliderA, colliderB, colInfo);
 
-                colliderA.GetParentObject()->AddPosition((-colPoints.Normal.X * colPoints.PenetrationDepth), (-colPoints.Normal.Y * colPoints.PenetrationDepth), (-colPoints.Normal.Z * colPoints.PenetrationDepth));
-                colliderA.GetParentObject()->ApplyTransformation();
+                    rb1->AddContactPoints(colInfo.collisionPoints);
+                    rb1->_hasCollision = true;
 
-                Physics::Contact(*rb1, -colPoints.Normal);
-                //rb1->_movementVector = { 0,0,0 };
+                    return true;
+                }
+
+                //Physics::Contact(*rb1, -colPoints.Normal);
             }
             else if (rb1 == nullptr && rb2 != nullptr) {
-                colPoints = Collision::EPA(points, colliderA, colliderB); 
+                if (Collision::EPA(points, colliderA, colliderB, colInfo)) {
+                    colliderB.GetParentObject()->AddPosition(colInfo.Normal * colInfo.PenetrationDepth);
+                    rb2->_pullingVectors.push_back(colInfo.Normal * colInfo.PenetrationDepth);
+                    Collision::CalculateContactPoints(colliderA, colliderB, colInfo);
 
-                colliderB.GetParentObject()->AddPosition((colPoints.Normal.X * colPoints.PenetrationDepth), (colPoints.Normal.Y * colPoints.PenetrationDepth), (colPoints.Normal.Z * colPoints.PenetrationDepth));
-                colliderB.GetParentObject()->ApplyTransformation();
+                    rb2->AddContactPoints(colInfo.collisionPoints);
+                    rb2->_hasCollision = true;
 
-                Physics::Contact(*rb2, -colPoints.Normal);
-                //rb2->_movementVector = { 0,0,0 };
+                    return true;
+                }
+
+                //Physics::Contact(*rb2, -colPoints.Normal);
             }
             else if (rb1 != nullptr && rb2 != nullptr) {
-                colPoints = Collision::EPA(points, colliderB, colliderA);
+                if (Collision::EPA(points, colliderB, colliderA, colInfo)) {
+                    colliderA.GetParentObject()->AddPosition(colInfo.Normal * colInfo.PenetrationDepth);
 
-                colliderA.GetParentObject()->AddPosition((colPoints.Normal.X * colPoints.PenetrationDepth), (colPoints.Normal.Y * colPoints.PenetrationDepth), (colPoints.Normal.Z * colPoints.PenetrationDepth));
-                colliderA.GetParentObject()->ApplyTransformation();
+                    rb1->_pullingVectors.push_back(-colInfo.Normal * colInfo.PenetrationDepth * 0.5f);
+                    rb2->_pullingVectors.push_back(colInfo.Normal * colInfo.PenetrationDepth * 0.5f);
 
-                Physics::Contact(*rb1, *rb2, -colPoints.Normal);
+                    Collision::CalculateContactPoints(colliderB, colliderA, colInfo);
+                    
+                    rb1->_hasCollision = true;
+                    rb2->_hasCollision = true;
+
+                    rb1->AddContactPoints(colInfo.collisionPoints);
+                    rb2->AddContactPoints(colInfo.collisionPoints);
+
+
+                    return true;
+                }
+
+                //Physics::Contact(*rb1, *rb2, -colPoints.Normal);
             }
             return true;
         }
     }
 }
-CollisionInfo Collision::EPA(Simplex& simplex, Geometry& colliderA, Geometry& colliderB)
+bool Collision::EPA(Simplex& simplex, Geometry& colliderA, Geometry& colliderB, CollisionInfo& colInfo)
 {
     std::vector<Vector3> polytope(simplex.begin(), simplex.end());
     std::vector<size_t>  faces = {
@@ -336,26 +325,13 @@ CollisionInfo Collision::EPA(Simplex& simplex, Geometry& colliderA, Geometry& co
     }
 
     if (minDistance == FLT_MAX) {
-        std::cout << std::endl << "not" << std::endl;
         minDistance = normals[minFace].W;
     }
 
-    //TODO: 
-    CollisionInfo pointsA;
+    colInfo.Normal = minNormal;
+    colInfo.PenetrationDepth = minDistance + 0.001f;
 
-    pointsA.Normal = minNormal;
-    pointsA.PenetrationDepth = minDistance + 0.001f;
-    pointsA.HasCollision = true;
-    //pointsA.CollisionPoints = Collision::GetContactPoints(*colliderA, pointsA.Normal);
-
-    CollisionInfo pointsB;
-    
-    pointsB.Normal = minNormal;
-    pointsB.PenetrationDepth = minDistance + 0.001f;
-    pointsB.HasCollision = true;
-    //pointsB.CollisionPoints = Collision::GetContactPoints(*colliderB, pointsB.Normal);
-
-    return pointsA;
+    return true;
 }
 
 std::pair<std::vector<Vector4>, size_t> Collision::GetFaceNormals(std::vector<Vector3>& polytope,std::vector<size_t>& faces)
@@ -438,4 +414,267 @@ std::shared_ptr<std::vector<float>> Collision::GetContactPoints(Geometry& geomet
     }
 
     return ContactPoints;
+}
+
+void Collision::CalculateContactPoints(Geometry& contactObject1, Geometry& contactObject2, CollisionInfo& colInfo) {
+    struct Plane
+    {
+    public:
+        Vector3 P1;
+        Vector3 Normal;
+
+        Plane(Vector3 p1, Vector3 normal) {
+            P1 = p1;
+            Normal = normal;
+        }
+    };
+
+    auto findOrigin = [](const std::vector<std::pair<Vector3, float>>& points) {
+        Vector3 origin{ 0,0,0 };
+        for (size_t i = 0; i < points.size(); i++) {
+            origin += points[i].first;
+        }
+        origin /= points.size();
+        return origin;
+    };
+    auto compareAngle = [](std::pair<Vector3, float>& pA, std::pair<Vector3, float>& pB) {
+        if (pA.second < pB.second) {
+            return true;
+        }
+        return false;
+    };
+    auto findContactPoint = [](Vector3 point, Vector3 objPos, Plane contactPlane, std::vector<std::pair<Vector3, float>>& contactBuf) {
+        point += objPos;
+
+        float distance = Vector3::GetVertexToPlaneDistance(point, contactPlane.P1, contactPlane.Normal);
+        if (distance > 0.01f)
+            return;
+
+        contactBuf.push_back({ point,0 });
+    };
+
+    //Point and angle
+    std::vector<std::pair<Vector3, float>> contactPointsA; contactPointsA.reserve(6);
+    std::vector<std::pair<Vector3, float>> contactPointsB; contactPointsB.reserve(6);
+
+    colInfo.Normal.NormilizeSelf();
+    Plane contactPlane{ contactObject1.FindFurthestPoint(colInfo.Normal), colInfo.Normal };
+
+    Vector3 originA;
+    Vector3 originB;
+    Vector3 refVector;
+
+    //Finding contact points from shape A
+    for (size_t i = 0; i < contactObject1._vertexCount * 3; i += 3)
+    {
+        Vector3 point{ contactObject1._vertex[i + 0],contactObject1._vertex[i + 1],contactObject1._vertex[i + 2] };
+
+        findContactPoint(point, contactObject1.GetParentObject()->GetPosition(), contactPlane, contactPointsA);
+    }
+
+    //Finding contact points from shape B
+    for (size_t i = 0; i < contactObject2._vertexCount * 3; i += 3)
+    {
+        Vector3 point{ contactObject2._vertex[i + 0], contactObject2._vertex[i + 1],contactObject2._vertex[i + 2] };
+
+        findContactPoint(point, contactObject2.GetParentObject()->GetPosition(), contactPlane, contactPointsB);
+    }
+
+    if (contactPointsA.size() == 0) {
+        for (size_t i = 0; i < contactPointsB.size(); i++)
+        {
+            colInfo.collisionPoints.push_back(contactPointsB[i].first);
+        }
+        return;
+    }
+    if (contactPointsB.size() == 0) {
+        for (size_t i = 0; i < contactPointsA.size(); i++)
+        {
+            colInfo.collisionPoints.push_back(contactPointsA[i].first);
+        }
+        return;
+    }
+
+    //calculate angle
+    originA = findOrigin(contactPointsA);
+    refVector = contactPointsA[0].first - originA;
+    for (size_t i = 1; i < contactPointsA.size(); i++) {
+        Vector3 originToPoint = contactPointsA[i].first - originA;
+        float u = Vector3::DotProduct(colInfo.Normal, Vector3::CrossProduct(refVector, originToPoint));
+        float angle = Vector3::GetAngle(refVector, originToPoint) * 180 / M_PI;
+
+        //if u <= 0 than point is left
+        if (u <= 0.001f) {
+            contactPointsA[i].second = angle;
+        }
+        else
+        {
+            contactPointsA[i].second = angle + 180;
+        }
+    }
+
+    //calculate angle
+    originB = findOrigin(contactPointsB);
+    refVector = contactPointsB[0].first - originB;
+    for (size_t i = 1; i < contactPointsB.size(); i++) {
+        Vector3 originToPoint = contactPointsB[i].first - originB;
+        float u = Vector3::DotProduct(-colInfo.Normal, Vector3::CrossProduct(refVector, originToPoint));
+        float angle = Vector3::GetAngle(refVector, originToPoint) * 180 / M_PI;
+
+        //if u <= 0 than point is left
+        if (u <= 0) {
+            contactPointsB[i].second = angle;
+        }
+        else
+        {
+            contactPointsB[i].second = angle + 180;
+        }
+    }
+
+
+    //Vertex to face contact
+    if (contactPointsA.size() == 1) {
+        colInfo.collisionPoints.push_back(contactPointsA[0].first);
+        return;
+    }
+    else if (contactPointsB.size() == 1) {
+        colInfo.collisionPoints.push_back(contactPointsB[0].first);
+        return;
+    }
+
+    //Rebuild shapes correctly(by clock)
+    std::sort(contactPointsA.begin(), contactPointsA.end(), compareAngle);
+    std::sort(contactPointsB.begin(), contactPointsB.end(), compareAngle);
+
+    std::vector<Vector3> realContactPoints;
+
+    for (size_t it = 0; it < contactPointsB.size(); it++)
+    {
+        size_t itFirstP = it;
+        size_t itSecondP = it + 1;
+        if (itSecondP == contactPointsB.size()) {
+            itSecondP = 0;
+        }
+
+        //We assume that the first point is inside
+        unsigned int passedCount = 1;
+
+        //Check if first point inside shape
+        for (size_t jt = 0; jt < contactPointsA.size(); jt++) {
+            size_t jtSecondP = jt + 1;
+            if (jtSecondP == contactPointsA.size()) {
+                jtSecondP = 0;
+            }
+
+            Vector3 vct1 = contactPointsB[itFirstP].first - contactPointsA[jt].first;
+            Vector3 edgeVector = contactPointsA[jtSecondP].first - contactPointsA[jt].first;
+
+            Vector3 norm = Vector3::CrossProduct(Vector3::GetNormalize(edgeVector), colInfo.Normal);
+
+            if (Vector3::DotProduct(norm, vct1) < 0) {
+                passedCount--;
+                break;
+            }
+        }
+        if (passedCount == 1)
+            realContactPoints.push_back(contactPointsB[itFirstP].first);
+
+
+        //Check if second point inside shape
+        //We assume that the second point is inside
+        passedCount++;
+        for (size_t jt = 0; jt < contactPointsA.size(); jt++) {
+            size_t jtSecondP = jt + 1;
+            if (jtSecondP == contactPointsA.size()) {
+                jtSecondP = 0;
+            }
+            Vector3 vct1 = contactPointsB[itSecondP].first - contactPointsA[jt].first;
+            Vector3 edgeVector = contactPointsA[jtSecondP].first - contactPointsA[jt].first;
+
+            Vector3 norm = Vector3::GetNormalize(Vector3::CrossProduct(Vector3::GetNormalize(edgeVector), colInfo.Normal));
+
+            if (Vector3::DotProduct(norm, vct1) < 0) {
+                passedCount--;
+                break;
+            }
+        }
+
+        //all points of current line is inside shape
+        if (passedCount == 2)
+            continue;
+
+
+        //Check if line separate shape
+        for (size_t jt = 0; jt < contactPointsA.size(); jt++) {
+            size_t jtFirstP = jt;
+            size_t jtSecondP = jt + 1;
+            if (jtSecondP == contactPointsA.size()) {
+                jtSecondP = 0;
+            }
+
+            float lengthAxisB = Vector3::GetMagnitude(contactPointsB[itSecondP].first - contactPointsB[itFirstP].first);
+            float lengthAxisA = Vector3::GetMagnitude(contactPointsA[jtSecondP].first - contactPointsA[jtFirstP].first);
+
+            /*
+            ------------   AxesA
+                 ---       AxesB
+            */
+            if (lengthAxisA >= lengthAxisB) {
+                Vector3 projectPoint;
+
+                bool notParallel = Vector3::ClosetPointBetweenAxis(
+                    { contactPointsB[itFirstP].first, contactPointsB[itSecondP].first },
+                    { contactPointsA[jtFirstP].first, contactPointsA[jtSecondP].first }, projectPoint);
+
+                if (!notParallel)
+                    continue;
+
+                float axiBLength = Vector3::GetMagnitude(contactPointsB[itFirstP].first - contactPointsB[itSecondP].first);
+                float vct1 = Vector3::GetMagnitude(contactPointsB[itFirstP].first - projectPoint);
+                float vct2 = Vector3::GetMagnitude(contactPointsB[itSecondP].first - projectPoint);
+
+                if (vct1 > axiBLength || vct2 > axiBLength)
+                    continue;
+
+                realContactPoints.push_back(projectPoint);
+            }
+
+            /*
+                 ---       AxesA
+            ------------   AxesB
+            */
+            else {
+                Vector3 projectPoint;
+
+                bool notParallel = Vector3::ClosetPointBetweenAxis(
+                    { contactPointsA[jtFirstP].first, contactPointsA[jtSecondP].first },
+                    { contactPointsB[itFirstP].first, contactPointsB[itSecondP].first }, projectPoint);
+
+                if (!notParallel)
+                    continue;
+
+                float axisBLength = Vector3::GetMagnitude(contactPointsA[jtFirstP].first - contactPointsA[jtSecondP].first);
+                float vct1 = Vector3::GetMagnitude(contactPointsA[jtFirstP].first - projectPoint);
+                float vct2 = Vector3::GetMagnitude(contactPointsA[jtFirstP].first - projectPoint);
+
+                if (vct1 > axisBLength || vct2 > axisBLength)
+                    continue;
+
+                realContactPoints.push_back(projectPoint);
+            }
+        }
+    }
+
+    //All point shape B outside shape A
+    //So All points shape A inside shapeB
+    if (realContactPoints.size() == 0) {
+        for (size_t i = 0; i < contactPointsA.size(); i++)
+        {
+            realContactPoints.push_back(contactPointsA[i].first);
+        }
+    }
+
+    std::cout << " End\n";
+
+    colInfo.collisionPoints = { realContactPoints.begin(), realContactPoints.end() };
 }

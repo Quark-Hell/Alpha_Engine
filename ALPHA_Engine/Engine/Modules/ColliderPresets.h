@@ -4,9 +4,15 @@
 
 class ColliderPresets : public Geometry {
 protected:
+	std::vector<float> _debugVertex;
+	std::vector<unsigned int> _debugIndices;
+
+protected:
 	void ApplyTransformation();
-	bool Create(std::string linkToFBX) override;
 	virtual void InitCollider(bool isExpand = true);
+
+public:
+	bool Create(std::string linkToFBX) override;
 
 private:
 	friend class Render;

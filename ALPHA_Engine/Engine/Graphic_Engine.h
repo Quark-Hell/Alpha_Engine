@@ -8,6 +8,7 @@ class ColliderPresets;
 class BoxCollider;
 class Mesh;
 class Vector3;
+class RigidBody;
 
 struct Colors {
 	const Vector3 green { 0.0f, 1.0f, 0.0f }; 
@@ -59,9 +60,9 @@ private:
 	void SetDebugRenderOptions();
 
 	void RenderMesh(Mesh& mesh);
-	void RenderMeshCollider(Geometry& collider);
 	void RenderCollider(ColliderPresets& collider);
-	void RenderBoxCollider(BoxCollider& collider);
+
+	void RenderRigidBodyInfo(RigidBody& rb);
 
 	void ApplyCameraTransform(std::shared_ptr<Camera>  camera);
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);

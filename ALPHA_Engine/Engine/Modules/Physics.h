@@ -2,6 +2,7 @@
 #include "Basical_Type.h"
 #include "Module.h"
 class Vector3;
+class Geometry;
 
 class State {
 public:
@@ -36,6 +37,11 @@ private:
 	Vector4 _orientation{ 0,0,0 };
 	Vector3 _angularMomentum{ 0,0,0 };
 	Vector3 _angularVelocity{ 0,0,0 };
+
+	std::vector<Vector3> _contactPoints;
+	std::vector<Vector3> _pullingVectors;
+
+	bool _hasCollision;
 	//Matrix3x3 _inertiaMatrix;
 
 public:
@@ -61,12 +67,18 @@ public:
 	Object* GetParentObject() override;
 	void SetParentObject(const Object& parent) override;
 
+	bool GetContactPoints(std::vector<Vector3>& contactPoint);
+
 	RigidBody();
 	~RigidBody();
 
 private:
 	void SetMovementVector(Vector3 vec);
 	void SetRotationVector(Vector3 vec);
+
+	void AddContactPoints(std::vector<Vector3>& points);
+
+	void ClearCollisinInfo();
 
 	friend class Collision;
 	friend class Physics;

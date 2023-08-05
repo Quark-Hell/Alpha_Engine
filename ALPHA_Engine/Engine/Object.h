@@ -1,6 +1,7 @@
 #pragma once
 #include "Basical_Type.h"
 #include "Modules/Transform.h"
+#include "Modules/BoxCollider.h"
 
 enum ModulesList;
 
@@ -11,9 +12,10 @@ class Vector3;
 class Object : public Transform {
 private:
 	std::vector<std::shared_ptr<Module>> Modules;
+	BoxCollider InertiaCollider;
 
-private:
 	friend class Geometry;
+	friend class BoxCollider;
 
 public:
 	Object();
@@ -46,6 +48,8 @@ public:
 	void ApplyTransformation() override;
 #pragma endregion
 
+	const BoxCollider& GetInertiaCollider();
+
 	bool AddModule(std::shared_ptr<Module> someModule);
 	bool AddModule(ModulesList moduleType, Module& outputModule);
 
@@ -57,6 +61,8 @@ public:
 	std::shared_ptr<Module> GetModuleByIndex(size_t index);
 
 	int GetCountOfModules();
+
+	glm::mat4x4& GetTransformationMatrix();
 
 	void DeleteObject();
 
