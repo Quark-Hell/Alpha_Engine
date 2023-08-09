@@ -1,5 +1,8 @@
 #include "MeshCollider.h"
 
+MeshCollider::MeshCollider(std::string linkToFBX) {
+    ColliderPresets::Create(linkToFBX);
+}
 MeshCollider::MeshCollider() {
 
 }

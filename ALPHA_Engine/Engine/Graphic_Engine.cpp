@@ -190,11 +190,9 @@ void Render::RenderCollider(ColliderPresets& collider) {
 
     glColor3f(0.8, 0.2, 0.2);
     glPointSize(7);
-    glDrawArrays(GL_POINTS, 0, 8);
+    glDrawElements(GL_POINTS, collider._debugIndices.size(), GL_UNSIGNED_INT, &collider._debugIndices[0]);
     
     glDisableClientState(GL_VERTEX_ARRAY);
-
-
 }
 void Render::RenderRigidBodyInfo(RigidBody& rb) {
     std::vector<Vector3> contactPoint;

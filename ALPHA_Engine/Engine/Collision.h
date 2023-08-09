@@ -66,6 +66,11 @@ private:
 
 	static std::shared_ptr<std::vector<float>> GetContactPoints(Geometry& geometry, Vector3 moveVector);
 
-	static void CalculateContactPoints(Geometry& contactGeometry1, Geometry& contactObject2, CollisionInfo& colInfo);
+	static void CalculateContactPoints(Geometry& contactObject1, Geometry& contactObject2, CollisionInfo& colInfo);
+	static void CheckIntersection(
+		std::vector<std::pair<Vector3, float>>& contactPointsA, 
+		std::vector<std::pair<Vector3, float>>& contactPointsB,
+		Vector3 normal,
+		std::vector<Vector3>& contactPointsBuf);
 };
 

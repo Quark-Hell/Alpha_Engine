@@ -126,6 +126,24 @@ void RigidBody::AddContactPoints(std::vector<Vector3>& points) {
 void RigidBody::ClearCollisinInfo() {
 	RigidBody::_hasCollision = false;
 	RigidBody::_contactPoints.clear();
+	RigidBody::_pullingVectors.clear();
+}
+
+void RigidBody::ApplyPullingVectors() {
+	if (_pullingVectors.size() == 0)
+		return;
+
+	std::cout << _pullingVectors.size() << " pVectorSize\n";
+
+	Vector3 realPullingVector;
+	for (size_t i = 0; i < _pullingVectors.size(); i++)
+	{
+		//RigidBody::GetParentObject()->AddPosition(_pullingVectors[i]);
+		realPullingVector += _pullingVectors[i];
+	}
+	realPullingVector /= _pullingVectors.size();
+
+	RigidBody::GetParentObject()->AddPosition(realPullingVector);
 }
 
 //void RigidBody::SetInertiaMatrix(Matrix3x3 matrix) {
@@ -148,6 +166,23 @@ RigidBody::~RigidBody() {
 #pragma endregion
 
 #pragma region Phisycs Define
+void Physics::PullingVectorsLoop() {
+	for (size_t it = 0; it < World::ObjectsOnScene.size(); it++)
+	{
+		Object* obj = World::ObjectsOnScene[it];
+		std::shared_ptr<RigidBody> rigidBody = std::dynamic_pointer_cast<RigidBody>(obj->GetModuleByType(RigidBodyType));
+
+		if (rigidBody == nullptr)
+			continue;
+
+		//Physics::ApplyBaseFriction(*rigidBody);
+		rigidBody->ApplyPullingVectors();
+
+		//std::cout << rigidBody->_movementVector.X;
+		//std::cout << "\n";
+	}
+}
+
 void Physics::PhysicsLoop() {
 
 	for (size_t it = 0; it < World::ObjectsOnScene.size(); it++)
@@ -233,7 +268,7 @@ void Physics::ApplyPhysics(RigidBody& rb) {
 
 void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 	double accumulator = World::GetDeltaTime();
-	if (accumulator > 1)
+	if (accumulator > _maxTimeStep)
 		accumulator = Physics::fixTimeStep;
 
 	while (accumulator >= Physics::fixTimeStep)

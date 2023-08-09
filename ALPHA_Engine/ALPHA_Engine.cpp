@@ -34,10 +34,11 @@ GameFunction* Game = new GameFunction;
 Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
 
-std::shared_ptr<Object> object2;
+
 std::shared_ptr<Object> plane;
 std::shared_ptr<Object> plane1;
 std::shared_ptr<Object> plane3;
+std::shared_ptr<Object> object2;
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 
@@ -48,10 +49,10 @@ void GameFunction::Start() {
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
 
     //MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
-    std::shared_ptr<BoxCollider> col2 = std::make_shared<BoxCollider>(); col2->Create("\\Models\\Primitives\\Cube.fbx");
-    std::shared_ptr<MeshCollider> col3 = std::make_shared<MeshCollider>(); col3->Create("\\Models\\Primitives\\Cube.fbx");
-    std::shared_ptr<MeshCollider> col4 = std::make_shared<MeshCollider>(); col4->Create("\\Models\\Primitives\\Cube.fbx");
-    std::shared_ptr<MeshCollider> col5 = std::make_shared<MeshCollider>(); col5->Create("\\Models\\Primitives\\Cube.fbx");
+    auto col2 = std::make_shared<BoxCollider>();
+    auto col3 = std::make_shared<BoxCollider>();
+    auto col4 = std::make_shared<BoxCollider>();
+    auto col5 = std::make_shared<BoxCollider>();
 
     Vector3 pos = Vector3{ 0,0,-15 };
     Vector3 rot = Vector3{ 0,0,0 };
@@ -64,29 +65,31 @@ void GameFunction::Start() {
     //object->AddPosition(9, 3, 0);
     //rb1->CalculateCenterMass();
 
-    plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    plane1->AddModule(std::static_pointer_cast<Module>(col4));
-    plane1->AddPosition(-0.5, -6, -10);
-    plane1->AddRotation(90, 0, 0);
-    plane1->SetScale(10, 10, 0.5);
 
-    plane = Primitives::Cube({0,0,0}, rot, scale, color);
-    plane->AddModule(std::static_pointer_cast<Module>(col3));
-    plane->AddPosition(0, -3, -10);
-    plane->AddRotation(90, 30, 60);
-    plane->SetScale(5, 5, 0.5);
     
     plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     plane3->AddModule(std::static_pointer_cast<Module>(col5));
-    plane3->AddPosition(-3, -4.5, -10);
-    plane3->AddRotation(0, 0, 5);
+    plane3->AddPosition(-3, 0, -10);
+    plane3->AddRotation(0, 0, 10);
     plane3->SetScale(3, 3, 0.5);
-    
+
+    plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane1->AddModule(std::static_pointer_cast<Module>(col4));
+    plane1->AddPosition(-0.5, -2, -10);
+    plane1->AddRotation(90, 0, 0);
+    plane1->SetScale(10, 10, 0.5);
+
+    plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane->AddModule(std::static_pointer_cast<Module>(col3));
+    plane->AddPosition(0, 5, -10);
+    plane->AddRotation(90, 30, 60);
+    plane->SetScale(5, 5, 0.5);
+
     object2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     object2->AddModule(std::static_pointer_cast<Module>(col2));
     object2->AddModule(std::static_pointer_cast<Module>(rb2));
-    object2->AddRotation(0, 1, 0);
-    object2->AddPosition(-2.5f, -1, -10);
+    object2->AddRotation(0, 0, 0);
+    object2->AddPosition(-2.1f, 4, -10);
     object2->SetScale(1, 1, 1);
 }
 
@@ -104,6 +107,8 @@ void GameFunction::Update() {
 
 void SetControl() {
     Player.AddModule(std::static_pointer_cast<Module>(camera));
+    Player.AddRotation(20, 0, 0);
+    Player.AddPosition(0, -7, 0);
     
     Bind LeftMove; LeftMove.KeyboardBind({ LeftMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_A });
     Bind RightMove; RightMove.KeyboardBind({ RightMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_D });
@@ -265,6 +270,7 @@ int main()
         World::ApplyingSceneTransformation();
         Physics::PhysicsLoop();
         Collision::CollisionLoop();
+        //Physics::PullingVectorsLoop();
         render->RenderLoop(camera);
         World::EndFrame();
         std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << "\n";

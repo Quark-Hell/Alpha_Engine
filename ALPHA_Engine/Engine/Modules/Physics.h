@@ -80,6 +80,8 @@ private:
 
 	void ClearCollisinInfo();
 
+	void ApplyPullingVectors();
+
 	friend class Collision;
 	friend class Physics;
 };
@@ -97,9 +99,11 @@ public:
 
 private:
 	static inline const float fixTimeStep = 1.0f / 60.0f;
+	static inline const float _maxTimeStep = 1.0f / 10.0f;
 
 public:
 	static void PhysicsLoop();
+	static void PullingVectorsLoop();
 
 	Physics();
 	~Physics();

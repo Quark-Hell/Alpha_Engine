@@ -3,14 +3,15 @@
 
 class MeshCollider : public ColliderPresets {
 public:
+	MeshCollider(std::string linkToFBX);
 	MeshCollider();
+
+
 	~MeshCollider();
 
 	ModulesList GetType();
 
 	bool CreateConvexFromConcave(std::string link);
-
-	//bool Create(std::string linkToFBX) override;
 
 private:
 	friend class Collision;
