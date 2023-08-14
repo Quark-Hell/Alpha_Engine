@@ -1,64 +1,68 @@
 #pragma once
 #include "Basical_Type.h"
-#include "Matrix.h"
+#include "Modules/Transform.h"
+#include "Modules/BoxCollider.h"
 
-class Matrix4x4;
+enum ModulesList;
+
 class Module;
 class Vector4;
 class Vector3;
 
-class Object {
-
+class Object : public Transform {
 private:
-	Vector3 Position{ 0,0,0 };
-	Vector4 Rotation{ 0,0,0,1 };
-	Vector3 Scale{ 1,1,1 };
+	std::vector<std::shared_ptr<Module>> Modules;
+	BoxCollider InertiaCollider;
 
-	Matrix4x4 _transformMatrix{};
-
-	std::vector<Module*> Modules;
-
-private:
 	friend class Geometry;
+	friend class BoxCollider;
 
 public:
 	Object();
 	~Object();
 
-	Vector3 GetPosition();
-	void AddPosition(float X, float Y, float Z);
-	void AddPosition(Vector3 position);
+#pragma region Redifine from Transfom
+	Vector3 GetPosition() override;
+	void AddPosition(float X, float Y, float Z) override;
+	void AddPosition(Vector3 position) override;
 
-	void SetPosition(float X, float Y, float Z);
-	void SetPosition(Vector3 position);
-
-
-	Vector3 GetRotation();
-	void AddRotation(float X, float Y, float Z);
-	void AddRotation(Vector3 rotation);
-
-	void SetRotation(float X, float Y, float Z);
-	void SetRotation(Vector3 rotation);
+	void SetPosition(float X, float Y, float Z) override;
+	void SetPosition(Vector3 position) override;
 
 
-	Vector3 GetScale();
-	void SetScale(float X, float Y, float Z);
-	void SetScale(Vector3 scale);
+	Vector3 GetRotation() override;
+	void AddRotation(float X, float Y, float Z) override;
+	void AddRotation(Vector3 rotation) override;
+
+	void SetRotation(float X, float Y, float Z) override;
+	void SetRotation(Vector3 rotation) override;
+
+
+	Vector3 GetScale() override;
+	void SetScale(float X, float Y, float Z) override;
+	void SetScale(Vector3 scale) override;
 
 	/*SetPosition, SetRotation and SetScale functions only change matrix of _transformMatrix.
 	So this function apply transformation to object and recalculate vertex relative position;
 	*/
-	void ApplyTransform();
+	void ApplyTransformation() override;
+#pragma endregion
 
-	bool AddModule(class Module* some_module);
+	const BoxCollider& GetInertiaCollider();
 
-	bool DeleteModuleByName(std::string name);
+	bool AddModule(std::shared_ptr<Module> someModule);
+	bool AddModule(ModulesList moduleType, Module& outputModule);
+
+	bool DeleteModuleByType(ModulesList type);
 	bool DeleteModuleByIndex(int index);
 
-	Module* GetModuleByName(std::string name);
-	Module* GetModuleByIndex(size_t index);
+	std::shared_ptr<Module> GetModuleByType(ModulesList type);
+	std::vector<std::shared_ptr<Module>> GetModuleByTypes(std::vector<ModulesList> typesArray);
+	std::shared_ptr<Module> GetModuleByIndex(size_t index);
 
 	int GetCountOfModules();
+
+	glm::mat4x4& GetTransformationMatrix();
 
 	void DeleteObject();
 

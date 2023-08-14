@@ -2,7 +2,7 @@
 Game Engine For Simulators
 
 <p align="center">
-      <a href="https://imgbb.com/"><img src="https://i.ibb.co/259dQkR/Alpha-Engine-1.png" alt="Alpha-Engine-1" border="0"></a>
+      <img src="https://i.ibb.co/LprNYRR/Alpha-Engine-2.png" alt="Alpha-Engine-2" border="0">
 </p>
 
 <p align="center">

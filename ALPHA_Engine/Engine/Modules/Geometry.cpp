@@ -2,63 +2,87 @@
 
 #include "Object.h"
 #include "Alghoritms.h"
-#include "Matrix.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+Geometry::Geometry() {
 
-inline Geometry::Geometry() {
-    Geometry::Rename("Geometry");
 }
-inline Geometry::~Geometry() {
+Geometry::~Geometry() {
 
 }
 
-inline bool Geometry::Create(std::string linkToFBX) {
+Object* Geometry::GetParentObject() {
+    return ParentObject;
+}
+void Geometry::SetParentObject(const Object& parent) {
+    ParentObject = const_cast<Object*>(&parent);
+}
+
+ModulesList Geometry::GetType() {
+    return ModulesList::GeometryType;
+}
+
+bool Geometry::Create(std::string linkToFBX) {
     Assimp::Importer importer;
     std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
 
     //TODO: Check if fbx
-    const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate);
+    const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
     aiMesh* mesh = s->mMeshes[0];
 
-    Geometry::_vertexCount = mesh->mNumVertices;
-    Geometry::_normalsCount = mesh->mNumVertices;
+    Geometry::_indicesCount = mesh->mNumFaces * 3;
+    Geometry::_indices = new unsigned int[Geometry::_indicesCount];
 
+    for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
+        for (size_t jt = 0; jt < mesh->mFaces[it].mNumIndices; jt++)
+        {
+            Geometry::_indices[(it * 3) + jt] = mesh->mFaces[it].mIndices[jt];
+        }
+    }
+
+
+    Geometry::_vertexCount = mesh->mNumVertices;
     Geometry::_vertex = new float[Geometry::_vertexCount * 3];
-    Geometry::_normals = new float[Geometry::_normalsCount * 3];
 
     for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
         if (mesh->HasPositions()) {
-            Geometry::_vertex[it]     = mesh->mVertices[it / 3].x;
+            Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
             Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
             Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
         }
+    }
+
+
+    Geometry::_normalsCount = mesh->mNumVertices;
+    Geometry::_normals = new float[Geometry::_normalsCount * 3];
+
+    for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
         if (mesh->HasNormals()) {
-            Geometry::_normals[it]     = mesh->mNormals[it / 3].x;
+            Geometry::_normals[it] = mesh->mNormals[it / 3].x;
             Geometry::_normals[it + 1] = mesh->mNormals[it / 3].y;
             Geometry::_normals[it + 2] = mesh->mNormals[it / 3].z;
         }
     }
 
-    Geometry::MakeUnique();
+
+    Geometry::_isIndexed = true;
+    //Mesh::MakeUnique();
+    //Mesh::_isShifted = true;
 
     return true;
 }
 
 /*Recommended not use now. Work so slow*/
-inline void Geometry::MakeUnique() {
+void Geometry::MakeUnique() {
     const int arr_len = 3;
     std::array<float, arr_len> buffer;
-
+    
     unsigned int count = 0;
-
+    
     std::unordered_map<std::string, std::array<float,arr_len>> uniqueMap;
-
+    
     std::string hash;
     hash.resize(arr_len * sizeof(float));
-
+    
     //delete same vertex by use hash map
     for (size_t it = 0; it < Geometry::_vertexCount * 3; it += 3)
     {
@@ -66,23 +90,33 @@ inline void Geometry::MakeUnique() {
         buffer[0] = Geometry::_vertex[it];
         buffer[1] = Geometry::_vertex[it + 1];
         buffer[2] = Geometry::_vertex[it + 2];
-
+    
         memcpy((char*)hash.data(), &buffer, arr_len * sizeof(float));
-
+    
         std::pair<std::string, std::array<float, arr_len>> vertPair(hash, buffer);
-
+    
         uniqueMap.insert(vertPair);
     }
-
+    
     Geometry::_vertexCount = uniqueMap.size();
     free(Geometry::_vertex);
     Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+
+    //int it = 0;
+    //for (const auto& pair : uniqueMap) {
+    //    if (it < Geometry::_vertexCount * 3) {
+    //        Geometry::_vertex[it] = pair.second[0];
+    //        Geometry::_vertex[it + 1] = pair.second[1];
+    //        Geometry::_vertex[it + 2] = pair.second[2];
+    //        it+=3;
+    //    }
+    //}
 
     for (size_t it = 0; it < uniqueMap.size() * 3; it+=3)
     {
         auto begin = uniqueMap.begin();
         std::advance(begin, it / 3);
-
+    
         Geometry::_vertex[it]   = begin->second[0];
         Geometry::_vertex[it+1] = begin->second[1];
         Geometry::_vertex[it+2] = begin->second[2];
@@ -90,7 +124,7 @@ inline void Geometry::MakeUnique() {
 }
 
 /*Not work now*/
-inline std::vector<Mesh*> Geometry::SeparateByLooseParts() {
+std::vector<Mesh*> Geometry::SeparateByLooseParts() {
     struct VertInfo
     {
         Vector3 Point;
@@ -171,18 +205,18 @@ inline std::vector<Mesh*> Geometry::SeparateByLooseParts() {
     return m;
 }
 
-inline Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
+Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
     Vector3 maxPoint = { 0,0,0 };
     float maxDistance = -FLT_MAX;
-    Vector3* vertexPos = new Vector3;
+    Vector3 vertexPos = { 0,0,0 };
 
     for (size_t it = 0; it < Geometry::_vertexCount * 3; it+=3) {
 
-        vertexPos->X = Geometry::_vertex[it];
-        vertexPos->Y = Geometry::_vertex[it + 1];
-        vertexPos->Z = Geometry::_vertex[it + 2];
+        vertexPos.X = Geometry::_vertex[it];
+        vertexPos.Y = Geometry::_vertex[it + 1];
+        vertexPos.Z = Geometry::_vertex[it + 2];
   
-        float distance = Vector3::DotProduct(*vertexPos, direction);
+        float distance = Vector3::DotProduct(vertexPos, direction);
         if (distance > maxDistance) {
             maxDistance = distance;
             maxPoint = vertexPos;
@@ -192,41 +226,125 @@ inline Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
     return maxPoint + Geometry::GetParentObject()->GetPosition();
 }
 
-inline void Geometry::ApplyTransformation() {
+Vector3 Geometry::GetPosition() {
+    return Geometry::_position;
+}
+void Geometry::AddPosition(float X, float Y, float Z) {
+    Geometry::_position.X += X;
+    Geometry::_position.Y += Y;
+    Geometry::_position.Z += Z;
+}
+void Geometry::AddPosition(Vector3 position) {
+    Geometry::_position.X += position.X;
+    Geometry::_position.Y += position.Y;
+    Geometry::_position.Z += position.Z;
+}
+void Geometry::SetPosition(float X, float Y, float Z) {
+    Vector3 direction = Vector3(X, Y, Z) - Geometry::_position;
+
+    Geometry::AddPosition(direction);
+}
+void Geometry::SetPosition(Vector3 position) {
+    Vector3 direction = position - Geometry::_position;
+
+    Geometry::AddPosition(direction);
+}
+
+
+Vector3 Geometry::GetRotation() {
+    return Geometry::_rotation;
+}
+void Geometry::AddRotation(float X, float Y, float Z) {
+    const float radX = M_PI / 180 * X;
+    const float radY = M_PI / 180 * Y;
+    const float radZ = M_PI / 180 * Z;
+
+    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    Geometry::_rotation.X += X;
+    Geometry::_rotation.Y += Y;
+    Geometry::_rotation.Z += Z;
+
+    Geometry::_isShifted = true;
+}
+void Geometry::AddRotation(Vector3 rotation) {
+    const float radX = M_PI / 180 * rotation.X;
+    const float radY = M_PI / 180 * rotation.Y;
+    const float radZ = M_PI / 180 * rotation.Z;
+
+    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    Geometry::_rotation.X += rotation.X;
+    Geometry::_rotation.Y += rotation.Y;
+    Geometry::_rotation.Z += rotation.Z;
+
+    Geometry::_isShifted = true;
+}
+void Geometry::SetRotation(float X, float Y, float Z) {
+    Vector3 direction = Vector3(X, Y, Z) - Geometry::_rotation;
+
+    Geometry::AddRotation(direction);
+}
+void Geometry::SetRotation(Vector3 rotation) {
+    Vector3 direction = rotation - Geometry::_rotation;
+
+    Geometry::AddRotation(direction);
+}
+
+
+Vector3 Geometry::GetScale() {
+    return Transform::_scale;
+}
+void Geometry::SetScale(float X, float Y, float Z) {
+    Vector3 delta = Geometry::_scale / Vector3(X, Y, Z);
+    Transform::_transformMatrix = glm::scale(Transform::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
+
+    Transform::_scale.X = X;
+    Transform::_scale.Y = Y;
+    Transform::_scale.Z = Z;
+
+    Geometry::ApplyTransformation();
+}
+void Geometry::SetScale(Vector3 scale) {
+    Vector3 delta = Transform::_scale / scale;
+    Geometry::_transformMatrix = glm::scale(Geometry::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
+
+    Geometry::_scale.X = scale.X;
+    Geometry::_scale.Y = scale.Y;
+    Geometry::_scale.Z = scale.Z;
+
+    ApplyTransformation();
+}
+
+void Geometry::ApplyTransformation() {
+    if (GetParentObject() == nullptr)
+        return;
+
     for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
     {
-        std::array<float, 4> buffer;
-        buffer[0] = Geometry::_vertex[jt];
-        buffer[1] = Geometry::_vertex[jt + 1];
-        buffer[2] = Geometry::_vertex[jt + 2];
-        buffer[3] = 1;
+        glm::vec4 buf(Geometry::_vertex[jt], Geometry::_vertex[jt + 1], Geometry::_vertex[jt + 2], 1);
 
-        float w = 1;
-
-        MatrixMath::MultiplyMatrix(
-            Geometry::_vertex[jt],
-            Geometry::_vertex[jt + 1],
-            Geometry::_vertex[jt + 2],
-            w,
-            Geometry::GetParentObject()->_transformMatrix, buffer);
+        glm::vec4 res;
+        res = Geometry::GetParentObject()->_transformMatrix * buf;
+        Geometry::_vertex[jt] = res.x;
+        Geometry::_vertex[jt + 1] = res.y;
+        Geometry::_vertex[jt + 2] = res.z;
     }
 
-    for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
+    for (size_t jt = 0; jt < Geometry::_normalsCount * 3; jt += 3)
     {
-        std::array<float, 4> buffer;
-        buffer[0] = Geometry::_normals[jt];
-        buffer[1] = Geometry::_normals[jt + 1];
-        buffer[2] = Geometry::_normals[jt + 2];
-        buffer[3] = 1;
+        glm::vec4 buf(Geometry::_normals[jt], Geometry::_normals[jt + 1], Geometry::_normals[jt + 2], 1);
 
-        float w = 1;
-
-        MatrixMath::MultiplyMatrix(
-            Geometry::_normals[jt],
-            Geometry::_normals[jt + 1],
-            Geometry::_normals[jt + 2],
-            w,
-            Geometry::GetParentObject()->_transformMatrix, buffer);
+        glm::vec4 res;
+        res = Geometry::GetParentObject()->_transformMatrix * buf;
+        Geometry::_normals[jt] = res.x;
+        Geometry::_normals[jt + 1] = res.y;
+        Geometry::_normals[jt + 2] = res.z;
     }
-    Geometry::_isShifted = false;
+
+    Geometry::_transformMatrix = glm::mat4x4(1.0f);
 }

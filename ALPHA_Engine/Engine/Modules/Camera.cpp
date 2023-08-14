@@ -2,11 +2,14 @@
 
 #include "Object.h"
 
-inline Camera::Camera() {
-    Camera::Rename("Camera");
+Camera::Camera() {
+
+}
+Camera::~Camera() {
+
 }
 
-inline void Camera::SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar) {
+void Camera::SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar) {
     Camera::Fov = Fov;
     Camera::Aspect = Aspect;
     Camera::ZNear = ZNear;
@@ -16,31 +19,33 @@ inline void Camera::SetCameraInfo(float Fov, float Aspect, float ZNear, float ZF
     glLoadIdentity();
     gluPerspective(Fov, Aspect, ZNear, ZFar);
 }
-inline void Camera::GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float* ZFar) {
+void Camera::GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float* ZFar) {
     *Fov = Camera::Fov;
     *Aspect = Camera::Aspect;
     *ZNear = Camera::ZNear;
     *ZFar = Camera::ZFar;
 }
 
-inline float Camera::GetFov() {
+ModulesList Camera::GetType() {
+    return ModulesList::CameraType;
+}
+
+Object* Camera::GetParentObject() {
+    return Module::GetParentObject();
+}
+void Camera::SetParentObject(const Object& parent) {
+    Module::SetParentObject(parent);
+}
+
+float Camera::GetFov() {
     return Camera::Fov;
 }
-inline float Camera::GetAspect() {
+float Camera::GetAspect() {
     return Camera::Aspect;
 }
-inline float Camera::GetZNear() {
+float Camera::GetZNear() {
     return Camera::ZNear;
 }
-inline float Camera::GetZFar() {
+float Camera::GetZFar() {
     return Camera::ZFar;
-}
-
-//TODO:
-inline Vector3 Camera::GetDirectionOfView() {
-    DirectionOfView = GetParentObject()->GetRotation();
-
-    //DirectionOfView.NormilizeSelf();
-
-    return DirectionOfView;
 }

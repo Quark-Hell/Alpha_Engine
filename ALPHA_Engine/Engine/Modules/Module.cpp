@@ -1,18 +1,20 @@
 #include "Module.h"
-
 #include "Object.h"
 
-inline void Module::Rename(std::string name) {
-	_name = name;
+Module::Module() {
+
 }
-inline std::string Module::GetName() {
-	return Module::_name;
+Module::~Module() {
+
 }
 
-inline Object* Module::GetParentObject() {
+ModulesList Module::GetType() {
+	return ModulesList::ModuleType;
+}
+
+Object* Module::GetParentObject() {
 	return ParentObject;
 }
-
-inline void Module::Test() {
-
+void Module::SetParentObject(const Object& parent) {
+	ParentObject = const_cast<Object*>(&parent);
 }

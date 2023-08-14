@@ -3,7 +3,12 @@
 #include "Basical_Type.h"
 
 class Camera;
+class Geometry;
+class ColliderPresets;
+class BoxCollider;
 class Mesh;
+class Vector3;
+class RigidBody;
 
 struct Colors {
 	const Vector3 green { 0.0f, 1.0f, 0.0f }; 
@@ -44,13 +49,21 @@ private:
 	void ClearFrameBuffer();
 
 public:
-	void StartRender(Camera* camera);
-	void RenderLoop(Camera* camera);
+	void StartRender(std::shared_ptr<Camera> camera);
+	void RenderLoop(std::shared_ptr<Camera>  camera);
 	Screen* GetScreenClass();
 
 private:
-	void ApplyCameraTransform(Camera* camera);
 	void SceneAssembler();
+
+	void SetMeshRenderOptions();
+	void SetDebugRenderOptions();
+
 	void RenderMesh(Mesh& mesh);
+	void RenderCollider(ColliderPresets& collider);
+
+	void RenderRigidBodyInfo(RigidBody& rb);
+
+	void ApplyCameraTransform(std::shared_ptr<Camera>  camera);
 	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
 };

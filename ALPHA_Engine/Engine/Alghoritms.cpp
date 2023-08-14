@@ -1,10 +1,10 @@
 #include "Alghoritms.h"
 
-inline void Graph::AddEdge(int Src, int Dest) {
+void Graph::AddEdge(int Src, int Dest) {
     Graph::adjLists[Src].push_back(Dest);
 }
 
-inline void Graph::DFS(int StartVertex, std::vector<int>* Output) {
+void Graph::DFS(int StartVertex, std::vector<int>* Output) {
     Graph::visited[StartVertex] = true;
     Output->push_back(StartVertex);
 
@@ -16,7 +16,7 @@ inline void Graph::DFS(int StartVertex, std::vector<int>* Output) {
     }
 }
 
-inline void Graph::BFS(int StartVertex, std::vector<int>* Output) {
+void Graph::BFS(int StartVertex, std::vector<int>* Output) {
     std::queue<int> q;
     visited[StartVertex] = true;
     q.push(StartVertex);
@@ -35,11 +35,11 @@ inline void Graph::BFS(int StartVertex, std::vector<int>* Output) {
     }
 }
 
-inline Graph::Graph(unsigned int size) {
+Graph::Graph(unsigned int size) {
     Graph::adjLists.resize(size);
     Graph::visited.resize(size);
 }
 
-inline unsigned int Graph::GetAdjListSize() {
+unsigned int Graph::GetAdjListSize() {
     return Graph::adjLists.size();
 }

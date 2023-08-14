@@ -1,7 +1,10 @@
 #pragma once
 #include <iostream>
+#include "AdditionalMath.h"
 
-struct Vector2 {
+class Math;
+
+class Vector2 {
 
 public:
 	float X;
@@ -13,36 +16,41 @@ public:
 	}
 
 public:
-	float GetMagnitude() {
+	virtual float GetMagnitude() {
 		return sqrtf(powf(X, 2) + powf(Y, 2));
 	}
 	static float GetMagnitude(Vector2 Vector) {
 		return sqrtf(powf(Vector.X, 2) + powf(Vector.Y, 2));
 	}
 
-	float GetNonSqrtMagnitude() {
+	virtual float GetNonSqrtMagnitude() {
 		return powf(X, 2) + powf(Y, 2);
 	}
 	static float GetNonSqrtMagnitude(Vector2 Vector) {
 		return powf(Vector.X, 2) + powf(Vector.Y, 2);
 	}
 
-	void NormilizeSelf() {
+	virtual void NormilizeSelf() {
 		float locLength = GetMagnitude();
+		if (locLength == 0)
+			return;
+
 		float inv_length = (1 / locLength);
 
 		X *= inv_length;
 		Y *= inv_length;
 	}
 	static Vector2 GetNormalize(Vector2 vector) {
-		Vector2 newVector;
-		float locLength = Vector2::GetMagnitude(newVector);
+		float locLength = Vector2::GetMagnitude(vector);
+		if (locLength == 0)
+			return vector;
+
 		float inv_length = (1 / locLength);
 
-		newVector.X *= inv_length;
-		newVector.Y *= inv_length;
+		vector.X *= inv_length;
+		vector.Y *= inv_length;
 
-		return newVector;
+		return vector;
 	}
 
 	static Vector2 LinearInteprolation(Vector2 A, Vector2 B, float T) {
@@ -54,13 +62,24 @@ public:
 		return newVector;
 	}
 
-	float DotProduct(Vector2 B) {
+	virtual float DotProduct(Vector2 B) {
 		return (X * B.X) + (Y * B.Y);
 	}
 	static float DotProduct(Vector2 A, Vector2 B) {
 		return (A.X * B.X) + (A.Y * B.Y);
 	}
 
+	virtual float GetAngle(Vector2 B = { 1,0 }) {
+		return cosf(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
+	}
+	static float GetAngle(Vector2 A = { 1,0 }, Vector2 B = { 1,0 }) {
+		return cosf(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
+	}
+
+	static Vector2 ReflectVector(Vector2 vector, Vector2 normal) {
+		normal.NormilizeSelf();
+		return normal * Vector2::DotProduct(vector, normal) * 2 - vector;
+	}
 
 #pragma region Operators
 	//-----------------------------------------------------------//
@@ -71,6 +90,15 @@ public:
 	void operator=(const Vector2* value) {
 		X = value->X;
 		Y = value->Y;
+	}
+
+	void operator=(const float value) {
+		X = value;
+		Y = value;
+	}
+	void operator=(const float* value) {
+		X = *value;
+		Y = *value;
 	}
 	//-----------------------------------------------------------//
 
@@ -83,6 +111,15 @@ public:
 		X += value->X;
 		Y += value->Y;
 	}
+
+	void operator+=(const float value) {
+		X += value;
+		Y += value;
+	}
+	void operator+=(const float* value) {
+		X += *value;
+		Y += *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -93,6 +130,15 @@ public:
 	void operator-=(const Vector2* value) {
 		X -= value->X;
 		Y -= value->Y;
+	}
+
+	void operator-=(const float value) {
+		X -= value;
+		Y -= value;
+	}
+	void operator-=(const float* value) {
+		X -= *value;
+		Y -= *value;
 	}
 	//-----------------------------------------------------------//
 
@@ -105,6 +151,15 @@ public:
 		X *= value->X;
 		Y *= value->Y;
 	}
+
+	void operator*=(const float value) {
+		X *= value;
+		Y *= value;
+	}
+	void operator*=(const float* value) {
+		X *= *value;
+		Y *= *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -115,6 +170,15 @@ public:
 	void operator/=(const Vector2* value) {
 		X /= value->X;
 		Y /= value->Y;
+	}
+
+	void operator/=(const float value) {
+		X /= value;
+		Y /= value;
+	}
+	void operator/=(const float* value) {
+		X /= *value;
+		Y /= *value;
 	}
 	//-----------------------------------------------------------//
 
@@ -284,7 +348,7 @@ public:
 #pragma endregion
 };
 
-struct Vector3 : public Vector2 {
+class Vector3 : public Vector2 {
 public:
 	float Z;
 
@@ -295,41 +359,46 @@ public:
 	}
 
 public:
-	float GetMagnitude() {
+	virtual inline float GetMagnitude() override {
 		return sqrtf(powf(X, 2) + powf(Y, 2) + powf(Z, 2));
 	}
-	static float GetMagnitude(Vector3 Vector) {
+	static inline float GetMagnitude(Vector3 Vector) {
 		return sqrtf(powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2));
 	}
 
-	float GetNonSqrtMagnitude() {
+	virtual inline float GetNonSqrtMagnitude() override {
 		return powf(X, 2) + powf(Y, 2) + powf(Z, 2);
 	}
-	static float GetNonSqrtMagnitude(Vector3 Vector) {
+	static inline float GetNonSqrtMagnitude(Vector3 Vector) {
 		return powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2);
 	}
 
-	void NormilizeSelf() {
+	virtual inline void NormilizeSelf() override {
 		float locLength = GetMagnitude();
+		if (locLength == 0)
+			return;
+
 		float inv_length = (1 / locLength);
 
 		X *= inv_length;
 		Y *= inv_length;
 		Z *= inv_length;
 	}
-	static Vector3 GetNormalize(Vector3 vector) {
-		Vector3 newVector;
-		float locLength = Vector3::GetMagnitude(newVector);
+	static inline Vector3 GetNormalize(Vector3 vector) {
+		float locLength = Vector3::GetMagnitude(vector);
+		if (locLength == 0)
+			return vector;
+
 		float inv_length = (1 / locLength);
 
-		newVector.X *= inv_length;
-		newVector.Y *= inv_length;
-		newVector.Z *= inv_length;
+		vector.X *= inv_length;
+		vector.Y *= inv_length;
+		vector.Z *= inv_length;
 
-		return newVector;
+		return vector;
 	}
 
-	static Vector3 LinearInteprolation(Vector3 A, Vector3 B, float T) {
+	static inline Vector3 LinearInteprolation(Vector3 A, Vector3 B, float T) {
 		Vector3 newVector;
 
 		newVector.X = (A.X * (1.0f - T)) + (B.X * T);
@@ -339,26 +408,127 @@ public:
 		return newVector;
 	}
 
-	float DotProduct(Vector3 B) {
+	float inline DotProduct(Vector3 B) {
 		return (X * B.X) + (Y * B.Y) + (Z * B.Z);
 	}
-	static float DotProduct(Vector3 A, Vector3 B) {
+	static inline float DotProduct(Vector3 A, Vector3 B) {
 		return (A.X * B.X) + (A.Y * B.Y) + (A.Z * B.Z);
 	}
 
-	Vector3 CrossProduct(Vector3 B) {
-		//TODO
+	inline Vector3 CrossProduct(Vector3 B) {
 		return Vector3(
 			(Y * B.Z - Z * B.Y),
 			(Z * B.X - X * B.Z),
 			(X * B.Y - Y * B.X));
 	}
-	static Vector3 CrossProduct(Vector3 A, Vector3 B) {
-		//TODO
+	static inline Vector3 CrossProduct(Vector3 A, Vector3 B) {
 		return Vector3(
 			(A.Y * B.Z - A.Z * B.Y),
 			(A.Z * B.X - A.X * B.Z),
 			(A.X * B.Y - A.Y * B.X));
+	}
+
+	float inline GetAngle(Vector3 B) {
+		return acosf(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
+	}
+	static inline float GetAngle(Vector3 A, Vector3 B) {
+		float cos = DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B));
+		if (abs(cos) > 1)
+			cos = round(cos);
+
+		return acosf(cos);
+	}
+
+	static inline Vector3 ReflectVector(Vector3 vector, Vector3 normal) {
+		normal.NormilizeSelf();
+		return vector - vector * Vector3::DotProduct(vector, normal) * 2;
+	}
+
+	static inline bool LineToPlaneIntersection(std::pair<Vector3, Vector3> line, 
+		Vector3 pA, Vector3 pB, Vector3 pC,
+		Vector3& intersectPoint) {
+
+		line.first.NormilizeSelf();
+		line.second.NormilizeSelf();
+
+		Vector3 lineVector = line.second - line.first;
+
+		Vector3 planeVectorA = pB - pA;
+		Vector3 planeVectorB = pC - pA;
+
+		Vector3 planeNorm = Vector3::GetNormalize(Vector3::CrossProduct(planeVectorA, planeVectorB));
+
+		float u = Vector3::DotProduct(planeNorm, lineVector);
+
+		//has not contact
+		if (fabs(u) < 0.001f)
+			return false;
+
+		float t = ((pA.X - line.first.X) * planeNorm.X + (pA.Y - line.first.Y) * planeNorm.Y + (pA.Z - line.first.Z) * planeNorm.Z) /
+			(planeNorm.X * (lineVector.X) + planeNorm.Y * (lineVector.Y) + planeNorm.Z * (lineVector.Z));
+
+		intersectPoint = line.first + (lineVector * t);
+		return true;
+	}
+
+	static inline float GetVertexToPlaneDistance(Vector3 vertex, Vector3 p1, Vector3 normal) {
+		normal.NormilizeSelf();
+
+		float numerator = std::abs(
+			(vertex.X - p1.X) * normal.X +
+			(vertex.Y - p1.Y) * normal.Y +
+			(vertex.Z - p1.Z) * normal.Z);
+
+		double denominator = std::sqrt(
+			normal.X * normal.X +
+			normal.Y * normal.Y +
+			normal.Z * normal.Z);
+
+		return numerator / denominator;
+	}
+
+	static inline Vector3 ProjectPointOnAxis(Vector3 point, Vector3 axisP1, Vector3 axisP2) {
+		Vector3 axisVector = Vector3::GetNormalize(axisP2 - axisP1);
+		Vector3 pointVector = point - axisP1;
+
+		double projection = 
+			axisVector.X * pointVector.X + 
+			axisVector.Y * pointVector.Y + 
+			axisVector.Z * pointVector.Z;
+
+		Vector3 projectPoint{axisP1 + axisVector * projection};
+		return projectPoint;
+	}
+
+	static inline bool ClosetPointBetweenAxis(std::pair<Vector3, Vector3> axis1,std::pair<Vector3, Vector3> axis2, Vector3& point) {
+		Vector3 axis1Vector = Vector3::GetNormalize(axis1.second - axis1.first);
+		Vector3 axis2Vector = Vector3::GetNormalize(axis2.second - axis2.first);
+
+		float normU = Vector3::DotProduct(axis1Vector, axis2Vector);
+
+		//parallel
+		if (fabs(normU) == 1)
+			return false;
+
+		Vector3 cn = Vector3::GetNormalize(Vector3::CrossProduct(axis2Vector ,axis1Vector));
+		Vector3 projection = axis1Vector * Vector3::DotProduct(axis2.first - axis1.first, axis1Vector);
+		Vector3 rejection = axis2.first - axis1.first - axis1Vector * Vector3::DotProduct(axis2.first - axis1.first, axis1Vector) - cn * Vector3::DotProduct(axis2.first - axis1.first, cn);
+		Vector3 closetApproach = axis2.first - axis2Vector * Vector3::GetMagnitude(rejection) / Vector3::DotProduct(axis2Vector, Vector3::GetNormalize(rejection));
+
+		point = closetApproach;
+		return true;
+	}
+
+	static inline float DistanceBetweenAxis(std::pair<Vector3, Vector3> axis1, std::pair<Vector3, Vector3> axis2) {
+		Vector3 axis1Vector = Vector3::GetNormalize(axis1.second - axis1.first);
+		Vector3 axis2Vector = axis2.second - axis2.first;
+		
+		Vector3 delta = axis2.first - axis1.first;
+
+		Vector3 cross = Vector3::CrossProduct(delta, axis1Vector);
+		float distance = Vector3::GetMagnitude(cross);
+
+		return distance;
 	}
 
 #pragma region Operators
@@ -373,6 +543,18 @@ public:
 		Y = value->Y;
 		Z = value->Z;
 	}
+
+	void operator=(const float value) {
+		X = value;
+		Y = value;
+		Z = value;
+
+	}
+	void operator=(const float* value) {
+		X = *value;
+		Y = *value;
+		Z = *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -385,6 +567,18 @@ public:
 		X += value->X;
 		Y += value->Y;
 		Z += value->Z;
+	}
+
+	void operator+=(const float value) {
+		X += value;
+		Y += value;
+		Z += value;
+
+	}
+	void operator+=(const float* value) {
+		X += *value;
+		Y += *value;
+		Z += *value;
 	}
 	//-----------------------------------------------------------//
 
@@ -399,6 +593,18 @@ public:
 		Y -= value->Y;
 		Z -= value->Z;
 	}
+
+	void operator-=(const float value) {
+		X -= value;
+		Y -= value;
+		Z -= value;
+
+	}
+	void operator-=(const float* value) {
+		X -= *value;
+		Y -= *value;
+		Z -= *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -412,6 +618,18 @@ public:
 		Y *= value->Y;
 		Z *= value->Z;
 	}
+
+	void operator*=(const float value) {
+		X *= value;
+		Y *= value;
+		Z *= value;
+
+	}
+	void operator*=(const float* value) {
+		X *= *value;
+		Y *= *value;
+		Z *= *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -424,6 +642,18 @@ public:
 		X /= value->X;
 		Y /= value->Y;
 		Z /= value->Z;
+	}
+
+	void operator/=(const float value) {
+		X /= value;
+		Y /= value;
+		Z /= value;
+
+	}
+	void operator/=(const float* value) {
+		X /= *value;
+		Y /= *value;
+		Z /= *value;
 	}
 	//-----------------------------------------------------------//
 
@@ -577,14 +807,14 @@ public:
 	//-----------------------------------------------------------//
 
 	bool operator<(const Vector3 value) {
-		if (GetNonSqrtMagnitude() < GetNonSqrtMagnitude())
+		if (GetNonSqrtMagnitude() < GetNonSqrtMagnitude(value))
 		{
 			return true;
 		}
 		return false;
 	}
 	bool operator<(const Vector3* value) {
-		if (GetNonSqrtMagnitude() < GetNonSqrtMagnitude())
+		if (GetNonSqrtMagnitude() < GetNonSqrtMagnitude(*value))
 		{
 			return true;
 		}
@@ -593,7 +823,7 @@ public:
 #pragma endregion
 };
 
-struct Vector4 : public Vector3 {
+class Vector4 : public Vector3 {
 
 public:
 	float W;
@@ -606,41 +836,46 @@ public:
 	}
 
 public:
-	float GetMagnitude() {
+	virtual inline float GetMagnitude() override {
 		return sqrtf(powf(X, 2) + powf(Y, 2) + powf(Z, 2) + powf(Z,2));
 	}
-	static float GetMagnitude(Vector3 Vector) {
+	static inline float GetMagnitude(Vector3 Vector) {
 		return sqrtf(powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2));
 	}
 
-	float GetNonSqrtMagnitude() {
+	virtual inline float GetNonSqrtMagnitude() override {
 		return powf(X, 2) + powf(Y, 2) + powf(Z, 2);
 	}
-	static float GetNonSqrtMagnitude(Vector3 Vector) {
+	static inline float GetNonSqrtMagnitude(Vector3 Vector) {
 		return powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2);
 	}
 
-	void NormilizeSelf() {
+	virtual inline void NormilizeSelf() override {
 		float locLength = GetMagnitude();
+		if (locLength == 0)
+			return;
+
 		float inv_length = (1 / locLength);
 
 		X *= inv_length;
 		Y *= inv_length;
 		Z *= inv_length;
 	}
-	static Vector3 GetNormalize(Vector3 vector) {
-		Vector3 newVector;
-		float locLength = Vector3::GetMagnitude(newVector);
+	static inline Vector3 GetNormalize(Vector3 vector) {
+		float locLength = Vector3::GetMagnitude(vector);
+		if (locLength == 0)
+			return vector;
+
 		float inv_length = (1 / locLength);
 
-		newVector.X *= inv_length;
-		newVector.Y *= inv_length;
-		newVector.Z *= inv_length;
+		vector.X *= inv_length;
+		vector.Y *= inv_length;
+		vector.Z *= inv_length;
 
-		return newVector;
+		return vector;
 	}
 
-	static Vector4 LinearInteprolation(Vector4 A, Vector4 B, float T) {
+	static inline Vector4 LinearInteprolation(Vector4 A, Vector4 B, float T) {
 		Vector4 newVector;
 
 		newVector.X = (A.X * (1.0f - T)) + (B.X * T);
@@ -651,11 +886,23 @@ public:
 		return newVector;
 	}
 
-	float DotProduct(Vector4 B) {
+	float inline DotProduct(Vector4 B) {
 		return (X * B.X) + (Y * B.Y) + (Z + B.Z) + (W + B.W);
 	}
-	static float DotProduct(Vector4 A, Vector4 B) {
+	static float inline DotProduct(Vector4 A, Vector4 B) {
 		return (A.X * B.X) + (A.Y * B.Y) + (A.Z + B.Z) + (A.W + B.W);
+	}
+
+	float inline GetAngle(Vector4 B = { 1,0,0 }) {
+		return cosf(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
+	}
+	static float inline GetAngle(Vector4 A, Vector4 B = { 1,0,0 }) {
+		return cosf(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
+	}
+
+	static inline Vector4 ReflectVector(Vector4 vector, Vector4 normal) {
+		normal.NormilizeSelf();
+		return vector - ((vector * normal * 2) / normal.GetMagnitude()) * normal;
 	}
 
 #pragma region Operators
@@ -672,6 +919,20 @@ public:
 		Z = value->Z;
 		W = value->W;
 	}
+
+	void operator=(const float value) {
+		X = value;
+		Y = value;
+		Z = value;
+		W = value;
+
+	}
+	void operator=(const float* value) {
+		X = *value;
+		Y = *value;
+		Z = *value;
+		W = *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -686,6 +947,20 @@ public:
 		Y += value->Y;
 		Z += value->Z;
 		W += value->W;
+	}
+
+	void operator+=(const float value) {
+		X += value;
+		Y += value;
+		Z += value;
+		W += value;
+
+	}
+	void operator+=(const float* value) {
+		X += *value;
+		Y += *value;
+		Z += *value;
+		W += *value;
 	}
 	//-----------------------------------------------------------//
 
@@ -702,6 +977,20 @@ public:
 		Z -= value->Z;
 		W -= value->W;
 	}
+
+	void operator-=(const float value) {
+		X -= value;
+		Y -= value;
+		Z -= value;
+		W -= value;
+
+	}
+	void operator-=(const float* value) {
+		X -= *value;
+		Y -= *value;
+		Z -= *value;
+		W -= *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -717,6 +1006,20 @@ public:
 		Z *= value->Z;
 		W *= value->W;
 	}
+
+	void operator*=(const float value) {
+		X *= value;
+		Y *= value;
+		Z *= value;
+		W *= value;
+
+	}
+	void operator*=(const float* value) {
+		X *= *value;
+		Y *= *value;
+		Z *= *value;
+		W *= *value;
+	}
 	//-----------------------------------------------------------//
 
 	//-----------------------------------------------------------//
@@ -731,6 +1034,20 @@ public:
 		Y /= value->Y;
 		Z /= value->Z;
 		W /= value->W;
+	}
+
+	void operator/=(const float value) {
+		X /= value;
+		Y /= value;
+		Z /= value;
+		W /= value;
+
+	}
+	void operator/=(const float* value) {
+		X /= *value;
+		Y /= *value;
+		Z /= *value;
+		W /= *value;
 	}
 	//-----------------------------------------------------------//
 

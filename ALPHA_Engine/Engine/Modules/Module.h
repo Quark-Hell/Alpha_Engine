@@ -3,10 +3,22 @@
 
 class Object;
 
+enum ModulesList {
+	ModuleType = 0,
+	CameraType = 1,
+	RigidBodyType = 2,
+	GeometryType = 3,
+	MeshColliderType = 4,
+	MeshType = 5,
+	BoxColliderType = 6,
+};
+
 class Module
 {
-private:
-	std::string _name;
+public:
+	std::string Name = "Undefined";
+
+protected:
 	Object* ParentObject = nullptr;
 
 private:
@@ -15,10 +27,11 @@ private:
 	friend class Object;
 
 public:
-	void Rename(std::string name);
-	std::string GetName();
-	Object* GetParentObject();
+	Module();
+	~Module();
 
-private:
-	virtual void Test();
+	virtual ModulesList GetType() = 0;
+
+	virtual Object* GetParentObject();
+	virtual void SetParentObject(const Object& parent) = 0;
 };

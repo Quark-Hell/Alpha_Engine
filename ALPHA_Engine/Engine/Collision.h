@@ -1,6 +1,9 @@
 #pragma once
 #include "Modules/Geometry.h"
 
+class MeshCollider;
+class CollisionInfo;
+
 class Simplex
 {
 private:
@@ -35,38 +38,39 @@ public:
 	static inline bool Tetrahedron(Simplex& points, Vector3& direction);
 };
 
-class Collider : public Geometry {
-public:
-	Collider();
-	~Collider();
-
-	bool CreateConvexFrom—oncave(std::string link);
-
-private:
-	friend class Collision;
-};
-
-class CollisionPoints {
+class CollisionInfo {
 public:
 	Vector3 Normal;
 	float PenetrationDepth;
-	bool HasCollision;
+	std::vector<Vector3> collisionPoints;
 };
 
 class Collision{
-private:
-	CollisionPoints _collisionPoints;
-
 public:
-	CollisionPoints GetCollisionPoints();
-	void CollisionLoop();
+	static void CollisionLoop();
+
+	static inline unsigned int GJKaccurate = 100;
+	static inline unsigned int EPAaccurate = 100;
 
 private:
-	Vector3 Support(Collider* colliderA, Collider* colliderB, Vector3 direction);
-	bool GJK(Collider* colliderA, Collider* colliderB, CollisionPoints& colPoints);
-	CollisionPoints EPA(Simplex& simplex, Collider* colliderA, Collider* ColliderB);
+	//static bool BoxToBox(BoxCollider& colliderA, BoxCollider& colliderB);
+	//static bool SphereToSphere(Geometry& colliderA, Geometry& colliderB);
+	//static bool SphereToBox(Geometry& colliderA, Geometry& colliderB);
 
-	std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
-	void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
+	static Vector3 Support(Geometry& colliderA, Geometry& colliderB, Vector3 direction);
+	static bool GJK(Geometry& colliderA, Geometry& colliderB);
+	static bool EPA(Simplex& simplex, Geometry& colliderA, Geometry& ColliderB, CollisionInfo& colInfo);
+
+	static std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
+	static void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
+
+	static std::shared_ptr<std::vector<float>> GetContactPoints(Geometry& geometry, Vector3 moveVector);
+
+	static void CalculateContactPoints(Geometry& contactObject1, Geometry& contactObject2, CollisionInfo& colInfo);
+	static void CheckIntersection(
+		std::vector<std::pair<Vector3, float>>& contactPointsA, 
+		std::vector<std::pair<Vector3, float>>& contactPointsB,
+		Vector3 normal,
+		std::vector<Vector3>& contactPointsBuf);
 };
 

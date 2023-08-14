@@ -8,9 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set (GLEW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLEW/")
 set (GLFW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
+set (glm "${PROJECT_SOURCE_DIR}/ALPHA_Engine/glm/")
 
 set (GLEWinclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLEW/include/")
 set (GLFWinclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/include/")
+set (glmInclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/glm/glm/")
 
 SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/")
 SET (assimpLIB "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/lib/")
@@ -29,10 +31,12 @@ find_library(GLEW glew)
 
 include_directories(${GLEWinclude})
 include_directories(${GLFWinclude})
+include_directories(${glmInclude})
 
 include_directories(${assimpINCLUDE})
 include_directories(${Engine})
 include_directories(${Game})
+include_directories(${glm})
 
 include_directories(${SFML})
 include_directories(${SFMLinclude})
@@ -49,24 +53,51 @@ ${assimpINCLUDE}assimp/Importer.hpp
 ${assimpINCLUDE}assimp/scene.h
 ${assimpINCLUDE}assimp/postprocess.h
 
+${Game}GameModels.h 
+${Game}GameModels.cpp 
+
+${Engine}Binds.h
+${Engine}Binds.cpp
+
 ${Engine}Alghoritms.h
+${Engine}Alghoritms.cpp
 ${Engine}Basical_Type.h
+${Engine}Basical_Type.cpp
 ${Engine}Collision.h
+${Engine}Collision.cpp
 ${Engine}Graphic_Engine.h
+${Engine}Graphic_Engine.cpp
 ${Engine}Material.h
-${Engine}Matrix.h  
+${Engine}Material.cpp
+
 ${Engine}Object.h 
+${Engine}Object.cpp   
 ${Engine}Texture.h 
+${Engine}Texture.cpp
 ${Engine}Timer.h
+${Engine}Timer.cpp
 ${Engine}Vectors.h
+${Engine}Vectors.cpp
 ${Engine}World.h  
+${Engine}World.cpp 
 
 ${Engine}Modules/Camera.h
+${Engine}Modules/Camera.cpp
 ${Engine}Modules/Geometry.h
+${Engine}Modules/Geometry.cpp
 ${Engine}Modules/Mesh.h
+${Engine}Modules/Mesh.cpp
 ${Engine}Modules/Module.h
+${Engine}Modules/Module.cpp
 ${Engine}Modules/Physics.h
-"Game/GameModels.h")
+${Engine}Modules/Physics.cpp
+"Engine/AdditionalMath.h" 
+"Engine/AdditionalMath.cpp" 
+"Engine/Modules/BoxCollider.h"
+"Engine/Modules/BoxCollider.cpp" 
+${glm}glm.hpp 
+ "Engine/Modules/ColliderPresets.h"
+ "Engine/Modules/ColliderPresets.cpp" "Engine/Modules/MeshCollider.h" "Engine/Modules/MeshCollider.cpp" "Engine/Modules/Transform.h" "Engine/Modules/Transform.cpp" "Engine/Plane.h")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib

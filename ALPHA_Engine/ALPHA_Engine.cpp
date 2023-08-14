@@ -1,61 +1,114 @@
 ﻿// ALPHA_Engine.cpp : Defines the entry point for the application.
 //
-
+#pragma once
 #include "ALPHA_Engine.h"
 
+#include "Engine/Alghoritms.h"
 #include "Engine/Basical_Type.h"
 
-#include "Engine/Alghoritms.cpp"
-#include "Engine/Collision.cpp"
-#include "Engine/Graphic_Engine.cpp"
+#include "Engine/World.h"
+#include "Engine/Object.h"
 
-#include "Engine/World.cpp"
-#include "Engine/Object.cpp"
-#include "Engine/Matrix.cpp"
+#include "Engine/Collision.h"
+#include "Engine/Graphic_Engine.h"
 
-#include "Engine/Binds.cpp"
+#include "Engine/Binds.h"
+#include "Engine/AdditionalMath.h"
 
-#include "GameModels.cpp"
+#include "GameModels.h"
 
-#include "Modules/Camera.cpp"
-#include "Modules/Geometry.cpp"
-#include "Modules/Mesh.cpp"
-#include "Modules/Module.cpp"
-#include "Modules/Physics.cpp"
+#include "Modules/Camera.h"
+#include "Modules/Geometry.h"
+#include "Modules/Mesh.h"
+#include "Modules/Module.h"
+#include "Modules/Physics.h"
+#include "Modules/ColliderPresets.h"
+#include "Modules/BoxCollider.h"
+#include "Modules/MeshCollider.h"
+#include "Modules/Transform.h"
 
 Object Player;
-Camera* camera = new Camera;
+std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 
 GameFunction* Game = new GameFunction;
 Render* render = new Render;
-Collision* collision = new Collision;
 InputSystem* InpSys = new InputSystem;
 
-Object* object = new Object;
 
+std::shared_ptr<Object> plane;
+std::shared_ptr<Object> plane1;
+std::shared_ptr<Object> plane3;
+std::shared_ptr<Object> object2;
+
+std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 
 void GameFunction::Start() {
     SetControl();
 
-    Vector3 pos = Vector3(0,0,0);
-    Vector3 rot = Vector3(0, 0, 0);
-    Vector3 scale = Vector3(1, 1, 1);
-    Vector3 color = Vector3(0, 0, 0);
+    World::DebugRenderEnabled = true;
+    World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
 
-    object = Primitives::Cylinder(pos, rot, scale, color);
+    //MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
+    auto col2 = std::make_shared<BoxCollider>();
+    auto col3 = std::make_shared<BoxCollider>();
+    auto col4 = std::make_shared<BoxCollider>();
+    auto col5 = std::make_shared<BoxCollider>();
+
+    Vector3 pos = Vector3{ 0,0,-15 };
+    Vector3 rot = Vector3{ 0,0,0 };
+    Vector3 scale = Vector3{ 1,1,1 };
+    Vector3 color = Vector3{ 0,0,0 };
+
+    //object = Primitives::Sphere(pos, rot, scale, color);
+    //object->AddModule(col1);
+    //object->AddModule(rb1);
+    //object->AddPosition(9, 3, 0);
+    //rb1->CalculateCenterMass();
+
+
+    
+    plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane3->AddModule(std::static_pointer_cast<Module>(col5));
+    plane3->AddPosition(-5, 0, -10);
+    plane3->AddRotation(0, 0, 10);
+    plane3->SetScale(3, 3, 0.5);
+
+    plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane1->AddModule(std::static_pointer_cast<Module>(col4));
+    plane1->AddPosition(-0.5, -2, -10);
+    plane1->AddRotation(90, 0, 0);
+    plane1->SetScale(70, 70, 0.5);
+
+    plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane->AddModule(std::static_pointer_cast<Module>(col3));
+    plane->AddPosition(0, 5, -10);
+    plane->AddRotation(90, 30, 60);
+    plane->SetScale(5, 5, 0.5);
+
+    object2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    object2->AddModule(std::static_pointer_cast<Module>(col2));
+    object2->AddModule(std::static_pointer_cast<Module>(rb2));
+    object2->AddRotation(0, 0, 0);
+    object2->AddPosition(-2.1f, 9, -10);
+    object2->SetScale(1, 1, 1);
 }
 
 void GameFunction::Update() {
-    object->AddRotation(1.5,0,0);
+    //object->AddRotation(1.5,0,0);
 
     //object->SetScale(
     //    abs(sin(World::GetTimeLong() / 350) + 1.2),
     //    abs(sin(World::GetTimeLong() / 350) + 1.2),
     //    abs(sin(World::GetTimeLong() / 350) + 1.2));
+
+    //std::cout << object->GetPosition().Z;
+    //std::cout << "\n";
 }
 
 void SetControl() {
-    Player.AddModule(camera);
+    Player.AddModule(std::static_pointer_cast<Module>(camera));
+    Player.AddRotation(20, 0, 0);
+    Player.AddPosition(0, -7, 0);
     
     Bind LeftMove; LeftMove.KeyboardBind({ LeftMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_A });
     Bind RightMove; RightMove.KeyboardBind({ RightMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_D });
@@ -70,6 +123,15 @@ void SetControl() {
     
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { GLFW_KEY_ESCAPE });
     
+    Bind jump; jump.KeyboardBind({ Jump }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_SPACE });
+    Bind stop; stop.KeyboardBind({ Stop }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_G });
+
+    Bind toLeft; toLeft.KeyboardBind({ LeftMoveTestObject }, { EnumKeyStates::KeyHold }, { GLFW_KEY_H });
+    Bind toRight; toRight.KeyboardBind({ RightMoveTestObject }, { EnumKeyStates::KeyHold }, { GLFW_KEY_J });
+
+    InpSys->InsertBind(toLeft);
+    InpSys->InsertBind(toRight);
+
     InpSys->InsertBind(CameraRot);
     
     InpSys->InsertBind(LeftMove);
@@ -82,6 +144,9 @@ void SetControl() {
     InpSys->InsertBind(DownMove);
     
     InpSys->InsertBind(CloseGameFirstMethod);
+
+    InpSys->InsertBind(stop);
+    InpSys->InsertBind(jump);
 }
 void LeftMoveCamera() {
     Vector3 newPos = Player.GetPosition();
@@ -152,6 +217,13 @@ void DownMoveCamera() {
     Player.SetPosition(newPos);
 }
 
+void LeftMoveTestObject() {
+    object2->AddPosition(-0.02,0,0);
+}
+void RightMoveTestObject() {
+    object2->AddPosition(0.02, 0, 0);
+}
+
 void CameraRotate() {
     float sensitive = 0.15;
 
@@ -172,6 +244,14 @@ void CameraRotate() {
     }
 }
 
+void Stop() {
+    //rb1->AddForce(0, 100, 0);
+}
+void Jump() {
+    //rb1->AddForce(-0.2,0,0);
+    printf("jump");
+}
+
 int main()
 {
     //HWND hwnd = GetConsoleWindow();
@@ -179,20 +259,21 @@ int main()
 
     Game->Start();
     render->StartRender(camera);
-
+    
     InpSys->Window = render->GetScreenClass()->GetWindow();
-
-    camera->GetDirectionOfView();
-
+    
     while (!World::GetStateOfGame())
     {
         World::StartFrame();
         Game->Update();
         InpSys->IO_Events();
         World::ApplyingSceneTransformation();
-        collision->CollisionLoop();
+        Physics::PhysicsLoop();
+        Collision::CollisionLoop();
+        //Physics::PullingVectorsLoop();
         render->RenderLoop(camera);
         World::EndFrame();
+        std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << "\n";
     }
 
     glfwTerminate();

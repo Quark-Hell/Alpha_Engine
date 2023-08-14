@@ -5,7 +5,6 @@ public:
 	virtual void Start();
 	virtual void Update();
 
-
 };
 
 void SetControl();
@@ -27,6 +26,9 @@ void BackwardMoveCamera();
 
 void UpMoveCamera();
 void DownMoveCamera();
+
+void Stop();
+void Jump();
 
 void CameraRotate();
 

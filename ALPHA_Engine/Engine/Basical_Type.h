@@ -1,10 +1,10 @@
 #pragma once
 #define _USE_MATH_DEFINES
 
-#include <iostream>
 #include <vector>
 #include <filesystem>
 #include <string>  
+#include <memory>
 #include <unordered_map>
 #include <unordered_set>
 #include <chrono>
@@ -14,9 +14,7 @@
 #include <ctime>
 #include <set>
 #include <array>
-#include <cmath>
-
-#include "Vectors.h"
+#include "AdditionalMath.h"
 
 #define GLEW_STATIC
 #include <GL/glew.h>

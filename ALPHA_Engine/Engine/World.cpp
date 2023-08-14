@@ -1,44 +1,42 @@
 #include "World.h"
 
-#include "Object.h"
-
-inline World::World() {
+World::World() {
 
 }
 
-inline void World::CloseGame() {
+void World::CloseGame() {
 	IsCloseGame = true;
 }
 
-inline bool World::GetStateOfGame() {
+bool World::GetStateOfGame() {
 	return IsCloseGame;
 }
 
-inline double World::GetTimeLong() {
+double World::GetTimeLong() {
 	return World::_timeLong;
 }
-inline float World::GetDeltaTime() {
+float World::GetDeltaTime() {
 	return World::_deltaTime;
 }
 
-inline void World::StartFrame() {
+void World::StartFrame() {
 	// Get starting timepoint
 	World::_startTime = std::chrono::high_resolution_clock::now();
 }
-inline void World::EndFrame() {
+void World::EndFrame() {
 	World::_endTime = std::chrono::high_resolution_clock::now();
-	World::_deltaTime = std::chrono::duration_cast	<std::chrono::milliseconds>(World::_endTime - World::_startTime).count();
-	World::_timeLong += std::chrono::duration_cast	<std::chrono::milliseconds>(World::_endTime - World::_startTime).count();
+	World::_deltaTime = std::chrono::duration_cast	<std::chrono::microseconds>(World::_endTime - World::_startTime).count() * 0.000001f;
+	World::_timeLong += World::_deltaTime;
 }
 
-inline void World::BuildTransformationThread(const std::vector<Object*> objects) {
+void World::BuildTransformationThread(const std::vector<Object*> objects) {
 	for (size_t it = 0; it < objects.size(); it++)
 	{
-		objects[it]->ApplyTransform();
+		objects[it]->ApplyTransformation();
 	}
 }
 
-inline void World::ApplyingSceneTransformation() {
+void World::ApplyingSceneTransformation() {
 	const unsigned int bufferCapacity = 500000;
 
 	std::vector<std::thread> threads;
@@ -71,5 +69,11 @@ inline void World::ApplyingSceneTransformation() {
 	for (size_t it = 0; it < threads.size(); it++)
 	{
 		threads[it].join();
+	}
+}
+
+void World::SetSimulationSpeed(float simSpeed) {
+	if (simSpeed < 0) {
+		World::SimulationSpeed = simSpeed;
 	}
 }

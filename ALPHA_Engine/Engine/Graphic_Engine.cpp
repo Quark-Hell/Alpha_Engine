@@ -2,10 +2,20 @@
 
 #include "World.h"
 #include "Modules/Camera.h"
+#include "Modules/Geometry.h"
 #include "Modules/Mesh.h"
+
+#include "Modules/MeshCollider.h"
+#include "Modules/BoxCollider.h"
+
+#include "Modules/Physics.h"
+
+#include "Collision.h"
+
 #include "GameModels.h"
 
-inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name) {
+
+void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name) {
     _wight = Wight;
     _height = Height;
     _bitsPerPixel = BitsPerPixel;
@@ -45,19 +55,18 @@ inline void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsign
     glfwGetFramebufferSize(Screen::_window, &width, &height);
     glViewport(0, 0, width, height);
 
-
     glfwMakeContextCurrent(Screen::_window);
-    //glfwSwapInterval(0);
+    glfwSwapInterval(1);
 }
-inline GLFWwindow* Screen::GetWindow() {
+GLFWwindow* Screen::GetWindow() {
     return Screen::_window;
 }
 
-inline Screen* Render::GetScreenClass() {
+Screen* Render::GetScreenClass() {
     return &(Render::_screenClass);
 }
 
-inline void Render::PrepareToRender() {
+void Render::PrepareToRender() {
     glClearColor(0.3f, 0.3f, 0.3f, 0.f);
 
     //Light
@@ -95,11 +104,11 @@ inline void Render::PrepareToRender() {
     glClearDepth(1.f);
     glDepthFunc(GL_LEQUAL);
     
-    float ratio = 4 / 3;
+    float ratio = 4.0f / 3.0f;
     glFrustum(-ratio, ratio, -1.f, 1.f, 1.0f, 500.f);
 }
 
-inline void Render::ApplyCameraTransform(Camera* camera) {
+void Render::ApplyCameraTransform(std::shared_ptr<Camera> camera) {
     Vector3 Position = camera->GetParentObject()->GetPosition();
     Vector3 Rotation = camera->GetParentObject()->GetRotation();
 
@@ -122,13 +131,13 @@ inline void Render::ApplyCameraTransform(Camera* camera) {
     glTranslatef(Position.X, Position.Y, Position.Z);
 }
 
-inline void Render::ClearFrameBuffer() {
+void Render::ClearFrameBuffer() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
 
-inline void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
+void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -141,14 +150,25 @@ inline void Render::ApplyTransformation(Vector3 Position, Vector3 Rotation, Vect
     //glScalef(Scale.X, Scale.Y, Scale.Z);
 }
 
-inline void Render::RenderMesh(Mesh& mesh) {
+void Render::SetMeshRenderOptions() {
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+}
+void Render::SetDebugRenderOptions() {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+}
+
+void Render::RenderMesh(Mesh& mesh) {
     glColor3f(0.8, 0.8, 0.8);
+    Render::SetMeshRenderOptions();
 
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
     //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    
-
+   
     //glBindTexture();
     //glIndexPointer(GL_UNSIGNED_INT,0, mesh._indices);
     glNormalPointer(GL_FLOAT, 0, mesh._normals);
@@ -159,29 +179,83 @@ inline void Render::RenderMesh(Mesh& mesh) {
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
+void Render::RenderCollider(ColliderPresets& collider) {
+    glColor3f(0.2, 0.8, 0.2);
+    Render::SetDebugRenderOptions();
+    
+    glEnableClientState(GL_VERTEX_ARRAY);
+    
+    glVertexPointer(3, GL_FLOAT, 0, &collider._debugVertex[0]);
+    glDrawElements(GL_TRIANGLES, collider._debugIndices.size(), GL_UNSIGNED_INT, &collider._debugIndices[0]);
 
-inline void Render::SceneAssembler() {
+    glColor3f(0.8, 0.2, 0.2);
+    glPointSize(7);
+    glDrawElements(GL_POINTS, collider._debugIndices.size(), GL_UNSIGNED_INT, &collider._debugIndices[0]);
+    
+    glDisableClientState(GL_VERTEX_ARRAY);
+}
+void Render::RenderRigidBodyInfo(RigidBody& rb) {
+    std::vector<Vector3> contactPoint;
+    if (!rb.GetContactPoints(contactPoint))
+        return;
+
+    Render::SetDebugRenderOptions();
+    glDisable(GL_DEPTH_TEST);
+    glColor3f(0.2, 0.2, 0.7);
+    glPointSize(10);
+
+    std::cout << contactPoint.size() << " Size\n";
+
+    for (size_t i = 0; i < contactPoint.size(); i++) {
+        Vector3 relativeContactPointPos = (rb.GetParentObject()->GetPosition() * -1) + contactPoint[i];
+
+        glBegin(GL_POINTS);
+        glVertex3f(relativeContactPointPos.X, relativeContactPointPos.Y, relativeContactPointPos.Z);
+        glEnd();
+    }
+
+}
+
+void Render::SceneAssembler() {
     for (size_t i = 0; i < World::ObjectsOnScene.size(); i++)
     {
         for (size_t j = 0; j < World::ObjectsOnScene[i]->GetCountOfModules(); j++)
         {
-            Mesh* mesh = dynamic_cast<Mesh*>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+            ModulesList type = World::ObjectsOnScene[i]->GetModuleByIndex(j)->GetType();
 
-            if (mesh != nullptr && mesh->GetName() == "Mesh") {
+            if (type == MeshType) {
+                std::shared_ptr<Mesh> mesh = std::dynamic_pointer_cast<Mesh>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
                 Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
                 RenderMesh(*mesh);
             }
+
+
+#pragma region DebugRender
+#ifdef _DEBUG
+            if (World::DebugRenderEnabled == false)
+                continue;
+
+            std::shared_ptr<ColliderPresets> collider = std::dynamic_pointer_cast<ColliderPresets>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+
+            if (collider != nullptr) {
+                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+                RenderCollider(*collider);
+            }
+
+            std::shared_ptr<RigidBody> rb = std::dynamic_pointer_cast<RigidBody>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+
+            if (rb != nullptr) {
+                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+                RenderRigidBodyInfo(*rb);
+            }
+#endif
+#pragma endregion
         }
     }   
 }       
 
-inline void Render::StartRender(Camera* camera) {
-    //sf::ContextSettings window_settings;
-    //window_settings.depthBits = 24;
-    //window_settings.stencilBits = 8;
-    //window_settings.antialiasingLevel = 2;
-
-    _screenClass.CreateScreen(800, 600, 32, "GLFW OpenGL");
+void Render::StartRender(std::shared_ptr<Camera>  camera) {
+    _screenClass.CreateScreen(1280, 720, 32, "GLFW OpenGL");
 
     int width, height;
     glfwGetFramebufferSize(_screenClass._window, &width, &height);
@@ -190,14 +264,11 @@ inline void Render::StartRender(Camera* camera) {
     Render::PrepareToRender();
     Render::ApplyCameraTransform(camera);
 
-    camera->SetCameraInfo(60, 4.0 / 3.0, 0.1, 300);
-
-    //_screenClass._screen->setVerticalSyncEnabled(true);
-    //_screenClass._screen->setFramerateLimit(60);
+    camera->SetCameraInfo(60, 16.0 / 9.0, 0.1, 300);
 }
 
 
-inline void Render::RenderLoop(Camera* camera) {
+void Render::RenderLoop(std::shared_ptr<Camera>  camera) {
     if (!glfwWindowShouldClose(_screenClass._window))
     {
         glfwPollEvents();
@@ -210,5 +281,9 @@ inline void Render::RenderLoop(Camera* camera) {
         Render::SceneAssembler();
 
         glfwSwapBuffers(_screenClass._window);
+    }
+    else
+    {
+        exit(0);
     }
 }
