@@ -18,12 +18,12 @@ public:
 class RigidBody : public Module {
 public:
 	float Mass = 1;
-	Vector3 Gravity = Vector3{ 0,-1.81,0 };
-	float BaseFriction = 0.9;
+	Vector3 Gravity = Vector3{ 0,-9.81,0 };
+	float BaseFriction = 0.990;
 	/*Description:
 	if = 1 than body movement reflect
 	if = 0 than body stop*/
-	float ElasticityCoefficient = 0;
+	float ElasticityCoefficient = 0.7f;
 	float MaxSpeed = 20;
 
 private:

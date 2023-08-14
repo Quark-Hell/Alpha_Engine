@@ -216,10 +216,10 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB) {
 
                     //colliderA.GetParentObject()->SetPosition(nowPos);
 
+                    Physics::Contact(*rb1, -colInfo.Normal);
+
                     return true;
                 }
-
-                //Physics::Contact(*rb1, -colPoints.Normal);
             }
             else if (rb1 == nullptr && rb2 != nullptr) {
                 if (Collision::EPA(points, colliderA, colliderB, colInfo)) {
@@ -235,10 +235,12 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB) {
             
                     //colliderB.GetParentObject()->SetPosition(nowPos);
 
+                    Physics::Contact(*rb2, colInfo.Normal);
+
                     return true;
                 }
             
-                //Physics::Contact(*rb2, -colPoints.Normal);
+
             }
             else if (rb1 != nullptr && rb2 != nullptr) {
                 if (Collision::EPA(points, colliderB, colliderA, colInfo)) {
@@ -261,7 +263,7 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB) {
                     return true;
                 }
 
-                //Physics::Contact(*rb1, *rb2, -colPoints.Normal);
+                Physics::Contact(*rb1, *rb2, -colInfo.Normal);
             }
             return true;
         }

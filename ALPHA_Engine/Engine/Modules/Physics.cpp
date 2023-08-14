@@ -193,7 +193,6 @@ void Physics::PhysicsLoop() {
 		if (rigidBody == nullptr)
 			continue;
 
-		//Physics::ApplyBaseFriction(*rigidBody);
 		Physics::ApplyPhysics(*rigidBody);
 
 		//std::cout << rigidBody->_movementVector.X;
@@ -209,6 +208,8 @@ void Physics::ApplyBaseFriction(RigidBody& rb) {
 	//Vector3 resistForce = quadSpeed * 0.5 * 5.29 * 1 * 1;
 	//rb.AddForce(resistForce);
 	//rb._force *= rb.BaseFriction;
+	//rb._force *= rb.BaseFriction;
+	rb._velocity *= rb.BaseFriction;
 }
 
 void Physics::ApplyTorque(RigidBody& rb) {
@@ -259,7 +260,7 @@ void Physics::ApplyPhysics(RigidBody& rb) {
 		Physics::SemiImplicitIntegrate(rb);
 		break;
 	case RK4:
-		RK4Integrate(rb);
+		Physics::RK4Integrate(rb);
 		break;
 	default:
 		break;
@@ -274,6 +275,9 @@ void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 	while (accumulator >= Physics::fixTimeStep)
 	{
 		Physics::ApplyGravity(rb);
+		Physics::ApplyBaseFriction(rb);
+
+		std::cout << rb._force.Y << " xForce\n";
 
 		Vector3 newVelocity = rb.GetVelocity() + rb._force / rb.Mass;
 
@@ -295,9 +299,12 @@ void Physics::SemiImplicitIntegrate(RigidBody& rb) {
 		const double alpha = accumulator / Physics::fixTimeStep;
 		
 		Physics::ApplyGravity(rb);
+		Physics::ApplyBaseFriction(rb);
 		
 		Vector3 newVelocity = rb.GetVelocity() + rb._force / rb.Mass;
-		
+
+		std::cout << newVelocity.X << " xForce\t" << newVelocity.Y << " yForce\n";
+
 		if (newVelocity > rb.MaxSpeed) {
 			rb._velocity = Vector3::GetNormalize(newVelocity) * rb.MaxSpeed;
 			rb.GetParentObject()->AddPosition(rb.GetVelocity() * Physics::fixTimeStep * alpha);
@@ -357,6 +364,8 @@ void Physics::RK4Integrate(RigidBody& rb) {
 		state.Velocity = rb._velocity;
 
 		Physics::ApplyGravity(rb);
+		Physics::ApplyBaseFriction(rb);
+
 		integrate(state, Physics::fixTimeStep, rb._force, rb.Mass);
 		
 		rb._velocity = state.Velocity;
@@ -374,6 +383,8 @@ void Physics::RK4Integrate(RigidBody& rb) {
 		state.Velocity = rb._velocity;
 		
 		Physics::ApplyGravity(rb);
+		Physics::ApplyBaseFriction(rb);
+
 		integrate(state, Physics::fixTimeStep, rb._force, rb.Mass);
 		
 		rb._velocity += (state.Velocity - rb._velocity) * alpha;

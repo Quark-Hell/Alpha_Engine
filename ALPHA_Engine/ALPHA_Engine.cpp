@@ -69,7 +69,7 @@ void GameFunction::Start() {
     
     plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     plane3->AddModule(std::static_pointer_cast<Module>(col5));
-    plane3->AddPosition(-3, 0, -10);
+    plane3->AddPosition(-5, 0, -10);
     plane3->AddRotation(0, 0, 10);
     plane3->SetScale(3, 3, 0.5);
 
@@ -77,7 +77,7 @@ void GameFunction::Start() {
     plane1->AddModule(std::static_pointer_cast<Module>(col4));
     plane1->AddPosition(-0.5, -2, -10);
     plane1->AddRotation(90, 0, 0);
-    plane1->SetScale(10, 10, 0.5);
+    plane1->SetScale(70, 70, 0.5);
 
     plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     plane->AddModule(std::static_pointer_cast<Module>(col3));
@@ -89,7 +89,7 @@ void GameFunction::Start() {
     object2->AddModule(std::static_pointer_cast<Module>(col2));
     object2->AddModule(std::static_pointer_cast<Module>(rb2));
     object2->AddRotation(0, 0, 0);
-    object2->AddPosition(-2.1f, 4, -10);
+    object2->AddPosition(-2.1f, 9, -10);
     object2->SetScale(1, 1, 1);
 }
 
