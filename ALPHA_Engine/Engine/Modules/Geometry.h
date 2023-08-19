@@ -5,14 +5,13 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "Modules/Transform.h"
+#include "Modules/MovableModule.h"
 
 class Object;
 class Mesh;
 
-class Geometry : public Module, public Transform {
+class Geometry : public virtual MovableModule {
 protected:
-	bool _isShifted = false;
 	bool _isIndexed = false;
 
 	Object* _parentObject;
@@ -25,46 +24,21 @@ protected:
 	unsigned int _normalsCount = 0;
 	unsigned int _indicesCount = 0;
 
-
 protected:
 	friend class Object;
 	friend class Render;
 	friend class Collision;
 	friend class Physics;
 	friend class RigidBody;
+	friend class AABB;
 
 public:
 	Geometry();
-	~Geometry();
-
-	Object* GetParentObject() override;
-	void SetParentObject(const Object& parent) override;
-
-#pragma region Redifine from Transfom
-	Vector3 GetPosition() override;
-	void AddPosition(float X, float Y, float Z) override;
-	void AddPosition(Vector3 position) override;
-
-	void SetPosition(float X, float Y, float Z) override;
-	void SetPosition(Vector3 position) override;
-
-
-	Vector3 GetRotation() override;
-	void AddRotation(float X, float Y, float Z) override;
-	void AddRotation(Vector3 rotation) override;
-
-	void SetRotation(float X, float Y, float Z) override;
-	void SetRotation(Vector3 rotation) override;
-
-
-	Vector3 GetScale() override;
-	void SetScale(float X, float Y, float Z) override;
-	void SetScale(Vector3 scale) override;
-
-	void ApplyTransformation() override;
-#pragma endregion
+	virtual ~Geometry();
 
 	ModulesList GetType() override;
+
+	void ApplyTransformation() override;
 
 	virtual bool Create(std::string linkToFBX);
 	//virtual void Delete();

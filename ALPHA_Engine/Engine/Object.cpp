@@ -5,7 +5,7 @@
 #include "Modules/Geometry.h"
 #include "Modules/Mesh.h"
 #include "Modules/Physics.h"
-#include "Modules/ColliderPresets.h"
+#include "Modules/Collider.h"
 
 #include "Modules/MeshCollider.h"
 #include "Modules/BoxCollider.h"
@@ -48,9 +48,9 @@ Vector3 Object::GetRotation() {
 	return Object::_rotation;
 }
 void Object::AddRotation(float X, float Y, float Z) {
-	const float radX = M_PI / 180 * X;
-	const float radY = M_PI / 180 * Y;
-	const float radZ = M_PI / 180 * Z;
+	const float radX = M_PI / 180.0f * X;
+	const float radY = M_PI / 180.0f * Y;
+	const float radZ = M_PI / 180.0f * Z;
 
 	Object::_transformMatrix = glm::rotate(Object::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
 	Object::_transformMatrix = glm::rotate(Object::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -70,9 +70,9 @@ void Object::AddRotation(float X, float Y, float Z) {
 	}
 }
 void Object::AddRotation(Vector3 rotation) {
-	const float radX = M_PI / 180 * rotation.X;
-	const float radY = M_PI / 180 * rotation.Y;
-	const float radZ = M_PI / 180 * rotation.Z;
+	const float radX = M_PI / 180.0f * rotation.X;
+	const float radY = M_PI / 180.0f * rotation.Y;
+	const float radZ = M_PI / 180.0f * rotation.Z;
 
 	Object::_transformMatrix = glm::rotate(Object::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
 	Object::_transformMatrix = glm::rotate(Object::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -164,6 +164,39 @@ bool Object::AddModule(std::shared_ptr<Module> someModule) {
 	return true;
 }
 bool Object::AddModule(ModulesList moduleType, Module& outputModule) {
+	std::shared_ptr<Module> someModule;
+
+	switch (moduleType)
+	{
+	case ModuleType:
+		return false;
+		break;
+	case CameraType:
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<Camera>());
+		break;
+	case RigidBodyType:
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<RigidBody>());
+		break;
+	case GeometryType:
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<Geometry>());
+		break;
+	case MeshColliderType:
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<MeshCollider>());
+		break;
+	case BoxColliderType:
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<BoxCollider>());
+		break;
+	default:
+		return false;
+		break;
+	}
+
+	Object::AddModule(someModule);
+	someModule->SetParentObject(*this);
+	outputModule = *someModule.get();
+	return true;
+}
+bool Object::AddModule(ModulesList moduleType) {
 	std::shared_ptr<Module> someModule;
 
 	switch (moduleType)

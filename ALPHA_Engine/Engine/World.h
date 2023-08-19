@@ -1,6 +1,7 @@
 #pragma once
 #include "Basical_Type.h"
 #include "Object.h"
+#include "BVH_Tree.h"
 
 class Object;
 
@@ -20,6 +21,11 @@ private:
 	static inline std::chrono::steady_clock::time_point _endTime;
 
 	static inline float SimulationSpeed = 1;
+
+	static inline AABB RootAABB = AABB(
+		0, 5,
+		0, 5,
+		0, 5);
 
 public:
 	///TODO: In next update debug render will not work in release build
@@ -42,6 +48,10 @@ public:
 	static float GetDeltaTime();
 
 	static void SetSimulationSpeed(float SimSpeed);
+
+	static void CreateWorldTree();
+	static void FindNearestObject(Leaf& leafBuffer, std::vector<Object*>& objectsBuffer, float maxDistance = 300);
+	static void CreateAABBvolume(Node& outputNode, std::vector<std::shared_ptr<Leaf>>& leafBuffer);
 
 private:
 	friend class Render;

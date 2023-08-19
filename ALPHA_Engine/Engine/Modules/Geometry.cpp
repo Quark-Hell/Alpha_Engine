@@ -10,15 +10,8 @@ Geometry::~Geometry() {
 
 }
 
-Object* Geometry::GetParentObject() {
-    return ParentObject;
-}
-void Geometry::SetParentObject(const Object& parent) {
-    ParentObject = const_cast<Object*>(&parent);
-}
-
 ModulesList Geometry::GetType() {
-    return ModulesList::GeometryType;
+    return GeometryType;
 }
 
 bool Geometry::Create(std::string linkToFBX) {
@@ -224,100 +217,6 @@ Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
     }
 
     return maxPoint + Geometry::GetParentObject()->GetPosition();
-}
-
-Vector3 Geometry::GetPosition() {
-    return Geometry::_position;
-}
-void Geometry::AddPosition(float X, float Y, float Z) {
-    Geometry::_position.X += X;
-    Geometry::_position.Y += Y;
-    Geometry::_position.Z += Z;
-}
-void Geometry::AddPosition(Vector3 position) {
-    Geometry::_position.X += position.X;
-    Geometry::_position.Y += position.Y;
-    Geometry::_position.Z += position.Z;
-}
-void Geometry::SetPosition(float X, float Y, float Z) {
-    Vector3 direction = Vector3(X, Y, Z) - Geometry::_position;
-
-    Geometry::AddPosition(direction);
-}
-void Geometry::SetPosition(Vector3 position) {
-    Vector3 direction = position - Geometry::_position;
-
-    Geometry::AddPosition(direction);
-}
-
-
-Vector3 Geometry::GetRotation() {
-    return Geometry::_rotation;
-}
-void Geometry::AddRotation(float X, float Y, float Z) {
-    const float radX = M_PI / 180 * X;
-    const float radY = M_PI / 180 * Y;
-    const float radZ = M_PI / 180 * Z;
-
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
-
-    Geometry::_rotation.X += X;
-    Geometry::_rotation.Y += Y;
-    Geometry::_rotation.Z += Z;
-
-    Geometry::_isShifted = true;
-}
-void Geometry::AddRotation(Vector3 rotation) {
-    const float radX = M_PI / 180 * rotation.X;
-    const float radY = M_PI / 180 * rotation.Y;
-    const float radZ = M_PI / 180 * rotation.Z;
-
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
-
-    Geometry::_rotation.X += rotation.X;
-    Geometry::_rotation.Y += rotation.Y;
-    Geometry::_rotation.Z += rotation.Z;
-
-    Geometry::_isShifted = true;
-}
-void Geometry::SetRotation(float X, float Y, float Z) {
-    Vector3 direction = Vector3(X, Y, Z) - Geometry::_rotation;
-
-    Geometry::AddRotation(direction);
-}
-void Geometry::SetRotation(Vector3 rotation) {
-    Vector3 direction = rotation - Geometry::_rotation;
-
-    Geometry::AddRotation(direction);
-}
-
-
-Vector3 Geometry::GetScale() {
-    return Transform::_scale;
-}
-void Geometry::SetScale(float X, float Y, float Z) {
-    Vector3 delta = Geometry::_scale / Vector3(X, Y, Z);
-    Transform::_transformMatrix = glm::scale(Transform::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
-
-    Transform::_scale.X = X;
-    Transform::_scale.Y = Y;
-    Transform::_scale.Z = Z;
-
-    Geometry::ApplyTransformation();
-}
-void Geometry::SetScale(Vector3 scale) {
-    Vector3 delta = Transform::_scale / scale;
-    Geometry::_transformMatrix = glm::scale(Geometry::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
-
-    Geometry::_scale.X = scale.X;
-    Geometry::_scale.Y = scale.Y;
-    Geometry::_scale.Z = scale.Z;
-
-    ApplyTransformation();
 }
 
 void Geometry::ApplyTransformation() {

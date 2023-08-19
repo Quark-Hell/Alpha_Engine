@@ -12,6 +12,8 @@
 
 #include "Collision.h"
 
+#include "AABB.h"
+
 #include "GameModels.h"
 
 
@@ -162,8 +164,8 @@ void Render::SetDebugRenderOptions() {
 }
 
 void Render::RenderMesh(Mesh& mesh) {
-    glColor3f(0.8, 0.8, 0.8);
     Render::SetMeshRenderOptions();
+    glColor3f(0.8, 0.8, 0.8);
 
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -179,9 +181,9 @@ void Render::RenderMesh(Mesh& mesh) {
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
-void Render::RenderCollider(ColliderPresets& collider) {
-    glColor3f(0.2, 0.8, 0.2);
+void Render::RenderCollider(Collider& collider) {
     Render::SetDebugRenderOptions();
+    glColor3f(0.2, 0.8, 0.2);
     
     glEnableClientState(GL_VERTEX_ARRAY);
     
@@ -215,6 +217,35 @@ void Render::RenderRigidBodyInfo(RigidBody& rb) {
     }
 
 }
+void Render::RenderAABB(std::vector<float>& vertex, std::vector<unsigned int>& indices) {
+#ifdef _DEBUG
+    Render::SetDebugRenderOptions();
+    //glDisable(GL_DEPTH_TEST);
+    glColor3f(0.8, 0.8, 0.8);
+    
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    glVertexPointer(3, GL_FLOAT, 0, &vertex[0]);
+    //glDrawArrays(GL_POINTS, 0, 24);
+    glDrawElements(GL_LINE_LOOP, indices.size(), GL_UNSIGNED_INT, &indices[0]);
+    
+    glDisableClientState(GL_VERTEX_ARRAY);
+#endif // _DEBUG
+}
+void Render::RenderAABB(AABB& aabb) {
+#ifdef _DEBUG
+    Render::SetDebugRenderOptions();
+    //glDisable(GL_DEPTH_TEST);
+    glColor3f(0.5, 0.8, 0.2);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    glVertexPointer(3, GL_FLOAT, 0, &aabb._AABBvertex[0]);
+    glDrawElements(GL_TRIANGLES, aabb._AABBindices.size(), GL_UNSIGNED_INT, &aabb._AABBindices[0]);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+#endif // _DEBUG
+}
 
 void Render::SceneAssembler() {
     for (size_t i = 0; i < World::ObjectsOnScene.size(); i++)
@@ -235,11 +266,12 @@ void Render::SceneAssembler() {
             if (World::DebugRenderEnabled == false)
                 continue;
 
-            std::shared_ptr<ColliderPresets> collider = std::dynamic_pointer_cast<ColliderPresets>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+            std::shared_ptr<Collider> collider = std::dynamic_pointer_cast<Collider>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
 
             if (collider != nullptr) {
                 Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
                 RenderCollider(*collider);
+                RenderAABB(collider->_AABBvertex, collider->_AABBindices);
             }
 
             std::shared_ptr<RigidBody> rb = std::dynamic_pointer_cast<RigidBody>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
@@ -251,7 +283,13 @@ void Render::SceneAssembler() {
 #endif
 #pragma endregion
         }
-    }   
+    } 
+
+#ifdef _DEBUG
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    Render::RenderAABB(World::RootAABB);
+#endif
 }       
 
 void Render::StartRender(std::shared_ptr<Camera>  camera) {

@@ -28,10 +28,10 @@ private:
 
 public:
 	Module();
-	~Module();
+	virtual ~Module();
 
 	virtual ModulesList GetType() = 0;
 
 	virtual Object* GetParentObject();
-	virtual void SetParentObject(const Object& parent) = 0;
+	virtual void SetParentObject(const Object& parent);
 };
