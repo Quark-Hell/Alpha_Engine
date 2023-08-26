@@ -14,9 +14,6 @@ class Vector3;
 class Object : public Transform {
 private:
 	std::vector<std::shared_ptr<Module>> Modules;
-	BoxCollider InertiaCollider;
-
-	AABB _aabbVolume;
 
 	friend class Geometry;
 	friend class BoxCollider;
@@ -52,8 +49,6 @@ public:
 	*/
 	void ApplyTransformation() override;
 #pragma endregion
-
-	const BoxCollider& GetInertiaCollider();
 
 	bool AddModule(std::shared_ptr<Module> someModule);
 	bool AddModule(ModulesList moduleType, Module& outputModule);

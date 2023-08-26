@@ -15,10 +15,6 @@
 #include "Vectors.h"
 #include "World.h"
 
-const BoxCollider& Object::GetInertiaCollider() {
-	return Object::InertiaCollider;
-}
-
 Vector3 Object::GetPosition() {
 	return Object::_position;
 }
@@ -339,6 +335,7 @@ Object::~Object() {
 	for (size_t i = 0; i < World::ObjectsOnScene.size(); i++) {
 		if (this == World::ObjectsOnScene[i]) {
 			World::ObjectsOnScene.erase(World::ObjectsOnScene.begin() + i);
+			return;
 		}
 	}
 }

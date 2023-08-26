@@ -5,16 +5,9 @@
 #include "Modules/Geometry.h"
 
 BoxCollider::BoxCollider() {
-	BoxCollider::_vertex = new float[BoxCollider::_vertexCount];
-
-	BoxCollider::InitCollider();
-	BoxCollider::SetScale(Vector3{ 1,1,1 });
-
-	AABB::UpdateAABB(Geometry::_vertex, Geometry::_vertexCount);
-
-#ifdef _DEBUG
 	MeshCollider::Create("\\Models\\Primitives\\Cube.fbx");
-#endif
+	BoxCollider::SetScale(Vector3{ 1,1,1 });
+	AABB::UpdateAABB(Geometry::_vertex, Geometry::_vertexCount);
 }
 
 BoxCollider::~BoxCollider() {

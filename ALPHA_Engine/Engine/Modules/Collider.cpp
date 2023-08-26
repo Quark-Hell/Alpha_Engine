@@ -5,14 +5,31 @@
 #include <assimp/postprocess.h>
 
 #include "Object.h"
+#include "World.h"
 
 Collider::Collider()
 {
+    bool isHave = false;
+    for (size_t i = 0; i < World::CollidersOnScene.size(); i++) {
+        if (this == World::CollidersOnScene[i]) {
+            isHave = true;
+        }
+    }
 
+    if (isHave == true)
+        return;
+
+    World::CollidersOnScene.push_back(this);
 }
 
 Collider::~Collider()
 {
+    for (size_t i = 0; i < World::CollidersOnScene.size(); i++) {
+        if (this == World::CollidersOnScene[i]) {
+            World::CollidersOnScene.erase(World::CollidersOnScene.begin() + i);
+            return;
+        }
+    }
 }
 
 ModulesList Collider::GetType() {

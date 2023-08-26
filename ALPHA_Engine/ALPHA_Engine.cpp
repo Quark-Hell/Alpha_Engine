@@ -27,6 +27,7 @@
 #include "Modules/MeshCollider.h"
 #include "Modules/Transform.h"
 
+
 Object Player;
 std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 
@@ -47,7 +48,7 @@ void GameFunction::Start() {
     World::DebugRenderEnabled = true;
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
 
-    MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
+    //MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
     auto col2 = std::make_shared<BoxCollider>();
     auto col3 = std::make_shared<BoxCollider>();
     auto col5 = std::make_shared<BoxCollider>();
@@ -84,16 +85,16 @@ void GameFunction::Start() {
     plane->AddRotation(90, 30, 60);
     plane->SetScale(5, 5, 0.5);
     
-    object = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    object->AddModule(std::static_pointer_cast<Module>(col2));
-    object->AddModule(std::static_pointer_cast<Module>(rb2));
-    object->AddRotation(0, 0, 0);
-    object->AddPosition(-2.1f, 9, -10);
-    object->SetScale(1, 1, 1);
+    //object = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    //object->AddModule(std::static_pointer_cast<Module>(col2));
+    //object->AddModule(std::static_pointer_cast<Module>(rb2));
+    //object->AddRotation(0, 0, 0);
+    //object->AddPosition(-2.1f, 9, -10);
+    //object->SetScale(1, 1, 1);
 }
 
 void GameFunction::Update() {
-    //object->AddRotation(1.5,0,0);
+    //plane->AddRotation(0, 0, 5.5);
 
     //object->SetScale(
     //    abs(sin(World::GetTimeLong() / 350) + 1.2),
@@ -123,10 +124,10 @@ void SetControl() {
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { GLFW_KEY_ESCAPE });
     
     Bind jump; jump.KeyboardBind({ Jump }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_SPACE });
-    Bind stop; stop.KeyboardBind({ Stop }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_G });
+    Bind stop; stop.KeyboardBind({ Stop }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_L });
 
-    Bind toLeft; toLeft.KeyboardBind({ LeftMoveTestObject }, { EnumKeyStates::KeyHold }, { GLFW_KEY_H });
-    Bind toRight; toRight.KeyboardBind({ RightMoveTestObject }, { EnumKeyStates::KeyHold }, { GLFW_KEY_J });
+    Bind toLeft; toLeft.KeyboardBind({ LeftMoveTestObject }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_G });
+    Bind toRight; toRight.KeyboardBind({ RightMoveTestObject }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_H });
 
     InpSys->InsertBind(toLeft);
     InpSys->InsertBind(toRight);
@@ -217,10 +218,10 @@ void DownMoveCamera() {
 }
 
 void LeftMoveTestObject() {
-    object->AddPosition(-0.02,0,0);
+    rb2->AddForce(-15, 0, 0);
 }
 void RightMoveTestObject() {
-    object->AddPosition(0.02, 0, 0);
+    rb2->AddForce(15, 0, 0);
 }
 
 void CameraRotate() {
@@ -244,10 +245,10 @@ void CameraRotate() {
 }
 
 void Stop() {
-    //rb1->AddForce(0, 100, 0);
+    rb2->AddForce(10, 0, 0);
 }
 void Jump() {
-    //rb1->AddForce(-0.2,0,0);
+    rb2->AddForce(0,10,0);
     printf("jump");
 }
 
@@ -274,7 +275,7 @@ int main()
         //Physics::PullingVectorsLoop();
         render->RenderLoop(camera);
         World::EndFrame();
-        std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << "\n";
+        std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << " Musk Lox" << "\n";
     }
 
     glfwTerminate();

@@ -1,4 +1,6 @@
 #include "World.h"
+//#include <Windows.h>
+//#pragma comment(lib, "winmm.lib")
 
 World::World() {
 
@@ -79,39 +81,57 @@ void World::SetSimulationSpeed(float simSpeed) {
 }
 
 void World::CreateWorldTree() {
+	//PlaySound("E:\\3D-Engine\\ALPHA_Engine\\EINS_ZWEI_POLIZEI.wav", NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+
 	std::vector<std::shared_ptr<Node>> nodeBuffer;
 	std::vector<std::shared_ptr<Leaf>> leavesBuffer;
-	
-	std::vector<Object*> objectBuffer; 
-	objectBuffer.reserve(World::ObjectsOnScene.size());
-	objectBuffer = { World::ObjectsOnScene.begin(), World::ObjectsOnScene.end() };
-	
-	while (objectBuffer.size() != 0)
+
+	std::vector<Collider*> colliderBuffer;
+	colliderBuffer.reserve(World::CollidersOnScene.size());
+	colliderBuffer = { World::CollidersOnScene.begin(), World::CollidersOnScene.end() };
+
+
+	while (colliderBuffer.size() != 0)
 	{
 		leavesBuffer.push_back(std::make_shared<Leaf>());
 
-		leavesBuffer[leavesBuffer.size() - 1]->objectsPtr.push_back(objectBuffer[objectBuffer.size() - 1]);
-		objectBuffer.pop_back();
-	
-		World::FindNearestObject(*leavesBuffer[leavesBuffer.size() - 1], objectBuffer, 150);
+		leavesBuffer[leavesBuffer.size() - 1]->PushBack(colliderBuffer[colliderBuffer.size() - 1]);
+		colliderBuffer.pop_back();
+
+		World::FindNearestCollider(*leavesBuffer[leavesBuffer.size() - 1], colliderBuffer, 150);
 	}
 
 	while (leavesBuffer.size() != 0)
 	{
 		nodeBuffer.push_back(std::make_shared<Node>());
 
-		nodeBuffer[nodeBuffer.size() - 1]->leavesPtr.push_back(leavesBuffer[leavesBuffer.size() - 1]);
+		nodeBuffer[nodeBuffer.size() - 1]->PushBack(leavesBuffer[leavesBuffer.size() - 1]);
 		leavesBuffer.pop_back();
 
 		World::CreateAABBvolume(*nodeBuffer[nodeBuffer.size() - 1], leavesBuffer);
 	}
+
+	while (nodeBuffer.size() > 1)
+	{
+		nodeBuffer.push_back(std::make_shared<Node>(true));
+
+		nodeBuffer[nodeBuffer.size() - 1]->PushBack(nodeBuffer[leavesBuffer.size() - 1]);
+		nodeBuffer.pop_back();
+
+		//World::CreateAABBvolume(*nodeBuffer[nodeBuffer.size() - 1], leavesBuffer);
+	}
+
+	RootBVHnode = nodeBuffer[0];
 }
 
-void World::FindNearestObject(Leaf& leafBuffer, std::vector<Object*>& objectsBuffer, float maxDistance) {
+void World::FindNearestCollider(Leaf& leafBuffer, std::vector<Collider*>& objectsBuffer, float maxDistance) {
 	std::vector<std::pair<size_t, float>> distancesToObjects;
 	distancesToObjects.reserve(objectsBuffer.size());
 	
-	Vector3 basePos = leafBuffer.objectsPtr[0]->GetPosition();
+	Collider* colPtr = nullptr;
+	leafBuffer.Get(&colPtr, 0);
+
+	Vector3 basePos = colPtr->GetParentObject()->GetPosition() + colPtr->GetPosition();
 	
 	for (size_t i = 0; i < distancesToObjects.capacity(); i++) {
 		if (objectsBuffer.size() <= i)
@@ -119,45 +139,61 @@ void World::FindNearestObject(Leaf& leafBuffer, std::vector<Object*>& objectsBuf
 
 		distancesToObjects.push_back({ i,0 });
 	
-		Vector3 nextPos = objectsBuffer[i]->GetPosition();
+		Vector3 nextPos = objectsBuffer[i]->GetParentObject()->GetPosition() + objectsBuffer[i]->GetPosition();
 		distancesToObjects[i].second = Vector3::GetNonSqrtMagnitude(basePos - nextPos);
 	}
 	
-	
 	size_t passedCount = 0;
-	for (size_t i = 0; i < leafBuffer.objectsPtr.capacity(); i++) {
-		if (distancesToObjects.size() <= i)
+
+	float minX = 0, minY = 0, minZ = 0;
+	float maxX = 0, maxY = 0, maxZ = 0;
+
+	colPtr->GetSize(minX, maxX, minY, maxY, minZ, maxZ);
+
+	minX += basePos.X; minY += basePos.Y; minZ += basePos.Z;
+	maxX += basePos.X; maxY += basePos.Y; maxZ += basePos.Z;
+
+	for (size_t i = 0; i < leafBuffer.GetCapacity(); i++) {
+		if (distancesToObjects.size() <= i) {
+			leafBuffer.AABBvolume.SetSize(minX, maxX, minY, maxY, minZ, maxZ);
 			return;
+		}
+
 		if (distancesToObjects[i].second > maxDistance)
 			continue;
 	
-		leafBuffer.objectsPtr.push_back(objectsBuffer[distancesToObjects[i - passedCount].first]);
+		leafBuffer.PushBack(objectsBuffer[distancesToObjects[i - passedCount].first]);
 		objectsBuffer.erase(objectsBuffer.begin() + distancesToObjects[i - passedCount].first);
 		passedCount++;
 
+		//Building leaf AABB
+		leafBuffer.Get(&colPtr, leafBuffer.GetSize() - 1);
+
+		basePos = colPtr->GetParentObject()->GetPosition() + colPtr->GetPosition();
+
 		//Min
-		if (leafBuffer.AABBvolume.MinX > leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MinX)
-			leafBuffer.AABBvolume.MinX = leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MinX;
+		if (minX > colPtr->GetMinX() + basePos.X)
+			minX = colPtr->GetMinX() + basePos.X;
 
-		if (leafBuffer.AABBvolume.MinY > leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MinY)
-			leafBuffer.AABBvolume.MinY = leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MinY;
+		if (minY > colPtr->GetMinY() + basePos.Y)
+			minY = colPtr->GetMinY() + basePos.Y;
 
-		if (leafBuffer.AABBvolume.MinZ > leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MinZ)
-			leafBuffer.AABBvolume.MinZ = leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MinZ;
+		if (minZ > colPtr->GetMinZ() + basePos.Z)
+			minZ = colPtr->GetMinZ() + basePos.Z;
 
 
 		//Max
-		if (leafBuffer.AABBvolume.MaxX > leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MaxX)
-			leafBuffer.AABBvolume.MaxX = leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MaxX;
+		if (maxX < colPtr->GetMaxX() + basePos.X)
+			maxX = colPtr->GetMaxX() + basePos.X;
 
-		if (leafBuffer.AABBvolume.MaxY > leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MaxY)
-			leafBuffer.AABBvolume.MaxY = leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MaxY;
+		if (maxY < colPtr->GetMaxY() + basePos.Y)
+			maxY = colPtr->GetMaxY() + basePos.Y;
 
-		if (leafBuffer.AABBvolume.MaxZ > leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MaxZ)
-			leafBuffer.AABBvolume.MaxZ = leafBuffer.objectsPtr[leafBuffer.objectsPtr.size() - 1]->_aabbVolume.MaxZ;
+		if (maxZ < colPtr->GetMaxZ() + basePos.Z)
+			maxZ = colPtr->GetMaxZ() + basePos.Z;
 	}
 
-
+	leafBuffer.AABBvolume.SetSize(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
 void World::CreateAABBvolume(Node& outputNode, std::vector<std::shared_ptr<Leaf>>& leavesBuffer) {
@@ -172,20 +208,19 @@ void World::CreateAABBvolume(Node& outputNode, std::vector<std::shared_ptr<Leaf>
 	std::vector<std::pair<size_t, float>> distancesToLeaves;
 	distancesToLeaves.reserve(distancesToLeaves.size());
 
-	Vector3 basePos = outputNode.leavesPtr[0]->GetPosition();
+	Leaf* leafPtr = nullptr;
+	outputNode.Get(&leafPtr, 0);
+	Vector3 basePos = leafPtr->AABBvolume.GetAABBPosition();
 
-	//Min
-	outputNode.AABBvolume.MinX = outputNode.leavesPtr[0]->AABBvolume.MinX;
-	outputNode.AABBvolume.MinY = outputNode.leavesPtr[0]->AABBvolume.MinY;
-	outputNode.AABBvolume.MinZ = outputNode.leavesPtr[0]->AABBvolume.MinZ;
+	float minX = 0, minY = 0, minZ = 0;
+	float maxX = 0, maxY = 0, maxZ = 0;
 
-	//Max
-	outputNode.AABBvolume.MaxX = outputNode.leavesPtr[0]->AABBvolume.MaxX;
-	outputNode.AABBvolume.MaxY = outputNode.leavesPtr[0]->AABBvolume.MaxY;
-	outputNode.AABBvolume.MaxZ = outputNode.leavesPtr[0]->AABBvolume.MaxZ;
+	leafPtr->AABBvolume.GetSize(minX, maxX, minY, maxY, minZ, maxZ);
 
-	if (leavesBuffer.size() == 0)
+	if (leavesBuffer.size() == 0) {
+		outputNode.AABBvolume.SetSize(minX, maxX, minY, maxY, minZ, maxZ);
 		return;
+	}
 
 	for (size_t i = 0; i < distancesToLeaves.capacity(); i++) {
 		if (leavesBuffer.size() <= i)
@@ -193,35 +228,36 @@ void World::CreateAABBvolume(Node& outputNode, std::vector<std::shared_ptr<Leaf>
 
 		distancesToLeaves.push_back({ i,0 });
 
-		Vector3 nextPos = leavesBuffer[i]->GetPosition();
+		Vector3 nextPos = leavesBuffer[i]->AABBvolume.GetAABBPosition();
 		distancesToLeaves[i].second = Vector3::GetNonSqrtMagnitude(basePos - nextPos);
 	}
 
 	std::sort(distancesToLeaves.begin(), distancesToLeaves.end(), compareDistance);
 
-	for (size_t i = 0; i < outputNode.leavesPtr.capacity(); i++) {
-		if (leavesBuffer.size() <= i)
-			return;
+	for (size_t i = 0; i < outputNode.GetCapacity() && i < leavesBuffer.size(); i++) {
+		basePos = leavesBuffer[i]->AABBvolume.GetAABBPosition();
 
 		//Min
-		if (outputNode.AABBvolume.MinX > leavesBuffer[i]->AABBvolume.MinX)
-			outputNode.AABBvolume.MinX = leavesBuffer[i]->AABBvolume.MinX;
+		if (minX > leavesBuffer[i]->AABBvolume.GetMinX())
+			minX = leavesBuffer[i]->AABBvolume.GetMinX();
 
-		if (outputNode.AABBvolume.MinY > leavesBuffer[i]->AABBvolume.MinY)
-			outputNode.AABBvolume.MinY = leavesBuffer[i]->AABBvolume.MinY;
+		if (minY > leavesBuffer[i]->AABBvolume.GetMinY())
+			minY = leavesBuffer[i]->AABBvolume.GetMinY();
 
-		if (outputNode.AABBvolume.MinZ > leavesBuffer[i]->AABBvolume.MinZ)
-			outputNode.AABBvolume.MinZ = leavesBuffer[i]->AABBvolume.MinZ;
+		if (minZ > leavesBuffer[i]->AABBvolume.GetMinZ())
+			minZ = leavesBuffer[i]->AABBvolume.GetMinZ();
 
 
 		//Max
-		if (outputNode.AABBvolume.MaxX > leavesBuffer[i]->AABBvolume.MaxX)
-			outputNode.AABBvolume.MaxX = leavesBuffer[i]->AABBvolume.MaxX;
+		if (maxX < leavesBuffer[i]->AABBvolume.GetMaxX())
+			maxX = leavesBuffer[i]->AABBvolume.GetMaxX();
 
-		if (outputNode.AABBvolume.MaxY > leavesBuffer[i]->AABBvolume.MaxY)
-			outputNode.AABBvolume.MaxY = leavesBuffer[i]->AABBvolume.MaxY;
+		if (maxY < leavesBuffer[i]->AABBvolume.GetMaxY())
+			maxY = leavesBuffer[i]->AABBvolume.GetMaxY();
 
-		if (outputNode.AABBvolume.MaxZ > leavesBuffer[i]->AABBvolume.MaxZ)
-			outputNode.AABBvolume.MaxZ = leavesBuffer[i]->AABBvolume.MaxZ;
+		if (maxZ < leavesBuffer[i]->AABBvolume.GetMaxZ())
+			maxZ = leavesBuffer[i]->AABBvolume.GetMaxZ();
 	}
+
+	outputNode.AABBvolume.SetSize(minX, maxX, minY, maxY, minZ, maxZ);
 }

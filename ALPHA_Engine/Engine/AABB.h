@@ -4,9 +4,9 @@
 class Render;
 
 class AABB {
-public:
-	float MinX = 0, MinY = 0, MinZ = 0;
-	float MaxX = 0, MaxY = 0, MaxZ = 0;
+private:
+	float _minX = 0, _minY = 0, _minZ = 0;
+	float _maxX = 1, _maxY = 1, _maxZ = 1;
 
 private:
 	Vector3 _position;
@@ -14,9 +14,11 @@ private:
 
 public:
 	AABB(
-		float minX = 0, float maxX = 0, 
-		float minY = 0, float maxY = 0,
-		float minZ = 0, float maxZ = 0);
+		float minX, float maxX,
+		float minY, float maxY,
+		float minZ, float maxZ);
+	AABB();
+
 	virtual ~AABB();
 
 	void SetSize(
@@ -24,19 +26,30 @@ public:
 		float minY = 0, float maxY = 0,
 		float minZ = 0, float maxZ = 0);
 
-	friend Render;
+	float GetMinX();
+	float GetMaxX();
+	float GetMinY();
+	float GetMaxY();
+	float GetMinZ();
+	float GetMaxZ();
 
-#ifdef _DEBUG
-	friend Render;
+	void GetSize(float& minX, float& maxX, float& minY, float& maxY, float& minZ, float& maxZ);
+
+	Vector3 GetAABBPosition();
 
 protected:
-	void CreateAABB();
 	void UpdateAABB(const float* vertex, float vertexCount);
 	void UpdateAABB(float radius);
 
+	friend Render;
+
+#ifdef _DEBUG
 protected:
 	std::vector<float> _AABBvertex;
 	std::vector<unsigned int> _AABBindices;
+
+protected:
+	void CreateAABB();
 #endif // _DEBUG
 
 };

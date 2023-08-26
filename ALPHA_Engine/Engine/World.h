@@ -10,9 +10,11 @@ enum DebugRenderModes {
 	PointsRender = 1 << 1
 };
 
-static class World {
+class World {
 private:
 	static inline std::vector<Object*> ObjectsOnScene;
+	static inline std::vector<Collider*> CollidersOnScene;
+
 	static inline bool IsCloseGame = false;
 
 	static inline double _timeLong = 0;
@@ -22,10 +24,7 @@ private:
 
 	static inline float SimulationSpeed = 1;
 
-	static inline AABB RootAABB = AABB(
-		0, 5,
-		0, 5,
-		0, 5);
+	static inline std::shared_ptr<Node> RootBVHnode;
 
 public:
 	///TODO: In next update debug render will not work in release build
@@ -50,7 +49,7 @@ public:
 	static void SetSimulationSpeed(float SimSpeed);
 
 	static void CreateWorldTree();
-	static void FindNearestObject(Leaf& leafBuffer, std::vector<Object*>& objectsBuffer, float maxDistance = 300);
+	static void FindNearestCollider(Leaf& leafBuffer, std::vector<Collider*>& objectsBuffer, float maxDistance = 300);
 	static void CreateAABBvolume(Node& outputNode, std::vector<std::shared_ptr<Leaf>>& leafBuffer);
 
 private:
@@ -59,6 +58,7 @@ private:
 	friend class Object;
 	friend class Physics;
 	friend class RigidBody;
+	friend class Collider;
 
 	World();
 };

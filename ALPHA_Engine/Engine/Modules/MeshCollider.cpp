@@ -40,7 +40,7 @@ bool MeshCollider::Create(std::string linkToFBX) {
     Collider::CreateDebugShell(*s);
 #endif
 
-    AABB::CreateAABB();
+    AABB::UpdateAABB(Geometry::_vertex, Geometry::_vertexCount);
 
     Geometry::_isIndexed = true;
     Geometry::MakeUnique();

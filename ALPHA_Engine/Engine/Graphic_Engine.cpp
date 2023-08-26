@@ -13,6 +13,7 @@
 #include "Collision.h"
 
 #include "AABB.h"
+#include "BVH_Tree.h"
 
 #include "GameModels.h"
 
@@ -226,22 +227,22 @@ void Render::RenderAABB(std::vector<float>& vertex, std::vector<unsigned int>& i
     glEnableClientState(GL_VERTEX_ARRAY);
 
     glVertexPointer(3, GL_FLOAT, 0, &vertex[0]);
-    //glDrawArrays(GL_POINTS, 0, 24);
     glDrawElements(GL_LINE_LOOP, indices.size(), GL_UNSIGNED_INT, &indices[0]);
     
     glDisableClientState(GL_VERTEX_ARRAY);
 #endif // _DEBUG
 }
-void Render::RenderAABB(AABB& aabb) {
+void Render::RenderWorldAABB(Node& rootNode) {
 #ifdef _DEBUG
     Render::SetDebugRenderOptions();
     //glDisable(GL_DEPTH_TEST);
-    glColor3f(0.5, 0.8, 0.2);
+    glColor3f(0.5, 0, 0.5);
 
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    glVertexPointer(3, GL_FLOAT, 0, &aabb._AABBvertex[0]);
-    glDrawElements(GL_TRIANGLES, aabb._AABBindices.size(), GL_UNSIGNED_INT, &aabb._AABBindices[0]);
+
+    glVertexPointer(3, GL_FLOAT, 0, &rootNode.AABBvolume._AABBvertex[0]);
+    glDrawElements(GL_LINE_LOOP, rootNode.AABBvolume._AABBindices.size(), GL_UNSIGNED_INT, &rootNode.AABBvolume._AABBindices[0]);
 
     glDisableClientState(GL_VERTEX_ARRAY);
 #endif // _DEBUG
@@ -288,7 +289,12 @@ void Render::SceneAssembler() {
 #ifdef _DEBUG
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    Render::RenderAABB(World::RootAABB);
+    glTranslatef(
+        World::RootBVHnode.get()->AABBvolume.GetAABBPosition().X, 
+        World::RootBVHnode.get()->AABBvolume.GetAABBPosition().Y, 
+        World::RootBVHnode.get()->AABBvolume.GetAABBPosition().Z);
+
+    Render::RenderWorldAABB(*World::RootBVHnode.get());
 #endif
 }       
 

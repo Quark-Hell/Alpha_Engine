@@ -10,6 +10,7 @@ class Mesh;
 class Vector3;
 class RigidBody;
 class AABB;
+class Node;
 
 struct Colors {
 	const Vector3 green { 0.0f, 1.0f, 0.0f }; 
@@ -63,7 +64,7 @@ private:
 	void RenderMesh(Mesh& mesh);
 	void RenderCollider(Collider& collider);
 	void RenderAABB(std::vector<float>& vertex, std::vector<unsigned int>& indices);
-	void RenderAABB(AABB& aabb);
+	void RenderWorldAABB(Node& rootNode);
 
 	void RenderRigidBodyInfo(RigidBody& rb);
 
