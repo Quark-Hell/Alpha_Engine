@@ -27,7 +27,6 @@
 #include "Modules/MeshCollider.h"
 #include "Modules/Transform.h"
 
-
 Object Player;
 std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 

@@ -23,7 +23,12 @@ SET (Game "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Game/")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/GLFW")
 set(CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
 
+set(ProtoBuf "${PROJECT_SOURCE_DIR}/ALPHA_Engine/protobuf-21.6")
+
+
 find_library(GLEW glew)
+#find_package(protobuf REQUIRED CONFIG)
+ADD_SUBDIRECTORY(${ProtoBuf})
 #find_package(glew REQUIRED)
 #find_package(GLFW REQUIRED)
 #find_package(OpenGL REQUIRED)
@@ -45,6 +50,8 @@ set(dll_Files "${PROJECT_SOURCE_DIR}/ALPHA_Engine/.dll")
 set(GameModels "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Models")
 set(EXE_DEST "${PROJECT_BINARY_DIR}/ALPHA_Engine")
 
+#PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${ProtoBuf}/protofiles/Vector3.proto)
+
 # Add source to this project's executable.
 add_executable (ALPHA_Engine 
 ALPHA_Engine.cpp
@@ -52,6 +59,11 @@ ALPHA_Engine.h
 ${assimpINCLUDE}assimp/Importer.hpp
 ${assimpINCLUDE}assimp/scene.h
 ${assimpINCLUDE}assimp/postprocess.h
+
+${PROTO_SRCS}
+${PROTO_HDRS}
+
+${glm}glm.hpp 
 
 ${Game}GameModels.h 
 ${Game}GameModels.cpp 
@@ -95,14 +107,30 @@ ${Engine}Modules/Physics.cpp
 "Engine/AdditionalMath.cpp" 
 "Engine/Modules/BoxCollider.h"
 "Engine/Modules/BoxCollider.cpp" 
-${glm}glm.hpp 
  
- "Engine/Modules/ColliderPresets.cpp" "Engine/Modules/MeshCollider.h" "Engine/Modules/MeshCollider.cpp" "Engine/Modules/Transform.h" "Engine/Modules/Transform.cpp" "Engine/Plane.h" "Engine/BVH_Tree.h" "Engine/BVH_Tree.cpp" "Engine/AABB.h" "Engine/AABB.cpp" "Engine/Modules/Collider.h" "Engine/Modules/Collider.cpp" "Engine/Modules/MovableModule.h" "Engine/Modules/MovableModule.cpp")
+ "Engine/Modules/ColliderPresets.cpp" 
+ "Engine/Modules/MeshCollider.h" 
+ "Engine/Modules/MeshCollider.cpp" 
+ "Engine/Modules/Transform.h"
+ "Engine/Modules/Transform.cpp" 
+ "Engine/Plane.h" 
+ "Engine/BVH_Tree.h" 
+ "Engine/BVH_Tree.cpp" 
+ "Engine/AABB.h"
+ "Engine/AABB.cpp"
+ "Engine/Modules/Collider.h"
+ "Engine/Modules/Collider.cpp"
+ "Engine/Modules/MovableModule.h"
+ "Engine/Modules/MovableModule.cpp"
+${Engine}SceneManager.h
+${Engine}SceneManager.cpp
+)
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib
 PRIVATE ${GLEW}/glew32s.lib
 PRIVATE opengl32.lib
+PRIVATE ${Protobuf_LIBRARIES}
 PRIVATE ${assimpLIB}assimp-vc143-mtd.lib
 )
 
