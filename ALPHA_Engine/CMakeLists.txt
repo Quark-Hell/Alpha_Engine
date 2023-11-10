@@ -2,35 +2,33 @@
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.8)
+project(ALPHA_Engine)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set (GLEW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLEW/")
-set (GLFW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
-set (glm "${PROJECT_SOURCE_DIR}/ALPHA_Engine/glm/")
+set (GLEW "${PROJECT_SOURCE_DIR}/GLEW/")
+set (GLFW "${PROJECT_SOURCE_DIR}/GLFW/")
+set (glm "${PROJECT_SOURCE_DIR}/glm/")
 
-set (GLEWinclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLEW/include/")
-set (GLFWinclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/include/")
-set (glmInclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/glm/glm/")
+set (GLEWinclude "${PROJECT_SOURCE_DIR}/GLEW/include/")
+set (GLFWinclude "${PROJECT_SOURCE_DIR}/GLFW/include/")
+set (glmInclude "${PROJECT_SOURCE_DIR}/glm/glm/")
 
-SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/")
-SET (assimpLIB "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/lib/")
-SET (assimpINCLUDE "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/include/")
-SET (Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Engine/")
-SET (Game "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Game/")
+set (bitsetyInclude "${PROJECT_SOURCE_DIR}/bitsery/include/")
+
+SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}/")
+SET (assimpLIB "${PROJECT_SOURCE_DIR}/assimp/lib/")
+SET (assimpINCLUDE "${PROJECT_SOURCE_DIR}/assimp/include/")
+SET (Engine "${PROJECT_SOURCE_DIR}/Engine/")
+SET (Game "${PROJECT_SOURCE_DIR}/Game/")
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/GLFW")
-set(CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
+set(CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/GLFW/")
 
-set(ProtoBuf "${PROJECT_SOURCE_DIR}/ALPHA_Engine/protobuf-21.6")
-
-
-find_library(GLEW glew)
-#find_package(protobuf REQUIRED CONFIG)
-ADD_SUBDIRECTORY(${ProtoBuf})
-#find_package(glew REQUIRED)
-#find_package(GLFW REQUIRED)
+find_library(GLEW glew REQUIRED)
+find_library(GLFW glfw REQUIRED)
+add_library(bitsery INTERFACE)
 #find_package(OpenGL REQUIRED)
 #find_package(ASSIMP REQUIRED)
 
@@ -46,11 +44,13 @@ include_directories(${glm})
 include_directories(${SFML})
 include_directories(${SFMLinclude})
 
-set(dll_Files "${PROJECT_SOURCE_DIR}/ALPHA_Engine/.dll")
-set(GameModels "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Models")
-set(EXE_DEST "${PROJECT_BINARY_DIR}/ALPHA_Engine")
+include_directories(${bitsetyInclude})
 
-#PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${ProtoBuf}/protofiles/Vector3.proto)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+set(dll_Files "${PROJECT_SOURCE_DIR}/.dll")
+set(GameModels "${PROJECT_SOURCE_DIR}/Models")
+set(EXE_DEST "${PROJECT_BINARY_DIR}/")
 
 # Add source to this project's executable.
 add_executable (ALPHA_Engine 
@@ -59,9 +59,6 @@ ALPHA_Engine.h
 ${assimpINCLUDE}assimp/Importer.hpp
 ${assimpINCLUDE}assimp/scene.h
 ${assimpINCLUDE}assimp/postprocess.h
-
-${PROTO_SRCS}
-${PROTO_HDRS}
 
 ${glm}glm.hpp 
 
@@ -126,14 +123,21 @@ ${Engine}SceneManager.h
 ${Engine}SceneManager.cpp
 )
 
+#${bitsetyInclude}/bitsery/bitsery.h
+
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib
 PRIVATE ${GLEW}/glew32s.lib
 PRIVATE opengl32.lib
-PRIVATE ${Protobuf_LIBRARIES}
 PRIVATE ${assimpLIB}assimp-vc143-mtd.lib
 )
-
+#PRIVATE ${ProtoBuf}/lib/libprotobuf.lib
+#PRIVATE ${ProtoBuf}/lib/libprotobuf-lite.lib
+#PRIVATE ${ProtoBuf}/lib/libprotoc.lib
+#PRIVATE ${Protobuf_LIBRARIES}
+#PRIVATE ${ProtoBuf}/lib/libprotobuf.lib
+#PRIVATE ${ProtoBuf}/lib/libprotobuf-lite.lib
+#PRIVATE ${ProtoBuf}/lib/libprotoc.lib
 target_compile_options(ALPHA_Engine PUBLIC "/Zc:__cplusplus")
 
 add_custom_target(copy_dll ALL

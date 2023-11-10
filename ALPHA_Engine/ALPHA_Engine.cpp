@@ -27,6 +27,11 @@
 #include "Modules/MeshCollider.h"
 #include "Modules/Transform.h"
 
+#include "bitsery/bitsery.h"
+#include "bitsery/adapter/buffer.h"
+#include "bitsery/traits/vector.h"
+#include "bitsery/traits/string.h"
+
 Object Player;
 std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 
@@ -41,7 +46,37 @@ std::shared_ptr<Object> object;
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 
+using Buffer = std::vector<uint8_t>;
+using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
+using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
+
+struct MyStruct {
+    uint16_t i;
+    char str[6];
+    std::vector<float> fs;
+    glm::mat2x2 m = glm::mat2x2(1);
+};
+
+template <typename S>
+void serialize(S& s, MyStruct& o) {
+    s.value2b(o.i);
+    s.text1b(o.str);
+    s.container4b(o.fs, 100);
+}
+
+
 void GameFunction::Start() {
+    MyStruct data{ 8941, "hello", {15.0f, -8.5f, 0.045f} };
+    MyStruct res{};
+
+    Buffer buffer;
+    auto writtenSize = bitsery::quickSerialization(OutputAdapter{ buffer }, data);
+    auto state = bitsery::quickDeserialization(InputAdapter{ buffer.begin(), writtenSize }, res);
+
+    assert(state.first == bitsery::ReaderError::NoError && state.second);
+    assert(data.fs == res.fs && data.i == res.i && std::strcmp(data.str, res.str) == 0);
+
+
     SetControl();
 
     World::DebugRenderEnabled = true;
