@@ -22,15 +22,37 @@ const BoxCollider& Object::GetInertiaCollider() {
 Vector3 Object::GetPosition() {
 	return Object::_position;
 }
+
 void Object::AddPosition(float X, float Y, float Z) {
 	Object::_position.X += X;
 	Object::_position.Y += Y;
 	Object::_position.Z += Z;
+
+	Object::_origin.X += X;
+	Object::_origin.Y += Y;
+	Object::_origin.Z += Z;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		std::shared_ptr<Transform> transfrom = std::dynamic_pointer_cast<Transform>(Object::GetModuleByIndex(it));
+
+		if (transfrom != nullptr) {
+			transfrom->AddPosition(X, Y, Z);
+		}
+	}
 }
 void Object::AddPosition(Vector3 position) {
-	Object::_position.X += position.X;
-	Object::_position.Y += position.Y;
-	Object::_position.Z += position.Z;
+	Object::_position += position;
+	Object::_origin += position;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		std::shared_ptr<Transform> transfrom = std::dynamic_pointer_cast<Transform>(Object::GetModuleByIndex(it));
+
+		if (transfrom != nullptr) {
+			transfrom->AddPosition(position);
+		}
+	}
 }
 void Object::SetPosition(float X, float Y, float Z) {
 	Vector3 direction = Vector3(X, Y, Z) - Object::_position;
@@ -41,6 +63,44 @@ void Object::SetPosition(Vector3 position) {
 	Vector3 direction = position - Object::_position;
 
 	Object::AddPosition(direction);
+}
+
+void Object::AddOriginPosition(float X, float Y, float Z) {
+	Object::_origin.X += X;
+	Object::_origin.Y += Y;
+	Object::_origin.Z += Z;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		std::shared_ptr<Transform> transfrom = std::dynamic_pointer_cast<Transform>(Object::GetModuleByIndex(it));
+
+		if (transfrom != nullptr) {
+			transfrom->AddOriginPosition(X, Y, Z);
+		}
+	}
+}
+void Object::AddOriginPosition(Vector3 position) {
+	Object::_origin += position;
+
+	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
+	{
+		std::shared_ptr<Transform> transfrom = std::dynamic_pointer_cast<Transform>(Object::GetModuleByIndex(it));
+
+		if (transfrom != nullptr) {
+			transfrom->AddOriginPosition(position);
+		}
+	}
+}
+
+void Object::SetOriginPosition(float X, float Y, float Z) {
+	Vector3 direction = Vector3(X, Y, Z) - Object::_origin;
+
+	Object::AddOriginPosition(direction);
+}
+void Object::SetOriginPosition(Vector3 position) {
+	Vector3 direction = position - Object::_origin;
+
+	Object::AddOriginPosition(direction);
 }
 
 

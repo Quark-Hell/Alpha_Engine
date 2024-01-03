@@ -8,6 +8,8 @@ protected:
 	Vector4 _rotation{ 0,0,0,1 };
 	Vector3 _scale{ 1,1,1 };
 
+	Vector3 _origin{ 0,0,0 };
+
 	glm::mat4x4 _transformMatrix{};
 
 public:
@@ -33,6 +35,12 @@ public:
 	virtual Vector3 GetScale() = 0;
 	virtual void SetScale(float X, float Y, float Z) = 0;
 	virtual void SetScale(Vector3 scale) = 0;
+
+	virtual void AddOriginPosition(float X, float Y, float Z) = 0;
+	virtual void AddOriginPosition(Vector3 position) = 0;
+	
+	virtual void SetOriginPosition(float X, float Y, float Z) = 0;
+	virtual void SetOriginPosition(Vector3 position) = 0;
 
 public:
 	virtual void ApplyTransformation() = 0;
