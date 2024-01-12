@@ -233,11 +233,14 @@ void Geometry::AddPosition(float X, float Y, float Z) {
     Geometry::_position.X += X;
     Geometry::_position.Y += Y;
     Geometry::_position.Z += Z;
+
+    Geometry::_origin.X += X;
+    Geometry::_origin.Y += Y;
+    Geometry::_origin.Z += Z;
 }
 void Geometry::AddPosition(Vector3 position) {
-    Geometry::_position.X += position.X;
-    Geometry::_position.Y += position.Y;
-    Geometry::_position.Z += position.Z;
+    Geometry::_position += position;
+    Geometry::_origin += position;
 }
 void Geometry::SetPosition(float X, float Y, float Z) {
     Vector3 direction = Vector3(X, Y, Z) - Geometry::_position;
@@ -248,6 +251,26 @@ void Geometry::SetPosition(Vector3 position) {
     Vector3 direction = position - Geometry::_position;
 
     Geometry::AddPosition(direction);
+}
+
+void Geometry::AddOriginPosition(float X, float Y, float Z) {
+    Geometry::_origin.X += X;
+    Geometry::_origin.Y += Y;
+    Geometry::_origin.Z += Z;
+}
+void Geometry::AddOriginPosition(Vector3 position) {
+    Geometry::_origin += position;
+}
+
+void Geometry::SetOriginPosition(float X, float Y, float Z) {
+    Vector3 direction = Vector3(X, Y, Z) - Geometry::_origin;
+
+    Geometry::AddOriginPosition(direction);
+}
+void Geometry::SetOriginPosition(Vector3 position) {
+    Vector3 direction = position - Geometry::_origin;
+
+    Geometry::AddOriginPosition(direction);
 }
 
 
@@ -284,6 +307,7 @@ void Geometry::AddRotation(Vector3 rotation) {
 
     Geometry::_isShifted = true;
 }
+
 void Geometry::SetRotation(float X, float Y, float Z) {
     Vector3 direction = Vector3(X, Y, Z) - Geometry::_rotation;
 
@@ -324,16 +348,24 @@ void Geometry::ApplyTransformation() {
     if (GetParentObject() == nullptr)
         return;
 
+    Vector3 originShift = Geometry::GetParentObject()->_origin - Geometry::GetParentObject()->_position;
+
     for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
     {
         glm::vec4 buf(Geometry::_vertex[jt], Geometry::_vertex[jt + 1], Geometry::_vertex[jt + 2], 1);
+        glm::mat4 originMat = glm::translate(glm::vec3(-originShift.X, -originShift.Y, -originShift.Z));
+        glm::mat4 oldOriginMat = glm::translate(glm::vec3(originShift.X, originShift.Y, originShift.Z));
+
+        buf = originMat * buf;
 
         glm::vec4 res;
         res = Geometry::GetParentObject()->_transformMatrix * buf;
+        res = oldOriginMat * res;
         Geometry::_vertex[jt] = res.x;
         Geometry::_vertex[jt + 1] = res.y;
         Geometry::_vertex[jt + 2] = res.z;
     }
+
 
     for (size_t jt = 0; jt < Geometry::_normalsCount * 3; jt += 3)
     {

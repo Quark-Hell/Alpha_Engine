@@ -42,6 +42,12 @@ public:
 	void SetScale(float X, float Y, float Z) override;
 	void SetScale(Vector3 scale) override;
 
+	void AddOriginPosition(float X, float Y, float Z) override;
+	void AddOriginPosition(Vector3 position) override;
+	
+	void SetOriginPosition(float X, float Y, float Z) override;
+	void SetOriginPosition(Vector3 position) override;
+
 	/*SetPosition, SetRotation and SetScale functions only change matrix of _transformMatrix.
 	So this function apply transformation to object and recalculate vertex relative position;
 	*/

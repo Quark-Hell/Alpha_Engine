@@ -66,12 +66,20 @@ void ColliderPresets::ApplyTransformation() {
         ColliderPresets::_transformMatrix = ColliderPresets::GetParentObject()->GetTransformationMatrix() * ColliderPresets::_transformMatrix;
     }
 
+    Vector3 originShift = _origin - _position;
+
     for (size_t jt = 0; jt < ColliderPresets::_vertexCount * 3; jt += 3)
     {
         glm::vec4 buf(ColliderPresets::_vertex[jt], ColliderPresets::_vertex[jt + 1], ColliderPresets::_vertex[jt + 2], 1);
+        glm::mat4 originMat = glm::translate(glm::vec3(-originShift.X, -originShift.Y, -originShift.Z));
+        glm::mat4 oldOriginMat = glm::translate(glm::vec3(originShift.X, originShift.Y, originShift.Z));
+
+        buf = originMat * buf;
 
         glm::vec4 res;
         res = ColliderPresets::_transformMatrix * buf;
+        res = oldOriginMat * res;
+
         ColliderPresets::_vertex[jt + 0] = res.x;
         ColliderPresets::_vertex[jt + 1] = res.y;
         ColliderPresets::_vertex[jt + 2] = res.z;
@@ -81,9 +89,15 @@ void ColliderPresets::ApplyTransformation() {
     for (size_t jt = 0; jt < _debugVertex.size(); jt += 3)
     {
         glm::vec4 buf(ColliderPresets::_debugVertex[jt], ColliderPresets::_debugVertex[jt + 1], ColliderPresets::_debugVertex[jt + 2], 1);
+        glm::mat4 originMat = glm::translate(glm::vec3(-originShift.X, -originShift.Y, -originShift.Z));
+        glm::mat4 oldOriginMat = glm::translate(glm::vec3(originShift.X, originShift.Y, originShift.Z));
+
+        buf = originMat * buf;
 
         glm::vec4 res;
         res = ColliderPresets::_transformMatrix * buf;
+        res = oldOriginMat * res;
+
         ColliderPresets::_debugVertex[jt + 0] = res.x;
         ColliderPresets::_debugVertex[jt + 1] = res.y;
         ColliderPresets::_debugVertex[jt + 2] = res.z;
