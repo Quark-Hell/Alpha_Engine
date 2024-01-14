@@ -27,6 +27,8 @@
 #include "Modules/MeshCollider.h"
 #include "Modules/Transform.h"
 
+#include "Texture.h"
+
 Object Player;
 std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 
@@ -35,8 +37,8 @@ Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
 
 
-std::shared_ptr<Object> plane;
-std::shared_ptr<Object> plane1;
+//std::shared_ptr<Object> plane;
+//std::shared_ptr<Object> plane1;
 //std::shared_ptr<Object> plane3;
 std::shared_ptr<Object> object2;
 
@@ -77,26 +79,30 @@ void GameFunction::Start() {
     //plane3->AddRotation(0, 0, 10);
     //plane3->SetScale(3, 3, 0.5);
 
-    plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    plane1->AddModule(std::static_pointer_cast<Module>(col4));
-    plane1->AddPosition(-0.5, -2, -10);
-    plane1->AddRotation(90, 0, 0);
-    plane1->SetScale(70, 70, 0.5);
-
-    plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    plane->AddModule(std::static_pointer_cast<Module>(col3));
-    plane->AddPosition(0, 5, -10);
-    plane->AddRotation(90, 0, 0);
-    plane->SetScale(5, 5, 0.5);
+    //plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    //plane1->AddModule(std::static_pointer_cast<Module>(col4));
+    //plane1->AddPosition(-0.5, -2, -10);
+    //plane1->AddRotation(90, 0, 0);
+    //plane1->SetScale(70, 70, 0.5);
+    //
+    //plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    //plane->AddModule(std::static_pointer_cast<Module>(col3));
+    //plane->AddPosition(0, 5, -10);
+    //plane->AddRotation(90, 0, 0);
+    //plane->SetScale(5, 5, 0.5);
 
     //plane->AddOriginPosition(-2.5,0,0);
 
     object2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     object2->AddModule(std::static_pointer_cast<Module>(col2));
-    object2->AddModule(std::static_pointer_cast<Module>(rb2));
+    //object2->AddModule(std::static_pointer_cast<Module>(rb2));
     object2->AddRotation(0, 0, 20);
     object2->AddPosition(-2.5, 9, -10);
     object2->SetScale(1, 1, 1);
+
+    Mesh* mesh = (Mesh*)(object2->GetModuleByType(MeshType).get());
+    Material* mat = (Material*)mesh->GetSubModuleByType(MaterialType).get();
+
 }
 
 void GameFunction::Update() {
@@ -272,14 +278,12 @@ int main()
     while (!World::GetStateOfGame())
     {
         World::StartFrame();
-        Physics::SaveValue();
         Game->Update();
         InpSys->IO_Events();
         World::ApplyingSceneTransformation();
         Physics::PhysicsLoop();
         Collision::CollisionLoop();
         //Physics::PullingVectorsLoop();
-        Physics::CalculateValue();
         render->RenderLoop(camera);
         World::EndFrame();
         std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << "\n";

@@ -4,6 +4,7 @@
 #include "Modules/Camera.h"
 #include "Modules/Geometry.h"
 #include "Modules/Mesh.h"
+#include "Modules/SubModules/Material.h"
 
 #include "Modules/MeshCollider.h"
 #include "Modules/BoxCollider.h"
@@ -167,10 +168,18 @@ void Render::RenderMesh(Mesh& mesh) {
 
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
-    //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    Material* mat = (Material*)mesh.GetSubModuleByType(MaterialType).get();
+    if (mat != nullptr) {
+        //glClientActiveTexture(GL_TEXTURE0);
+        glActiveTexture(0);
+        glBindTexture(GL_TEXTURE_2D, mat->_diffuse.textureId);
+    }
    
-    //glBindTexture();
+
     //glIndexPointer(GL_UNSIGNED_INT,0, mesh._indices);
+    glTexCoordPointer(2, GL_FLOAT,0, mat->_texCoords.get());
     glNormalPointer(GL_FLOAT, 0, mesh._normals);
     glVertexPointer(3, GL_FLOAT, 0, mesh._vertex);
     
@@ -178,7 +187,9 @@ void Render::RenderMesh(Mesh& mesh) {
     
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
+
 void Render::RenderCollider(ColliderPresets& collider) {
     glColor3f(0.2, 0.8, 0.2);
     Render::SetDebugRenderOptions();

@@ -1,5 +1,6 @@
 #pragma once
 #include "Basical_Type.h"
+#include "SubModules/SubModule.h"
 
 class Object;
 
@@ -20,6 +21,7 @@ public:
 
 protected:
 	Object* ParentObject = nullptr;
+	std::vector<std::shared_ptr<SubModule>> _subModules;
 
 private:
 	friend class Render;
@@ -29,9 +31,14 @@ private:
 public:
 	Module();
 	~Module();
-
+	
 	virtual ModulesList GetType() = 0;
 
 	virtual Object* GetParentObject();
-	virtual void SetParentObject(const Object& parent) = 0;
+	virtual void SetParentObject(const Object& parent);
+
+	virtual bool AddSubModule(std::shared_ptr<SubModule> subModule);
+	virtual bool AddSubModule(SubModulesList type);
+
+	std::shared_ptr<SubModule> GetSubModuleByType(SubModulesList type);
 };

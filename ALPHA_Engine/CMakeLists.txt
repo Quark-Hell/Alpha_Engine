@@ -20,6 +20,8 @@ SET (assimpINCLUDE "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/include/")
 SET (Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Engine/")
 SET (Game "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Game/")
 
+SET(STB "${PROJECT_SOURCE_DIR}/ALPHA_Engine/STB/")
+
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/GLFW")
 set(CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
 
@@ -38,11 +40,11 @@ include_directories(${Engine})
 include_directories(${Game})
 include_directories(${glm})
 
-include_directories(${SFML})
-include_directories(${SFMLinclude})
+include_directories(${STB})
 
 set(dll_Files "${PROJECT_SOURCE_DIR}/ALPHA_Engine/.dll")
 set(GameModels "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Models")
+set(GameTextures "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Textures")
 set(EXE_DEST "${PROJECT_BINARY_DIR}/ALPHA_Engine")
 
 # Add source to this project's executable.
@@ -67,8 +69,8 @@ ${Engine}Collision.h
 ${Engine}Collision.cpp
 ${Engine}Graphic_Engine.h
 ${Engine}Graphic_Engine.cpp
-${Engine}Material.h
-${Engine}Material.cpp
+"Engine/Modules/SubModules/Material.h"
+"Engine/Modules/SubModules/Material.cpp"
 
 ${Engine}Object.h 
 ${Engine}Object.cpp   
@@ -97,7 +99,14 @@ ${Engine}Modules/Physics.cpp
 "Engine/Modules/BoxCollider.cpp" 
 ${glm}glm.hpp 
  "Engine/Modules/ColliderPresets.h"
- "Engine/Modules/ColliderPresets.cpp" "Engine/Modules/MeshCollider.h" "Engine/Modules/MeshCollider.cpp" "Engine/Modules/Transform.h" "Engine/Modules/Transform.cpp" "Engine/Plane.h")
+ "Engine/Modules/ColliderPresets.cpp" 
+ "Engine/Modules/MeshCollider.h"
+ "Engine/Modules/MeshCollider.cpp"
+ "Engine/Modules/Transform.h"
+ "Engine/Modules/Transform.cpp"
+ "Engine/Plane.h" 
+ "Engine/Modules/SubModules/SubModule.h" 
+ "Engine/Modules/SubModules/SubModule.cpp")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib
@@ -122,6 +131,14 @@ add_custom_target(copy_models ALL
 	${EXE_DEST}/Models
 	DEPENDS ${dll_Files}
 	COMMENT "Copying resources to ${EXE_DEST}/Models"
+)
+
+add_custom_target(copy_textures ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${GameTextures}
+	${EXE_DEST}/Textures
+	DEPENDS ${dll_Files}
+	COMMENT "Copying resources to ${EXE_DEST}/Textures"
 )
 
 # TODO: Add tests and install targets if needed.

@@ -1,5 +1,9 @@
 #pragma once
-#include "Modules/Module.h"
+#include "Basical_Type.h"
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 enum EnumTypeOfWrapping {
 	Repeat = 0,
@@ -23,11 +27,20 @@ enum EnumTypeOfMIPMAP {
 class Texture {
 	//https://dtf.ru/gamedev/244935-iz-chego-sostoit-grafika#first
 
-private:
-	std::string _textureLink;
-	std::vector <Vector3> _textureCoords;
+	friend class Material;
+	friend class Render;
 
-	//sf::Texture _sfTexture;
+private:
+	std::string _texturePath;
+
+	std::unique_ptr<unsigned char> _texture = std::unique_ptr<unsigned char>();
+
+	unsigned int _width;
+	unsigned int _height;
+	unsigned int _channelsCount;
+
+	GLuint textureId;
+
 	//Other representation(DirectX, Vulkan...)
 
 	EnumTypeOfWrapping _typeOfWrapping;
@@ -35,7 +48,10 @@ private:
 	EnumTypeOfMIPMAP _typeOfMIPMAP;
 
 public:
-	void CreateTexture(unsigned int width, unsigned int height);
+	Texture();
+	~Texture();
+
+	void CreateTexture(std::string pathToTexture);
 
 	void SetTypeOfWrapping(EnumTypeOfWrapping xType, EnumTypeOfWrapping yType);
 	void SetTypeOfTextureFiltering(EnumTypeOfTextureFiltering minType, EnumTypeOfTextureFiltering magType);

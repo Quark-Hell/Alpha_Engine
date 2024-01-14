@@ -9,6 +9,7 @@ class BoxCollider;
 class Mesh;
 class Vector3;
 class RigidBody;
+class Material;
 
 struct Colors {
 	const Vector3 green { 0.0f, 1.0f, 0.0f }; 
