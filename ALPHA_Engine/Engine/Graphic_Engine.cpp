@@ -22,16 +22,26 @@ void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int 
     _bitsPerPixel = BitsPerPixel;
     _name = Name;
 
-    //GLEW Init
-    glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK)
-    {
-        //TODO: Add exception
-        //std::cout << "Failed to initialize GLEW" << std::endl;
-        //
+    if (!glfwInit()) {
+        glfwTerminate();
     }
 
-    glfwInit();
+    Screen::_window = glfwCreateWindow(Wight, Height, Name.c_str(), nullptr, nullptr);
+    if (Screen::_window == nullptr)
+    {
+        //TODO: Add exception
+        //std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+    }
+
+    int width, height;
+    glfwGetFramebufferSize(Screen::_window, &width, &height);
+    glViewport(0, 0, width, height);
+
+    glfwMakeContextCurrent(Screen::_window);
+    glfwSwapInterval(1);
+
+
     
     glfwWindowHint(GLFW_SAMPLES,3);
 
@@ -40,24 +50,24 @@ void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int 
     
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
+    //GLEW Init
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK)
+    {
+        //TODO: Add exception
+        //std::cout << "Failed to initialize GLEW" << std::endl;
+        //
+        glfwTerminate();
+    }
+
+    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+
+
     
     ////Todo:
     ////glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE) if MacOs
-    
-    Screen::_window = glfwCreateWindow(Wight, Height, Name.c_str(), nullptr, nullptr);
-    if (Screen::_window == nullptr)
-    {
-        //TODO: Add exception
-        //std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-    }
-    
-    int width, height;
-    glfwGetFramebufferSize(Screen::_window, &width, &height);
-    glViewport(0, 0, width, height);
-
-    glfwMakeContextCurrent(Screen::_window);
-    glfwSwapInterval(1);
 }
 GLFWwindow* Screen::GetWindow() {
     return Screen::_window;
@@ -73,37 +83,37 @@ void Render::PrepareToRender() {
     //Light
     GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
-
+    
     GLfloat LightAmbient[] = { 0.25f, 0.25f, 0.25f, 1.0f };
     glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
-
-
+    
+    
     GLfloat LightDiffuse[] = { 0.75f, 0.75f, 0.75f, 1.0f };
     glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
-
+    
     GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
-
+    
     GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
-
+    
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-
-    glEnable(GL_CULL_FACE); // enable culling face
-    glCullFace(GL_BACK); // cull faces from back
-    glFrontFace(GL_CCW); // vertex order (counter clock wise)
-
+    
+    //glEnable(GL_CULL_FACE); // enable culling face
+    //glCullFace(GL_BACK); // cull faces from back
+    //glFrontFace(GL_CCW); // vertex order (counter clock wise)
+    
     glShadeModel(GL_SMOOTH);
     glEnable(GL_NORMALIZE);
-
+    
     glEnable(GL_COLOR_MATERIAL);
-
-    // Enable Z-buffer read and write
-    glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-    glClearDepth(1.f);
-    glDepthFunc(GL_LEQUAL);
+    
+    //// Enable Z-buffer read and write
+    //glEnable(GL_DEPTH_TEST);
+    //glDepthMask(GL_TRUE);
+    //glClearDepth(1.f);
+    //glDepthFunc(GL_LEQUAL);
     
     float ratio = 4.0f / 3.0f;
     glFrustum(-ratio, ratio, -1.f, 1.f, 1.0f, 500.f);
@@ -173,7 +183,7 @@ void Render::RenderMesh(Mesh& mesh) {
     Material* mat = (Material*)mesh.GetSubModuleByType(MaterialType).get();
     if (mat != nullptr) {
         //glClientActiveTexture(GL_TEXTURE0);
-        glActiveTexture(0);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mat->_diffuse.textureId);
     }
    
@@ -278,6 +288,85 @@ void Render::StartRender(std::shared_ptr<Camera>  camera) {
     camera->SetCameraInfo(60, 16.0 / 9.0, 0.1, 300);
 }
 
+GLfloat points[] = {
+     0.0f,  0.5f, 0.0f,
+     0.5f, -0.5f, 0.0f,
+    -0.5f, -0.5f, 0.0f
+};
+
+GLfloat colors[] = {
+    1.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 1.0f
+};
+
+const char* vertex_shader =
+"#version 460\n"
+"layout(location = 0) in vec3 vertex_position;"
+"layout(location = 1) in vec3 vertex_color;"
+"out vec3 color;"
+"void main() {"
+"   color = vertex_color;"
+"   gl_Position = vec4(vertex_position, 1.0);"
+"}";
+
+const char* fragment_shader =
+"#version 460\n"
+"in vec3 color;"
+"out vec4 frag_color;"
+"void main() {"
+"   frag_color = vec4(color, 1.0);"
+"}";
+
+GLuint vs;
+GLuint fs;
+GLuint shader_program;
+GLuint points_vbo;
+GLuint colors_vbo;
+GLuint vao;
+
+bool Render::CompileShaders() {
+    vs = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vs, 1, &vertex_shader, nullptr);
+    glCompileShader(vs);
+    
+    fs = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fs, 1, &fragment_shader, nullptr);
+    glCompileShader(fs);
+
+    shader_program = glCreateProgram();
+    glAttachShader(shader_program, vs);
+    glAttachShader(shader_program, fs);
+    glLinkProgram(shader_program);
+
+    glDeleteShader(vs);
+    glDeleteShader(fs);
+
+    points_vbo = 0;
+    glGenBuffers(1, &points_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+
+    colors_vbo = 0;
+    glGenBuffers(1, &colors_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+
+    vao = 0;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    return true;
+}
+
 
 void Render::RenderLoop(std::shared_ptr<Camera>  camera) {
     if (!glfwWindowShouldClose(_screenClass._window))
@@ -287,9 +376,12 @@ void Render::RenderLoop(std::shared_ptr<Camera>  camera) {
         Render::ClearFrameBuffer();
 
         Render::PrepareToRender();
-        Render::ApplyCameraTransform(camera);
+        //Render::ApplyCameraTransform(camera);
 
-        Render::SceneAssembler();
+        //Render::SceneAssembler();
+        glUseProgram(shader_program);
+        glBindVertexArray(vao);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(_screenClass._window);
     }

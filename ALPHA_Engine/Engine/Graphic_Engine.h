@@ -54,6 +54,8 @@ public:
 	void RenderLoop(std::shared_ptr<Camera>  camera);
 	Screen* GetScreenClass();
 
+	bool CompileShaders();
+
 private:
 	void SceneAssembler();
 

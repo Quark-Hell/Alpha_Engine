@@ -274,6 +274,8 @@ int main()
     render->StartRender(camera);
     
     InpSys->Window = render->GetScreenClass()->GetWindow();
+
+    render->CompileShaders();
     
     while (!World::GetStateOfGame())
     {
