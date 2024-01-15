@@ -3,6 +3,8 @@
 #include "Modules/Transform.h"
 #include "Modules/BoxCollider.h"
 
+#include "AABB.h"
+
 enum ModulesList;
 
 class Module;
@@ -12,10 +14,10 @@ class Vector3;
 class Object : public Transform {
 private:
 	std::vector<std::shared_ptr<Module>> Modules;
-	BoxCollider InertiaCollider;
 
 	friend class Geometry;
 	friend class BoxCollider;
+	friend class World;
 
 public:
 	Object();
@@ -54,10 +56,9 @@ public:
 	void ApplyTransformation() override;
 #pragma endregion
 
-	const BoxCollider& GetInertiaCollider();
-
 	bool AddModule(std::shared_ptr<Module> someModule);
 	bool AddModule(ModulesList moduleType, Module& outputModule);
+	bool AddModule(ModulesList moduleType);
 
 	bool DeleteModuleByType(ModulesList type);
 	bool DeleteModuleByIndex(int index);

@@ -22,7 +22,7 @@
 #include "Modules/Mesh.h"
 #include "Modules/Module.h"
 #include "Modules/Physics.h"
-#include "Modules/ColliderPresets.h"
+#include "Modules/Collider.h"
 #include "Modules/BoxCollider.h"
 #include "Modules/MeshCollider.h"
 #include "Modules/Transform.h"
@@ -37,9 +37,9 @@ Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
 
 
-//std::shared_ptr<Object> plane;
-//std::shared_ptr<Object> plane1;
-//std::shared_ptr<Object> plane3;
+std::shared_ptr<Object> plane;
+std::shared_ptr<Object> plane1;
+std::shared_ptr<Object> plane3;
 std::shared_ptr<Object> object2;
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
@@ -53,12 +53,10 @@ void GameFunction::Start() {
     //MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
     auto col2 = std::make_shared<BoxCollider>();
     auto col3 = std::make_shared<BoxCollider>();
-    auto col4 = std::make_shared<BoxCollider>();
-    //auto col5 = std::make_shared<BoxCollider>();
+    auto col5 = std::make_shared<BoxCollider>();
 
     col2->Name = "col2";
     col3->Name = "col3";
-    col4->Name = "col4";
 
     Vector3 pos = Vector3{ 0,0,-15 };
     Vector3 rot = Vector3{ 0,0,0 };
@@ -71,37 +69,36 @@ void GameFunction::Start() {
     //object->AddPosition(9, 3, 0);
     //rb1->CalculateCenterMass();
 
+    plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane1->AddModule(BoxColliderType);
+    plane1->AddPosition(-0.5, -3, -10);
+    plane1->AddRotation(90, 0, 0);
+    plane1->SetScale(70, 70, 0.5);
 
     
-    //plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    //plane3->AddModule(std::static_pointer_cast<Module>(col5));
-    //plane3->AddPosition(-5, 0, -10);
-    //plane3->AddRotation(0, 0, 10);
-    //plane3->SetScale(3, 3, 0.5);
+    plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane3->AddModule(std::static_pointer_cast<Module>(col5));
+    plane3->AddPosition(-5, 0, -10);
+    plane3->AddRotation(0, 0, 10);
+    plane3->SetScale(3, 3, 0.5); 
+    
+    plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane->AddModule(std::static_pointer_cast<Module>(col3));
+    plane->AddPosition(0, 5, -10);
+    plane->AddRotation(90, 0, 0);
+    plane->SetScale(5, 5, 0.5);
+    // 
+    plane->AddOriginPosition(-2.5,0,0);
 
-    //plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    //plane1->AddModule(std::static_pointer_cast<Module>(col4));
-    //plane1->AddPosition(-0.5, -2, -10);
-    //plane1->AddRotation(90, 0, 0);
-    //plane1->SetScale(70, 70, 0.5);
-    //
-    //plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    //plane->AddModule(std::static_pointer_cast<Module>(col3));
-    //plane->AddPosition(0, 5, -10);
-    //plane->AddRotation(90, 0, 0);
-    //plane->SetScale(5, 5, 0.5);
+    //object2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    //object2->AddModule(std::static_pointer_cast<Module>(col2));
+    ////object2->AddModule(std::static_pointer_cast<Module>(rb2));
+    //object2->AddRotation(0, 0, 20);
+    //object2->AddPosition(-2.5, 9, -10);
+    //object2->SetScale(1, 1, 1);
 
-    //plane->AddOriginPosition(-2.5,0,0);
-
-    object2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    object2->AddModule(std::static_pointer_cast<Module>(col2));
-    //object2->AddModule(std::static_pointer_cast<Module>(rb2));
-    object2->AddRotation(0, 0, 20);
-    object2->AddPosition(-2.5, 9, -10);
-    object2->SetScale(1, 1, 1);
-
-    Mesh* mesh = (Mesh*)(object2->GetModuleByType(MeshType).get());
-    Material* mat = (Material*)mesh->GetSubModuleByType(MaterialType).get();
+    //Mesh* mesh = (Mesh*)(object2->GetModuleByType(MeshType).get());
+    //Material* mat = (Material*)mesh->GetSubModuleByType(MaterialType).get();
 
 }
 
@@ -137,10 +134,10 @@ void SetControl() {
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { GLFW_KEY_ESCAPE });
     
     Bind jump; jump.KeyboardBind({ Jump }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_SPACE });
-    Bind stop; stop.KeyboardBind({ Stop }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_G });
+    Bind stop; stop.KeyboardBind({ Stop }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_L });
 
-    Bind toLeft; toLeft.KeyboardBind({ LeftMoveTestObject }, { EnumKeyStates::KeyHold }, { GLFW_KEY_H });
-    Bind toRight; toRight.KeyboardBind({ RightMoveTestObject }, { EnumKeyStates::KeyHold }, { GLFW_KEY_J });
+    Bind toLeft; toLeft.KeyboardBind({ LeftMoveTestObject }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_G });
+    Bind toRight; toRight.KeyboardBind({ RightMoveTestObject }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_H });
 
     InpSys->InsertBind(toLeft);
     InpSys->InsertBind(toRight);
@@ -258,10 +255,10 @@ void CameraRotate() {
 }
 
 void Stop() {
-    //rb1->AddForce(0, 100, 0);
+    rb2->AddForce(10, 0, 0);
 }
 void Jump() {
-    //rb1->AddForce(-0.2,0,0);
+    rb2->AddForce(0,10,0);
     printf("jump");
 }
 
@@ -276,6 +273,8 @@ int main()
     InpSys->Window = render->GetScreenClass()->GetWindow();
 
     render->CompileShaders();
+
+    //World::CreateWorldTree();
     
     while (!World::GetStateOfGame())
     {
@@ -288,7 +287,7 @@ int main()
         //Physics::PullingVectorsLoop();
         render->RenderLoop(camera);
         World::EndFrame();
-        std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << "\n";
+        std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << " Musk Lox" << "\n";
     }
 
     glfwTerminate();

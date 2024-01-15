@@ -18,7 +18,7 @@ void Geometry::SetParentObject(const Object& parent) {
 }
 
 ModulesList Geometry::GetType() {
-    return ModulesList::GeometryType;
+    return GeometryType;
 }
 
 bool Geometry::Create(std::string linkToFBX) {

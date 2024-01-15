@@ -139,20 +139,20 @@ void Collision::CollisionLoop() {
         }
     }
 
-    std::shared_ptr<Geometry> colliderA;
-    std::shared_ptr<Geometry> colliderB;
+    std::shared_ptr<MeshCollider> colliderA;
+    std::shared_ptr<MeshCollider> colliderB;
 
     for (size_t it = 0; it < World::ObjectsOnScene.size(); it++)
     {
         for (size_t jt = 0; jt < World::ObjectsOnScene[it]->GetCountOfModules(); jt++)
         {
-            colliderA = std::dynamic_pointer_cast<ColliderPresets>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
+            colliderA = std::dynamic_pointer_cast<MeshCollider>(World::ObjectsOnScene[it]->GetModuleByIndex(jt));
 
             for (size_t kt = 1; kt < World::ObjectsOnScene.size(); kt++)
             {
                 for (size_t mt = 0; mt < World::ObjectsOnScene[kt]->GetCountOfModules(); mt++)
                 {
-                    colliderB = std::dynamic_pointer_cast<ColliderPresets>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
+                    colliderB = std::dynamic_pointer_cast<MeshCollider>(World::ObjectsOnScene[kt]->GetModuleByIndex(mt));
 
                     if (colliderA == colliderB)
                         continue;
@@ -468,7 +468,7 @@ void Collision::CalculateContactPoints(Geometry& contactObject1, Geometry& conta
         for (size_t i = 1; i < contactPoints.size(); i++) {
             Vector3 originToPoint = contactPoints[i].first - originA;
             float u = Vector3::DotProduct(normal, Vector3::CrossProduct(refVector, originToPoint));
-            float angle = Vector3::GetAngle(refVector, originToPoint) * 180 / M_PI;
+            float angle = Vector3::GetAngle(refVector, originToPoint) * 180.0f / M_PI;
 
             //if u <= 0 than point is left
             if (u <= 0.001f) {

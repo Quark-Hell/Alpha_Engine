@@ -5,12 +5,12 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "Modules/Transform.h"
+#include "Modules/MovableModule.h"
 
 class Object;
 class Mesh;
 
-class Geometry : public Module, public Transform {
+class Geometry : public virtual MovableModule {
 protected:
 	bool _isShifted = false;
 	bool _isIndexed = false;
@@ -81,5 +81,4 @@ public:
 
 	/*Recommended not use now. Work so slow*/
 	void MakeUnique();
-
 };

@@ -98,15 +98,21 @@ ${Engine}Modules/Physics.cpp
 "Engine/Modules/BoxCollider.h"
 "Engine/Modules/BoxCollider.cpp" 
 ${glm}glm.hpp 
- "Engine/Modules/ColliderPresets.h"
- "Engine/Modules/ColliderPresets.cpp" 
  "Engine/Modules/MeshCollider.h"
  "Engine/Modules/MeshCollider.cpp"
  "Engine/Modules/Transform.h"
  "Engine/Modules/Transform.cpp"
  "Engine/Plane.h" 
  "Engine/Modules/SubModules/SubModule.h" 
- "Engine/Modules/SubModules/SubModule.cpp")
+ "Engine/Modules/SubModules/SubModule.cpp"
+ "Engine/BVH_Tree.h" 
+ "Engine/BVH_Tree.cpp" 
+ "Engine/AABB.h" 
+ "Engine/AABB.cpp"
+ "Engine/Modules/Collider.h" 
+ "Engine/Modules/Collider.cpp" 
+ "Engine/Modules/MovableModule.h" 
+ "Engine/Modules/MovableModule.cpp")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib

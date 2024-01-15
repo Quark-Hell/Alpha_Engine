@@ -479,7 +479,7 @@ public:
 			(vertex.Y - p1.Y) * normal.Y +
 			(vertex.Z - p1.Z) * normal.Z);
 
-		double denominator = std::sqrt(
+		float denominator = std::sqrt(
 			normal.X * normal.X +
 			normal.Y * normal.Y +
 			normal.Z * normal.Z);
@@ -491,7 +491,7 @@ public:
 		Vector3 axisVector = Vector3::GetNormalize(axisP2 - axisP1);
 		Vector3 pointVector = point - axisP1;
 
-		double projection = 
+		float projection = 
 			axisVector.X * pointVector.X + 
 			axisVector.Y * pointVector.Y + 
 			axisVector.Z * pointVector.Z;

@@ -1,7 +1,7 @@
 #pragma once
-#include "ColliderPresets.h"
+#include "Modules/MeshCollider.h"
 
-class BoxCollider : public ColliderPresets {
+class BoxCollider : public MeshCollider {
 private:
 	friend Render;
 	friend Collision;
