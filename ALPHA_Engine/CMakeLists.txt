@@ -45,6 +45,7 @@ include_directories(${STB})
 set(dll_Files "${PROJECT_SOURCE_DIR}/ALPHA_Engine/.dll")
 set(GameModels "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Models")
 set(GameTextures "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Textures")
+set(GameShaders "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Shaders")
 set(EXE_DEST "${PROJECT_BINARY_DIR}/ALPHA_Engine")
 
 # Add source to this project's executable.
@@ -112,7 +113,7 @@ ${glm}glm.hpp
  "Engine/Modules/Collider.h" 
  "Engine/Modules/Collider.cpp" 
  "Engine/Modules/MovableModule.h" 
- "Engine/Modules/MovableModule.cpp")
+ "Engine/Modules/MovableModule.cpp"   "Engine/ShaderProgram.h" "Engine/ShaderProgram.cpp")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib
@@ -146,5 +147,14 @@ add_custom_target(copy_textures ALL
 	DEPENDS ${dll_Files}
 	COMMENT "Copying resources to ${EXE_DEST}/Textures"
 )
+
+add_custom_target(copy_shaders ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${GameShaders}
+	${EXE_DEST}/Shaders
+	DEPENDS ${dll_Files}
+	COMMENT "Copying resources to ${EXE_DEST}/Shaders"
+)
+
 
 # TODO: Add tests and install targets if needed.

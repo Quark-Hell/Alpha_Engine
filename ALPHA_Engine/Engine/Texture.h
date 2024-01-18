@@ -5,6 +5,15 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
+//OpenGL
+#pragma comment(lib, "opengl32")
+#pragma comment(lib, "glu32")
+#include <gl/gl.h>
+#include <gl/glu.h>
+
 enum EnumTypeOfWrapping {
 	Repeat = 0,
 	MirroredRepeat = 1,

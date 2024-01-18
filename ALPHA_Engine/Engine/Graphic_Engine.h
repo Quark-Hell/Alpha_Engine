@@ -2,6 +2,16 @@
 
 #include "Basical_Type.h"
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
+//OpenGL
+#pragma comment(lib, "opengl32")
+#pragma comment(lib, "glu32")
+#include <gl/gl.h>
+#include <gl/glu.h>
+
 class Camera;
 class Geometry;
 class Collider;
@@ -57,6 +67,7 @@ public:
 	Screen* GetScreenClass();
 
 	bool CompileShaders();
+	void SetMatrix4(const char* name, const glm::mat4& matrix) const;
 
 private:
 	void SceneAssembler();

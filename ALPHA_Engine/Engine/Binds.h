@@ -2,6 +2,8 @@
 
 #include "Basical_Type.h"
 
+#include <GLFW/glfw3.h>
+
 struct MousePos {
 public:
 	float XPos = 0;

@@ -5,6 +5,8 @@
 #include "Object.h"
 #include "Modules/Mesh.h"
 
+//Todo: move this class into "Primitives" class into Engine folder
+
 class Primitives {
 public: 
 	static std::shared_ptr<Object> Plane(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color);

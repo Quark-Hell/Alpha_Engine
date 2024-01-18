@@ -15,7 +15,12 @@ class Object : public Transform {
 private:
 	std::vector<std::shared_ptr<Module>> Modules;
 
+	//TODO: add interface for this class
+	/////////////////////
 	friend class Geometry;
+	friend class Camera;
+	/////////////////////
+
 	friend class BoxCollider;
 	friend class World;
 

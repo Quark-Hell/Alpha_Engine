@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <filesystem>
+#include <fstream>
 #include <string>  
 #include <memory>
 #include <unordered_map>
@@ -15,13 +16,5 @@
 #include <set>
 #include <array>
 #include "AdditionalMath.h"
-
-#define GLEW_STATIC
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-//OpenGL
-#pragma comment(lib, "opengl32")
-#pragma comment(lib, "glu32")
-#include <gl/gl.h>
-#include <gl/glu.h>
+#include <optional>
+#include <cstring> 
