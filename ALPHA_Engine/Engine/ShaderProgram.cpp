@@ -65,6 +65,25 @@ bool ShaderProgram::GetCompiledStatus()
 	return ShaderProgram::_isCompiled;
 }
 
+template <typename T>
+void ShaderProgram::SetValue(ShadersType shaderType, std::string fieldName, T value) {
+	if (std::is_same<glm::mat4x4, T>::value) {
+		glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::_programId, fieldName), 1, GL_FALSE, glm::value_ptr(value));
+	}
+	else if (std::is_same<glm::mat3x3, T>::value) {
+		glUniformMatrix3fv(glGetUniformLocation(ShaderProgram::_programId, fieldName), 1, GL_FALSE, glm::value_ptr(value));
+	}
+	else if (std::is_same<int, T>::value) {
+		glUniform1i(glGetUniformLocation(ShaderProgram::_programId, fieldName), value);
+	}
+	else if (std::is_same<float, T>::value) {
+		glUniform1f(glGetUniformLocation(ShaderProgram::_programId, fieldName), value);
+	}
+	else if (std::is_same<Vector3, T>::value) {
+		glUniform3f(glGetUniformLocation(ShaderProgram::_programId, fieldName), value.X, value.Y, value.Z);
+	}
+}
+
 //TODO: Create all types of shader
 bool ShaderProgram::CreateShader(const char* sourcePath, ShadersType shaderType)
 {
@@ -74,9 +93,8 @@ bool ShaderProgram::CreateShader(const char* sourcePath, ShadersType shaderType)
 		std::string genPath = std::filesystem::current_path().string() + path;
 		std::ifstream sourceStream(genPath);
 
-		std::string* source = new std::string();
-
 		if (sourceStream.is_open()) {
+			str.get()->clear();
 			std::string line;
 			while (std::getline(sourceStream, line)) {
 				*str.get() += line + "\n";
@@ -101,17 +119,43 @@ bool ShaderProgram::CreateShader(const char* sourcePath, ShadersType shaderType)
 
 		chSource = ShaderProgram::_vertexShaderSource.get()->c_str();
 		glShaderSource(shaderId, 1, &chSource, nullptr);
+
 		_vertexShaderId = shaderId;
 		break;
+
 	case TessellationControlShader:
-		//unsigned int shader_id = glCreateShader(shaderType);
-		return false;
+		shaderId = glCreateShader(GL_TESS_CONTROL_SHADER);
+		if (!readShaderSource(sourcePath, ShaderProgram::_tessellationControlShaderSource))
+			return false;
+
+		chSource = ShaderProgram::_tessellationControlShaderSource.get()->c_str();
+		glShaderSource(shaderId, 1, &chSource, nullptr);
+
+		_tessellationControlShaderId = shaderId;
+		break;
+
 	case TessellationEvaluationShader:
-		//unsigned int shader_id = glCreateShader(shaderType);
-		return false;
+		shaderId = glCreateShader(GL_TESS_EVALUATION_SHADER);
+		if (!readShaderSource(sourcePath, ShaderProgram::_tessellationEvaluationShaderSource))
+			return false;
+
+		chSource = ShaderProgram::_tessellationEvaluationShaderSource.get()->c_str();
+		glShaderSource(shaderId, 1, &chSource, nullptr);
+
+		_tessellationEvaluationShaderId = shaderId;
+		break;
+
 	case GeometryShader:
-		//unsigned int shader_id = glCreateShader(shaderType);
-		return false;
+		shaderId = glCreateShader(GL_GEOMETRY_SHADER);
+		if (!readShaderSource(sourcePath, ShaderProgram::_geometryShaderSource))
+			return false;
+
+		chSource = ShaderProgram::_geometryShaderSource.get()->c_str();
+		glShaderSource(shaderId, 1, &chSource, nullptr);
+
+		_geometryShaderId = shaderId;
+		break;
+
 	case FragmentShader:
 		shaderId = glCreateShader(GL_FRAGMENT_SHADER);
 		if (!readShaderSource(sourcePath, ShaderProgram::_fragmentShaderSource))
@@ -122,12 +166,19 @@ bool ShaderProgram::CreateShader(const char* sourcePath, ShadersType shaderType)
 		_fragmentShaderId = shaderId;
 		break;
 	case ComputeShader:
-		//unsigned int shader_id = glCreateShader(shaderType);
-		return false;
+		shaderId = glCreateShader(GL_COMPUTE_SHADER);
+		if (!readShaderSource(sourcePath, ShaderProgram::_computeShaderSource))
+			return false;
+
+		chSource = ShaderProgram::_computeShaderSource.get()->c_str();
+		glShaderSource(shaderId, 1, &chSource, nullptr);
+		_computeShaderId = shaderId;
+		break;
 	default:
 		return false;
 	}
 
+	_isCompiled = false;
 	return true;
 }
 
@@ -254,21 +305,28 @@ void ShaderProgram::DetachShader()
 
 void ShaderProgram::DeleteShader()
 {
-	if (_vertexShaderId != std::nullopt)
+	if (ShaderProgram::_vertexShaderId != std::nullopt){}
 		glDeleteShader(_vertexShaderId.value());
 
-	if (_tessellationControlShaderId != std::nullopt)
+	if (ShaderProgram::_tessellationControlShaderId != std::nullopt)
 		glDeleteShader(_tessellationControlShaderId.value());
 
-	if (_tessellationEvaluationShaderId != std::nullopt)
+	if (ShaderProgram::_tessellationEvaluationShaderId != std::nullopt)
 		glDeleteShader(_tessellationEvaluationShaderId.value());
 
-	if (_geometryShaderId != std::nullopt)
+	if (ShaderProgram::_geometryShaderId != std::nullopt)
 		glDeleteShader(_geometryShaderId.value());
 
-	if (_fragmentShaderId != std::nullopt)
+	if (ShaderProgram::_fragmentShaderId != std::nullopt)
 		glDeleteShader(_fragmentShaderId.value());
 
-	if (_computeShaderId != std::nullopt)
+	if (ShaderProgram::_computeShaderId != std::nullopt)
 		glDeleteShader(_computeShaderId.value());
+
+	ShaderProgram::_vertexShaderSource->clear();
+	ShaderProgram::_tessellationControlShaderSource->clear();
+	ShaderProgram::_tessellationEvaluationShaderSource->clear();
+	ShaderProgram::_geometryShaderSource->clear();
+	ShaderProgram::_fragmentShaderSource->clear();
+	ShaderProgram::_computeShaderSource->clear();
 }

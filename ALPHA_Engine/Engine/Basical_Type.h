@@ -18,3 +18,4 @@
 #include "AdditionalMath.h"
 #include <optional>
 #include <cstring> 
+#include <type_traits>

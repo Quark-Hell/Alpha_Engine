@@ -40,6 +40,7 @@ public:
 	ShaderProgram(const ShaderProgram&) = delete;
 	ShaderProgram& operator=(const ShaderProgram&) = delete;
 
+#pragma region Interface
 	std::optional<unsigned int> GetVertexShaderId();
 	std::optional<unsigned int> GetTesselationControlShaderId();
 	std::optional<unsigned int> GetTesselationEvaluationShaderId();
@@ -49,6 +50,11 @@ public:
 
 	std::optional<unsigned int> GetProgramId();
 	bool GetCompiledStatus();
+
+	template <typename T> 
+	void SetValue(ShadersType shaderType, std::string fieldName, T value);
+
+#pragma endregion
 
 	bool CreateShader(const char* sourcePath, ShadersType shaderType);
 	bool Bind();
