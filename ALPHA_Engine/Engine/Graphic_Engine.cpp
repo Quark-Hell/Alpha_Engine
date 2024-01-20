@@ -415,6 +415,11 @@ void Render::RenderLoop(std::shared_ptr<Camera>  camera) {
         if (shader.GetCompiledStatus() == true) {
             glUseProgram(shader.GetProgramId().value());
             glBindVertexArray(vao);
+            glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
+            shader.SetValue(ShadersType::VertexShader, "model_matrix", &modelMat);
+            glm::mat4x4 camMat = glm::translate(glm::vec3(-1, 0, -2));
+            glm::mat4x4 viewMat = camera->_projectionMatrix * camMat;
+            shader.SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
             glDrawArrays(GL_TRIANGLES, 0, 3);
         }
 

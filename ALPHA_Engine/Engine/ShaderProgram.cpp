@@ -65,26 +65,11 @@ bool ShaderProgram::GetCompiledStatus()
 	return ShaderProgram::_isCompiled;
 }
 
-template <typename T>
-void ShaderProgram::SetValue(ShadersType shaderType, std::string fieldName, T value) {
-	if (std::is_same<glm::mat4x4, T>::value) {
-		glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::_programId, fieldName), 1, GL_FALSE, glm::value_ptr(value));
-	}
-	else if (std::is_same<glm::mat3x3, T>::value) {
-		glUniformMatrix3fv(glGetUniformLocation(ShaderProgram::_programId, fieldName), 1, GL_FALSE, glm::value_ptr(value));
-	}
-	else if (std::is_same<int, T>::value) {
-		glUniform1i(glGetUniformLocation(ShaderProgram::_programId, fieldName), value);
-	}
-	else if (std::is_same<float, T>::value) {
-		glUniform1f(glGetUniformLocation(ShaderProgram::_programId, fieldName), value);
-	}
-	else if (std::is_same<Vector3, T>::value) {
-		glUniform3f(glGetUniformLocation(ShaderProgram::_programId, fieldName), value.X, value.Y, value.Z);
-	}
-}
+//template <typename T, typename>
+//void ShaderProgram::SetValue(ShadersType shaderType, std::string fieldName, T value) {
+//
+//}
 
-//TODO: Create all types of shader
 bool ShaderProgram::CreateShader(const char* sourcePath, ShadersType shaderType)
 {
 	unsigned int shaderId;

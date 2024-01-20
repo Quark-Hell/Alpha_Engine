@@ -3,7 +3,7 @@
 #include "Object.h"
 
 Camera::Camera() {
-
+    Camera::UpdateProjectionMatrix();
 }
 Camera::~Camera() {
 

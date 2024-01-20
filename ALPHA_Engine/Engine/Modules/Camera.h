@@ -26,7 +26,7 @@ private:
 	Vector3 DirectionOfView;
 
 	//TODO: Add function for change mode
-	ProjectionMode _projectionMode;
+	ProjectionMode _projectionMode = ProjectionMode::Perspective;
 
 	glm::mat4x4 _projectionMatrix = glm::mat4x4(1.0);
 
@@ -78,6 +78,8 @@ public:
 
 	void UpdateProjectionMatrix();
 	void UpdateViewMatrix();
+
+	friend class Render;
 
 	Camera();
 	~Camera();

@@ -129,7 +129,7 @@ void SetControl() {
     Bind UpMove; UpMove.KeyboardBind({ UpMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_Q });
     Bind DownMove; DownMove.KeyboardBind({ DownMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_E });
     
-    Bind CameraRot; CameraRot.MouseSensorBind({ CameraRotate }, EnumMouseSensorStates(MouseKeepMoved | MouseStartMoved));
+    //Bind CameraRot; CameraRot.MouseSensorBind({ CameraRotate }, EnumMouseSensorStates(MouseKeepMoved | MouseStartMoved));
     
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { GLFW_KEY_ESCAPE });
     
@@ -142,7 +142,7 @@ void SetControl() {
     InpSys->InsertBind(toLeft);
     InpSys->InsertBind(toRight);
 
-    InpSys->InsertBind(CameraRot);
+    //InpSys->InsertBind(CameraRot);
     
     InpSys->InsertBind(LeftMove);
     InpSys->InsertBind(RightMove);
@@ -281,7 +281,7 @@ int main()
         World::StartFrame();
         Game->Update();
         InpSys->IO_Events();
-        World::ApplyingSceneTransformation();
+        //World::ApplyingSceneTransformation();
         Physics::PhysicsLoop();
         Collision::CollisionLoop();
         //Physics::PullingVectorsLoop();
