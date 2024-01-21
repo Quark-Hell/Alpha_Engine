@@ -277,6 +277,7 @@ int main()
         Game->Update();
         InpSys->IO_Events();
         World::ApplyingSceneTransformation();
+        camera->ApplyTransformation();
         Physics::PhysicsLoop();
         Collision::CollisionLoop();
         //Physics::PullingVectorsLoop();

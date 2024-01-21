@@ -61,16 +61,10 @@ void Camera::AddPosition(float X, float Y, float Z) {
     Camera::_origin.X += X;
     Camera::_origin.Y += Y;
     Camera::_origin.Z += Z;
-
-    glm::mat4x4 mat = glm::translate(glm::vec3(X, Y, Z));
-    Camera::_transformMatrix = Camera::_transformMatrix * mat;
 }
 void Camera::AddPosition(Vector3 position) {
     Camera::_position += position;
     Camera::_origin += position;
-
-    glm::mat4x4 mat = glm::translate(glm::vec3(position.X, position.Y, position.Z));
-    Camera::_transformMatrix = Camera::_transformMatrix * mat;
 }
 void Camera::SetPosition(float X, float Y, float Z) {
     Vector3 direction = Vector3(X, Y, Z) - Camera::_position;
@@ -113,14 +107,6 @@ void Camera::AddRotation(float X, float Y, float Z) {
     const float radY = M_PI / 180 * Y;
     const float radZ = M_PI / 180 * Z;
 
-    glm::mat4x4 mat(1.0f);
-
-    mat = glm::rotate(mat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-    mat = glm::rotate(mat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-    mat = glm::rotate(mat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
-
-    Camera::_transformMatrix = mat * Camera::_transformMatrix;
-
     Camera::_rotation.X += X;
     Camera::_rotation.Y += Y;
     Camera::_rotation.Z += Z;
@@ -129,14 +115,6 @@ void Camera::AddRotation(Vector3 rotation) {
     const float radX = M_PI / 180 * rotation.X;
     const float radY = M_PI / 180 * rotation.Y;
     const float radZ = M_PI / 180 * rotation.Z;
-
-    glm::mat4x4 mat(1.0f);
-
-    mat = glm::rotate(mat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-    mat = glm::rotate(mat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-    mat = glm::rotate(mat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
-
-    Camera::_transformMatrix = mat * Camera::_transformMatrix;
 
     Camera::_rotation.X += rotation.X;
     Camera::_rotation.Y += rotation.Y;
@@ -159,24 +137,10 @@ Vector3 Camera::GetScale() {
     return Transform::_scale;
 }
 void Camera::SetScale(float X, float Y, float Z) {
-    Vector3 delta = Camera::_scale / Vector3(X, Y, Z);
-    Camera::_transformMatrix = glm::scale(Camera::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
 
-    Camera::_scale.X = X;
-    Camera::_scale.Y = Y;
-    Camera::_scale.Z = Z;
-
-    Camera::ApplyTransformation();
 }
 void Camera::SetScale(Vector3 scale) {
-    Vector3 delta = Transform::_scale / scale;
-    Camera::_transformMatrix = glm::scale(Camera::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
 
-    Camera::_scale.X = scale.X;
-    Camera::_scale.Y = scale.Y;
-    Camera::_scale.Z = scale.Z;
-
-    ApplyTransformation();
 }
 
 void Camera::ApplyTransformation() {
@@ -186,8 +150,7 @@ void Camera::ApplyTransformation() {
     Vector3 originShift = Camera::GetParentObject()->_origin - Camera::GetParentObject()->_position;
 
     Camera::UpdateProjectionMatrix();
-
-    //Camera::_transformMatrix = glm::mat4x4(1.0f);
+    Camera::UpdateViewMatrix();
 }
 
 void Camera::UpdateProjectionMatrix() {
@@ -202,4 +165,22 @@ void Camera::UpdateProjectionMatrix() {
             0, 0, (-f - n) / (f - n), -1,
             0, 0, -2 * f * n / (f - n), 0);
     }
+}
+
+void Camera::UpdateViewMatrix()
+{
+    glm::mat4x4 rotMat(1.0f);
+
+    const float radX = M_PI / 180 * Camera::_rotation.X;
+    const float radY = M_PI / 180 * Camera::_rotation.Y;
+    const float radZ = M_PI / 180 * Camera::_rotation.Z;
+
+    rotMat = glm::rotate(rotMat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+    rotMat = glm::rotate(rotMat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+    rotMat = glm::rotate(rotMat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    glm::mat4x4 transMat(1.0f);
+    transMat = glm::translate(glm::vec3(Camera::_position.X, Camera::_position.Y, Camera::_position.Z));
+
+    Camera::_transformMatrix = rotMat * transMat;
 }

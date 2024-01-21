@@ -28,7 +28,7 @@ private:
 	//TODO: Add function for change mode
 	ProjectionMode _projectionMode = ProjectionMode::Perspective;
 
-	glm::mat4x4 _projectionMatrix = glm::mat4x4(1.0);
+	glm::mat4x4 _projectionMatrix = glm::mat4x4(1.0f);
 
 public:
 	void SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar);
