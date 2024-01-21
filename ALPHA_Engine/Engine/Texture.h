@@ -38,6 +38,7 @@ class Texture {
 
 	friend class Material;
 	friend class Render;
+	friend class Mesh;
 
 private:
 	std::string _texturePath;

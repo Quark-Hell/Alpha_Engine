@@ -70,8 +70,8 @@ ${Engine}Collision.h
 ${Engine}Collision.cpp
 ${Engine}Graphic_Engine.h
 ${Engine}Graphic_Engine.cpp
-"Engine/Modules/SubModules/Material.h"
-"Engine/Modules/SubModules/Material.cpp"
+"Engine/Modules/Material.h"
+"Engine/Modules/Material.cpp"
 
 ${Engine}Object.h 
 ${Engine}Object.cpp   
@@ -104,8 +104,8 @@ ${glm}glm.hpp
  "Engine/Modules/Transform.h"
  "Engine/Modules/Transform.cpp"
  "Engine/Plane.h" 
- "Engine/Modules/SubModules/SubModule.h" 
- "Engine/Modules/SubModules/SubModule.cpp"
+  
+ 
  "Engine/BVH_Tree.h" 
  "Engine/BVH_Tree.cpp" 
  "Engine/AABB.h" 

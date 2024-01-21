@@ -37,10 +37,10 @@ Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
 
 
-std::shared_ptr<Object> plane;
+//std::shared_ptr<Object> plane;
 std::shared_ptr<Object> plane1;
-std::shared_ptr<Object> plane3;
-std::shared_ptr<Object> object2;
+//std::shared_ptr<Object> plane3;
+//std::shared_ptr<Object> object2;
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 
@@ -64,25 +64,25 @@ void GameFunction::Start() {
     Vector3 color = Vector3{ 0,0,0 };
 
     plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    plane1->AddModule(BoxColliderType);
-    plane1->AddPosition(-0.5, -3, -10);
-    plane1->AddRotation(90, 0, 0);
-    plane1->SetScale(70, 70, 0.5);
+    //plane1->AddModule(BoxColliderType);
+    //plane1->AddPosition(-0.5, -3, -10);
+    //plane1->AddRotation(90, 0, 0);
+    //lane1->SetScale(70, 70, 0.5);
 
     
-    plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    plane3->AddModule(std::static_pointer_cast<Module>(col5));
-    plane3->AddPosition(-5, 0, -10);
-    plane3->AddRotation(0, 0, 10);
-    plane3->SetScale(3, 3, 0.5); 
-    
-    plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    plane->AddModule(std::static_pointer_cast<Module>(col3));
-    plane->AddPosition(0, 5, -10);
-    plane->AddRotation(90, 0, 0);
-    plane->SetScale(5, 5, 0.5);
-    // 
-    plane->AddOriginPosition(-2.5,0,0);
+    //plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    //plane3->AddModule(std::static_pointer_cast<Module>(col5));
+    //plane3->AddPosition(-5, 0, -10);
+    //plane3->AddRotation(0, 0, 10);
+    //plane3->SetScale(3, 3, 0.5); 
+    //
+    //plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    //plane->AddModule(std::static_pointer_cast<Module>(col3));
+    //plane->AddPosition(0, 5, -10);
+    //plane->AddRotation(90, 0, 0);
+    //plane->SetScale(5, 5, 0.5);
+    //// 
+    //plane->AddOriginPosition(-2.5,0,0);
 
     //object2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     //object2->AddModule(std::static_pointer_cast<Module>(col2));
@@ -262,9 +262,9 @@ int main()
     //HWND hwnd = GetConsoleWindow();
     //ShowWindow(hwnd, 1);
 
-    Game->Start();
     render->StartRender(camera);
-    
+    Game->Start();
+
     InpSys->Window = render->GetScreenClass()->GetWindow();
 
     render->CompileShaders();

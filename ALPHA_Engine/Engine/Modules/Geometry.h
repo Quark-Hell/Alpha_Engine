@@ -17,16 +17,16 @@ protected:
 
 	Object* _parentObject;
 
+	//std::shared_ptr<std::vector<float>> _vertex = std::make_shared<std::vector<float>>();
+	//std::shared_ptr<std::vector<float>> _normals = std::make_shared<std::vector<float>>();
+	std::shared_ptr<std::vector<unsigned int>> _indices = std::make_shared<std::vector<unsigned int>>();
 	float* _vertex;
 	float* _normals;
-	unsigned int* _indices;
 
 	unsigned int _vertexCount = 0;
 	unsigned int _normalsCount = 0;
 	unsigned int _indicesCount = 0;
 
-
-protected:
 	friend class Object;
 	friend class Render;
 	friend class Collision;

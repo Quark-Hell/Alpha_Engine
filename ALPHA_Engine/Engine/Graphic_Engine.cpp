@@ -4,7 +4,7 @@
 #include "Modules/Camera.h"
 #include "Modules/Geometry.h"
 #include "Modules/Mesh.h"
-#include "Modules/SubModules/Material.h"
+#include "Modules/Material.h"
 
 #include "Modules/MeshCollider.h"
 #include "Modules/BoxCollider.h"
@@ -21,6 +21,24 @@
 #include "gtc/type_ptr.hpp"
 
 #include "ShaderProgram.h"
+
+GLfloat points[] = {
+     0.0f,  0.5f, 0.0f,
+     0.5f, -0.5f, 0.0f,
+    -0.5f, -0.5f, 0.0f
+};
+
+GLfloat colors[] = {
+    1.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 1.0f
+};
+
+ShaderProgram shader;
+
+GLuint points_vbo;
+GLuint colors_vbo;
+GLuint vao;
 
 void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name) {
     _wight = Wight;
@@ -178,32 +196,60 @@ void Render::SetDebugRenderOptions() {
     glEnable(GL_DEPTH_TEST);
 }
 
-void Render::RenderMesh(Mesh& mesh) {
-    Render::SetMeshRenderOptions();
-    glColor3f(0.8, 0.8, 0.8);
+void Render::RenderMesh(Mesh& mesh, std::shared_ptr<Camera> camera) {
+    //Render::SetMeshRenderOptions();
 
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    if (mesh._material->_shader->GetCompiledStatus() == true) {
+        glUseProgram(mesh._material->_shader->GetProgramId().value());
+        glBindVertexArray(mesh._vao);
 
-    Material* mat = (Material*)mesh.GetSubModuleByType(MaterialType).get();
-    if (mat != nullptr) {
-        //glClientActiveTexture(GL_TEXTURE0);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mat->_diffuse.textureId);
+        glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
+        mesh._material->_shader->SetValue(ShadersType::VertexShader, "model_matrix", &modelMat);
+
+        glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
+        mesh._material->_shader->SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
+
+        glDrawElements(GL_TRIANGLES, mesh._indices->size(), GL_UNSIGNED_INT, mesh._indices->data());
+        //glDrawArrays(GL_TRIANGLES, 0, 24 * 3);
+
+        //if (shader.GetCompiledStatus() == true) {
+        //    glUseProgram(shader.GetProgramId().value());
+        //    glBindVertexArray(vao);
+        //
+        //    glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
+        //    shader.SetValue(ShadersType::VertexShader, "model_matrix", &modelMat);
+        //    
+        //    glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
+        //    shader.SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
+        //
+        //    glDrawArrays(GL_TRIANGLES, 0, 3);
+        //}
     }
+
+    //glColor3f(0.8, 0.8, 0.8);
+
+    //glEnableClientState(GL_NORMAL_ARRAY);
+    //glEnableClientState(GL_VERTEX_ARRAY);
+    //glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    //Material* mat = (Material*)mesh.GetSubModuleByType(MaterialType).get();
+    //if (mat != nullptr) {
+    //    //glClientActiveTexture(GL_TEXTURE0);
+    //    glActiveTexture(GL_TEXTURE0);
+    //    glBindTexture(GL_TEXTURE_2D, mat->_diffuse.textureId);
+    //}
    
 
     //glIndexPointer(GL_UNSIGNED_INT,0, mesh._indices);
-    glTexCoordPointer(2, GL_FLOAT,0, mat->_texCoords.get());
-    glNormalPointer(GL_FLOAT, 0, mesh._normals);
-    glVertexPointer(3, GL_FLOAT, 0, mesh._vertex);
+    //glTexCoordPointer(2, GL_FLOAT,0, mat->_texCoords.get());
+    //glNormalPointer(GL_FLOAT, 0, mesh._normals);
+    //glVertexPointer(3, GL_FLOAT, 0, mesh._vertex);
     
-    glDrawElements(GL_TRIANGLES, mesh._indicesCount, GL_UNSIGNED_INT, mesh._indices);
+    //glDrawElements(GL_TRIANGLES, mesh._indicesCount, GL_UNSIGNED_INT, mesh._indices);
     
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    //glDisableClientState(GL_NORMAL_ARRAY);
+    //glDisableClientState(GL_VERTEX_ARRAY);
+    //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void Render::RenderCollider(Collider& collider) {
@@ -272,7 +318,7 @@ void Render::RenderWorldAABB(Node& rootNode) {
 #endif // _DEBUG
 }
 
-void Render::SceneAssembler() {
+void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
     for (size_t i = 0; i < World::ObjectsOnScene.size(); i++)
     {
         for (size_t j = 0; j < World::ObjectsOnScene[i]->GetCountOfModules(); j++)
@@ -281,30 +327,30 @@ void Render::SceneAssembler() {
 
             if (type == MeshType) {
                 std::shared_ptr<Mesh> mesh = std::dynamic_pointer_cast<Mesh>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
-                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
-                RenderMesh(*mesh);
+                //Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+                Render::RenderMesh(*mesh, camera);
             }
 
 
 #pragma region DebugRender
 #ifdef _DEBUG
-            if (World::DebugRenderEnabled == false)
-                continue;
-
-            std::shared_ptr<Collider> collider = std::dynamic_pointer_cast<Collider>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
-
-            if (collider != nullptr) {
-                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
-                RenderCollider(*collider);
-                RenderAABB(collider->_AABBvertex, collider->_AABBindices);
-            }
-
-            std::shared_ptr<RigidBody> rb = std::dynamic_pointer_cast<RigidBody>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
-
-            if (rb != nullptr) {
-                Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
-                RenderRigidBodyInfo(*rb);
-            }
+          //  if (World::DebugRenderEnabled == false)
+          //      continue;
+          //
+          //  std::shared_ptr<Collider> collider = std::dynamic_pointer_cast<Collider>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+          //
+          //  if (collider != nullptr) {
+          //      Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+          //      RenderCollider(*collider);
+          //      RenderAABB(collider->_AABBvertex, collider->_AABBindices);
+          //  }
+          //
+          //  std::shared_ptr<RigidBody> rb = std::dynamic_pointer_cast<RigidBody>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+          //
+          //  if (rb != nullptr) {
+          //      Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+          //      RenderRigidBodyInfo(*rb);
+          //  }
 #endif
 #pragma endregion
         }
@@ -331,77 +377,55 @@ void Render::StartRender(std::shared_ptr<Camera>  camera) {
     glViewport(0, 0, width, height);
 
     Render::PrepareToRender();
-    Render::ApplyCameraTransform(camera);
+    //Render::ApplyCameraTransform(camera);
 
-    camera->SetCameraInfo(60, 16.0 / 9.0, 0.1, 300);
+    //camera->SetCameraInfo(60, 16.0 / 9.0, 0.1, 300);
 }
-
-GLfloat points[] = {
-     0.0f,  0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-    -0.5f, -0.5f, 0.0f
-};
-
-GLfloat colors[] = {
-    1.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 1.0f
-};
-
-ShaderProgram shader;
-
-GLuint points_vbo;
-GLuint colors_vbo;
-GLuint vao;
 
 bool Render::CompileShaders() {
     shader.CreateShader("\\Shaders\\BaseVertexShaders\\VertexShader.txt", ShadersType::VertexShader);
     shader.CreateShader("\\Shaders\\BaseFragmentShaders\\FragmentShader.txt", ShadersType::FragmentShader);
-
+    
     shader.CompileShader();
 
 
     if (shader.GetCompiledStatus()) {
         shader.AttachShader();
         shader.DeleteShader();
-
+    
         points_vbo = 0;
         glGenBuffers(1, &points_vbo);
         glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
-
+        
         colors_vbo = 0;
         glGenBuffers(1, &colors_vbo);
         glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-
+        
         vao = 0;
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
-
+        
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
+        
         glEnableVertexAttribArray(1);
         glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
+    
         return true;
     }
     else
     {
         shader.DeleteShader();
     }
+    
+    return true;
 }
 
-void Render::SetMatrix4(const char* name, const glm::mat4& matrix) const
-{
-    //glUniformMatrix4fv(glGetUniformLocation(shader_program, name), 1, GL_FALSE, glm::value_ptr(matrix));
-}
-
-
-void Render::RenderLoop(std::shared_ptr<Camera>  camera) {
+void Render::RenderLoop(std::shared_ptr<Camera> camera) {
     if (!glfwWindowShouldClose(_screenClass._window))
     {
         glfwPollEvents();
@@ -411,45 +435,19 @@ void Render::RenderLoop(std::shared_ptr<Camera>  camera) {
         Render::PrepareToRender();
         //Render::ApplyCameraTransform(camera);
 
-        //Render::SceneAssembler();
-        if (shader.GetCompiledStatus() == true) {
-            glUseProgram(shader.GetProgramId().value());
-            glBindVertexArray(vao);
-            glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
-
-            shader.SetValue(ShadersType::VertexShader, "model_matrix", &modelMat);
-            glm::mat4x4 translMat = glm::translate(glm::vec3(0, 0, -2));
-            glm::mat4x4 mat(1.0f);
-            //
-            mat = glm::rotate(mat, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-            mat = glm::rotate(mat, 0.5f, glm::vec3(0.0f, 1.0f, 0.0f));
-            mat = glm::rotate(mat, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-
-            //float rotate_in_radians_x = glm::radians(0.0f);
-            //glm::mat4 rotate_matrix_x(1, 0, 0, 0,
-            //    0, cos(rotate_in_radians_x), sin(rotate_in_radians_x), 0,
-            //    0, -sin(rotate_in_radians_x), cos(rotate_in_radians_x), 0,
-            //    0, 0, 0, 1);
-            //
-            //float rotate_in_radians_y = glm::radians(-30.0f);
-            //glm::mat4 rotate_matrix_y(cos(rotate_in_radians_y), 0, -sin(rotate_in_radians_y), 0,
-            //    0, 1, 0, 0,
-            //    sin(rotate_in_radians_y), 0, cos(rotate_in_radians_y), 0,
-            //    0, 0, 0, 1);
-
-            //float rotate_in_radians_z = glm::radians(0.0f);
-            //glm::mat4 rotate_matrix(cos(rotate_in_radians_z), sin(rotate_in_radians_z), 0, 0,
-            //    -sin(rotate_in_radians_z), cos(rotate_in_radians_z), 0, 0,
-            //    0, 0, 1, 0,
-            //    0, 0, 0, 1);
-
-            glm::mat4x4 vMat = translMat * mat;
-
-            glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
-
-            shader.SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
-            glDrawArrays(GL_TRIANGLES, 0, 3);
-        }
+        Render::SceneAssembler(camera);
+        //if (shader.GetCompiledStatus() == true) {
+        //    //glUseProgram(shader.GetProgramId().value());
+        //    //glBindVertexArray(vao);
+        //    
+        //    //glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
+        //    //shader.SetValue(ShadersType::VertexShader, "model_matrix", &modelMat);
+        //    //
+        //    //glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
+        //    //shader.SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
+        //
+        //    glDrawArrays(GL_TRIANGLES, 0, 3);
+        //}
 
 
         glfwSwapBuffers(_screenClass._window);

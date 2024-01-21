@@ -29,16 +29,14 @@ bool Geometry::Create(std::string linkToFBX) {
     const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
     aiMesh* mesh = s->mMeshes[0];
 
-    Geometry::_indicesCount = mesh->mNumFaces * 3;
-    Geometry::_indices = new unsigned int[Geometry::_indicesCount];
+    Geometry::_indices->resize(mesh->mNumFaces * 3);
 
     for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
         for (size_t jt = 0; jt < mesh->mFaces[it].mNumIndices; jt++)
         {
-            Geometry::_indices[(it * 3) + jt] = mesh->mFaces[it].mIndices[jt];
+            (*Geometry::_indices)[(it * 3) + jt] = mesh->mFaces[it].mIndices[jt];
         }
     }
-
 
     Geometry::_vertexCount = mesh->mNumVertices;
     Geometry::_vertex = new float[Geometry::_vertexCount * 3];

@@ -67,15 +67,14 @@ public:
 	Screen* GetScreenClass();
 
 	bool CompileShaders();
-	void SetMatrix4(const char* name, const glm::mat4& matrix) const;
 
 private:
-	void SceneAssembler();
+	void SceneAssembler(std::shared_ptr<Camera> camera);
 
 	void SetMeshRenderOptions();
 	void SetDebugRenderOptions();
 
-	void RenderMesh(Mesh& mesh);
+	void RenderMesh(Mesh& mesh, std::shared_ptr<Camera>  camera);
 	void RenderCollider(Collider& collider);
 	void RenderAABB(std::vector<float>& vertex, std::vector<unsigned int>& indices);
 	void RenderWorldAABB(Node& rootNode);

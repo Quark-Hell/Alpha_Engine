@@ -1,13 +1,13 @@
 #pragma once
 #include "Texture.h"
 
-#include "SubModule.h"
-
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-class Material : public SubModule
+#include "ShaderProgram.h"
+
+class Material
 {
 public:
 	Texture _diffuse;
@@ -26,13 +26,8 @@ public:
 	Material();
 	~Material();
 
-	SubModulesList GetType() override;
-
 	bool LoadMaterial(const aiScene& scene, unsigned int matIndex);
 
-	bool LoadTextureCoord(std::string pathToCoords);
-	bool LoadTextureCoord(const aiScene& scene, unsigned int matIndex);
-
 private:
-	std::shared_ptr<std::vector<float>> _texCoords = std::make_shared<std::vector<float>>(std::vector<float>());
+	std::shared_ptr<ShaderProgram> _shader = std::make_shared<ShaderProgram>();
 };
