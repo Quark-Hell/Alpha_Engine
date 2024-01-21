@@ -119,4 +119,8 @@ bool Mesh::Create(std::string linkToFBX) {
 
 	return true;
 }
+void Mesh::ApplyTransformation()
+{
+
+}
 #pragma endregion

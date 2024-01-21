@@ -63,12 +63,6 @@ void GameFunction::Start() {
     Vector3 scale = Vector3{ 1,1,1 };
     Vector3 color = Vector3{ 0,0,0 };
 
-    //object = Primitives::Sphere(pos, rot, scale, color);
-    //object->AddModule(col1);
-    //object->AddModule(rb1);
-    //object->AddPosition(9, 3, 0);
-    //rb1->CalculateCenterMass();
-
     plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     plane1->AddModule(BoxColliderType);
     plane1->AddPosition(-0.5, -3, -10);
@@ -117,8 +111,8 @@ void GameFunction::Update() {
 
 void SetControl() {
     Player.AddModule(std::static_pointer_cast<Module>(camera));
-    Player.AddRotation(20, 0, 0);
-    Player.AddPosition(0, -7, 0);
+    //Player.AddRotation(30, 0, 0);
+    Player.AddPosition(0, 0, -3);
     
     Bind LeftMove; LeftMove.KeyboardBind({ LeftMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_A });
     Bind RightMove; RightMove.KeyboardBind({ RightMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_D });
@@ -129,7 +123,7 @@ void SetControl() {
     Bind UpMove; UpMove.KeyboardBind({ UpMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_Q });
     Bind DownMove; DownMove.KeyboardBind({ DownMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_E });
     
-    //Bind CameraRot; CameraRot.MouseSensorBind({ CameraRotate }, EnumMouseSensorStates(MouseKeepMoved | MouseStartMoved));
+    Bind CameraRot; CameraRot.MouseSensorBind({ CameraRotate }, EnumMouseSensorStates(MouseKeepMoved | MouseStartMoved));
     
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { GLFW_KEY_ESCAPE });
     
@@ -142,7 +136,7 @@ void SetControl() {
     InpSys->InsertBind(toLeft);
     InpSys->InsertBind(toRight);
 
-    //InpSys->InsertBind(CameraRot);
+    InpSys->InsertBind(CameraRot);
     
     InpSys->InsertBind(LeftMove);
     InpSys->InsertBind(RightMove);
@@ -210,6 +204,7 @@ void BackwardMoveCamera() {
     newPos += BackwardVector * (-0.1);
 
     Player.SetPosition(newPos);
+    //Player.AddPosition(0, 0, -0.01f);
 }
 
 void UpMoveCamera() {
@@ -281,13 +276,13 @@ int main()
         World::StartFrame();
         Game->Update();
         InpSys->IO_Events();
-        //World::ApplyingSceneTransformation();
+        World::ApplyingSceneTransformation();
         Physics::PhysicsLoop();
         Collision::CollisionLoop();
         //Physics::PullingVectorsLoop();
         render->RenderLoop(camera);
         World::EndFrame();
-        std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << " Musk Lox" << "\n";
+        std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << "\n";
     }
 
     glfwTerminate();

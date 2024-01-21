@@ -20,6 +20,8 @@ public:
 
 	bool Create(std::string linkToFBX) override;
 
+	void ApplyTransformation() override;
+
 	//bool Create(std::string linkToFBX) override;
 	//void DeleteMesh() override;
 };

@@ -416,9 +416,37 @@ void Render::RenderLoop(std::shared_ptr<Camera>  camera) {
             glUseProgram(shader.GetProgramId().value());
             glBindVertexArray(vao);
             glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
+
             shader.SetValue(ShadersType::VertexShader, "model_matrix", &modelMat);
-            glm::mat4x4 camMat = glm::translate(glm::vec3(-1, 0, -2));
-            glm::mat4x4 viewMat = camera->_projectionMatrix * camMat;
+            glm::mat4x4 translMat = glm::translate(glm::vec3(0, 0, -2));
+            glm::mat4x4 mat(1.0f);
+            //
+            mat = glm::rotate(mat, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+            mat = glm::rotate(mat, 0.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+            mat = glm::rotate(mat, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+            //float rotate_in_radians_x = glm::radians(0.0f);
+            //glm::mat4 rotate_matrix_x(1, 0, 0, 0,
+            //    0, cos(rotate_in_radians_x), sin(rotate_in_radians_x), 0,
+            //    0, -sin(rotate_in_radians_x), cos(rotate_in_radians_x), 0,
+            //    0, 0, 0, 1);
+            //
+            //float rotate_in_radians_y = glm::radians(-30.0f);
+            //glm::mat4 rotate_matrix_y(cos(rotate_in_radians_y), 0, -sin(rotate_in_radians_y), 0,
+            //    0, 1, 0, 0,
+            //    sin(rotate_in_radians_y), 0, cos(rotate_in_radians_y), 0,
+            //    0, 0, 0, 1);
+
+            //float rotate_in_radians_z = glm::radians(0.0f);
+            //glm::mat4 rotate_matrix(cos(rotate_in_radians_z), sin(rotate_in_radians_z), 0, 0,
+            //    -sin(rotate_in_radians_z), cos(rotate_in_radians_z), 0, 0,
+            //    0, 0, 1, 0,
+            //    0, 0, 0, 1);
+
+            glm::mat4x4 vMat = translMat * mat;
+
+            glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
+
             shader.SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
             glDrawArrays(GL_TRIANGLES, 0, 3);
         }
