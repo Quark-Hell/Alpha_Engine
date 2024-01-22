@@ -39,7 +39,7 @@ InputSystem* InpSys = new InputSystem;
 
 //std::shared_ptr<Object> plane;
 std::shared_ptr<Object> plane1;
-//std::shared_ptr<Object> plane3;
+std::shared_ptr<Object> plane3;
 //std::shared_ptr<Object> object2;
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
@@ -65,16 +65,16 @@ void GameFunction::Start() {
 
     plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     //plane1->AddModule(BoxColliderType);
-    //plane1->AddPosition(-0.5, -3, -10);
-    //plane1->AddRotation(90, 0, 0);
-    //lane1->SetScale(70, 70, 0.5);
+    plane1->AddPosition(0, -10, -10);
+    plane1->AddRotation(90, 0, 0);
+    plane1->SetScale(10, 10, 0.5);
 
     
-    //plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     //plane3->AddModule(std::static_pointer_cast<Module>(col5));
-    //plane3->AddPosition(-5, 0, -10);
-    //plane3->AddRotation(0, 0, 10);
-    //plane3->SetScale(3, 3, 0.5); 
+    plane3->AddPosition(-5, 0, -10);
+    plane3->AddRotation(0, 0, 10);
+    plane3->SetScale(3, 3, 0.5); 
     //
     //plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     //plane->AddModule(std::static_pointer_cast<Module>(col3));
@@ -97,6 +97,7 @@ void GameFunction::Start() {
 }
 
 void GameFunction::Update() {
+    plane1->AddRotation({ 0, 0, -0.5 });
     //plane->AddRotation({ 0, 0, -0.5 });
     //plane->AddLocalRot(Vector3{ -2.5, 0, 0 }, Vector3{ 0, 0, -0.5 });
 

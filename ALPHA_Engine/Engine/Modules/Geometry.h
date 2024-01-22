@@ -25,7 +25,6 @@ protected:
 
 	unsigned int _vertexCount = 0;
 	unsigned int _normalsCount = 0;
-	unsigned int _indicesCount = 0;
 
 	friend class Object;
 	friend class Render;

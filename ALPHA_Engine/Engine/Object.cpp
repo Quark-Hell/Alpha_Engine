@@ -121,7 +121,7 @@ void Object::AddRotation(float X, float Y, float Z) {
 		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr) {
-			geometry->_isShifted = true;
+			geometry->AddRotation(X, Y, Z);
 			continue;
 		}
 
@@ -150,14 +150,14 @@ void Object::AddRotation(Vector3 rotation) {
 		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr) {
-			geometry->_isShifted = true;
+			geometry->AddRotation(rotation);
 			continue;
 		}
 
 		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
 
 		if (camera != nullptr) {
-			camera->AddRotation(rotation.X, rotation.Y, rotation.Z);
+			camera->AddRotation(rotation);
 		}
 	}
 }
@@ -189,7 +189,7 @@ void Object::SetScale(float X, float Y, float Z) {
 		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr) {
-			geometry->_isShifted = true;
+			geometry->SetScale(X,Y,Z);
 		}
 	}
 
@@ -208,7 +208,7 @@ void Object::SetScale(Vector3 scale) {
 		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr) {
-			geometry->_isShifted = true;
+			geometry->SetScale(scale);
 		}
 	}
 

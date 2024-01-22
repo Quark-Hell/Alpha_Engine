@@ -158,12 +158,12 @@ void Camera::UpdateProjectionMatrix() {
     {
         float r = 0.1f;
         float t = 0.1f;
-        float f = 10;
         float n = 0.1f;
-        _projectionMatrix = glm::mat4(n / r, 0, 0, 0,
+        _projectionMatrix = glm::mat4(
+            n / r, 0, 0, 0,
             0, n / t, 0, 0,
-            0, 0, (-f - n) / (f - n), -1,
-            0, 0, -2 * f * n / (f - n), 0);
+            0, 0, (-ZFar - n) / (ZFar - n), -1,
+            0, 0, -2 * ZFar * n / (ZFar - n), 0);
     }
 }
 

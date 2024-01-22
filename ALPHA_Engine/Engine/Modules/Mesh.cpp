@@ -84,9 +84,126 @@ bool Mesh::Create(std::string linkToFBX) {
 	Mesh::BindMesh();
 	return true;
 }
+
+void Mesh::AddPosition(float X, float Y, float Z) {
+	Mesh::_position.X += X;
+	Mesh::_position.Y += Y;
+	Mesh::_position.Z += Z;
+
+	Mesh::_origin.X += X;
+	Mesh::_origin.Y += Y;
+	Mesh::_origin.Z += Z;
+
+	Mesh::_isShifted = true;
+}
+void Mesh::AddPosition(Vector3 position) {
+	Mesh::_position += position;
+	Mesh::_origin += position;
+
+	Mesh::_isShifted = true;
+}
+void Mesh::SetPosition(float X, float Y, float Z) {
+	Vector3 direction = Vector3(X, Y, Z) - Geometry::_position;
+
+	Mesh::AddPosition(direction);
+}
+void Mesh::SetPosition(Vector3 position) {
+	Vector3 direction = position - Geometry::_position;
+
+	Mesh::AddPosition(direction);
+}
+
+void Mesh::AddOriginPosition(float X, float Y, float Z) {
+	Mesh::_origin.X += X;
+	Mesh::_origin.Y += Y;
+	Mesh::_origin.Z += Z;
+}
+void Mesh::AddOriginPosition(Vector3 position) {
+	Mesh::_origin += position;
+}
+
+void Mesh::SetOriginPosition(float X, float Y, float Z) {
+	Vector3 direction = Vector3(X, Y, Z) - Mesh::_origin;
+
+	Mesh::AddOriginPosition(direction);
+}
+void Mesh::SetOriginPosition(Vector3 position) {
+	Vector3 direction = position - Mesh::_origin;
+
+	Mesh::AddOriginPosition(direction);
+}
+
+
+void Mesh::AddRotation(float X, float Y, float Z) {
+	const float radX = M_PI / 180 * X;
+	const float radY = M_PI / 180 * Y;
+	const float radZ = M_PI / 180 * Z;
+
+	Mesh::_rotation.X += X;
+	Mesh::_rotation.Y += Y;
+	Mesh::_rotation.Z += Z;
+
+	Mesh::_isShifted = true;
+}
+void Mesh::AddRotation(Vector3 rotation) {
+	const float radX = M_PI / 180 * rotation.X;
+	const float radY = M_PI / 180 * rotation.Y;
+	const float radZ = M_PI / 180 * rotation.Z;
+
+	Mesh::_rotation.X += rotation.X;
+	Mesh::_rotation.Y += rotation.Y;
+	Mesh::_rotation.Z += rotation.Z;
+
+	Mesh::_isShifted = true;
+}
+
+void Mesh::SetRotation(float X, float Y, float Z) {
+	Vector3 direction = Vector3(X, Y, Z) - Mesh::_rotation;
+
+	Mesh::AddRotation(direction);
+}
+void Mesh::SetRotation(Vector3 rotation) {
+	Vector3 direction = rotation - Mesh::_rotation;
+
+	Mesh::AddRotation(direction);
+}
+
+
+void Mesh::SetScale(float X, float Y, float Z) {
+	Mesh::_scale.X = X;
+	Mesh::_scale.Y = Y;
+	Mesh::_scale.Z = Z;
+
+	Mesh::_isShifted = true;
+}
+void Mesh::SetScale(Vector3 scale) {
+	Mesh::_scale.X = scale.X;
+	Mesh::_scale.Y = scale.Y;
+	Mesh::_scale.Z = scale.Z;
+
+	Mesh::_isShifted = true;
+}
+
 void Mesh::ApplyTransformation()
 {
+	glm::mat4x4 rotMat(1.0f);
 
+	const float radX = M_PI / 180 * Mesh::_rotation.X;
+	const float radY = M_PI / 180 * Mesh::_rotation.Y;
+	const float radZ = M_PI / 180 * Mesh::_rotation.Z;
+
+	rotMat = glm::rotate(rotMat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+	rotMat = glm::rotate(rotMat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+	rotMat = glm::rotate(rotMat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+
+	glm::mat4x4 transMat(1.0f);
+	transMat = glm::translate(glm::vec3(Mesh::_position.X, Mesh::_position.Y, Mesh::_position.Z));
+
+	glm::mat4x4 scaleMat(1.0f);
+	scaleMat = glm::scale(scaleMat, glm::vec3(Mesh::_scale.X, Mesh::_scale.Y, Mesh::_scale.Z));
+
+	//Mesh::_transformMatrix = rotMat * scaleMat * transMat;
+	Mesh::_transformMatrix = transMat * rotMat * scaleMat;
 }
 
 bool Mesh::LoadTextureCoord(std::string pathToCoords) {
@@ -114,18 +231,6 @@ bool Mesh::LoadTextureCoord(const aiScene& scene, unsigned int matIndex) {
 		Mesh::_texCoords->push_back(mesh->mTextureCoords[0][it].y);
 	}
 }
-
-GLfloat vert[] = {
-	 0.0f,  0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	-0.5f, -0.5f, 0.0f
-};
-
-GLfloat col[] = {
-	1.0f, 0.0f, 0.0f,
-	0.0f, 1.0f, 0.0f,
-	0.0f, 0.0f, 1.0f
-};
 
 bool Mesh::BindMesh() {
 	if (Mesh::_vertexVbo != 0)

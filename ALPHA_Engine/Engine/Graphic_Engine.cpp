@@ -65,8 +65,6 @@ void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int 
     glfwMakeContextCurrent(Screen::_window);
     glfwSwapInterval(1);
 
-
-    
     glfwWindowHint(GLFW_SAMPLES,3);
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
@@ -204,7 +202,7 @@ void Render::RenderMesh(Mesh& mesh, std::shared_ptr<Camera> camera) {
         glBindVertexArray(mesh._vao);
 
         glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
-        mesh._material->_shader->SetValue(ShadersType::VertexShader, "model_matrix", &modelMat);
+        mesh._material->_shader->SetValue(ShadersType::VertexShader, "model_matrix", &mesh._transformMatrix);
 
         glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
         mesh._material->_shader->SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
@@ -449,7 +447,7 @@ void Render::RenderLoop(std::shared_ptr<Camera> camera) {
         //    glDrawArrays(GL_TRIANGLES, 0, 3);
         //}
 
-
+        glFinish();
         glfwSwapBuffers(_screenClass._window);
     }
     else
