@@ -11,6 +11,11 @@ enum ModulesList {
 	MeshColliderType = 4,
 	MeshType = 5,
 	BoxColliderType = 6,
+	LightType = 7,
+	AmbientLightType = 8,
+	DirectLightType = 9,
+	PointLightType = 10,
+	SpotLightType = 11,
 };
 
 class Module

@@ -113,7 +113,7 @@ ${glm}glm.hpp
  "Engine/Modules/Collider.h" 
  "Engine/Modules/Collider.cpp" 
  "Engine/Modules/MovableModule.h" 
- "Engine/Modules/MovableModule.cpp"   "Engine/ShaderProgram.h" "Engine/ShaderProgram.cpp")
+ "Engine/Modules/MovableModule.cpp"   "Engine/ShaderProgram.h" "Engine/ShaderProgram.cpp" "Engine/Modules/Light/Light.h" "Engine/Modules/Light/Light.cpp" "Engine/Modules/Light/AmbientLight.h" "Engine/Modules/Light/AmbientLight.cpp" "Engine/Modules/Light/DirectLight.h" "Engine/Modules/Light/DirectLight.cpp" "Engine/Modules/Light/PointLight.h" "Engine/Modules/Light/PointLight.cpp" "Engine/Modules/Light/SpotLight.h" "Engine/Modules/Light/SpotLight.cpp")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib

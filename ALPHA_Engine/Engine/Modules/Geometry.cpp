@@ -49,15 +49,13 @@ bool Geometry::Create(std::string linkToFBX) {
         }
     }
 
-
-    Geometry::_normalsCount = mesh->mNumVertices;
-    Geometry::_normals = new float[Geometry::_normalsCount * 3];
+    Geometry::_normals->resize(Geometry::_vertexCount * 3);
 
     for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
         if (mesh->HasNormals()) {
-            Geometry::_normals[it] = mesh->mNormals[it / 3].x;
-            Geometry::_normals[it + 1] = mesh->mNormals[it / 3].y;
-            Geometry::_normals[it + 2] = mesh->mNormals[it / 3].z;
+            (*Geometry::_normals)[it] = mesh->mNormals[it / 3].x;
+            (*Geometry::_normals)[it + 1] = mesh->mNormals[it / 3].y;
+            (*Geometry::_normals)[it + 2] = mesh->mNormals[it / 3].z;
         }
     }
 
@@ -251,26 +249,6 @@ void Geometry::SetPosition(Vector3 position) {
     Geometry::AddPosition(direction);
 }
 
-void Geometry::AddOriginPosition(float X, float Y, float Z) {
-    Geometry::_origin.X += X;
-    Geometry::_origin.Y += Y;
-    Geometry::_origin.Z += Z;
-}
-void Geometry::AddOriginPosition(Vector3 position) {
-    Geometry::_origin += position;
-}
-
-void Geometry::SetOriginPosition(float X, float Y, float Z) {
-    Vector3 direction = Vector3(X, Y, Z) - Geometry::_origin;
-
-    Geometry::AddOriginPosition(direction);
-}
-void Geometry::SetOriginPosition(Vector3 position) {
-    Vector3 direction = position - Geometry::_origin;
-
-    Geometry::AddOriginPosition(direction);
-}
-
 
 Vector3 Geometry::GetRotation() {
     return Geometry::_rotation;
@@ -365,15 +343,15 @@ void Geometry::ApplyTransformation() {
     }
 
 
-    for (size_t jt = 0; jt < Geometry::_normalsCount * 3; jt += 3)
+    for (size_t jt = 0; jt < Geometry::_normals->size(); jt += 3)
     {
-        glm::vec4 buf(Geometry::_normals[jt], Geometry::_normals[jt + 1], Geometry::_normals[jt + 2], 1);
+        glm::vec4 buf((*Geometry::_normals)[jt], (*Geometry::_normals)[jt + 1], (*Geometry::_normals)[jt + 2], 1);
 
         glm::vec4 res;
         res = Geometry::GetParentObject()->_transformMatrix * buf;
-        Geometry::_normals[jt] = res.x;
-        Geometry::_normals[jt + 1] = res.y;
-        Geometry::_normals[jt + 2] = res.z;
+        (*Geometry::_normals)[jt] = res.x;
+        (*Geometry::_normals)[jt + 1] = res.y;
+        (*Geometry::_normals)[jt + 2] = res.z;
     }
 
     Geometry::_transformMatrix = glm::mat4x4(1.0f);

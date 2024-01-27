@@ -25,3 +25,15 @@ void Math::RemoveError(float& num) {
 		num = 0;
 	}
 }
+
+float Math::Clamp(float min, float max, float value)
+{
+	if (value < min) {
+		value = min;
+	}
+	else if (value > max) {
+		value = max;
+	}
+
+	return value;
+}

@@ -22,23 +22,10 @@
 
 #include "ShaderProgram.h"
 
-GLfloat points[] = {
-     0.0f,  0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-    -0.5f, -0.5f, 0.0f
-};
-
-GLfloat colors[] = {
-    1.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 1.0f
-};
-
-ShaderProgram shader;
-
-GLuint points_vbo;
-GLuint colors_vbo;
-GLuint vao;
+#include "Modules/Light/AmbientLight.h"
+#include "Modules/Light/DirectLight.h"
+#include "Modules/Light/PointLight.h"
+#include "Modules/Light/SpotLight.h"
 
 void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name) {
     _wight = Wight;
@@ -102,40 +89,40 @@ Screen* Render::GetScreenClass() {
 void Render::PrepareToRender() {
     glClearColor(0.3f, 0.3f, 0.3f, 0.f);
 
-    //Light
-    GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
+    ////Light
+    //GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    //glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
+    //
+    //GLfloat LightAmbient[] = { 0.25f, 0.25f, 0.25f, 1.0f };
+    //glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
+    //
+    //
+    //GLfloat LightDiffuse[] = { 0.75f, 0.75f, 0.75f, 1.0f };
+    //glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
+    //
+    //GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    //glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
+    //
+    //GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    //glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
+    //
+    //glEnable(GL_LIGHTING);
+    //glEnable(GL_LIGHT0);
     
-    GLfloat LightAmbient[] = { 0.25f, 0.25f, 0.25f, 1.0f };
-    glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
-    
-    
-    GLfloat LightDiffuse[] = { 0.75f, 0.75f, 0.75f, 1.0f };
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
-    
-    GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
-    
-    GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
-    
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    
-    //glEnable(GL_CULL_FACE); // enable culling face
-    //glCullFace(GL_BACK); // cull faces from back
-    //glFrontFace(GL_CCW); // vertex order (counter clock wise)
+    glEnable(GL_CULL_FACE); // enable culling face
+    glCullFace(GL_BACK); // cull faces from back
+    glFrontFace(GL_CCW); // vertex order (counter clock wise)
     
     glShadeModel(GL_SMOOTH);
-    glEnable(GL_NORMALIZE);
+    //glEnable(GL_NORMALIZE);
     
     glEnable(GL_COLOR_MATERIAL);
     
-    //// Enable Z-buffer read and write
-    //glEnable(GL_DEPTH_TEST);
-    //glDepthMask(GL_TRUE);
-    //glClearDepth(1.f);
-    //glDepthFunc(GL_LEQUAL);
+    // Enable Z-buffer read and write
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glClearDepth(1.f);
+    glDepthFunc(GL_LEQUAL);
     
     float ratio = 4.0f / 3.0f;
     glFrustum(-ratio, ratio, -1.f, 1.f, 1.0f, 500.f);
@@ -201,53 +188,11 @@ void Render::RenderMesh(Mesh& mesh, std::shared_ptr<Camera> camera) {
         glUseProgram(mesh._material->_shader->GetProgramId().value());
         glBindVertexArray(mesh._vao);
 
-        glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
-        mesh._material->_shader->SetValue(ShadersType::VertexShader, "model_matrix", &mesh._transformMatrix);
-
-        glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
-        mesh._material->_shader->SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
+        mesh.ApplyMeshSettings(camera);
 
         glDrawElements(GL_TRIANGLES, mesh._indices->size(), GL_UNSIGNED_INT, mesh._indices->data());
-        //glDrawArrays(GL_TRIANGLES, 0, 24 * 3);
-
-        //if (shader.GetCompiledStatus() == true) {
-        //    glUseProgram(shader.GetProgramId().value());
-        //    glBindVertexArray(vao);
-        //
-        //    glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
-        //    shader.SetValue(ShadersType::VertexShader, "model_matrix", &modelMat);
-        //    
-        //    glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
-        //    shader.SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
-        //
-        //    glDrawArrays(GL_TRIANGLES, 0, 3);
-        //}
+        glBindVertexArray(0);
     }
-
-    //glColor3f(0.8, 0.8, 0.8);
-
-    //glEnableClientState(GL_NORMAL_ARRAY);
-    //glEnableClientState(GL_VERTEX_ARRAY);
-    //glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-    //Material* mat = (Material*)mesh.GetSubModuleByType(MaterialType).get();
-    //if (mat != nullptr) {
-    //    //glClientActiveTexture(GL_TEXTURE0);
-    //    glActiveTexture(GL_TEXTURE0);
-    //    glBindTexture(GL_TEXTURE_2D, mat->_diffuse.textureId);
-    //}
-   
-
-    //glIndexPointer(GL_UNSIGNED_INT,0, mesh._indices);
-    //glTexCoordPointer(2, GL_FLOAT,0, mat->_texCoords.get());
-    //glNormalPointer(GL_FLOAT, 0, mesh._normals);
-    //glVertexPointer(3, GL_FLOAT, 0, mesh._vertex);
-    
-    //glDrawElements(GL_TRIANGLES, mesh._indicesCount, GL_UNSIGNED_INT, mesh._indices);
-    
-    //glDisableClientState(GL_NORMAL_ARRAY);
-    //glDisableClientState(GL_VERTEX_ARRAY);
-    //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void Render::RenderCollider(Collider& collider) {
@@ -381,45 +326,6 @@ void Render::StartRender(std::shared_ptr<Camera>  camera) {
 }
 
 bool Render::CompileShaders() {
-    shader.CreateShader("\\Shaders\\BaseVertexShaders\\VertexShader.txt", ShadersType::VertexShader);
-    shader.CreateShader("\\Shaders\\BaseFragmentShaders\\FragmentShader.txt", ShadersType::FragmentShader);
-    
-    shader.CompileShader();
-
-
-    if (shader.GetCompiledStatus()) {
-        shader.AttachShader();
-        shader.DeleteShader();
-    
-        points_vbo = 0;
-        glGenBuffers(1, &points_vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
-        
-        colors_vbo = 0;
-        glGenBuffers(1, &colors_vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-        
-        vao = 0;
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
-        
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-        
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    
-        return true;
-    }
-    else
-    {
-        shader.DeleteShader();
-    }
-    
     return true;
 }
 

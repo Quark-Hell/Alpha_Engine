@@ -30,6 +30,25 @@ void Transform::SetPosition(Vector3 position) {
 
     Transform::AddPosition(direction);
 }
+void Transform::AddOriginPosition(float X, float Y, float Z) {
+    Transform::_origin.X += X;
+    Transform::_origin.Y += Y;
+    Transform::_origin.Z += Z;
+}
+void Transform::AddOriginPosition(Vector3 position) {
+    Transform::_origin += position;
+}
+void Transform::SetOriginPosition(float X, float Y, float Z) {
+    Vector3 direction = Vector3(X, Y, Z) - Transform::_origin;
+
+    Transform::AddOriginPosition(direction);
+}
+void Transform::SetOriginPosition(Vector3 position) {
+    Vector3 direction = position - Transform::_origin;
+
+    Transform::AddOriginPosition(direction);
+}
+
 
 
 Vector3 Transform::GetRotation() {
@@ -100,3 +119,4 @@ void Transform::SetScale(Vector3 scale) {
 
     ApplyTransformation();
 }
+

@@ -4,6 +4,7 @@
 #include "BVH_Tree.h"
 
 class Object;
+class Light;
 
 enum DebugRenderModes {
 	LinesRender = 1 << 0,
@@ -14,6 +15,7 @@ class World {
 private:
 	static inline std::vector<Object*> ObjectsOnScene;
 	static inline std::vector<Collider*> CollidersOnScene;
+	static inline std::vector<Light*> LightsOnScene;
 
 	static inline bool IsCloseGame = false;
 
@@ -52,6 +54,7 @@ public:
 	static void FindNearestCollider(Leaf& leafBuffer, std::vector<Collider*>& objectsBuffer, float maxDistance = 300);
 	static void CreateAABBvolume(Node& outputNode, std::vector<std::shared_ptr<Leaf>>& leafBuffer);
 
+	//TODO: Create interface instead friend class
 private:
 	friend class Render;
 	friend class Collision;
@@ -59,6 +62,8 @@ private:
 	friend class Physics;
 	friend class RigidBody;
 	friend class Collider;
+	friend class Light;
+	friend class ShaderProgram;
 
 	World();
 };

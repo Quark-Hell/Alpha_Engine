@@ -1,7 +1,11 @@
 #include "ShaderProgram.h"
 
-#define GLEW_STATIC
-#include <GL/glew.h>
+#include "Modules/Light/AmbientLight.h"
+#include "Modules/Light/DirectLight.h"
+#include "Modules/Light/PointLight.h"
+#include "Modules/Light/SpotLight.h"
+
+#include "Modules/Mesh.h"
 
 ShaderProgram::ShaderProgram()
 {
@@ -314,4 +318,62 @@ void ShaderProgram::DeleteShader()
 	ShaderProgram::_geometryShaderSource->clear();
 	ShaderProgram::_fragmentShaderSource->clear();
 	ShaderProgram::_computeShaderSource->clear();
+}
+
+void ShaderProgram::ApplyShadersValue()
+{
+}
+
+void ShaderProgram::ApplyShadersSettings(std::shared_ptr<Camera> camera)
+{
+	unsigned int ambientLightsCount = 0;
+	unsigned int directLightsCount = 0;
+	unsigned int pointLightsCount = 0;
+	unsigned int spotLightsCount = 0;
+
+	for (int i = 0; i < World::LightsOnScene.size(); i++) {
+
+		ModulesList type = World::LightsOnScene[i]->GetType();
+
+		if (type == ModulesList::AmbientLightType) {
+			ambientLightsCount++;
+			auto light = (AmbientLight*)(World::LightsOnScene[i]);
+			continue;
+		}
+		if (type == ModulesList::DirectLightType) {
+			auto light = (DirectLight*)(World::LightsOnScene[i]);
+			directLightsCount++;
+			continue;
+		}
+		if (type == ModulesList::PointLightType) {
+			auto light = (PointLight*)(World::LightsOnScene[i]);
+			pointLightsCount++;
+			continue;
+
+		}
+		if (type == ModulesList::SpotLightType) {
+			auto light = (SpotLight*)(World::LightsOnScene[i]);
+			spotLightsCount++;
+			continue;
+
+		}
+	}
+
+	directLightsCount = Math::Clamp(0, 16, directLightsCount);
+	pointLightsCount = Math::Clamp(0, 16, pointLightsCount);
+	spotLightsCount = Math::Clamp(0, 16, spotLightsCount);
+	
+	ShaderProgram::SetValue(ShadersType::FragmentShader, "DirectLightsCount", &directLightsCount);
+	ShaderProgram::SetValue(ShadersType::FragmentShader, "PointLightsCount", &pointLightsCount);
+	ShaderProgram::SetValue(ShadersType::FragmentShader, "SpotLightsCount", &spotLightsCount);
+
+	Vector3 locLightPos = Vector3{ 0,25,0 } - _parentMaterial->_parentMesh->GetPosition();
+	ShaderProgram::SetValue(ShadersType::FragmentShader, "lightPos", &locLightPos);
+	ShaderProgram::SetValue(ShadersType::FragmentShader, "lightColor", &Vector3{ 0.9,0.9,0.9 });
+	ShaderProgram::SetValue(ShadersType::FragmentShader, "viewPos", &camera->GetPosition());
+	
+	glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
+	ShaderProgram::SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
+
+	ShaderProgram::ApplyShadersValue();
 }

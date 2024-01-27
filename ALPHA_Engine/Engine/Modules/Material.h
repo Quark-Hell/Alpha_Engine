@@ -6,6 +6,7 @@
 #include <assimp/postprocess.h>
 
 #include "ShaderProgram.h"
+#include "Modules/Mesh.h"
 
 class Material
 {
@@ -30,4 +31,10 @@ public:
 
 private:
 	std::shared_ptr<ShaderProgram> _shader = std::make_shared<ShaderProgram>();
+	Mesh* _parentMesh;
+
+	void ApplyMaterialSettings(std::shared_ptr<Camera> camera);
+
+	friend class Mesh;
+	friend class ShaderProgram;
 };

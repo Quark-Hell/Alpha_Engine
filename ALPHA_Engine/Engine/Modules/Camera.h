@@ -80,6 +80,7 @@ public:
 	void UpdateViewMatrix();
 
 	friend class Render;
+	friend class ShaderProgram;
 
 	Camera();
 	~Camera();

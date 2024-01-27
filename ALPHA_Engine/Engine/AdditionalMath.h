@@ -18,6 +18,8 @@ public:
 	static void RemoveError(Vector3& vector);
 	static void RemoveError(float& num);
 
+	static float Clamp(float min, float max, float value);
+
 private:
 
 };

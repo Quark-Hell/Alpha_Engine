@@ -384,7 +384,7 @@ unsigned long Object::GetGeometryHeaviness() {
 
 		if (geometry != nullptr && geometry->_isShifted == true) {
 			heaviness += geometry->_vertexCount;
-			heaviness += geometry->_normalsCount;
+			heaviness += geometry->_normals->size() / 3;
 		}
 	}
 

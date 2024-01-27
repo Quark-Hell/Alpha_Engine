@@ -62,6 +62,7 @@ public:
 	~Texture();
 
 	void CreateTexture(std::string pathToTexture);
+	void DeleteTexture();
 
 	void SetTypeOfWrapping(EnumTypeOfWrapping xType, EnumTypeOfWrapping yType);
 	void SetTypeOfTextureFiltering(EnumTypeOfTextureFiltering minType, EnumTypeOfTextureFiltering magType);

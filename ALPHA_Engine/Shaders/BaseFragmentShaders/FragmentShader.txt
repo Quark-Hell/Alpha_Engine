@@ -1,6 +1,96 @@
 #version 460
 in vec3 color;
+in vec3 normal;
+in vec3 frag_Pos;
+in vec2 texCoords;
+
 out vec4 frag_color;
+
+uniform vec3 lightPos;
+uniform vec3 lightColor;
+uniform vec3 viewPos;
+
+uniform sampler2D diffuseMap;
+
+struct DirectLight {
+    vec3 direction;
+    vec3 color;
+  
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+#define MAXDIRECTLIGHT 16
+uniform uint DirectLightsCount = 0;
+uniform DirectLight directLights[MAXDIRECTLIGHT];
+
+struct PointLight {
+    vec3 position;  
+    vec3 color;
+  
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+	
+    float constant;
+    float linear;
+    float quadratic;
+};
+#define MAXPOINTLIGHT 16
+uniform uint PointLightsCount = 0;
+uniform PointLight pointLights[MAXPOINTLIGHT];
+
+struct SpotLight {
+    vec3 color;
+    vec3  position;
+    vec3  direction;
+    float cutOff;
+};
+#define MAXSPOTLIGHT 16
+uniform uint SpotLightsCount = 0;
+uniform SpotLight spotLights[MAXSPOTLIGHT];
+
+vec3 calcAmbientLights(vec3 lColor){
+   float ambientStrength = 1;
+   vec3 ambient = ambientStrength * lColor;
+
+   return ambient;
+}
+
+//vec3 calcDirectLight(DirectLight dirLight, vec3 normal, vec3 viewDir){
+//	//vec3 lightDir = normalize(-dirLight.direction);
+//	//
+//	//float diff = max(dot(normal, lightDir));
+//	//
+//	//vec3 reflectDir = reflect(-lightDir, normal);
+//	//float spec = pow(max(dot(viewDir, reflectDir), 0.0), 0.1);
+//	
+//	//vec3 ambient = dir
+//}
+//
+//vec3 calcPointLight(){
+//}
+//vec3 calcSpotLight(){
+//}
+
 void main() {
-   frag_color = vec4(color, 1.0);
+   vec3 ambient = calcAmbientLights(lightColor);
+   //
+   //vec3 norm = normalize(normal);
+   //vec3 lightDir = normalize(lightPos - frag_Pos);
+   //float diff = max(dot(norm, lightDir), 0.0);
+   ////vec3 diffuse = ambient * diff * vec3(texture(diffuseMap, texCoords));
+   //vec3 diffuse = diff * ambient * vec3(texture(diffuseMap, texCoords));
+   //
+   //vec3 viewDir = normalize(viewPos - frag_Pos);
+   //vec3 reflectDir = reflect(-lightDir, norm);
+   //
+   //float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256);
+   //int specularStrength = 1;
+   //vec3 specular = specularStrength * spec * lightColor;  
+   
+   vec3 result = ambient * vec3(texture(diffuseMap, texCoords));
+   
+   //vec3 result = (ambient + diffuse + specular) * color;
+   frag_color = vec4(result, 1.0);
 }

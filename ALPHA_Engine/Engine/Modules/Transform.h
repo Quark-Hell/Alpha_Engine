@@ -37,11 +37,11 @@ public:
 	virtual void SetScale(float X, float Y, float Z);
 	virtual void SetScale(Vector3 scale);
 
-	virtual void AddOriginPosition(float X, float Y, float Z) = 0;
-	virtual void AddOriginPosition(Vector3 position) = 0;
+	virtual void AddOriginPosition(float X, float Y, float Z);
+	virtual void AddOriginPosition(Vector3 position);
 	
-	virtual void SetOriginPosition(float X, float Y, float Z) = 0;
-	virtual void SetOriginPosition(Vector3 position) = 0;
+	virtual void SetOriginPosition(float X, float Y, float Z);
+	virtual void SetOriginPosition(Vector3 position);
 
 public:
 	virtual void ApplyTransformation() = 0;

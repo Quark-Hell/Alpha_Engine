@@ -34,7 +34,7 @@ bool MeshCollider::Create(std::string linkToFBX) {
         }
     }
 
-    Geometry::_normalsCount = 0;
+    Geometry::_normals->clear();
 
 #ifdef _DEBUG
     Collider::CreateDebugShell(*s);

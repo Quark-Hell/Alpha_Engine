@@ -1,6 +1,12 @@
 #pragma once
 #include "Basical_Type.h"
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
+#include "Modules/Material.h"
+#include "Modules/Camera.h"
+
 enum ShadersType {
 	VertexShader = 0,
 	TessellationControlShader = 1,
@@ -31,6 +37,8 @@ private:
 
 	bool _isCompiled = false;
 
+	Material* _parentMaterial;
+
 public:
 	ShaderProgram();
 	~ShaderProgram();
@@ -55,6 +63,7 @@ public:
 		std::is_same<glm::mat4x4, T>::value ||
 		std::is_same<glm::mat3x3, T>::value ||
 		std::is_same<int, T>::value ||
+		std::is_same<unsigned int, T>::value ||
 		std::is_same<float, T>::value ||
 		std::is_same<Vector3, T>::value
 	>>
@@ -73,6 +82,10 @@ public:
 		else if (std::is_same<int, T>::value) {
 			int* v = reinterpret_cast<int*>(value);
 			glUniform1i(glGetUniformLocation(ShaderProgram::_programId.value(), fieldName.c_str()), *v);
+		}
+		else if (std::is_same<unsigned int, T>::value) {
+			unsigned int* v = reinterpret_cast<unsigned int*>(value);
+			glUniform1ui(glGetUniformLocation(ShaderProgram::_programId.value(), fieldName.c_str()), *v);
 		}
 		else if (std::is_same<float, T>::value) {
 			float* v = reinterpret_cast<float*>(value);
@@ -101,6 +114,12 @@ public:
 	void DeleteShader();
 	void DeleteShader(ShadersType shaderType);
 
-	friend class ShaderManager;
+public:
+	void virtual ApplyShadersValue();
+
+private:
+	void ApplyShadersSettings(std::shared_ptr<Camera> camera);
+
+	friend class Material;
 };
 
