@@ -84,7 +84,7 @@ bool Mesh::Create(std::string linkToFBX) {
 
 	//Material* mat = (Material*)Mesh::GetSubModuleByType(MaterialType).get();
 	if (Mesh::_material != nullptr) {
-		Mesh::_material->LoadMaterial(*s, 0);
+		Mesh::_material->LoadMaterial(TypeOfTextuere::Diffuse,"\\Textures\\Stones.jpg");
 	}
 
 
@@ -285,13 +285,14 @@ bool Mesh::BindMesh() {
 	glBindBuffer(GL_ARRAY_BUFFER, _vertexVbo);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, _colorsVbo);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, _normalsVbo);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, _colorsVbo);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	glEnableVertexAttribArray(3);
 	glBindBuffer(GL_ARRAY_BUFFER, _texCoordsVbo);

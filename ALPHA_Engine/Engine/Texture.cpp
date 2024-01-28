@@ -25,5 +25,5 @@ void Texture::CreateTexture(std::string pathToTexture) {
 
 void Texture::DeleteTexture()
 {
-	stbi_image_free(Texture::_texture.get());
+	Texture::_texture.reset();
 }

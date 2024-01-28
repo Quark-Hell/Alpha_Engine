@@ -8,6 +8,18 @@
 #include "ShaderProgram.h"
 #include "Modules/Mesh.h"
 
+enum TypeOfTextuere {
+	Diffuse = 0,
+	Metallic = 1,
+	Specular = 2,
+	Roughness = 3,
+	Anisotropic = 4,
+	Emission = 5,
+	NormalsMap = 6,
+	OpacityMap = 7,
+	OcclusionMap = 8
+};
+
 class Material
 {
 public:
@@ -27,6 +39,9 @@ public:
 	Material();
 	~Material();
 
+public:
+	bool LoadMaterial(TypeOfTextuere typeOfTexture, std::string pathToTexture);
+private:
 	bool LoadMaterial(const aiScene& scene, unsigned int matIndex);
 
 private:
@@ -34,6 +49,9 @@ private:
 	Mesh* _parentMesh;
 
 	void ApplyMaterialSettings(std::shared_ptr<Camera> camera);
+
+	bool DeleteTexture(TypeOfTextuere typeOfTexture);
+	void DeleteTextures();
 
 	friend class Mesh;
 	friend class ShaderProgram;
