@@ -43,10 +43,10 @@ bool Material::LoadMaterial(const aiScene& scene, unsigned int matIndex) {
 
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     glBindTexture(GL_TEXTURE_2D, 0);
     
@@ -56,10 +56,6 @@ bool Material::LoadMaterial(const aiScene& scene, unsigned int matIndex) {
 void Material::ApplyMaterialSettings(std::shared_ptr<Camera> camera)
 {
     Material::_shader->ApplyShadersSettings(camera);
-
-    //int v = 0;
-
-    //Material::_shader->SetValue(ShadersType::FragmentShader, "diffuseMap", &v);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _diffuse.textureId);

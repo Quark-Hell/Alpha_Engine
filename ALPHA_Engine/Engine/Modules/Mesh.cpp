@@ -73,12 +73,11 @@ bool Mesh::Create(std::string linkToFBX) {
 	}
 
 	if (mesh->HasTextureCoords(0)) {
-		Mesh::_texCoords->resize(Geometry::_vertexCount * 3);
+		Mesh::_texCoords->resize(Geometry::_vertexCount * 2);
 
-		for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
-			(*Mesh::_texCoords)[it] = mesh->mTextureCoords[0][it].x;
-			(*Mesh::_texCoords)[it + 1] = mesh->mTextureCoords[0][it].x;
-			(*Mesh::_texCoords)[it + 2] = mesh->mTextureCoords[0][it].x;
+		for (std::uint32_t it = 0; it < Mesh::_texCoords->size(); it += 2) {
+			(*Mesh::_texCoords)[it] = mesh->mTextureCoords[0][it / 2].x;
+			(*Mesh::_texCoords)[it + 1] = mesh->mTextureCoords[0][it / 2].y;
 		}
 	}
 
@@ -296,7 +295,7 @@ bool Mesh::BindMesh() {
 
 	glEnableVertexAttribArray(3);
 	glBindBuffer(GL_ARRAY_BUFFER, _texCoordsVbo);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	return true;
 }
