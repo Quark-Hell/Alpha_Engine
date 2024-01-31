@@ -6,13 +6,13 @@
 class Light : public MovableModule {
 public:
 	Vector3 color;
-	Vector3 strength;
+	float strength;
 
 public:
 	Light();
 	virtual ~Light();
 
-	ModulesList GetType() override;
+	ModulesList GetType() override = 0;
 
 #pragma region Redifine from Transfom
 	void AddPosition(float X, float Y, float Z) override;

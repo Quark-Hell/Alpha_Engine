@@ -8,51 +8,71 @@ out vec4 frag_color;
 
 uniform vec3 lightPos;
 uniform vec3 lightColor;
+uniform float lightStrength;
 uniform vec3 viewPos;
+uniform vec3 direct;
 
 uniform sampler2D diffuseMap;
+
+vec3 calcAmbientLights(float strength, vec3 lColor);
+vec3 calcDiffuseLight(vec3 ambient, vec3 norm, vec3 lightDir);
+vec3 calcSpecularLight(vec3 lColor, vec3 norm, vec3 lightDir);
+
+
 
 struct DirectLight {
     vec3 direction;
     vec3 color;
-  
+	float strength;
+
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
 };
-#define MAXDIRECTLIGHT 16
-uniform uint DirectLightsCount = 0;
+#define MAXDIRECTLIGHT 8
+uniform int DirectLightsCount = 0;
 uniform DirectLight directLights[MAXDIRECTLIGHT];
+vec3 calcDirectLight();
+
+//vec3 calcDirectLight(DirectLight dirLight){
+//	vec3 lightDir = normalize(-dirLight.direction);
+//	
+//	vec3 result = (ambient + diffuse + specular);
+//}
+
+
 
 struct PointLight {
-    vec3 position;  
+    vec3 position;
     vec3 color;
-  
+	float strength;
+
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
-	
+
     float constant;
     float linear;
     float quadratic;
 };
 #define MAXPOINTLIGHT 16
-uniform uint PointLightsCount = 0;
+uniform int PointLightsCount = 0;
 uniform PointLight pointLights[MAXPOINTLIGHT];
 
 struct SpotLight {
     vec3 color;
     vec3  position;
     vec3  direction;
+	float strength;
+
     float cutOff;
 };
 #define MAXSPOTLIGHT 16
-uniform uint SpotLightsCount = 0;
+uniform int SpotLightsCount = 0;
 uniform SpotLight spotLights[MAXSPOTLIGHT];
 
-vec3 calcAmbientLights(vec3 lColor){
-   float ambientStrength = 1;
-   vec3 ambient = ambientStrength * lColor;
+vec3 calcAmbientLights(float strength, vec3 lColor){
+   vec3 ambient = strength * lColor;
 
    return ambient;
 }
@@ -64,7 +84,7 @@ vec3 calcAmbientLights(vec3 lColor){
 //	//
 //	//vec3 reflectDir = reflect(-lightDir, normal);
 //	//float spec = pow(max(dot(viewDir, reflectDir), 0.0), 0.1);
-//	
+//
 //	//vec3 ambient = dir
 //}
 //
@@ -73,24 +93,56 @@ vec3 calcAmbientLights(vec3 lColor){
 //vec3 calcSpotLight(){
 //}
 
+vec3 calcDiffuseLight(vec3 lColor, vec3 norm, vec3 lightDir){
+   float diff = max(dot(norm, lightDir), 0.0);
+   vec3 diffuse = lColor * diff;
+
+   return diffuse;
+}
+
+vec3 calcSpecularLight(vec3 lColor, vec3 norm, vec3 lightDir){
+   vec3 viewDir = normalize(viewPos - frag_Pos);
+   vec3 reflectDir = reflect(-lightDir, norm);
+   
+   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 128);
+   float specularStrength = 0.5f;
+   vec3 specular = specularStrength * spec * lColor;
+   
+   return specular;
+}
+
 void main() {
-   vec3 ambient = calcAmbientLights(lightColor);
-   //
-   //vec3 norm = normalize(normal);
-   //vec3 lightDir = normalize(lightPos - frag_Pos);
-   //float diff = max(dot(norm, lightDir), 0.0);
-   ////vec3 diffuse = ambient * diff * vec3(texture(diffuseMap, texCoords));
-   //vec3 diffuse = diff * ambient * vec3(texture(diffuseMap, texCoords));
-   //
-   //vec3 viewDir = normalize(viewPos - frag_Pos);
-   //vec3 reflectDir = reflect(-lightDir, norm);
-   //
-   //float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256);
-   //int specularStrength = 1;
-   //vec3 specular = specularStrength * spec * lightColor;  
+   vec3 lightDir;
+
+   vec3 norm;
+
+   vec3 ambient;
+   vec3 diffuse;
+   vec3 specular;
    
-   vec3 result = ambient * vec3(texture(diffuseMap, texCoords));
+   vec3 result;
    
-   //vec3 result = (ambient + diffuse + specular) * color;
-   frag_color = vec4(result, 1.0);
+   bool hasLight = false;
+
+   for(int i = 0; i < DirectLightsCount && i < MAXDIRECTLIGHT; i++){
+      hasLight = true;
+   
+      vec3 lightDir = normalize(direct);
+	  
+	  vec3 norm = normalize(normal);
+   
+      vec3 ambient = calcAmbientLights(lightStrength, lightColor);
+      vec3 diffuse = calcDiffuseLight(lightColor, norm, lightDir);
+      vec3 specular = calcSpecularLight(lightColor, norm, lightDir);
+	  
+	  result = (ambient + diffuse + specular) * vec3(texture(diffuseMap, texCoords));
+   }
+   
+   if(hasLight){
+      frag_color = vec4(result, 1.0);
+   }
+   else{
+      result = vec3(0.961, 0.478, 0.161);
+      frag_color = vec4(result, 1.0);
+   }
 }

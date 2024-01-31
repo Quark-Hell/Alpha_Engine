@@ -48,7 +48,6 @@ std::shared_ptr<Object> plane3;
 //std::shared_ptr<Object> object2;
 std::shared_ptr<Object> plane2;
 
-AmbientLight ambLight;
 DirectLight dirLight;
 
 
@@ -57,8 +56,12 @@ std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 void GameFunction::Start() {
     SetControl();
 
-    ambLight.Name = "ambLight";
     dirLight.Name = "DirLight";
+
+    dirLight.SetPosition(0, 15, 0);
+    dirLight.color = Vector3(0.7,0.7,0.7);
+    dirLight.strength = 0.5f;
+
     dirLight.SetPosition(0,15,0);
 
     World::DebugRenderEnabled = true;
@@ -81,8 +84,6 @@ void GameFunction::Start() {
 
     plane2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     //plane1->AddModule(BoxColliderType);
-    plane2->AddPosition(0, 0, 0);
-    plane2->AddRotation(0, 0, 0);
    // plane2->SetScale(3, 3, 0.5);
 
     plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
@@ -95,7 +96,7 @@ void GameFunction::Start() {
     //plane1->AddModule(BoxColliderType);
     plane1->AddPosition(0, -2, -5);
     plane1->AddRotation(90, 0, 0);
-    plane1->SetScale(10, 10, 0.5);
+    plane1->SetScale(10, 10, 1);
     //
     //plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     //plane->AddModule(std::static_pointer_cast<Module>(col3));

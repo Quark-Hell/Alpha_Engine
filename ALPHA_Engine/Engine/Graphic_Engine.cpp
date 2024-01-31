@@ -52,13 +52,13 @@ void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int 
     glfwMakeContextCurrent(Screen::_window);
     glfwSwapInterval(1);
 
-    glfwWindowHint(GLFW_SAMPLES,3);
-
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
+
 
     //GLEW Init
     glewExperimental = GL_TRUE;
@@ -69,6 +69,9 @@ void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int 
         //
         glfwTerminate();
     }
+
+    glfwWindowHint(GLFW_SAMPLES, 4);
+    glEnable(GL_MULTISAMPLE);
 
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;

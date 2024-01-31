@@ -277,7 +277,7 @@ bool Mesh::BindMesh() {
 	glBindBuffer(GL_ARRAY_BUFFER, Mesh::_texCoordsVbo);
 	glBufferData(GL_ARRAY_BUFFER, Mesh::_texCoords->size() * sizeof(float), Mesh::_texCoords->data(), GL_STATIC_DRAW);
 
-	_vao = 0;
+
 	glGenVertexArrays(1, &_vao);
 	glBindVertexArray(_vao);
 	
@@ -285,14 +285,13 @@ bool Mesh::BindMesh() {
 	glBindBuffer(GL_ARRAY_BUFFER, _vertexVbo);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-
 	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, _normalsVbo);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	glEnableVertexAttribArray(2);
 	glBindBuffer(GL_ARRAY_BUFFER, _colorsVbo);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	glEnableVertexAttribArray(3);
 	glBindBuffer(GL_ARRAY_BUFFER, _texCoordsVbo);
