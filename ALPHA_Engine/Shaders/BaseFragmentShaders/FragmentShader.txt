@@ -15,10 +15,8 @@ uniform vec3 direct;
 uniform sampler2D diffuseMap;
 
 vec3 calcAmbientLights(float strength, vec3 lColor);
-vec3 calcDiffuseLight(vec3 ambient, vec3 norm, vec3 lightDir);
+vec3 calcDiffuseLight(vec3 ambient, vec3 norm, vec3 lightDir, float strength);
 vec3 calcSpecularLight(vec3 lColor, vec3 norm, vec3 lightDir);
-
-
 
 struct DirectLight {
     vec3 direction;
@@ -34,12 +32,19 @@ uniform int DirectLightsCount = 0;
 uniform DirectLight directLights[MAXDIRECTLIGHT];
 vec3 calcDirectLight();
 
-//vec3 calcDirectLight(DirectLight dirLight){
-//	vec3 lightDir = normalize(-dirLight.direction);
-//	
-//	vec3 result = (ambient + diffuse + specular);
-//}
-
+vec3 calcDirectLight(DirectLight dirLight, vec3 normal){
+      vec3 lightDir = normalize(dirLight.direction);
+	  
+	  vec3 norm = normalize(normal);
+   
+      vec3 ambient = calcAmbientLights(dirLight.strength, dirLight.color);
+      vec3 diffuse = calcDiffuseLight(dirLight.color, norm, lightDir, dirLight.strength);
+      vec3 specular = calcSpecularLight(dirLight.color, norm, lightDir);
+	  
+	  vec3 result = ambient + diffuse + specular;
+	  
+	  return result;
+}
 
 
 struct PointLight {
@@ -59,6 +64,30 @@ struct PointLight {
 uniform int PointLightsCount = 0;
 uniform PointLight pointLights[MAXPOINTLIGHT];
 
+vec3 calcPointLight(PointLight pLight, vec3 normal);
+
+vec3 calcPointLight(PointLight pLight, vec3 normal){
+      vec3 lightDir = normalize(lightPos - frag_Pos);
+	  
+	  vec3 norm = normalize(normal);
+   
+      vec3 ambient = calcAmbientLights(pLight.strength, pLight.color) * vec3(texture(diffuseMap, texCoords));
+      vec3 diffuse = calcDiffuseLight(pLight.color, norm, lightDir, pLight.strength) * vec3(texture(diffuseMap, texCoords));
+      vec3 specular = calcSpecularLight(pLight.color, norm, lightDir);
+	  
+	  float distance    = length(pLight.position - frag_Pos);
+	  float attenuation = 1.0 / (pLight.constant + pLight.linear * distance + 
+    		    pLight.quadratic * (distance * distance));
+	  
+      //ambient *= attenuation;
+	  diffuse *= attenuation;
+	  specular *= attenuation;
+	  
+	  vec3 result = diffuse + ambient;
+	  
+	  return result;
+}
+
 struct SpotLight {
     vec3 color;
     vec3  position;
@@ -72,30 +101,17 @@ uniform int SpotLightsCount = 0;
 uniform SpotLight spotLights[MAXSPOTLIGHT];
 
 vec3 calcAmbientLights(float strength, vec3 lColor){
-   vec3 ambient = strength * lColor;
+   float str = 0.35f;
+   vec3 ambient = str * lColor;
 
    return ambient;
 }
 
-//vec3 calcDirectLight(DirectLight dirLight, vec3 normal, vec3 viewDir){
-//	//vec3 lightDir = normalize(-dirLight.direction);
-//	//
-//	//float diff = max(dot(normal, lightDir));
-//	//
-//	//vec3 reflectDir = reflect(-lightDir, normal);
-//	//float spec = pow(max(dot(viewDir, reflectDir), 0.0), 0.1);
-//
-//	//vec3 ambient = dir
-//}
-//
-//vec3 calcPointLight(){
-//}
-//vec3 calcSpotLight(){
-//}
 
-vec3 calcDiffuseLight(vec3 lColor, vec3 norm, vec3 lightDir){
+vec3 calcDiffuseLight(vec3 lColor, vec3 norm, vec3 lightDir, float strength){
    float diff = max(dot(norm, lightDir), 0.0);
-   vec3 diffuse = lColor * diff;
+
+   vec3 diffuse = lColor * diff * strength;
 
    return diffuse;
 }
@@ -111,38 +127,41 @@ vec3 calcSpecularLight(vec3 lColor, vec3 norm, vec3 lightDir){
    return specular;
 }
 
-void main() {
-   vec3 lightDir;
-
-   vec3 norm;
-
-   vec3 ambient;
-   vec3 diffuse;
-   vec3 specular;
-   
-   vec3 result;
-   
+void main() {   
+   vec3 result; 
    bool hasLight = false;
 
    for(int i = 0; i < DirectLightsCount && i < MAXDIRECTLIGHT; i++){
-      hasLight = true;
-   
-      vec3 lightDir = normalize(direct);
-	  
-	  vec3 norm = normalize(normal);
-   
-      vec3 ambient = calcAmbientLights(lightStrength, lightColor);
-      vec3 diffuse = calcDiffuseLight(lightColor, norm, lightDir);
-      vec3 specular = calcSpecularLight(lightColor, norm, lightDir);
-	  
-	  result = (ambient + diffuse + specular) * vec3(texture(diffuseMap, texCoords));
+      hasLight = true;	  
+	  result = calcDirectLight(directLights[i], normal) * vec3(texture(diffuseMap, texCoords));
    }
+   
+   for(int i = 0; i < PointLightsCount && i < MAXPOINTLIGHT; i++){
+      hasLight = true;	  
+	  result = calcPointLight(pointLights[i], normal);
+   }
+   
+   vec3 n = normalize(normal);
    
    if(hasLight){
-      frag_color = vec4(result, 1.0);
+	frag_color = vec4(result, 1.0);
    }
    else{
-      result = vec3(0.961, 0.478, 0.161);
-      frag_color = vec4(result, 1.0);
+	result = vec3(0.961, 0.478, 0.161);
+	frag_color = vec4(result, 1.0);
    }
+   
+   //if(n.x == 1 || n.y == 1 || n.z == 1){
+   //      result = vec3(0.961, 0.478, 0.161);
+   //   frag_color = vec4(result, 1.0);
+   //}
+   //else{
+   ////result = vec3(0.361, 0.761, 0.741);
+   ////frag_color = vec4(result, 1.0);
+   //   frag_color = vec4(result, 1.0);
+   //}
+   //else{
+   //   result = vec3(0.961, 0.478, 0.161);
+   //   frag_color = vec4(result, 1.0);
+   //}
 }

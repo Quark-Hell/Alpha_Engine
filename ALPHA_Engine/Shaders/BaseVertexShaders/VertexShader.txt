@@ -11,12 +11,13 @@ out vec2 texCoords;
 
 uniform mat4 model_matrix;
 uniform mat4 view_projection_matrix;
+uniform mat3 trans_model_mat;
 
 void main() {
    color = vertex_color;
    texCoords = vertex_tex_coords;
    
-   gl_Position = view_projection_matrix * model_matrix * vec4(vertex_position, 1.0);
-   frag_Pos = vec3(model_matrix * vec4(vertex_position, 1.0));
-   normal = mat3(transpose(inverse(model_matrix))) * vertex_normal;
+   gl_Position = view_projection_matrix * model_matrix * vec4(vertex_position, 1.0f);
+   frag_Pos = vec3(model_matrix * vec4(vertex_position, 1.0f));
+   normal = trans_model_mat * vertex_normal;
 }

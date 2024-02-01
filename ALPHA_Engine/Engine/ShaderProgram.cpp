@@ -1,6 +1,5 @@
 #include "ShaderProgram.h"
 
-#include "Modules/Light/AmbientLight.h"
 #include "Modules/Light/DirectLight.h"
 #include "Modules/Light/PointLight.h"
 #include "Modules/Light/SpotLight.h"
@@ -335,28 +334,26 @@ void ShaderProgram::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 
 		ModulesList type = World::LightsOnScene[i]->GetType();
 
-		if (type == ModulesList::AmbientLightType) {
-			auto light = (AmbientLight*)(World::LightsOnScene[i]);
-			ambientLightsCount++;
-
-			ShaderProgram::SetValue(ShadersType::FragmentShader, "lightPos", &light->GetPosition());
-			ShaderProgram::SetValue(ShadersType::FragmentShader, "lightColor", &light->color);
-			ShaderProgram::SetValue(ShadersType::FragmentShader, "lightStrength", &light->strength);
-			continue;
-		}
 		if (type == ModulesList::DirectLightType) {
 			auto light = (DirectLight*)(World::LightsOnScene[i]);
 			directLightsCount++;
 
-			ShaderProgram::SetValue(ShadersType::FragmentShader, "direct", &light->GetDirection());
-			ShaderProgram::SetValue(ShadersType::FragmentShader, "lightPos", &light->GetPosition());
-			ShaderProgram::SetValue(ShadersType::FragmentShader, "lightColor", &light->color);
-			ShaderProgram::SetValue(ShadersType::FragmentShader, "lightStrength", &light->strength);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("directLights[").append(std::to_string(i)).append("].direction"), &light->GetDirection());
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("directLights[").append(std::to_string(i)).append("].color"), &light->color);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("directLights[").append(std::to_string(i)).append("].strength"), &light->strength);
 			continue;
 		}
 		if (type == ModulesList::PointLightType) {
 			auto light = (PointLight*)(World::LightsOnScene[i]);
 			pointLightsCount++;
+
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(i)).append("].position"), &light->GetPosition());
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(i)).append("].color"), &light->color);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(i)).append("].strength"), &light->strength);
+
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(i)).append("].constant"), &light->constant);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(i)).append("].linear"), &light->linear);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(i)).append("].quadratic"), &light->quadratic);
 			continue;
 
 		}

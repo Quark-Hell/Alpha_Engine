@@ -22,7 +22,6 @@
 
 #include "ShaderProgram.h"
 
-#include "Modules/Light/AmbientLight.h"
 #include "Modules/Light/DirectLight.h"
 #include "Modules/Light/PointLight.h"
 #include "Modules/Light/SpotLight.h"

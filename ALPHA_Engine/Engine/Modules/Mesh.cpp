@@ -305,5 +305,8 @@ void Mesh::ApplyMeshSettings(std::shared_ptr<Camera> camera)
 
 	glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
 	Mesh::_material->_shader->SetValue(ShadersType::VertexShader, "model_matrix", &_transformMatrix);
+
+	glm::mat3x3 transMat = glm::transpose(glm::inverse(_transformMatrix));
+	Mesh::_material->_shader->SetValue(ShadersType::VertexShader, "trans_model_mat", &transMat);
 }
 #pragma endregion

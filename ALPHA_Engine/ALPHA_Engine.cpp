@@ -27,7 +27,6 @@
 #include "Modules/MeshCollider.h"
 #include "Modules/Transform.h"
 
-#include "Modules/Light/AmbientLight.h"
 #include "Modules/Light/DirectLight.h"
 #include "Modules/Light/PointLight.h"
 #include "Modules/Light/SpotLight.h"
@@ -48,7 +47,8 @@ std::shared_ptr<Object> plane3;
 //std::shared_ptr<Object> object2;
 std::shared_ptr<Object> plane2;
 
-DirectLight dirLight;
+//DirectLight dirLight;
+PointLight pLight;
 
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
@@ -56,13 +56,12 @@ std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 void GameFunction::Start() {
     SetControl();
 
-    dirLight.Name = "DirLight";
+    pLight.Name = "PointLight";
 
-    dirLight.SetPosition(0, 15, 0);
-    dirLight.color = Vector3(0.7,0.7,0.7);
-    dirLight.strength = 0.5f;
+    pLight.SetPosition(0, 1, -5);
+    pLight.color = Vector3(0.7,0.7,0.7);
+    pLight.strength = 345.5f;
 
-    dirLight.SetPosition(0,15,0);
 
     World::DebugRenderEnabled = true;
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
@@ -83,8 +82,9 @@ void GameFunction::Start() {
 
 
     plane2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane2->AddPosition(0, 0, 0.9);
     //plane1->AddModule(BoxColliderType);
-   // plane2->SetScale(3, 3, 0.5);
+    //plane2->SetScale(2, 2, 1);
 
     plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     //plane3->AddModule(std::static_pointer_cast<Module>(col5));
@@ -95,7 +95,7 @@ void GameFunction::Start() {
     plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     //plane1->AddModule(BoxColliderType);
     plane1->AddPosition(0, -2, -5);
-    plane1->AddRotation(90, 0, 0);
+    plane1->AddRotation(90, 0, 90);
     plane1->SetScale(10, 10, 1);
     //
     //plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
@@ -120,7 +120,8 @@ void GameFunction::Start() {
 }
 
 void GameFunction::Update() {
-      plane1->AddRotation({ 0, 0, -0.5 });
+      //plane1->AddRotation({ 0, 0, -0.5 });
+      plane2->AddRotation({ 0, -0.5, 0 });
     //plane->AddRotation({ 0, 0, -0.5 });
     //plane->AddLocalRot(Vector3{ -2.5, 0, 0 }, Vector3{ 0, 0, -0.5 });
 
