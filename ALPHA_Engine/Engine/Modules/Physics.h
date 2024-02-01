@@ -89,7 +89,7 @@ enum IntegrateMethods {
 	SemiImplicitEuler = 0,
 	RK4 = 1
 };
-static class Physics {
+class Physics {
 
 public:
 	//60 frame per second

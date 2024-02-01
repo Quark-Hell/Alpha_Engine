@@ -238,6 +238,8 @@ bool Material::DeleteTexture(TypeOfTextuere typeOfTexture)
         std::cout << "Error load texture: unknown format of texture\n";
         return false;
     }
+
+    return false;
 }
 
 void Material::DeleteTextures()

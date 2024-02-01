@@ -116,7 +116,7 @@ void Render::PrepareToRender() {
     glFrontFace(GL_CCW); // vertex order (counter clock wise)
     
     glShadeModel(GL_SMOOTH);
-    //glEnable(GL_NORMALIZE);
+    glEnable(GL_NORMALIZE);
     
     glEnable(GL_COLOR_MATERIAL);
     

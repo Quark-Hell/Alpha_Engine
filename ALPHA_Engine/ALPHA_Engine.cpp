@@ -1,6 +1,5 @@
 ﻿// ALPHA_Engine.cpp : Defines the entry point for the application.
 //
-#pragma once
 #include "ALPHA_Engine.h"
 
 #include "Engine/Alghoritms.h"
@@ -58,9 +57,9 @@ void GameFunction::Start() {
 
     pLight.Name = "PointLight";
 
-    pLight.SetPosition(0, 1, -5);
+    pLight.SetPosition(5, 1, -5);
     pLight.color = Vector3(0.7,0.7,0.7);
-    pLight.strength = 345.5f;
+    pLight.strength = 85.5f;
 
 
     World::DebugRenderEnabled = true;
@@ -82,7 +81,7 @@ void GameFunction::Start() {
 
 
     plane2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    plane2->AddPosition(0, 0, 0.9);
+    plane2->AddPosition(0, 0, -5);
     //plane1->AddModule(BoxColliderType);
     //plane2->SetScale(2, 2, 1);
 
@@ -96,7 +95,7 @@ void GameFunction::Start() {
     //plane1->AddModule(BoxColliderType);
     plane1->AddPosition(0, -2, -5);
     plane1->AddRotation(90, 0, 90);
-    plane1->SetScale(10, 10, 1);
+    plane1->SetScale(20, 20, 1);
     //
     //plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     //plane->AddModule(std::static_pointer_cast<Module>(col3));

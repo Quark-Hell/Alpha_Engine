@@ -268,6 +268,7 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB) {
             return true;
         }
     }
+    return false;
 }
 bool Collision::EPA(Simplex& simplex, Geometry& colliderA, Geometry& colliderB, CollisionInfo& colInfo)
 {

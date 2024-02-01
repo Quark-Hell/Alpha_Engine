@@ -241,6 +241,8 @@ bool Mesh::LoadTextureCoord(const aiScene& scene, unsigned int matIndex) {
 		Mesh::_texCoords->push_back(mesh->mTextureCoords[0][it].x);
 		Mesh::_texCoords->push_back(mesh->mTextureCoords[0][it].y);
 	}
+
+	return true;
 }
 
 bool Mesh::BindMesh() {

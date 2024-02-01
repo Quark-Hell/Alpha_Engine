@@ -94,6 +94,7 @@ bool ShaderProgram::CreateShader(const char* sourcePath, ShadersType shaderType)
 		}
 
 		sourceStream.close();
+		return true;
 		};
 
 	const char* chSource;

@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable : 4250 4244 4305 4267)
 #define _USE_MATH_DEFINES
 
 #include <vector>

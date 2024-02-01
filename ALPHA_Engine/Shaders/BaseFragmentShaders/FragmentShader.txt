@@ -6,12 +6,7 @@ in vec2 texCoords;
 
 out vec4 frag_color;
 
-uniform vec3 lightPos;
-uniform vec3 lightColor;
-uniform float lightStrength;
 uniform vec3 viewPos;
-uniform vec3 direct;
-
 uniform sampler2D diffuseMap;
 
 vec3 calcAmbientLights(float strength, vec3 lColor);
@@ -67,7 +62,8 @@ uniform PointLight pointLights[MAXPOINTLIGHT];
 vec3 calcPointLight(PointLight pLight, vec3 normal);
 
 vec3 calcPointLight(PointLight pLight, vec3 normal){
-      vec3 lightDir = normalize(lightPos - frag_Pos);
+      //vec3 lightDir = normalize(lightPos - frag_Pos);
+	  vec3 lightDir = normalize(pLight.position - frag_Pos);
 	  
 	  vec3 norm = normalize(normal);
    
@@ -150,18 +146,4 @@ void main() {
 	result = vec3(0.961, 0.478, 0.161);
 	frag_color = vec4(result, 1.0);
    }
-   
-   //if(n.x == 1 || n.y == 1 || n.z == 1){
-   //      result = vec3(0.961, 0.478, 0.161);
-   //   frag_color = vec4(result, 1.0);
-   //}
-   //else{
-   ////result = vec3(0.361, 0.761, 0.741);
-   ////frag_color = vec4(result, 1.0);
-   //   frag_color = vec4(result, 1.0);
-   //}
-   //else{
-   //   result = vec3(0.961, 0.478, 0.161);
-   //   frag_color = vec4(result, 1.0);
-   //}
 }

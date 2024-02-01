@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable : 4250 4244 4305 4267)
 #include <cmath>
 
 #include <glm.hpp>
