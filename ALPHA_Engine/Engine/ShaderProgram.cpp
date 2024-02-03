@@ -361,6 +361,14 @@ void ShaderProgram::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 		if (type == ModulesList::SpotLightType) {
 			auto light = (SpotLight*)(World::LightsOnScene[i]);
 			spotLightsCount++;
+
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(i)).append("].direction"), &light->GetDirection());
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(i)).append("].position"), &light->GetPosition());
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(i)).append("].color"), &light->color);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(i)).append("].strength"), &light->strength);
+
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(i)).append("].cutOff"), &light->CutOff);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(i)).append("].outerCutOff"), &light->OuterCutOff);
 			continue;
 
 		}
@@ -370,6 +378,8 @@ void ShaderProgram::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 	pointLightsCount = Math::Clamp(0, 16, pointLightsCount);
 	spotLightsCount = Math::Clamp(0, 16, spotLightsCount);
 	
+	ShaderProgram::SetValue(ShadersType::FragmentShader, "ambientStrength", &World::WorldAmbientStrength);
+
 	ShaderProgram::SetValue(ShadersType::FragmentShader, "DirectLightsCount", &directLightsCount);
 	ShaderProgram::SetValue(ShadersType::FragmentShader, "PointLightsCount", &pointLightsCount);
 	ShaderProgram::SetValue(ShadersType::FragmentShader, "SpotLightsCount", &spotLightsCount);

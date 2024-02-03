@@ -2,6 +2,8 @@
 
 #include "Light.h"
 
+//TODO: Add interpolation to linear and quadric values
+
 class PointLight : public Light {
 public:
 	float constant = 1.0f;

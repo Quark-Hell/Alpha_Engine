@@ -47,7 +47,8 @@ std::shared_ptr<Object> plane3;
 std::shared_ptr<Object> plane2;
 
 //DirectLight dirLight;
-PointLight pLight;
+//PointLight pLight;
+SpotLight sLight;
 
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
@@ -55,12 +56,14 @@ std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 void GameFunction::Start() {
     SetControl();
 
-    pLight.Name = "PointLight";
+    sLight.Name = "PointLight";
 
-    pLight.SetPosition(5, 1, -5);
-    pLight.color = Vector3(0.7,0.7,0.7);
-    pLight.strength = 85.5f;
-
+    sLight.SetPosition(0, 3, -4);
+    sLight.color = Vector3(0.7,0.7,0.7);
+    sLight.strength = 1.3f;
+    sLight.SetDirection(Vector3(0,-1,-0.7f));
+    sLight.CutOff = glm::cos(glm::radians(22.5f));
+    sLight.OuterCutOff = glm::cos(glm::radians(35.5f));
 
     World::DebugRenderEnabled = true;
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
@@ -121,6 +124,7 @@ void GameFunction::Start() {
 void GameFunction::Update() {
       //plane1->AddRotation({ 0, 0, -0.5 });
       plane2->AddRotation({ 0, -0.5, 0 });
+      plane3->AddRotation({ 0, -0.5, 0 });
     //plane->AddRotation({ 0, 0, -0.5 });
     //plane->AddLocalRot(Vector3{ -2.5, 0, 0 }, Vector3{ 0, 0, -0.5 });
 

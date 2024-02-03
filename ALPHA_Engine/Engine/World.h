@@ -28,6 +28,8 @@ private:
 
 	static inline std::shared_ptr<Node> RootBVHnode;
 
+	static inline float WorldAmbientStrength = 0.5f;
+
 public:
 	///TODO: In next update debug render will not work in release build
 	static inline bool DebugRenderEnabled = false;
