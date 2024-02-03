@@ -100,7 +100,7 @@ void Object::SetOriginPosition(Vector3 position) {
 }
 
 
-Vector3 Object::GetRotation() {
+Vector4 Object::GetRotation() {
 	return Object::_rotation;
 }
 void Object::AddRotation(float X, float Y, float Z) {
@@ -288,6 +288,7 @@ bool Object::AddModule(ModulesList moduleType) {
 		break;
 	case BoxColliderType:
 		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<BoxCollider>());
+
 		break;
 	default:
 		return false;
@@ -296,6 +297,7 @@ bool Object::AddModule(ModulesList moduleType) {
 
 	Object::AddModule(someModule);
 	someModule->SetParentObject(*this);
+	someModule->ModuleAdded();
 	return true;
 }
 

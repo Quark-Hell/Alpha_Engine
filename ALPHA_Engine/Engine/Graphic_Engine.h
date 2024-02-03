@@ -22,6 +22,7 @@ class RigidBody;
 class Material;
 class AABB;
 class Node;
+class MeshCollider;
 
 struct Colors {
 	const Vector3 green { 0.0f, 1.0f, 0.0f }; 
@@ -75,7 +76,7 @@ private:
 	void SetDebugRenderOptions();
 
 	void RenderMesh(Mesh& mesh, std::shared_ptr<Camera>  camera);
-	void RenderCollider(Collider& collider);
+	void RenderCollider(MeshCollider& collider, std::shared_ptr<Camera> camera);
 	void RenderAABB(std::vector<float>& vertex, std::vector<unsigned int>& indices);
 	void RenderWorldAABB(Node& rootNode);
 

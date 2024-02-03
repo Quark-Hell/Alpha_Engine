@@ -18,3 +18,7 @@ Object* Module::GetParentObject() {
 void Module::SetParentObject(const Object& parent) {
 	ParentObject = const_cast<Object*>(&parent);
 }
+
+void Module::ModuleAdded()
+{
+}

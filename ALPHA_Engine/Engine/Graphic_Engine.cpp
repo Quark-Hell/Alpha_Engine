@@ -90,26 +90,6 @@ Screen* Render::GetScreenClass() {
 
 void Render::PrepareToRender() {
     glClearColor(0.3f, 0.3f, 0.3f, 0.f);
-
-    ////Light
-    //GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    //glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
-    //
-    //GLfloat LightAmbient[] = { 0.25f, 0.25f, 0.25f, 1.0f };
-    //glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
-    //
-    //
-    //GLfloat LightDiffuse[] = { 0.75f, 0.75f, 0.75f, 1.0f };
-    //glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
-    //
-    //GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    //glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
-    //
-    //GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    //glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
-    //
-    //glEnable(GL_LIGHTING);
-    //glEnable(GL_LIGHT0);
     
     glEnable(GL_CULL_FACE); // enable culling face
     glCullFace(GL_BACK); // cull faces from back
@@ -184,7 +164,7 @@ void Render::SetDebugRenderOptions() {
 }
 
 void Render::RenderMesh(Mesh& mesh, std::shared_ptr<Camera> camera) {
-    //Render::SetMeshRenderOptions();
+    Render::SetMeshRenderOptions();
 
     if (mesh._material->_shader->GetCompiledStatus() == true) {
         glUseProgram(mesh._material->_shader->GetProgramId().value());
@@ -197,20 +177,30 @@ void Render::RenderMesh(Mesh& mesh, std::shared_ptr<Camera> camera) {
     }
 }
 
-void Render::RenderCollider(Collider& collider) {
+void Render::RenderCollider(MeshCollider& collider, std::shared_ptr<Camera> camera) {
     Render::SetDebugRenderOptions();
     glColor3f(0.2, 0.8, 0.2);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
+    if (collider.DebugMesh->_material->_shader->GetCompiledStatus() == true) {
+        glUseProgram(collider.DebugMesh->_material->_shader->GetProgramId().value());
+        glBindVertexArray(collider.DebugMesh->_vao);
+        
+        collider.DebugMesh->ApplyMeshSettings(camera);
+        
+        glDrawElements(GL_TRIANGLES, collider.DebugMesh->_indices->size(), GL_UNSIGNED_INT, collider.DebugMesh->_indices->data());
+        glBindVertexArray(0);
+    }
 
-    glVertexPointer(3, GL_FLOAT, 0, &collider._debugVertex[0]);
-    glDrawElements(GL_TRIANGLES, collider._debugIndices.size(), GL_UNSIGNED_INT, &collider._debugIndices[0]);
-
-    glColor3f(0.8, 0.2, 0.2);
-    glPointSize(7);
-    glDrawElements(GL_POINTS, collider._debugIndices.size(), GL_UNSIGNED_INT, &collider._debugIndices[0]);
-
-    glDisableClientState(GL_VERTEX_ARRAY);
+    //glEnableClientState(GL_VERTEX_ARRAY);
+    //
+    //glVertexPointer(3, GL_FLOAT, 0, &collider._debugVertex[0]);
+    //glDrawElements(GL_TRIANGLES, collider._debugIndices.size(), GL_UNSIGNED_INT, &collider._debugIndices[0]);
+    //
+    //glColor3f(0.8, 0.2, 0.2);
+    //glPointSize(7);
+    //glDrawElements(GL_POINTS, collider._debugIndices.size(), GL_UNSIGNED_INT, &collider._debugIndices[0]);
+    //
+    //glDisableClientState(GL_VERTEX_ARRAY);
 }
 void Render::RenderRigidBodyInfo(RigidBody& rb) {
     std::vector<Vector3> contactPoint;
@@ -279,16 +269,16 @@ void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
 
 #pragma region DebugRender
 #ifdef _DEBUG
-          //  if (World::DebugRenderEnabled == false)
-          //      continue;
-          //
-          //  std::shared_ptr<Collider> collider = std::dynamic_pointer_cast<Collider>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
-          //
-          //  if (collider != nullptr) {
-          //      Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
-          //      RenderCollider(*collider);
-          //      RenderAABB(collider->_AABBvertex, collider->_AABBindices);
-          //  }
+          if (World::DebugRenderEnabled == false)
+              continue;
+          
+          std::shared_ptr<MeshCollider> collider = std::dynamic_pointer_cast<MeshCollider>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+          
+          if (collider != nullptr) {
+              //Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+                RenderCollider(*collider, camera);
+              //RenderAABB(collider->_AABBvertex, collider->_AABBindices);
+          }
           //
           //  std::shared_ptr<RigidBody> rb = std::dynamic_pointer_cast<RigidBody>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
           //

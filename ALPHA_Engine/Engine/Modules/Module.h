@@ -39,4 +39,6 @@ public:
 
 	virtual Object* GetParentObject();
 	virtual void SetParentObject(const Object& parent);
+
+	virtual void ModuleAdded();
 };

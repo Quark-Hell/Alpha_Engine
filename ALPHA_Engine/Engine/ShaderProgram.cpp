@@ -292,9 +292,9 @@ void ShaderProgram::DetachShader()
 	}
 }
 
-void ShaderProgram::DeleteShader()
+void ShaderProgram::DeleteShaders()
 {
-	if (ShaderProgram::_vertexShaderId != std::nullopt){}
+	if (ShaderProgram::_vertexShaderId != std::nullopt)
 		glDeleteShader(_vertexShaderId.value());
 
 	if (ShaderProgram::_tessellationControlShaderId != std::nullopt)
@@ -318,6 +318,53 @@ void ShaderProgram::DeleteShader()
 	ShaderProgram::_geometryShaderSource->clear();
 	ShaderProgram::_fragmentShaderSource->clear();
 	ShaderProgram::_computeShaderSource->clear();
+}
+
+void ShaderProgram::DeleteShader(ShadersType shaderType)
+{
+	switch (shaderType)
+	{
+	case VertexShader:
+		if (ShaderProgram::_vertexShaderId != std::nullopt)
+			glDeleteShader(_vertexShaderId.value());
+
+		ShaderProgram::_vertexShaderSource->clear();
+		break;
+
+	case TessellationControlShader:
+		if (ShaderProgram::_tessellationControlShaderId != std::nullopt)
+			glDeleteShader(_tessellationControlShaderId.value());
+
+		ShaderProgram::_tessellationControlShaderSource->clear();
+		break;
+
+	case TessellationEvaluationShader:
+		if (ShaderProgram::_tessellationEvaluationShaderId != std::nullopt)
+			glDeleteShader(_tessellationEvaluationShaderId.value());
+
+		ShaderProgram::_tessellationEvaluationShaderSource->clear();
+		break;
+
+	case GeometryShader:
+		if (ShaderProgram::_geometryShaderId != std::nullopt)
+			glDeleteShader(_geometryShaderId.value());
+
+		ShaderProgram::_geometryShaderSource->clear();
+		break;
+
+	case FragmentShader:
+		if (ShaderProgram::_fragmentShaderId != std::nullopt)
+			glDeleteShader(_fragmentShaderId.value());
+
+		ShaderProgram::_fragmentShaderSource->clear();
+	case ComputeShader:
+		if (ShaderProgram::_computeShaderId != std::nullopt)
+			glDeleteShader(_computeShaderId.value());
+
+		ShaderProgram::_computeShaderSource->clear();
+	default:
+		return;
+	}
 }
 
 void ShaderProgram::ApplyShadersValue()

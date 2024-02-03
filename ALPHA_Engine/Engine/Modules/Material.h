@@ -20,6 +20,8 @@ enum TypeOfTextuere {
 	OcclusionMap = 8
 };
 
+enum ShadersType;
+
 class Material
 {
 public:
@@ -38,6 +40,8 @@ public:
 public:	
 	Material();
 	~Material();
+
+	bool InitShader(std::string pathToShader, ShadersType shaderType);
 
 public:
 	bool LoadMaterial(TypeOfTextuere typeOfTexture, std::string pathToTexture);

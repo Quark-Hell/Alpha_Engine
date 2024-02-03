@@ -4,23 +4,32 @@ Material::Material()
 {
     _shader->_parentMaterial = this;
 
-    _shader->CreateShader("\\Shaders\\BaseVertexShaders\\VertexShader.txt", ShadersType::VertexShader);
-    _shader->CreateShader("\\Shaders\\BaseFragmentShaders\\FragmentShader.txt", ShadersType::FragmentShader);
+    Material::InitShader("\\Shaders\\BaseVertexShaders\\VertexShader.txt", ShadersType::VertexShader);
+    Material::InitShader("\\Shaders\\BaseFragmentShaders\\FragmentShader.txt", ShadersType::FragmentShader);
+}
+
+Material::~Material()
+{
+    if (_shader != nullptr) {
+        _shader->DeleteShaders();
+    }
+}
+
+bool Material::InitShader(std::string pathToShader, ShadersType shaderType)
+{
+    _shader->CreateShader(pathToShader.c_str(), shaderType);
 
     _shader->CompileShader();
 
     if (_shader->GetCompiledStatus()) {
         _shader->AttachShader();
-        _shader->DeleteShader();
+        _shader->DeleteShader(shaderType);
     }
     else {
-        _shader->DeleteShader();
+        _shader->DeleteShader(shaderType);
     }
-}
 
-Material::~Material()
-{
-    _shader->DeleteShader();
+    return true;
 }
 
 bool Material::LoadMaterial(TypeOfTextuere typeOfTexture, std::string pathToTexture)

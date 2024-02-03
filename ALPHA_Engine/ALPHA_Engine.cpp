@@ -81,24 +81,24 @@ void GameFunction::Start() {
     Vector3 scale = Vector3{ 1,1,1 };
     Vector3 color = Vector3{ 0,0,0 };
 
-
+    plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
+    plane1->AddModule(BoxColliderType);
+    plane1->AddPosition(0, -2, -5);
+    plane1->AddRotation(90, 0, 90);
+    plane1->SetScale(20, 20, 1);
+    MeshCollider* bx = std::dynamic_pointer_cast<BoxCollider>(plane1->GetModuleByType(BoxColliderType)).get();
 
     plane2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     plane2->AddPosition(0, 0, -5);
-    //plane1->AddModule(BoxColliderType);
+    plane2->AddModule(BoxColliderType);
     //plane2->SetScale(2, 2, 1);
 
     plane3 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    //plane3->AddModule(std::static_pointer_cast<Module>(col5));
     plane3->AddPosition(0, 0, -10);
     plane3->AddRotation(0, 0, 0);
     //plane3->SetScale(3, 3, 0.5); 
 
-    plane1 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    //plane1->AddModule(BoxColliderType);
-    plane1->AddPosition(0, -2, -5);
-    plane1->AddRotation(90, 0, 90);
-    plane1->SetScale(20, 20, 1);
+
     //
     //plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
     //plane->AddModule(std::static_pointer_cast<Module>(col3));

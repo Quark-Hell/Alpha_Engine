@@ -50,9 +50,7 @@ float Camera::GetZFar() {
     return Camera::ZFar;
 }
 
-Vector3 Camera::GetPosition() {
-    return Camera::_position;
-}
+
 void Camera::AddPosition(float X, float Y, float Z) {
     Camera::_position.X += X;
     Camera::_position.Y += Y;
@@ -77,31 +75,7 @@ void Camera::SetPosition(Vector3 position) {
     Camera::AddPosition(direction);
 }
 
-//TODO: Translate matrix
-void Camera::AddOriginPosition(float X, float Y, float Z) {
-    Camera::_origin.X += X;
-    Camera::_origin.Y += Y;
-    Camera::_origin.Z += Z;
-}
-void Camera::AddOriginPosition(Vector3 position) {
-    Camera::_origin += position;
-}
 
-void Camera::SetOriginPosition(float X, float Y, float Z) {
-    Vector3 direction = Vector3(X, Y, Z) - Camera::_origin;
-
-    Camera::AddOriginPosition(direction);
-}
-void Camera::SetOriginPosition(Vector3 position) {
-    Vector3 direction = position - Camera::_origin;
-
-    Camera::AddOriginPosition(direction);
-}
-
-
-Vector3 Camera::GetRotation() {
-    return Camera::_rotation;
-}
 void Camera::AddRotation(float X, float Y, float Z) {
     const float radX = M_PI / 180 * X;
     const float radY = M_PI / 180 * Y;
@@ -132,16 +106,6 @@ void Camera::SetRotation(Vector3 rotation) {
     Camera::AddRotation(direction);
 }
 
-
-Vector3 Camera::GetScale() {
-    return Transform::_scale;
-}
-void Camera::SetScale(float X, float Y, float Z) {
-
-}
-void Camera::SetScale(Vector3 scale) {
-
-}
 
 void Camera::ApplyTransformation() {
     if (GetParentObject() == nullptr)

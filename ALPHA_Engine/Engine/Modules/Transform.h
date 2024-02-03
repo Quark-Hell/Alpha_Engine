@@ -25,7 +25,7 @@ public:
 	virtual void SetPosition(Vector3 position);
 
 
-	virtual Vector3 GetRotation();
+	virtual Vector4 GetRotation();
 	virtual void AddRotation(float X, float Y, float Z);
 	virtual void AddRotation(Vector3 rotation);
 

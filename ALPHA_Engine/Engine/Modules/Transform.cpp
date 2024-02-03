@@ -51,7 +51,7 @@ void Transform::SetOriginPosition(Vector3 position) {
 
 
 
-Vector3 Transform::GetRotation() {
+Vector4 Transform::GetRotation() {
     return Transform::_rotation;
 }
 void Transform::AddRotation(float X, float Y, float Z) {

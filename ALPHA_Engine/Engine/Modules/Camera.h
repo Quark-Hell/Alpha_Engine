@@ -47,31 +47,17 @@ public:
 	Vector3 GetDirectionOfView();
 	
 #pragma region Redifine from Transfom
-	Vector3 GetPosition() override;
 	void AddPosition(float X, float Y, float Z) override;
 	void AddPosition(Vector3 position) override;
 
 	void SetPosition(float X, float Y, float Z) override;
 	void SetPosition(Vector3 position) override;
 
-
-	Vector3 GetRotation() override;
 	void AddRotation(float X, float Y, float Z) override;
 	void AddRotation(Vector3 rotation) override;
 
 	void SetRotation(float X, float Y, float Z) override;
 	void SetRotation(Vector3 rotation) override;
-
-
-	Vector3 GetScale() override;
-	void SetScale(float X, float Y, float Z) override;
-	void SetScale(Vector3 scale) override;
-
-	void AddOriginPosition(float X, float Y, float Z) override;
-	void AddOriginPosition(Vector3 position) override;
-
-	void SetOriginPosition(float X, float Y, float Z) override;
-	void SetOriginPosition(Vector3 position) override;
 
 	void ApplyTransformation() override;
 #pragma endregion

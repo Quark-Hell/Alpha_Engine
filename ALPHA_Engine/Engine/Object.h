@@ -13,7 +13,7 @@ class Vector3;
 
 class Object : public Transform {
 private:
-	std::vector<std::shared_ptr<Module>> Modules;
+	std::vector<std::shared_ptr<Module>> Modules = std::vector<std::shared_ptr<Module>>();
 
 	//TODO: add interface for this class
 	/////////////////////
@@ -37,7 +37,7 @@ public:
 	void SetPosition(Vector3 position) override;
 
 
-	Vector3 GetRotation() override;
+	Vector4 GetRotation() override;
 	void AddRotation(float X, float Y, float Z) override;
 	void AddRotation(Vector3 rotation) override;
 

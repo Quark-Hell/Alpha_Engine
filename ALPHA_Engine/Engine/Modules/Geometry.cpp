@@ -17,6 +17,16 @@ void Geometry::SetParentObject(const Object& parent) {
     ParentObject = const_cast<Object*>(&parent);
 }
 
+void Geometry::ModuleAdded()
+{
+    Geometry::_position = ParentObject->GetPosition();
+    Geometry::_rotation = ParentObject->GetRotation();
+    Geometry::_scale = ParentObject->GetScale();
+
+    //TODO: Add copy origin
+    //Geometry::_origin = ParentObject->geto();
+}
+
 ModulesList Geometry::GetType() {
     return GeometryType;
 }
@@ -222,9 +232,6 @@ Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
     return maxPoint + Geometry::GetParentObject()->GetPosition();
 }
 
-Vector3 Geometry::GetPosition() {
-    return Geometry::_position;
-}
 void Geometry::AddPosition(float X, float Y, float Z) {
     Geometry::_position.X += X;
     Geometry::_position.Y += Y;
@@ -233,10 +240,14 @@ void Geometry::AddPosition(float X, float Y, float Z) {
     Geometry::_origin.X += X;
     Geometry::_origin.Y += Y;
     Geometry::_origin.Z += Z;
+
+    Geometry::_isShifted = true;
 }
 void Geometry::AddPosition(Vector3 position) {
     Geometry::_position += position;
     Geometry::_origin += position;
+
+    Geometry::_isShifted = true;
 }
 void Geometry::SetPosition(float X, float Y, float Z) {
     Vector3 direction = Vector3(X, Y, Z) - Geometry::_position;
@@ -249,18 +260,31 @@ void Geometry::SetPosition(Vector3 position) {
     Geometry::AddPosition(direction);
 }
 
-
-Vector3 Geometry::GetRotation() {
-    return Geometry::_rotation;
+void Geometry::AddOriginPosition(float X, float Y, float Z) {
+    Geometry::_origin.X += X;
+    Geometry::_origin.Y += Y;
+    Geometry::_origin.Z += Z;
 }
+void Geometry::AddOriginPosition(Vector3 position) {
+    Geometry::_origin += position;
+}
+
+void Geometry::SetOriginPosition(float X, float Y, float Z) {
+    Vector3 direction = Vector3(X, Y, Z) - Geometry::_origin;
+
+    Geometry::AddOriginPosition(direction);
+}
+void Geometry::SetOriginPosition(Vector3 position) {
+    Vector3 direction = position - Geometry::_origin;
+
+    Geometry::AddOriginPosition(direction);
+}
+
+
 void Geometry::AddRotation(float X, float Y, float Z) {
     const float radX = M_PI / 180 * X;
     const float radY = M_PI / 180 * Y;
     const float radZ = M_PI / 180 * Z;
-
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
 
     Geometry::_rotation.X += X;
     Geometry::_rotation.Y += Y;
@@ -272,10 +296,6 @@ void Geometry::AddRotation(Vector3 rotation) {
     const float radX = M_PI / 180 * rotation.X;
     const float radY = M_PI / 180 * rotation.Y;
     const float radZ = M_PI / 180 * rotation.Z;
-
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-    Geometry::_transformMatrix = glm::rotate(Geometry::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
 
     Geometry::_rotation.X += rotation.X;
     Geometry::_rotation.Y += rotation.Y;
@@ -296,63 +316,38 @@ void Geometry::SetRotation(Vector3 rotation) {
 }
 
 
-Vector3 Geometry::GetScale() {
-    return Transform::_scale;
-}
 void Geometry::SetScale(float X, float Y, float Z) {
-    Vector3 delta = Geometry::_scale / Vector3(X, Y, Z);
-    Transform::_transformMatrix = glm::scale(Transform::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
+    Geometry::_scale.X = X;
+    Geometry::_scale.Y = Y;
+    Geometry::_scale.Z = Z;
 
-    Transform::_scale.X = X;
-    Transform::_scale.Y = Y;
-    Transform::_scale.Z = Z;
-
-    Geometry::ApplyTransformation();
+    Geometry::_isShifted = true;
 }
 void Geometry::SetScale(Vector3 scale) {
-    Vector3 delta = Transform::_scale / scale;
-    Geometry::_transformMatrix = glm::scale(Geometry::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
-
     Geometry::_scale.X = scale.X;
     Geometry::_scale.Y = scale.Y;
     Geometry::_scale.Z = scale.Z;
 
-    ApplyTransformation();
+    Geometry::_isShifted = true;
 }
 
-void Geometry::ApplyTransformation() {
-    if (GetParentObject() == nullptr)
-        return;
+void Geometry::ApplyTransformation()
+{
+    glm::mat4x4 rotMat(1.0f);
 
-    Vector3 originShift = Geometry::GetParentObject()->_origin - Geometry::GetParentObject()->_position;
+    const float radX = M_PI / 180 * Geometry::_rotation.X;
+    const float radY = M_PI / 180 * Geometry::_rotation.Y;
+    const float radZ = M_PI / 180 * Geometry::_rotation.Z;
 
-    for (size_t jt = 0; jt < Geometry::_vertexCount * 3; jt += 3)
-    {
-        glm::vec4 buf(Geometry::_vertex[jt], Geometry::_vertex[jt + 1], Geometry::_vertex[jt + 2], 1);
-        glm::mat4 originMat = glm::translate(glm::vec3(-originShift.X, -originShift.Y, -originShift.Z));
-        glm::mat4 oldOriginMat = glm::translate(glm::vec3(originShift.X, originShift.Y, originShift.Z));
+    rotMat = glm::rotate(rotMat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+    rotMat = glm::rotate(rotMat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+    rotMat = glm::rotate(rotMat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        buf = originMat * buf;
+    glm::mat4x4 transMat(1.0f);
+    transMat = glm::translate(glm::vec3(Geometry::_position.X, Geometry::_position.Y, Geometry::_position.Z));
 
-        glm::vec4 res;
-        res = Geometry::GetParentObject()->_transformMatrix * buf;
-        res = oldOriginMat * res;
-        Geometry::_vertex[jt] = res.x;
-        Geometry::_vertex[jt + 1] = res.y;
-        Geometry::_vertex[jt + 2] = res.z;
-    }
+    glm::mat4x4 scaleMat(1.0f);
+    scaleMat = glm::scale(scaleMat, glm::vec3(Geometry::_scale.X, Geometry::_scale.Y, Geometry::_scale.Z));
 
-
-    for (size_t jt = 0; jt < Geometry::_normals->size(); jt += 3)
-    {
-        glm::vec4 buf((*Geometry::_normals)[jt], (*Geometry::_normals)[jt + 1], (*Geometry::_normals)[jt + 2], 1);
-
-        glm::vec4 res;
-        res = Geometry::GetParentObject()->_transformMatrix * buf;
-        (*Geometry::_normals)[jt] = res.x;
-        (*Geometry::_normals)[jt + 1] = res.y;
-        (*Geometry::_normals)[jt + 2] = res.z;
-    }
-
-    Geometry::_transformMatrix = glm::mat4x4(1.0f);
+    Geometry::_transformMatrix = transMat * rotMat * scaleMat;
 }

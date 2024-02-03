@@ -111,7 +111,7 @@ public:
 	void DetachShader();
 	void DetachShader(ShadersType shaderType);
 
-	void DeleteShader();
+	void DeleteShaders();
 	void DeleteShader(ShadersType shaderType);
 
 public:
