@@ -434,8 +434,8 @@ void ShaderProgram::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 
 	ShaderProgram::SetValue(ShadersType::FragmentShader, "viewPos", &camera->GetPosition());
 	
-	glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
-	ShaderProgram::SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
+	//glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
+	//ShaderProgram::SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
 
 	ShaderProgram::ApplyShadersValue();
 }

@@ -57,67 +57,95 @@ bool MeshCollider::Create(std::string linkToFBX) {
 
 void MeshCollider::AddPosition(float X, float Y, float Z) {
     Geometry::AddPosition(X, Y, Z);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->AddPosition(X, Y, Z);
+#endif
 }
 
 void MeshCollider::AddPosition(Vector3 position) {
     Geometry::AddPosition(position);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->AddPosition(position);
+#endif
 }
 void MeshCollider::SetPosition(float X, float Y, float Z) {
     Geometry::SetPosition(X, Y, Z);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->SetPosition(X, Y, Z);
+#endif
 }
 void MeshCollider::SetPosition(Vector3 position) {
     Geometry::SetPosition(position);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->SetPosition(position);
+#endif
 }
 
 void MeshCollider::AddOriginPosition(float X, float Y, float Z) {
     Geometry::AddOriginPosition(X, Y, Z);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->AddOriginPosition(X, Y, Z);
+#endif
 }
 void MeshCollider::AddOriginPosition(Vector3 position) {
     Geometry::AddOriginPosition(position);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->AddOriginPosition(position);
+#endif
 }
 
 void MeshCollider::SetOriginPosition(float X, float Y, float Z) {
     Geometry::SetOriginPosition(X, Y, Z);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->SetOriginPosition(X, Y, Z);
+#endif
 }
 void MeshCollider::SetOriginPosition(Vector3 position) {
     Geometry::SetOriginPosition(position);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->SetOriginPosition(position);
+#endif
 }
 
 
 void MeshCollider::AddRotation(float X, float Y, float Z) {
     Geometry::AddRotation(X, Y, Z);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->AddRotation(X, Y, Z);
+#endif
 }
 void MeshCollider::AddRotation(Vector3 rotation) {
     Geometry::AddRotation(rotation);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->AddRotation(rotation);
+#endif
 }
 
 void MeshCollider::SetRotation(float X, float Y, float Z) {
     Geometry::SetRotation(X, Y, Z);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->SetRotation(X, Y, Z);
+#endif
 }
 void MeshCollider::SetRotation(Vector3 rotation) {
     Geometry::SetRotation(rotation);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->SetRotation(rotation);
+#endif
 }
 
 
 void MeshCollider::SetScale(float X, float Y, float Z) {
     Geometry::SetScale(X, Y, Z);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->SetScale(X, Y, Z);
+#endif
 }
 void MeshCollider::SetScale(Vector3 scale) {
     Geometry::SetScale(scale);
+#ifdef _DEBUG
     MeshCollider::_debugMesh->SetScale(scale);
+#endif
 }
 
 

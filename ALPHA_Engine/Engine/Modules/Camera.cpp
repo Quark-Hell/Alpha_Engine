@@ -132,12 +132,30 @@ void Camera::UpdateProjectionMatrix() {
     {
         float r = 0.1f;
         float t = 0.1f;
-        float n = 0.1f;
-        _projectionMatrix = glm::mat4(
-            n / r, 0, 0, 0,
-            0, n / t, 0, 0,
-            0, 0, (-ZFar - n) / (ZFar - n), -1,
-            0, 0, -2 * ZFar * n / (ZFar - n), 0);
+
+        float aspect = 16.0f / 9.0f;
+        float fov = 60;
+        float far = 1000;
+
+
+        _projectionMatrix = glm::perspective(glm::radians(fov), aspect, ZNear, ZFar);
+
+        //_projectionMatrix = glm::mat4(
+        //    ZNear / r, 0, 0, 0,
+        //    0, ZNear / t, 0, 0,
+        //    0, 0, (-ZFar - ZNear) / (ZFar - ZNear), -1,
+        //    0, 0, -2 * ZFar * ZNear / (ZFar - ZNear), 0);
+
+        //_projectionMatrix = glm::mat4(
+        //    //ROW 1
+        //    znear / width / 4.0 * zoomfactor, 0.0, left + right / width / 2, 0.0,
+        //        //ROW 2
+        //        0.0, znear / height / 4.0 * zoomfactor, top + bottom / height / 2, 0.0,
+        //        //ROW 3
+        //        0.0, 0.0, -(zfar + znear) / (zfar - znear), 2 * zfar * znear / zfar - znear,
+        //        // ROW 4
+        //        0.0, 0.0, -1.0, 0.0
+        //);
     }
 }
 
@@ -156,5 +174,12 @@ void Camera::UpdateViewMatrix()
     glm::mat4x4 transMat(1.0f);
     transMat = glm::translate(glm::vec3(Camera::_position.X, Camera::_position.Y, Camera::_position.Z));
 
+
     Camera::_transformMatrix = rotMat * transMat;
+
+   // Camera::_transformMatrix = glm::lookAt(
+   //     glm::vec3(Camera::_position.X, Camera::_position.Y, Camera::_position.Z),
+   //     glm::vec3(0, 1, 0),
+   //     glm::vec3(0, 1, 0)
+   // );
 }

@@ -105,9 +105,6 @@ void Render::PrepareToRender() {
     glDepthMask(GL_TRUE);
     glClearDepth(1.f);
     glDepthFunc(GL_LEQUAL);
-    
-    float ratio = 4.0f / 3.0f;
-    glFrustum(-ratio, ratio, -1.f, 1.f, 1.0f, 500.f);
 }
 
 void Render::ApplyCameraTransform(std::shared_ptr<Camera> camera) {
@@ -179,6 +176,7 @@ void Render::RenderMesh(Mesh& mesh, std::shared_ptr<Camera> camera) {
 }
 
 void Render::RenderCollider(MeshCollider& collider, std::shared_ptr<Camera> camera) {
+#ifdef _DEBUG
     Render::SetDebugRenderOptions();
     glColor3f(0.2, 0.8, 0.2);
 
@@ -191,17 +189,7 @@ void Render::RenderCollider(MeshCollider& collider, std::shared_ptr<Camera> came
         glDrawElements(GL_TRIANGLES, collider._debugMesh->_indices->size(), GL_UNSIGNED_INT, collider._debugMesh->_indices->data());
         glBindVertexArray(0);
     }
-
-    //glEnableClientState(GL_VERTEX_ARRAY);
-    //
-    //glVertexPointer(3, GL_FLOAT, 0, &collider._debugVertex[0]);
-    //glDrawElements(GL_TRIANGLES, collider._debugIndices.size(), GL_UNSIGNED_INT, &collider._debugIndices[0]);
-    //
-    //glColor3f(0.8, 0.2, 0.2);
-    //glPointSize(7);
-    //glDrawElements(GL_POINTS, collider._debugIndices.size(), GL_UNSIGNED_INT, &collider._debugIndices[0]);
-    //
-    //glDisableClientState(GL_VERTEX_ARRAY);
+#endif
 }
 void Render::RenderRigidBodyInfo(RigidBody& rb) {
     std::vector<Vector3> contactPoint;

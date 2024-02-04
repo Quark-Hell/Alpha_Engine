@@ -123,8 +123,8 @@ void GameFunction::Start() {
 
 void GameFunction::Update() {
       //plane1->AddRotation({ 0, 0, -0.5 });
-      plane2->AddRotation({ 0, -0.5, 0 });
-      plane3->AddRotation({ 0, -0.5, 0 });
+      //plane2->AddRotation({ 0, -0.5, 0 });
+      //plane3->AddRotation({ 0, -0.5, 0 });
     //plane->AddRotation({ 0, 0, -0.5 });
     //plane->AddLocalRot(Vector3{ -2.5, 0, 0 }, Vector3{ 0, 0, -0.5 });
 

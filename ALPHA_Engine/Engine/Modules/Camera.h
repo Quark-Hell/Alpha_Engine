@@ -21,7 +21,7 @@ class Camera : public virtual MovableModule {
 private:
 	float Fov = 90;
 	float Aspect = 1;
-	float ZNear = 1;
+	float ZNear = 0.1f;
 	float ZFar = 300;
 	Vector3 DirectionOfView;
 

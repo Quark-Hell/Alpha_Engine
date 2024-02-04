@@ -274,5 +274,12 @@ void Mesh::ApplyMeshSettings(std::shared_ptr<Camera> camera)
 
 	glm::mat3x3 transMat = glm::transpose(glm::inverse(_transformMatrix));
 	Mesh::_material->_shader->SetValue(ShadersType::VertexShader, "trans_model_mat", &transMat);
+
+	//glm::mat4x4 MPV = camera->GetProjectionMatrix() * camera->GetTransformMatrix() * _transformMatrix;
+	glm::mat4x4 MVP = camera->GetProjectionMatrix() * camera->GetTransformMatrix() * _transformMatrix;
+	Mesh::_material->_shader->SetValue(ShadersType::VertexShader, "MVP", &(MVP));
+
+	//glm::mat4x4 MPV = camera->GetTransformMatrix() * camera->GetProjectionMatrix() *  _transformMatrix;
+	//Mesh::_material->_shader->SetValue(ShadersType::VertexShader, "MPV", &MPV);
 }
 #pragma endregion
