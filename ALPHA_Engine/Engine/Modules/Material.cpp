@@ -268,6 +268,8 @@ void Material::ApplyMaterialSettings(std::shared_ptr<Camera> camera)
 {
     Material::_shader->ApplyShadersSettings(camera);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, _diffuse.textureId);
+    if (_diffuse.textureId != 0) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, _diffuse.textureId);
+    }
 }

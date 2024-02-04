@@ -45,6 +45,8 @@ public:
 	float GetZFar();
 
 	Vector3 GetDirectionOfView();
+	glm::mat4x4 GetProjectionMatrix();
+	glm::mat4x4 GetTransformMatrix();
 	
 #pragma region Redifine from Transfom
 	void AddPosition(float X, float Y, float Z) override;

@@ -77,6 +77,71 @@ bool Geometry::Create(std::string linkToFBX) {
     return true;
 }
 
+bool Geometry::Create(std::string linkToFBX, 
+    bool initIndices,
+    bool initVertex,
+    bool initNormals,
+    bool initTexCoord, 
+    bool initMaterial)
+{
+    Geometry::_indices->clear();
+    Geometry::_normals->clear();
+
+    Assimp::Importer importer;
+    std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
+
+    //TODO: Check if fbx
+    const aiScene* s;
+    aiMesh* mesh = s->mMeshes[0];
+
+    if (initIndices) {
+        s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+
+        Geometry::_indices->resize(mesh->mNumFaces * 3);
+
+        for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
+            for (size_t jt = 0; jt < mesh->mFaces[it].mNumIndices; jt++)
+            {
+                (*Geometry::_indices)[(it * 3) + jt] = mesh->mFaces[it].mIndices[jt];
+            }
+        }
+
+        Geometry::_isIndexed = true;
+    }
+    else
+    {
+        s = importer.ReadFile(path, aiProcess_Triangulate);
+        Geometry::_isIndexed = false;
+    }
+
+    if (mesh->HasPositions() && initVertex) {
+        Geometry::_vertexCount = mesh->mNumVertices;
+        Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+        for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
+
+            Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
+            Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
+            Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
+        }
+    }
+
+
+    if (mesh->HasNormals() && initNormals) {
+        Geometry::_normals->resize(Geometry::_vertexCount * 3);
+
+        for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
+
+            (*Geometry::_normals)[it] = mesh->mNormals[it / 3].x;
+            (*Geometry::_normals)[it + 1] = mesh->mNormals[it / 3].y;
+            (*Geometry::_normals)[it + 2] = mesh->mNormals[it / 3].z;
+        }
+    }
+
+    //Mesh::_isShifted = true;
+
+    return true;
+}
+
 /*Recommended not use now. Work so slow*/
 void Geometry::MakeUnique() {
     const int arr_len = 3;

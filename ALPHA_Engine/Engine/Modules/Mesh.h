@@ -11,7 +11,6 @@ private:
 	friend class MeshCollider;
 
 private:
-
 	std::shared_ptr<std::vector<float>> _vertexColors = std::make_shared<std::vector<float>>();
 	std::shared_ptr<std::vector<float>> _texCoords = std::make_shared<std::vector<float>>();
 
@@ -33,14 +32,15 @@ public:
 	void SetParentObject(const Object& parent) override;
 
 	bool Create(std::string linkToFBX) override;
+	bool Create(std::string linkToFBX, bool initIndices, bool initVertex, bool initNormals, bool initTexCoord, bool initMaterial) override;
 
 	bool LoadTextureCoord(std::string pathToCoords);
 	bool LoadTextureCoord(const aiScene& scene, unsigned int matIndex);
 
-	bool BindMesh();
+	virtual bool BindMesh();
 
-private:
-	void ApplyMeshSettings(std::shared_ptr<Camera> camera);
+protected:
+	virtual void ApplyMeshSettings(std::shared_ptr<Camera> camera);
 
 	//bool Create(std::string linkToFBX) override;
 	//void DeleteMesh() override;

@@ -1,6 +1,7 @@
 #pragma once
 #include "Modules/Geometry.h"
 #include "Modules/Collider.h"
+#include "Modules/DebugMesh.h"
 
 class MeshCollider : public Collider, public Geometry {
 public:
@@ -46,12 +47,7 @@ public:
 
 #ifdef _DEBUG
 protected:
-	std::unique_ptr<Mesh> DebugMesh = std::make_unique<Mesh>();
-
-protected:
-	void CreateDebugShell(const aiScene& scene);
-	void BindDebugMesh();
-	void ApplyTransformationToDebugShell();
+	std::unique_ptr<DebugMesh> _debugMesh = std::make_unique<DebugMesh>();
 #endif
 
 private:

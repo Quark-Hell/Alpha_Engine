@@ -159,6 +159,7 @@ void Render::SetMeshRenderOptions() {
 }
 void Render::SetDebugRenderOptions() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glLineWidth(World::DebugWireframThickness);
     glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 }
@@ -181,13 +182,13 @@ void Render::RenderCollider(MeshCollider& collider, std::shared_ptr<Camera> came
     Render::SetDebugRenderOptions();
     glColor3f(0.2, 0.8, 0.2);
 
-    if (collider.DebugMesh->_material->_shader->GetCompiledStatus() == true) {
-        glUseProgram(collider.DebugMesh->_material->_shader->GetProgramId().value());
-        glBindVertexArray(collider.DebugMesh->_vao);
+    if (collider._debugMesh->_material->_shader->GetCompiledStatus() == true) {
+        glUseProgram(collider._debugMesh->_material->_shader->GetProgramId().value());
+        glBindVertexArray(collider._debugMesh->_vao);
         
-        collider.DebugMesh->ApplyMeshSettings(camera);
+        collider._debugMesh->ApplyMeshSettings(camera);
         
-        glDrawElements(GL_TRIANGLES, collider.DebugMesh->_indices->size(), GL_UNSIGNED_INT, collider.DebugMesh->_indices->data());
+        glDrawElements(GL_TRIANGLES, collider._debugMesh->_indices->size(), GL_UNSIGNED_INT, collider._debugMesh->_indices->data());
         glBindVertexArray(0);
     }
 

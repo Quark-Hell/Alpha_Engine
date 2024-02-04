@@ -50,6 +50,16 @@ float Camera::GetZFar() {
     return Camera::ZFar;
 }
 
+glm::mat4x4 Camera::GetProjectionMatrix()
+{
+    return Camera::_projectionMatrix;
+}
+
+glm::mat4x4 Camera::GetTransformMatrix()
+{
+    return Camera::_transformMatrix;
+}
+
 
 void Camera::AddPosition(float X, float Y, float Z) {
     Camera::_position.X += X;

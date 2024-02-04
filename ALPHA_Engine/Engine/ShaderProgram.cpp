@@ -431,8 +431,6 @@ void ShaderProgram::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 	ShaderProgram::SetValue(ShadersType::FragmentShader, "PointLightsCount", &pointLightsCount);
 	ShaderProgram::SetValue(ShadersType::FragmentShader, "SpotLightsCount", &spotLightsCount);
 
-	//Vector3 locLightPos = Vector3{ 0,25,0 } - _parentMaterial->_parentMesh->GetPosition();
-
 
 	ShaderProgram::SetValue(ShadersType::FragmentShader, "viewPos", &camera->GetPosition());
 	

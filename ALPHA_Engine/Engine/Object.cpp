@@ -233,7 +233,7 @@ bool Object::AddModule(std::shared_ptr<Module> someModule) {
 	someModule->SetParentObject(*this);
 	return true;
 }
-bool Object::AddModule(ModulesList moduleType, Module& outputModule) {
+bool Object::AddModule(ModulesList moduleType, Module** outputModule) {
 	std::shared_ptr<Module> someModule;
 
 	switch (moduleType)
@@ -263,7 +263,7 @@ bool Object::AddModule(ModulesList moduleType, Module& outputModule) {
 
 	Object::AddModule(someModule);
 	someModule->SetParentObject(*this);
-	outputModule = *someModule.get();
+	*outputModule = someModule.get();
 	return true;
 }
 bool Object::AddModule(ModulesList moduleType) {

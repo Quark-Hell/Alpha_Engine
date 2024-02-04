@@ -16,6 +16,7 @@ enum ModulesList {
 	DirectLightType = 9,
 	PointLightType = 10,
 	SpotLightType = 11,
+	DebugMeshType = 12
 };
 
 class Module

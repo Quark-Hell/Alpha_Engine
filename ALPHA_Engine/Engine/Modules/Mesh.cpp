@@ -95,6 +95,85 @@ bool Mesh::Create(std::string linkToFBX) {
 	return true;
 }
 
+bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool initNormals, bool initTexCoord, bool initMaterial)
+{
+	Mesh::_indices->clear();
+	Mesh::_normals->clear();
+	Mesh::_texCoords->clear();
+
+	Assimp::Importer importer;
+	std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
+
+	//TODO: Check if fbx
+	const aiScene* s;
+	aiMesh* mesh = s->mMeshes[0];
+
+	if (initIndices) {
+		s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+
+		Geometry::_indices->resize(mesh->mNumFaces * 3);
+
+		for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
+			for (size_t jt = 0; jt < mesh->mFaces[it].mNumIndices; jt++)
+			{
+				(*Geometry::_indices)[(it * 3) + jt] = mesh->mFaces[it].mIndices[jt];
+			}
+		}
+
+		Geometry::_isIndexed = true;
+	}
+	else
+	{
+		s = importer.ReadFile(path, aiProcess_Triangulate);
+		Geometry::_isIndexed = false;
+	}
+
+	if (mesh->HasPositions() && initVertex) {
+		Geometry::_vertexCount = mesh->mNumVertices;
+		Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+		for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
+
+			Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
+			Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
+			Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
+		}
+	}
+
+
+	if (mesh->HasNormals() && initNormals) {
+		Geometry::_normals->resize(Geometry::_vertexCount * 3);
+
+		for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
+
+			(*Geometry::_normals)[it] = mesh->mNormals[it / 3].x;
+			(*Geometry::_normals)[it + 1] = mesh->mNormals[it / 3].y;
+			(*Geometry::_normals)[it + 2] = mesh->mNormals[it / 3].z;
+		}
+	}
+
+	if (mesh->HasTextureCoords(0) && initTexCoord) {
+		Mesh::_texCoords->resize(Geometry::_vertexCount * 2);
+
+		for (std::uint32_t it = 0; it < Mesh::_texCoords->size(); it += 2) {
+			(*Mesh::_texCoords)[it] = mesh->mTextureCoords[0][it / 2].x;
+			(*Mesh::_texCoords)[it + 1] = mesh->mTextureCoords[0][it / 2].y;
+		}
+	}
+
+
+	//Material* mat = (Material*)Mesh::GetSubModuleByType(MaterialType).get();
+	if (Mesh::_material != nullptr && initMaterial) {
+		Mesh::_material->LoadMaterial(TypeOfTextuere::Diffuse,"\\Textures\\Stones.jpg");
+	}
+
+
+	Mesh::_isIndexed = true;
+	//Mesh::_isShifted = true;
+
+	Mesh::BindMesh();
+	return true;
+}
+
 bool Mesh::LoadTextureCoord(std::string pathToCoords) {
 	return false;
 }

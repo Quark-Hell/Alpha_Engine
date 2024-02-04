@@ -37,25 +37,26 @@ public:
 
 	friend class Render;
 
+	std::shared_ptr<ShaderProgram> _shader = std::make_shared<ShaderProgram>();
+
 public:	
 	Material();
 	~Material();
 
 	bool InitShader(std::string pathToShader, ShadersType shaderType);
 
-public:
 	bool LoadMaterial(TypeOfTextuere typeOfTexture, std::string pathToTexture);
-private:
-	bool LoadMaterial(const aiScene& scene, unsigned int matIndex);
-
-private:
-	std::shared_ptr<ShaderProgram> _shader = std::make_shared<ShaderProgram>();
-	Mesh* _parentMesh;
 
 	void ApplyMaterialSettings(std::shared_ptr<Camera> camera);
 
 	bool DeleteTexture(TypeOfTextuere typeOfTexture);
 	void DeleteTextures();
+
+private:
+	bool LoadMaterial(const aiScene& scene, unsigned int matIndex);
+
+private:
+	Mesh* _parentMesh;
 
 	friend class Mesh;
 	friend class ShaderProgram;

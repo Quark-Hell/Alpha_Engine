@@ -62,7 +62,7 @@ public:
 #pragma endregion
 
 	bool AddModule(std::shared_ptr<Module> someModule);
-	bool AddModule(ModulesList moduleType, Module& outputModule);
+	bool AddModule(ModulesList moduleType, Module** outputModule);
 	bool AddModule(ModulesList moduleType);
 
 	bool DeleteModuleByType(ModulesList type);

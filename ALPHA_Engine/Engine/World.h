@@ -28,7 +28,10 @@ private:
 
 	static inline std::shared_ptr<Node> RootBVHnode;
 
+public:
 	static inline float WorldAmbientStrength = 0.5f;
+	static inline Vector3 DebugWireframeColor = Vector3{ 0.012, 1, 0.153 };
+	static inline float DebugWireframThickness = 2;
 
 public:
 	///TODO: In next update debug render will not work in release build

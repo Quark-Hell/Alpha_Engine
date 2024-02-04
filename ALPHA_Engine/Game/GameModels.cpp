@@ -12,7 +12,7 @@ void Primitives::CreateObject(Vector3 Position, Vector3 Rotation, Vector3 Scale,
     Obj->AddModule(std::dynamic_pointer_cast<Module>(mesh));
 }
 
-std::shared_ptr<Object> Primitives::Plane(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+std::shared_ptr<Object> Primitives::Plane(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
     std::shared_ptr<Object> obj = std::make_shared<Object>();
     CreateObject(Position, Rotation, Scale, obj);
     
@@ -22,7 +22,7 @@ std::shared_ptr<Object> Primitives::Plane(Vector3 Position, Vector3 Rotation, Ve
     return obj;
 }
 
-std::shared_ptr<Object> Primitives::Cube(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+std::shared_ptr<Object> Primitives::Cube(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
    std::shared_ptr<Object> obj = std::make_shared<Object>();
    CreateObject(Position, Rotation, Scale, obj);
 
@@ -32,7 +32,7 @@ std::shared_ptr<Object> Primitives::Cube(Vector3 Position, Vector3 Rotation, Vec
    return obj;
 }
 
-std::shared_ptr<Object> Primitives::Circle(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+std::shared_ptr<Object> Primitives::Circle(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
     std::shared_ptr<Object> obj = std::make_shared<Object>();
     CreateObject(Position, Rotation, Scale, obj);
 
@@ -42,7 +42,7 @@ std::shared_ptr<Object> Primitives::Circle(Vector3 Position, Vector3 Rotation, V
     return obj;
 }
 
-std::shared_ptr<Object> Primitives::Sphere(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+std::shared_ptr<Object> Primitives::Sphere(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
     std::shared_ptr<Object> obj = std::make_shared<Object>();
     CreateObject(Position, Rotation, Scale, obj);
     
@@ -52,7 +52,7 @@ std::shared_ptr<Object> Primitives::Sphere(Vector3 Position, Vector3 Rotation, V
     return obj;
 }
 
-std::shared_ptr<Object> Primitives::Cylinder(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+std::shared_ptr<Object> Primitives::Cylinder(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
     std::shared_ptr<Object> obj = std::make_shared<Object>();
     CreateObject(Position, Rotation, Scale, obj);
     
@@ -62,7 +62,7 @@ std::shared_ptr<Object> Primitives::Cylinder(Vector3 Position, Vector3 Rotation,
     return obj;
 }
 
-std::shared_ptr<Object> Primitives::Cone(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+std::shared_ptr<Object> Primitives::Cone(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
     std::shared_ptr<Object> obj = std::make_shared<Object>();
     CreateObject(Position, Rotation, Scale, obj);
     
@@ -72,7 +72,7 @@ std::shared_ptr<Object> Primitives::Cone(Vector3 Position, Vector3 Rotation, Vec
     return obj;
 }
 
-std::shared_ptr<Object> Primitives::Torus(Vector3 Position, Vector3 Rotation, Vector3 Scale, Vector3 Color) {
+std::shared_ptr<Object> Primitives::Torus(Vector3 Position, Vector3 Rotation, Vector3 Scale) {
     std::shared_ptr<Object> obj = std::make_shared<Object>();
     CreateObject(Position, Rotation, Scale, obj);
     

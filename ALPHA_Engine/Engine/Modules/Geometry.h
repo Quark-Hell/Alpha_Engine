@@ -69,6 +69,12 @@ public:
 	ModulesList GetType() override;
 
 	virtual bool Create(std::string linkToFBX);
+	virtual bool Create(std::string linkToFBX, 
+		bool initIndices = true, 
+		bool initVertex = true, 
+		bool initNormals = true,
+		bool initTexCoord = false, 
+		bool initMaterial = false);
 	//virtual void Delete();
 
 	virtual Vector3 FindFurthestPoint(Vector3 direction);
