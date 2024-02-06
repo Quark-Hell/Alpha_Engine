@@ -46,9 +46,9 @@ std::shared_ptr<Object> plane3;
 //std::shared_ptr<Object> object2;
 std::shared_ptr<Object> plane2;
 
-//DirectLight dirLight;
-//PointLight pLight;
+DirectLight dirLight;
 SpotLight sLight;
+PointLight pLight;
 
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
@@ -56,14 +56,24 @@ std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 void GameFunction::Start() {
     SetControl();
 
-    sLight.Name = "PointLight";
+    dirLight.Name = "dirLight";
+    dirLight.color = Vector3(1, 0.988, 0.792);
+    dirLight.strength = 0.3f;
 
-    sLight.SetPosition(0, 3, -4);
-    sLight.color = Vector3(0.7,0.7,0.7);
-    sLight.strength = 1.3f;
-    sLight.SetDirection(Vector3(0,-1,-0.7f));
+    sLight.Name = "SpotLight";
+    
+    sLight.SetPosition(0, 0, 0.5);
+    sLight.color = Vector3(0.639, 0.847, 0.851);
+    sLight.strength = 3.3f;
+    sLight.SetDirection(Vector3(0,-0.3f,-0.7f));
     sLight.CutOff = glm::cos(glm::radians(22.5f));
     sLight.OuterCutOff = glm::cos(glm::radians(35.5f));
+
+    pLight.Name = "PointLight";
+    
+    pLight.SetPosition(0, 2, 0);
+    pLight.color = Vector3(0.639, 0.847, 0.851);
+    pLight.strength = 30.3f;
 
     World::DebugRenderEnabled = true;
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
@@ -83,14 +93,14 @@ void GameFunction::Start() {
     plane1 = Primitives::Cube({ 0,0,0 }, rot, scale);
     Mesh* mesh;
     plane1->AddModule(BoxColliderType, (Module**)&(mesh));
-    plane1->AddPosition(0, -2, -5);
+    plane1->AddPosition(0, -2, 0);
     plane1->AddRotation(90, 0, 90);
     plane1->SetScale(20, 20, 1);
 
     plane2 = Primitives::Cube({ 0,0,0 }, rot, scale);
-    plane2->AddPosition(0, 0, -5);
+    plane2->AddPosition(0, -1.25, 0);
     plane2->AddModule(BoxColliderType);
-    //plane2->SetScale(2, 2, 1);
+    plane2->SetScale(0.5f, 0.5f, 0.5f);
 
     plane3 = Primitives::Cube({ 0,0,0 }, rot, scale);
     plane3->AddPosition(0, 0, -10);
@@ -121,7 +131,26 @@ void GameFunction::Start() {
     //ambLight.AddPosition(0, -8, 0);
 }
 
+float angle = 180;
 void GameFunction::Update() {
+    Vector3 dir = sLight.GetDirection();
+    
+    while (angle > 360)
+    {
+        angle -= 360;
+    }
+    
+    
+    angle += 0.01f;
+    dir.X = cos(angle);
+    dir.Z = sin(angle);
+    //dir = Vector3::GetNormalize(dir);
+    
+    std::cout << "X: " << dir.X << " Y:" << dir.Y << " Z:" << dir.Z << "\n";
+    sLight.SetDirection(dir);
+    
+    plane2->AddRotation(0, glm::degrees(-0.01f), 0);
+
       //plane1->AddRotation({ 0, 0, -0.5 });
       //plane2->AddRotation({ 0, -0.5, 0 });
       //plane3->AddRotation({ 0, -0.5, 0 });

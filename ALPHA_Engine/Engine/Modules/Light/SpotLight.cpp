@@ -24,5 +24,5 @@ void SpotLight::SetDirection(Vector3 newDirection)
         return;
     }
 
-    _direction = Vector3::GetNormalize(newDirection);
+    _direction = newDirection;
 }
