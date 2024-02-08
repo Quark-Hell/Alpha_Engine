@@ -200,7 +200,7 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB) {
             std::shared_ptr<RigidBody> rb1 = std::dynamic_pointer_cast<RigidBody>(colliderA.GetParentObject()->GetModuleByType(ModulesList::RigidBodyType));
             std::shared_ptr<RigidBody> rb2 = std::dynamic_pointer_cast<RigidBody>(colliderB.GetParentObject()->GetModuleByType(ModulesList::RigidBodyType));
 
-            std::cout << " fsfdfs\n";
+            //std::cout << " fsfdfs\n";
 
             if (rb1 != nullptr && rb2 == nullptr) {
                 if (Collision::EPA(points, colliderA, colliderB, colInfo)) {

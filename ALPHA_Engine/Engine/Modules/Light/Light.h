@@ -4,6 +4,9 @@
 #include "Modules/MovableModule.h"
 
 class Light : public MovableModule {
+protected:
+	Vector3 _lookingPoint = Vector3(-1, 0, 0);
+
 public:
 	Vector3 color;
 	float strength;

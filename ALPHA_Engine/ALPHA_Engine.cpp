@@ -62,10 +62,9 @@ void GameFunction::Start() {
 
     sLight.Name = "SpotLight";
     
-    sLight.SetPosition(0, 0, 0.5);
+    sLight.SetPosition(0, -1.4f, 0);
     sLight.color = Vector3(0.639, 0.847, 0.851);
-    sLight.strength = 3.3f;
-    sLight.SetDirection(Vector3(0,-0.3f,-0.7f));
+    sLight.strength = 8.3f;
     sLight.CutOff = glm::cos(glm::radians(22.5f));
     sLight.OuterCutOff = glm::cos(glm::radians(35.5f));
 
@@ -103,8 +102,9 @@ void GameFunction::Start() {
     plane2->SetScale(0.5f, 0.5f, 0.5f);
 
     plane3 = Primitives::Cube({ 0,0,0 }, rot, scale);
-    plane3->AddPosition(0, 0, -10);
+    plane3->AddPosition(0, 3, -7);
     plane3->AddRotation(0, 0, 0);
+    plane3->AddModule(RigidBodyType);
     plane3->AddModule(BoxColliderType);
     //plane3->SetScale(3, 3, 0.5); 
 
@@ -133,23 +133,8 @@ void GameFunction::Start() {
 
 float angle = 180;
 void GameFunction::Update() {
-    Vector3 dir = sLight.GetDirection();
-    
-    while (angle > 360)
-    {
-        angle -= 360;
-    }
-    
-    
-    angle += 0.01f;
-    dir.X = cos(angle);
-    dir.Z = sin(angle);
-    //dir = Vector3::GetNormalize(dir);
-    
-    std::cout << "X: " << dir.X << " Y:" << dir.Y << " Z:" << dir.Z << "\n";
-    sLight.SetDirection(dir);
-    
-    plane2->AddRotation(0, glm::degrees(-0.01f), 0);
+    sLight.AddRotation(0, -5, 0); 
+    plane2->AddRotation(0, -5, 0);
 
       //plane1->AddRotation({ 0, 0, -0.5 });
       //plane2->AddRotation({ 0, -0.5, 0 });
