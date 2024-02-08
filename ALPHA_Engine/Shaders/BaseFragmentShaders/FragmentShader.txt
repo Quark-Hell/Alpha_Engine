@@ -44,6 +44,7 @@ vec3 calcDirectLight(DirectLight dirLight, vec3 normal){
 struct PointLight {
     vec3 position;
     vec3 color;
+	float radius;
 	float strength;
 
     vec3 diffuse;
@@ -60,21 +61,25 @@ uniform PointLight pointLights[MAXPOINTLIGHT];
 vec3 calcPointLight(PointLight pLight, vec3 normal);
 
 vec3 calcPointLight(PointLight pLight, vec3 normal){
-	  vec3 lightDir = normalize(pLight.position - frag_Pos);
+	vec3 diffuse;
+	vec3 specular;
+	
+	vec3 lightDir = pLight.position - frag_Pos;
+
+	  lightDir = normalize(lightDir);
 	  
 	  vec3 norm = normalize(normal);
    
-      vec3 diffuse = calcDiffuseLight(pLight.color, norm, lightDir, pLight.strength);
-      vec3 specular = calcSpecularLight(pLight.color, norm, lightDir);
+      diffuse = calcDiffuseLight(pLight.color, norm, lightDir, pLight.strength);
+      specular = calcSpecularLight(pLight.color, norm, lightDir);
 	  
-	  float distance    = length(pLight.position - frag_Pos);
-	  float attenuation = 1.0 / (pLight.constant + pLight.linear * distance + 
-    		    pLight.quadratic * (distance * distance));
+	  float distance    =  length(pLight.position - frag_Pos) + pLight.radius;
+	  float attenuation = smoothstep(pLight.radius, 0, length(pLight.position - frag_Pos));
 	  
 	  diffuse *= attenuation;
 	  specular *= attenuation;
 	  
-	  return diffuse;
+	return diffuse;
 }
 
 struct SpotLight {

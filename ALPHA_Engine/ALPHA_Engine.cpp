@@ -62,7 +62,8 @@ void GameFunction::Start() {
 
     sLight.Name = "SpotLight";
     
-    sLight.SetPosition(0, -1.4f, 0);
+    sLight.SetPosition(0, -1, 0);
+    sLight.AddRotation(0,0,-15);
     sLight.color = Vector3(0.639, 0.847, 0.851);
     sLight.strength = 8.3f;
     sLight.CutOff = glm::cos(glm::radians(22.5f));
@@ -70,9 +71,10 @@ void GameFunction::Start() {
 
     pLight.Name = "PointLight";
     
-    pLight.SetPosition(0, 2, 0);
+    pLight.SetPosition(0, 3, 0);
     pLight.color = Vector3(0.639, 0.847, 0.851);
     pLight.strength = 30.3f;
+    pLight.radius = 6;
 
     World::DebugRenderEnabled = true;
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
@@ -131,7 +133,6 @@ void GameFunction::Start() {
     //ambLight.AddPosition(0, -8, 0);
 }
 
-float angle = 180;
 void GameFunction::Update() {
     sLight.AddRotation(0, -5, 0); 
     plane2->AddRotation(0, -5, 0);

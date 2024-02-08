@@ -397,6 +397,7 @@ void ShaderProgram::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 
 			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].position"), &light->GetPosition());
 			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].color"), &light->color);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].radius"), &light->radius);
 			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].strength"), &light->strength);
 																												   
 			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].constant"), &light->constant);
