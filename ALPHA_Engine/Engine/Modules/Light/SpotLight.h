@@ -12,6 +12,4 @@ public:
 	virtual ~SpotLight();
 
 	ModulesList GetType() override;
-
-	Vector3 GetDirection();
 };

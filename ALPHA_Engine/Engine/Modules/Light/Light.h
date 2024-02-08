@@ -40,4 +40,6 @@ public:
 
 	void ApplyTransformation() override;
 #pragma endregion
+
+	Vector3 GetDirection();
 };

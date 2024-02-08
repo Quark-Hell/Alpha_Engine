@@ -164,3 +164,8 @@ void Light::SetRotation(Vector3 rotation) {
 void Light::ApplyTransformation()
 {
 }
+
+Vector3 Light::GetDirection()
+{
+    return Vector3::GetNormalize(-Light::_lookingPoint);
+}
