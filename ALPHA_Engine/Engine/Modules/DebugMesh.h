@@ -23,6 +23,7 @@ public:
 	ModulesList GetType() override;
 
 	bool Create(std::string linkToFBX) override;
+	bool Create(Geometry& geometry);
 
 	bool BindMesh() override;
 

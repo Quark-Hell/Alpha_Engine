@@ -180,6 +180,12 @@ void Render::RenderCollider(MeshCollider& collider, std::shared_ptr<Camera> came
     Render::SetDebugRenderOptions();
     glColor3f(0.2, 0.8, 0.2);
 
+    if (collider._debugMesh->_vertexCount == 0)
+        return;
+
+    if (collider._debugMesh->_indices->size() == 0)
+        return;
+
     if (collider._debugMesh->_material->_shader->GetCompiledStatus() == true) {
         glUseProgram(collider._debugMesh->_material->_shader->GetProgramId().value());
         glBindVertexArray(collider._debugMesh->_vao);

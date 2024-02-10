@@ -50,7 +50,38 @@ bool MeshCollider::Create(std::string linkToFBX) {
 
     Geometry::_isIndexed = true;
     Geometry::MakeUnique();
-    //Mesh::_isShifted = true;
+    Geometry::_isShifted = true;
+
+    return true;
+}
+
+bool MeshCollider::Create()
+{
+    if (MeshCollider::ParentObject == nullptr)
+        return false;
+
+    Mesh* mesh = std::dynamic_pointer_cast<Mesh>(MeshCollider::ParentObject->GetModuleByType(MeshType)).get();
+    if (mesh == nullptr)
+        return false;
+
+
+    MeshCollider::_vertexCount = mesh->_vertexCount;
+    MeshCollider::_vertex = new float[MeshCollider::_vertexCount * 3];
+    
+    for (std::uint32_t it = 0; it < mesh->_vertexCount * 3; it++)
+    {
+        MeshCollider::_vertex[it] = mesh->_vertex[it];
+    }
+
+#ifdef _DEBUG
+    MeshCollider::_debugMesh->Create(*mesh);
+#endif
+
+    //AABB::UpdateAABB(Geometry::_vertex, Geometry::_vertexCount);
+
+    //MeshCollider::_isIndexed = true;
+    //Geometry::MakeUnique();
+    Geometry::_isShifted = true;
 
     return true;
 }
@@ -151,7 +182,12 @@ void MeshCollider::SetScale(Vector3 scale) {
 
 void MeshCollider::ApplyTransformation() {
     if (MeshCollider::GetParentObject() != nullptr) {
+
         MeshCollider::_transformMatrix = MeshCollider::GetParentObject()->GetTransformationMatrix() * MeshCollider::_transformMatrix;
+    }
+    else
+    {
+        return;
     }
 
     for (size_t jt = 0; jt < MeshCollider::_vertexCount * 3; jt += 3)
@@ -176,12 +212,14 @@ void MeshCollider::ApplyTransformation() {
 void MeshCollider::ModuleAdded()
 {
     Geometry::ModuleAdded();
+    MeshCollider::Create();
 
 #ifdef _DEBUG
     MeshCollider::_debugMesh->SetParentObject(*MeshCollider::ParentObject);
     MeshCollider::_debugMesh->ModuleAdded();
 #endif
 
+    Geometry::_isShifted = true;
     //TODO: Add copy origin
     //Geometry::_origin = ParentObject->geto();
 }

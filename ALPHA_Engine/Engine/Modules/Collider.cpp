@@ -79,19 +79,4 @@ void Collider::ApplyTransformation() {
 //        }
 //    }
 //}
-
-
-
-//void Collider::ApplyTransformationToDebugShell() {
-//    for (size_t jt = 0; jt < _debugVertex.size(); jt += 3)
-//    {
-//        glm::vec4 buf(Collider::_debugVertex[jt], Collider::_debugVertex[jt + 1], Collider::_debugVertex[jt + 2], 1);
-//
-//        glm::vec4 res;
-//        res = Collider::_transformMatrix * buf;
-//        Collider::_debugVertex[jt + 0] = res.x;
-//        Collider::_debugVertex[jt + 1] = res.y;
-//        Collider::_debugVertex[jt + 2] = res.z;
-//    }
-//}
 #endif

@@ -15,6 +15,7 @@ public:
 	bool CreateConvexFromConcave(std::string link);
 
 	bool Create(std::string linkToFBX) override;
+	bool Create();
 
 #pragma region Redifine from Transfom
 	void AddPosition(float X, float Y, float Z) override;

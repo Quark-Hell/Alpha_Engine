@@ -59,6 +59,26 @@ bool DebugMesh::Create(std::string linkToFBX)
     return true;
 }
 
+bool DebugMesh::Create(Geometry& geometry)
+{
+    _indices = geometry._indices;
+
+    _vertexCount = geometry._vertexCount;
+    _vertex = new float[geometry._vertexCount * 3];
+
+    for (std::uint32_t it = 0; it < geometry._vertexCount * 3; it++)
+    {
+        _vertex[it] = geometry._vertex[it];
+    }
+
+    BindMesh();
+
+    _material->InitShader("\\Shaders\\BaseVertexShaders\\WireframeVertexShader.txt", ShadersType::VertexShader);
+    _material->InitShader("\\Shaders\\BaseFragmentShaders\\WireframeFragmentShader.txt", ShadersType::FragmentShader);
+
+    return true;
+}
+
 bool DebugMesh::BindMesh()
 {
     if (DebugMesh::_vertexVbo != 0)
@@ -92,7 +112,6 @@ void DebugMesh::ApplyMeshSettings(std::shared_ptr<Camera> camera)
     glm::mat4x4 viewMat = camera->GetProjectionMatrix() * camera->GetTransformMatrix();
     DebugMesh::_material->_shader->SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
     
-    glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
     DebugMesh::_material->_shader->SetValue(ShadersType::VertexShader, "model_matrix", &_transformMatrix);
     
     //DebugMesh::_material->_shader->SetValue(ShadersType::VertexShader, "color", &World::DebugWireframeColor);

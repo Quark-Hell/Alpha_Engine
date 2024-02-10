@@ -263,10 +263,8 @@ bool Object::AddModule(ModulesList moduleType, Module** outputModule) {
 	}
 
 	Object::AddModule(someModule);
-	someModule->SetParentObject(*this);
-	someModule->ModuleAdded();
-
 	*outputModule = someModule.get();
+
 	return true;
 }
 bool Object::AddModule(ModulesList moduleType) {
@@ -299,8 +297,6 @@ bool Object::AddModule(ModulesList moduleType) {
 	}
 
 	Object::AddModule(someModule);
-	someModule->SetParentObject(*this);
-	someModule->ModuleAdded();
 	return true;
 }
 

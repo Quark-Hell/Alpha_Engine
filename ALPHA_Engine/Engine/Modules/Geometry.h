@@ -29,6 +29,7 @@ protected:
 	friend class Collision;
 	friend class Physics;
 	friend class RigidBody;
+	friend class DebugMesh;
 
 public:
 	Geometry();

@@ -40,11 +40,9 @@ Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
 
 
-//std::shared_ptr<Object> plane;
 std::shared_ptr<Object> plane1;
-std::shared_ptr<Object> plane3;
-//std::shared_ptr<Object> object2;
 std::shared_ptr<Object> plane2;
+std::shared_ptr<Object> plane3;
 
 DirectLight dirLight;
 SpotLight sLight;
@@ -80,13 +78,6 @@ void GameFunction::Start() {
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
 
     //MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
-    auto col2 = std::make_shared<BoxCollider>();
-    auto col3 = std::make_shared<BoxCollider>();
-    auto col5 = std::make_shared<BoxCollider>();
-
-    col2->Name = "col2";
-    col3->Name = "col3";
-
     Vector3 pos = Vector3{ 0,0,-15 };
     Vector3 rot = Vector3{ 0,0,0 };
     Vector3 scale = Vector3{ 1,1,1 };
@@ -94,21 +85,24 @@ void GameFunction::Start() {
     plane1 = Primitives::Cube({ 0,0,0 }, rot, scale);
     Mesh* mesh;
     plane1->AddModule(BoxColliderType, (Module**)&(mesh));
-    plane1->AddPosition(0, -2, 0);
+    plane1->AddPosition(0, -10, 0);
     plane1->AddRotation(90, 0, 90);
     plane1->SetScale(20, 20, 1);
 
-    plane2 = Primitives::Cube({ 0,0,0 }, rot, scale);
-    plane2->AddPosition(0, -1.25, 0);
-    plane2->AddModule(BoxColliderType);
+    plane2 = Primitives::Cube({ 0,2,-3 }, rot, scale);
     plane2->SetScale(0.5f, 0.5f, 0.5f);
+    plane2->AddModule(MeshColliderType);
+    plane2->AddModule(RigidBodyType);
 
-    plane3 = Primitives::Cube({ 0,0,0 }, rot, scale);
-    plane3->AddPosition(0, 3, -7);
-    plane3->AddRotation(0, 0, 0);
-    plane3->AddModule(RigidBodyType);
-    plane3->AddModule(BoxColliderType);
-    //plane3->SetScale(3, 3, 0.5); 
+
+
+   //plane3 = Primitives::Cube({ 0,0,0 }, rot, scale);
+   //plane3->SetScale(0.5f, 1.5f, 0.5f);
+   //plane3->AddModule(MeshColliderType);
+   //plane3->AddModule(RigidBodyType);
+
+
+
 
 
     //
@@ -135,7 +129,7 @@ void GameFunction::Start() {
 
 void GameFunction::Update() {
     sLight.AddRotation(0, -5, 0); 
-    plane2->AddRotation(0, -5, 0);
+    //plane2->AddRotation(0, -5, 0);
 
       //plane1->AddRotation({ 0, 0, -0.5 });
       //plane2->AddRotation({ 0, -0.5, 0 });
