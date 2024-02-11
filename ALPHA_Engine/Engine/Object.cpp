@@ -32,6 +32,12 @@ void Object::AddPosition(float X, float Y, float Z) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
+
+		if (geometry != nullptr) {
+			geometry->_isShifted = true;
+		}
+
 		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
 
 		if (camera != nullptr) {
@@ -39,7 +45,7 @@ void Object::AddPosition(float X, float Y, float Z) {
 		}
 	}
 
-	Object::ApplyTransformation();
+	//Object::ApplyTransformation();
 }
 void Object::AddPosition(Vector3 position) {
 	Object::_position += position;
@@ -49,6 +55,12 @@ void Object::AddPosition(Vector3 position) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
+
+		if (geometry != nullptr) {
+			geometry->_isShifted = true;
+		}
+
 		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
 
 		if (camera != nullptr) {
@@ -56,7 +68,7 @@ void Object::AddPosition(Vector3 position) {
 		}
 	}
 
-	Object::ApplyTransformation();
+	//Object::ApplyTransformation();
 }
 void Object::SetPosition(float X, float Y, float Z) {
 	Vector3 direction = Vector3(X, Y, Z) - Object::_position;
@@ -126,6 +138,12 @@ void Object::AddRotation(float X, float Y, float Z) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
+
+		if (geometry != nullptr) {
+			geometry->_isShifted = true;
+		}
+
 		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
 
 		if (camera != nullptr) {
@@ -133,7 +151,7 @@ void Object::AddRotation(float X, float Y, float Z) {
 		}
 	}
 
-	Object::ApplyTransformation();
+	//Object::ApplyTransformation();
 }
 void Object::AddRotation(Vector3 rotation) {
 	const float radX = M_PI / 180.0f * rotation.X;
@@ -150,6 +168,12 @@ void Object::AddRotation(Vector3 rotation) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{	
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
+
+		if (geometry != nullptr) {
+			geometry->_isShifted = true;
+		}
+
 		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
 
 		if (camera != nullptr) {
@@ -157,7 +181,7 @@ void Object::AddRotation(Vector3 rotation) {
 		}
 	}
 
-	Object::ApplyTransformation();
+	//Object::ApplyTransformation();
 }
 void Object::SetRotation(float X, float Y, float Z) {
 	Vector3 direction = Vector3(X, Y, Z) - Object::_rotation;
