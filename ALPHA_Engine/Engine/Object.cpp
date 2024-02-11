@@ -28,27 +28,35 @@ void Object::AddPosition(float X, float Y, float Z) {
 	Object::_origin.Y += Y;
 	Object::_origin.Z += Z;
 
+	//Object::_transformMatrix = glm::translate(Object::_transformMatrix, glm::vec3(_position.X, _position.Y, _position.Z));
+
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		std::shared_ptr<Transform> transfrom = std::dynamic_pointer_cast<Transform>(Object::GetModuleByIndex(it));
+		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
 
-		if (transfrom != nullptr) {
-			transfrom->AddPosition(X, Y, Z);
+		if (camera != nullptr) {
+			camera->AddPosition(X, Y, Z);
 		}
 	}
+
+	Object::ApplyTransformation();
 }
 void Object::AddPosition(Vector3 position) {
 	Object::_position += position;
 	Object::_origin += position;
 
+	//Object::_transformMatrix = glm::translate(Object::_transformMatrix, glm::vec3(_position.X, _position.Y, _position.Z));
+
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		std::shared_ptr<Transform> transfrom = std::dynamic_pointer_cast<Transform>(Object::GetModuleByIndex(it));
+		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
 
-		if (transfrom != nullptr) {
-			transfrom->AddPosition(position);
+		if (camera != nullptr) {
+			camera->AddPosition(position);
 		}
 	}
+
+	Object::ApplyTransformation();
 }
 void Object::SetPosition(float X, float Y, float Z) {
 	Vector3 direction = Vector3(X, Y, Z) - Object::_position;
@@ -118,19 +126,14 @@ void Object::AddRotation(float X, float Y, float Z) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
-
-		if (geometry != nullptr) {
-			geometry->AddRotation(X, Y, Z);
-			continue;
-		}
-
 		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
 
 		if (camera != nullptr) {
 			camera->AddRotation(X, Y, Z);
 		}
 	}
+
+	Object::ApplyTransformation();
 }
 void Object::AddRotation(Vector3 rotation) {
 	const float radX = M_PI / 180.0f * rotation.X;
@@ -147,19 +150,14 @@ void Object::AddRotation(Vector3 rotation) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{	
-		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
-
-		if (geometry != nullptr) {
-			geometry->AddRotation(rotation);
-			continue;
-		}
-
 		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
 
 		if (camera != nullptr) {
 			camera->AddRotation(rotation);
 		}
 	}
+
+	Object::ApplyTransformation();
 }
 void Object::SetRotation(float X, float Y, float Z) {
 	Vector3 direction = Vector3(X, Y, Z) - Object::_rotation;
@@ -184,15 +182,6 @@ void Object::SetScale(float X, float Y, float Z) {
 	Object::_scale.Y = Y;
 	Object::_scale.Z = Z;
 
-	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
-	{
-		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
-
-		if (geometry != nullptr) {
-			geometry->SetScale(X,Y,Z);
-		}
-	}
-
 	Object::ApplyTransformation();
 }
 void Object::SetScale(Vector3 scale) {
@@ -203,25 +192,24 @@ void Object::SetScale(Vector3 scale) {
 	Object::_scale.Y = scale.Y;
 	Object::_scale.Z = scale.Z;
 
-	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
-	{
-		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
-
-		if (geometry != nullptr) {
-			geometry->SetScale(scale);
-		}
-	}
-
 	Object::ApplyTransformation();
 }
 
 void Object::ApplyTransformation() {
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
+		std::shared_ptr<MeshCollider> geometry = std::dynamic_pointer_cast<MeshCollider>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr && geometry->_isShifted == true) {
 			geometry->ApplyTransformation();
+			continue;
+		}
+
+		std::shared_ptr<Mesh> mesh = std::dynamic_pointer_cast<Mesh>(Object::GetModuleByIndex(it));
+
+		if (mesh != nullptr) {
+			mesh->ApplyTransformation();
+			continue;
 		}
 	}
 
@@ -261,6 +249,7 @@ bool Object::AddModule(ModulesList moduleType, Module** outputModule) {
 		return false;
 		break;
 	}
+
 
 	Object::AddModule(someModule);
 	*outputModule = someModule.get();

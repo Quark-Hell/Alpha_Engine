@@ -39,10 +39,10 @@ GameFunction* Game = new GameFunction;
 Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
 
+std::shared_ptr<Object> plane3;
+std::shared_ptr<Object> plane2;
 
 std::shared_ptr<Object> plane1;
-std::shared_ptr<Object> plane2;
-std::shared_ptr<Object> plane3;
 
 DirectLight dirLight;
 SpotLight sLight;
@@ -83,24 +83,24 @@ void GameFunction::Start() {
     Vector3 scale = Vector3{ 1,1,1 };
 
     plane1 = Primitives::Cube({ 0,0,0 }, rot, scale);
-    Mesh* mesh;
-    plane1->AddModule(BoxColliderType, (Module**)&(mesh));
-    plane1->AddPosition(0, -10, 0);
-    plane1->AddRotation(90, 0, 90);
-    plane1->SetScale(20, 20, 1);
+    plane1->AddRotation(90, 0, 0);
+    plane1->SetScale(10, 10, 0.1f);
+    plane1->AddPosition(0, -2, 0);
+    plane1->AddModule(MeshColliderType);
+ 
 
-    plane2 = Primitives::Cube({ 0,2,-3 }, rot, scale);
+    plane2 = Primitives::Cube({ 0,1,-3 }, rot, scale);
     plane2->SetScale(0.5f, 0.5f, 0.5f);
     plane2->AddModule(MeshColliderType);
     plane2->AddModule(RigidBodyType);
 
 
-
-   //plane3 = Primitives::Cube({ 0,0,0 }, rot, scale);
-   //plane3->SetScale(0.5f, 1.5f, 0.5f);
-   //plane3->AddModule(MeshColliderType);
-   //plane3->AddModule(RigidBodyType);
-
+    plane3 = Primitives::Sphere({ 0,0,0 }, rot, scale);
+    plane3->SetScale(0.5f, 0.5f, 0.5f);
+    plane3->AddModule(MeshColliderType);
+    plane3->AddModule(RigidBodyType);
+    //RigidBody* rb = std::dynamic_pointer_cast<RigidBody>(plane3->GetModuleByType(RigidBodyType)).get();
+    //rb->Gravity = Vector3(0, -1, 0);
 
 
 
@@ -321,6 +321,7 @@ int main()
         render->RenderLoop(camera);
         World::EndFrame();
         std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << "\n";
+        //std::cout << "X: " << plane2->GetPosition().X << " Y:" << plane2->GetPosition().Y << " Z:" << plane2->GetPosition().Z << "\n";
     }
 
     glfwTerminate();

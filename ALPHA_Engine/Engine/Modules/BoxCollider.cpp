@@ -17,6 +17,9 @@ BoxCollider::~BoxCollider() {
 void BoxCollider::SetParentObject(const Object& parent) {
 	BoxCollider::ApplyTransformation();
 	ParentObject = const_cast<Object*>(&parent);
+#ifdef _DEBUG
+	BoxCollider::_debugMesh->SetParentObject(*MeshCollider::ParentObject);
+#endif
 	BoxCollider::ReExpandedCollider();
 }
 

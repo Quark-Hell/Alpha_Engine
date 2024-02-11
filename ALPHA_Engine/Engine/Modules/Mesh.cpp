@@ -1,8 +1,11 @@
 #include "Mesh.h"
+#include "Object.h"
 
 #pragma region Mesh Define
 Mesh::Mesh() {
 	_material->_parentMesh = this;
+
+	_scale = Vector3(0,0,0);
 }
 Mesh::~Mesh() {
 
@@ -265,6 +268,44 @@ bool Mesh::BindMesh() {
 
 	return true;
 }
+
+void Mesh::ApplyTransformation()
+{
+	Vector4 parentRotation;
+	Vector3 parentPosition;
+	Vector3 parentScale;
+
+	if (ParentObject != nullptr) {
+		parentRotation = ParentObject->GetRotation();
+		parentPosition = ParentObject->GetPosition();
+		parentScale = ParentObject->GetScale();
+	}
+
+	glm::mat4x4 rotMat(1.0f);
+
+	const float radX = M_PI / 180 * (Mesh::_rotation.X + parentRotation.X);
+	const float radY = M_PI / 180 * (Mesh::_rotation.Y + parentRotation.Y);
+	const float radZ = M_PI / 180 * (Mesh::_rotation.Z + parentRotation.Z);
+
+	rotMat = glm::rotate(rotMat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+	rotMat = glm::rotate(rotMat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+	rotMat = glm::rotate(rotMat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+
+	glm::mat4x4 transMat(1.0f);
+	transMat = glm::translate(glm::vec3(
+		Mesh::_position.X + parentPosition.X, 
+		Mesh::_position.Y + parentPosition.Y,
+		Mesh::_position.Z + parentPosition.Z));
+
+	glm::mat4x4 scaleMat(1.0f);
+	scaleMat = glm::scale(scaleMat, glm::vec3(
+		Mesh::_scale.X + parentScale.X,
+		Mesh::_scale.Y + parentScale.Y,
+		Mesh::_scale.Z + parentScale.Z));
+
+	Mesh::_transformMatrix = transMat * rotMat * scaleMat;
+}
+
 void Mesh::ApplyMeshSettings(std::shared_ptr<Camera> camera)
 {
 	Mesh::_material->ApplyMaterialSettings(camera);
@@ -275,11 +316,7 @@ void Mesh::ApplyMeshSettings(std::shared_ptr<Camera> camera)
 	glm::mat3x3 transMat = glm::transpose(glm::inverse(_transformMatrix));
 	Mesh::_material->_shader->SetValue(ShadersType::VertexShader, "trans_model_mat", &transMat);
 
-	//glm::mat4x4 MPV = camera->GetProjectionMatrix() * camera->GetTransformMatrix() * _transformMatrix;
 	glm::mat4x4 MVP = camera->GetProjectionMatrix() * camera->GetTransformMatrix() * _transformMatrix;
 	Mesh::_material->_shader->SetValue(ShadersType::VertexShader, "MVP", &(MVP));
-
-	//glm::mat4x4 MPV = camera->GetTransformMatrix() * camera->GetProjectionMatrix() *  _transformMatrix;
-	//Mesh::_material->_shader->SetValue(ShadersType::VertexShader, "MPV", &MPV);
 }
 #pragma endregion

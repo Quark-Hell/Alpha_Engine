@@ -3,15 +3,9 @@
 
 MeshCollider::MeshCollider(std::string linkToFBX) {
     MeshCollider::Create(linkToFBX);
-
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->SetParentObject(*MeshCollider::ParentObject);
-#endif
 }
 MeshCollider::MeshCollider() {
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->SetParentObject(*MeshCollider::ParentObject);
-#endif
+
 }
 MeshCollider::~MeshCollider() {
 
@@ -86,108 +80,23 @@ bool MeshCollider::Create()
     return true;
 }
 
-void MeshCollider::AddPosition(float X, float Y, float Z) {
-    Geometry::AddPosition(X, Y, Z);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->AddPosition(X, Y, Z);
-#endif
-}
+void MeshCollider::SetParentObject(const Object& parent)
+{
+    if (MeshCollider::ParentObject != nullptr) {
+        Object* obj = const_cast<Object*>(&parent);
+        MeshCollider::InitTransformatiom(*ParentObject, *obj);
+    }
 
-void MeshCollider::AddPosition(Vector3 position) {
-    Geometry::AddPosition(position);
+    MeshCollider::ParentObject = const_cast<Object*>(&parent);
 #ifdef _DEBUG
-    MeshCollider::_debugMesh->AddPosition(position);
+    MeshCollider::_debugMesh->SetParentObject(*MeshCollider::ParentObject);
 #endif
 }
-void MeshCollider::SetPosition(float X, float Y, float Z) {
-    Geometry::SetPosition(X, Y, Z);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->SetPosition(X, Y, Z);
-#endif
-}
-void MeshCollider::SetPosition(Vector3 position) {
-    Geometry::SetPosition(position);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->SetPosition(position);
-#endif
-}
-
-void MeshCollider::AddOriginPosition(float X, float Y, float Z) {
-    Geometry::AddOriginPosition(X, Y, Z);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->AddOriginPosition(X, Y, Z);
-#endif
-}
-void MeshCollider::AddOriginPosition(Vector3 position) {
-    Geometry::AddOriginPosition(position);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->AddOriginPosition(position);
-#endif
-}
-
-void MeshCollider::SetOriginPosition(float X, float Y, float Z) {
-    Geometry::SetOriginPosition(X, Y, Z);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->SetOriginPosition(X, Y, Z);
-#endif
-}
-void MeshCollider::SetOriginPosition(Vector3 position) {
-    Geometry::SetOriginPosition(position);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->SetOriginPosition(position);
-#endif
-}
-
-
-void MeshCollider::AddRotation(float X, float Y, float Z) {
-    Geometry::AddRotation(X, Y, Z);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->AddRotation(X, Y, Z);
-#endif
-}
-void MeshCollider::AddRotation(Vector3 rotation) {
-    Geometry::AddRotation(rotation);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->AddRotation(rotation);
-#endif
-}
-
-void MeshCollider::SetRotation(float X, float Y, float Z) {
-    Geometry::SetRotation(X, Y, Z);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->SetRotation(X, Y, Z);
-#endif
-}
-void MeshCollider::SetRotation(Vector3 rotation) {
-    Geometry::SetRotation(rotation);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->SetRotation(rotation);
-#endif
-}
-
-
-void MeshCollider::SetScale(float X, float Y, float Z) {
-    Geometry::SetScale(X, Y, Z);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->SetScale(X, Y, Z);
-#endif
-}
-void MeshCollider::SetScale(Vector3 scale) {
-    Geometry::SetScale(scale);
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->SetScale(scale);
-#endif
-}
-
 
 void MeshCollider::ApplyTransformation() {
     if (MeshCollider::GetParentObject() != nullptr) {
 
         MeshCollider::_transformMatrix = MeshCollider::GetParentObject()->GetTransformationMatrix() * MeshCollider::_transformMatrix;
-    }
-    else
-    {
-        return;
     }
 
     for (size_t jt = 0; jt < MeshCollider::_vertexCount * 3; jt += 3)
@@ -209,17 +118,113 @@ void MeshCollider::ApplyTransformation() {
     MeshCollider::_transformMatrix = glm::mat4x4(1.0f);
 }
 
+void MeshCollider::InitTransformatiom(Object& newParent)
+{
+    Vector3 posDelta = newParent.GetPosition();
+    Vector4 rotDelta = newParent.GetRotation();
+    Vector3 scaleDelta = newParent.GetScale();
+
+    glm::mat4x4 rotMat(1.0f);
+
+    const float radX = M_PI / 180 * rotDelta.X;
+    const float radY = M_PI / 180 * rotDelta.Y;
+    const float radZ = M_PI / 180 * rotDelta.Z;
+
+    rotMat = glm::rotate(rotMat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+    rotMat = glm::rotate(rotMat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+    rotMat = glm::rotate(rotMat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    glm::mat4x4 transMat(1.0f);
+    transMat = glm::translate(glm::vec3(
+        posDelta.X,
+        posDelta.Y,
+        posDelta.Z));
+
+    glm::mat4x4 scaleMat(1.0f);
+    scaleMat = glm::scale(scaleMat, glm::vec3(
+        scaleDelta.X,
+        scaleDelta.Y,
+        scaleDelta.Z));
+
+    glm::mat4x4 deltaMat = rotMat * scaleMat;
+
+
+    MeshCollider::_transformMatrix = deltaMat * MeshCollider::_transformMatrix;
+
+    for (size_t jt = 0; jt < MeshCollider::_vertexCount * 3; jt += 3)
+    {
+        glm::vec4 buf(MeshCollider::_vertex[jt], MeshCollider::_vertex[jt + 1], MeshCollider::_vertex[jt + 2], 1);
+
+        glm::vec4 res;
+        res = MeshCollider::_transformMatrix * buf;
+        MeshCollider::_vertex[jt + 0] = res.x;
+        MeshCollider::_vertex[jt + 1] = res.y;
+        MeshCollider::_vertex[jt + 2] = res.z;
+    }
+
+    MeshCollider::_transformMatrix = glm::mat4x4(1.0f);
+}
+
+void MeshCollider::InitTransformatiom(Object& oldParent, Object& newParent)
+{
+    Vector3 posDelta = newParent.GetPosition() - oldParent.GetPosition();
+    Vector4 rotDelta = newParent.GetRotation() - oldParent.GetRotation();
+    Vector3 scaleDelta = newParent.GetScale() - oldParent.GetScale();
+
+    glm::mat4x4 rotMat(1.0f);
+
+    const float radX = M_PI / 180 * rotDelta.X;
+    const float radY = M_PI / 180 * rotDelta.Y;
+    const float radZ = M_PI / 180 * rotDelta.Z;
+
+    rotMat = glm::rotate(rotMat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+    rotMat = glm::rotate(rotMat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+    rotMat = glm::rotate(rotMat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    glm::mat4x4 transMat(1.0f);
+    transMat = glm::translate(glm::vec3(
+        posDelta.X,
+        posDelta.Y,
+        posDelta.Z));
+
+    glm::mat4x4 scaleMat(1.0f);
+    scaleMat = glm::scale(scaleMat, glm::vec3(
+        scaleDelta.X,
+        scaleDelta.Y,
+        scaleDelta.Z));
+
+    glm::mat4x4 deltaMat = transMat * rotMat * scaleMat;
+
+
+    MeshCollider::_transformMatrix = deltaMat * MeshCollider::_transformMatrix;
+
+    for (size_t jt = 0; jt < MeshCollider::_vertexCount * 3; jt += 3)
+    {
+        glm::vec4 buf(MeshCollider::_vertex[jt], MeshCollider::_vertex[jt + 1], MeshCollider::_vertex[jt + 2], 1);
+
+        glm::vec4 res;
+        res = MeshCollider::_transformMatrix * buf;
+        MeshCollider::_vertex[jt + 0] = res.x;
+        MeshCollider::_vertex[jt + 1] = res.y;
+        MeshCollider::_vertex[jt + 2] = res.z;
+    }
+
+    MeshCollider::_transformMatrix = glm::mat4x4(1.0f);
+}
+
 void MeshCollider::ModuleAdded()
 {
     Geometry::ModuleAdded();
     MeshCollider::Create();
+    MeshCollider::InitTransformatiom(*ParentObject);
+    //MeshCollider::ApplyTransformation();
 
 #ifdef _DEBUG
     MeshCollider::_debugMesh->SetParentObject(*MeshCollider::ParentObject);
-    MeshCollider::_debugMesh->ModuleAdded();
+    //MeshCollider::_debugMesh->ModuleAdded();
 #endif
 
-    Geometry::_isShifted = true;
+    //Geometry::_isShifted = true;
     //TODO: Add copy origin
     //Geometry::_origin = ParentObject->geto();
 }

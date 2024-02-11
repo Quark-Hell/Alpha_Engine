@@ -6,7 +6,7 @@ class Transform {
 protected:
 	Vector3 _position{ 0,0,0 };
 	Vector4 _rotation{ 0,0,0,1 };
-	Vector3 _scale{ 1,1,1 };
+	Vector3 _scale{ 0,0,0 };
 
 	Vector3 _origin{ 0,0,0 };
 

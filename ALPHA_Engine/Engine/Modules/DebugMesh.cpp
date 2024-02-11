@@ -3,6 +3,7 @@
 
 DebugMesh::DebugMesh()
 {
+    DebugMesh::Name = "DebugMesh";
 }
 
 DebugMesh::~DebugMesh()

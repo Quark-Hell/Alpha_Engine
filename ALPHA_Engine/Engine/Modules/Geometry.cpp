@@ -19,9 +19,9 @@ void Geometry::SetParentObject(const Object& parent) {
 
 void Geometry::ModuleAdded()
 {
-    Geometry::_position = ParentObject->GetPosition();
-    Geometry::_rotation = ParentObject->GetRotation();
-    Geometry::_scale = ParentObject->GetScale();
+    //Geometry::_position = ParentObject->GetPosition();
+    //Geometry::_rotation = ParentObject->GetRotation();
+    //Geometry::_scale = ParentObject->GetScale();
 
     //TODO: Add copy origin
     //Geometry::_origin = ParentObject->geto();
@@ -294,6 +294,7 @@ Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
         }
     }
 
+    Vector3 res = maxPoint + Geometry::GetParentObject()->GetPosition();
     return maxPoint + Geometry::GetParentObject()->GetPosition();
 }
 
@@ -398,21 +399,5 @@ void Geometry::SetScale(Vector3 scale) {
 
 void Geometry::ApplyTransformation()
 {
-    glm::mat4x4 rotMat(1.0f);
 
-    const float radX = M_PI / 180 * Geometry::_rotation.X;
-    const float radY = M_PI / 180 * Geometry::_rotation.Y;
-    const float radZ = M_PI / 180 * Geometry::_rotation.Z;
-
-    rotMat = glm::rotate(rotMat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-    rotMat = glm::rotate(rotMat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-    rotMat = glm::rotate(rotMat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
-
-    glm::mat4x4 transMat(1.0f);
-    transMat = glm::translate(glm::vec3(Geometry::_position.X, Geometry::_position.Y, Geometry::_position.Z));
-
-    glm::mat4x4 scaleMat(1.0f);
-    scaleMat = glm::scale(scaleMat, glm::vec3(Geometry::_scale.X, Geometry::_scale.Y, Geometry::_scale.Z));
-
-    Geometry::_transformMatrix = transMat * rotMat * scaleMat;
 }

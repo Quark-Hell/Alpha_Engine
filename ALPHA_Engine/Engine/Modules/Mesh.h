@@ -42,6 +42,10 @@ public:
 protected:
 	virtual void ApplyMeshSettings(std::shared_ptr<Camera> camera);
 
+#pragma region Redifine from Transfom
+	void ApplyTransformation() override;
+#pragma endregion
+
 	//bool Create(std::string linkToFBX) override;
 	//void DeleteMesh() override;
 };

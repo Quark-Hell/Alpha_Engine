@@ -259,11 +259,12 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB) {
                     rb2->_hasCollision = true;
 
                     colliderA.GetParentObject()->SetPosition(nowPos);
+                    Physics::Contact(*rb1, *rb2, -colInfo.Normal);
 
                     return true;
                 }
 
-                Physics::Contact(*rb1, *rb2, -colInfo.Normal);
+
             }
             return true;
         }
