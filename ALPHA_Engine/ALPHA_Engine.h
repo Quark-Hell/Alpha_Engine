@@ -7,6 +7,11 @@ public:
 
 };
 
+void InitSun();
+
+void InitPlanet1();
+void InitPlanet2();
+
 void SetControl();
 
 void LeftMoveTestObject();

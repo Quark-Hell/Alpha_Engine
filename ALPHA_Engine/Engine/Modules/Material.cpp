@@ -4,6 +4,16 @@ Material::Material()
 {
     _shader->_parentMaterial = this;
 
+    Material::LoadTexture(Diffuse, "\\Textures\\EmptyTexture.png");
+    Material::LoadTexture(Metallic, "\\Textures\\EmptyTexture.png");
+    Material::LoadTexture(Specular, "\\Textures\\EmptyTexture.png");
+    Material::LoadTexture(Roughness, "\\Textures\\EmptyTexture.png");
+    Material::LoadTexture(Anisotropic, "\\Textures\\EmptyTexture.png");
+    Material::LoadTexture(Emission, "\\Textures\\EmptyEmission.png");
+    Material::LoadTexture(NormalsMap, "\\Textures\\EmptyTexture.png");
+    Material::LoadTexture(OpacityMap, "\\Textures\\EmptyTexture.png");
+    Material::LoadTexture(OcclusionMap, "\\Textures\\EmptyTexture.png");
+
     Material::InitShader("\\Shaders\\BaseVertexShaders\\VertexShader.txt", ShadersType::VertexShader);
     Material::InitShader("\\Shaders\\BaseFragmentShaders\\FragmentShader.txt", ShadersType::FragmentShader);
 }
@@ -32,7 +42,7 @@ bool Material::InitShader(std::string pathToShader, ShadersType shaderType)
     return true;
 }
 
-bool Material::LoadMaterial(TypeOfTextuere typeOfTexture, std::string pathToTexture)
+bool Material::LoadTexture(TypeOfTextuere typeOfTexture, std::string pathToTexture)
 {
     unsigned char* data = nullptr;
     unsigned int width = 0;
@@ -182,7 +192,7 @@ bool Material::LoadMaterial(TypeOfTextuere typeOfTexture, std::string pathToText
     return true;
 }
 
-bool Material::LoadMaterial(const aiScene& scene, unsigned int matIndex) {
+bool Material::LoadTexture(const aiScene& scene, unsigned int matIndex) {
     Material::_diffuse.CreateTexture("\\Textures\\crate.png");
 
     glGenTextures(1, &Material::_diffuse.textureId);
@@ -269,7 +279,48 @@ void Material::ApplyMaterialSettings(std::shared_ptr<Camera> camera)
     Material::_shader->ApplyShadersSettings(camera);
 
     if (_diffuse.textureId != 0) {
-        glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE0 + 0);
         glBindTexture(GL_TEXTURE_2D, _diffuse.textureId);
+
+        _diffuse.textureLocation = glGetUniformLocation(Material::_shader->_programId.value(), "diffuseMap");
+        glUniform1i(_diffuse.textureLocation, 0);
+    }
+    if (_metallic.textureId != 0) {
+        glActiveTexture(GL_TEXTURE0 + 1);
+        glBindTexture(GL_TEXTURE_2D, _metallic.textureId);
+
+        //_metallic.textureLocation = glGetUniformLocation(Material::_shader->_programId.value(), "diffuseMap");
+        //glUniform1i(_metallic.textureLocation, 1);
+    }
+    if (_specular.textureId != 0) {
+        glActiveTexture(GL_TEXTURE0 + 2);
+        glBindTexture(GL_TEXTURE_2D, _specular.textureId);
+    }
+    if (_roughness.textureId != 0) {
+        glActiveTexture(GL_TEXTURE0 + 3);
+        glBindTexture(GL_TEXTURE_2D, _roughness.textureId);
+    }
+    if (_anisotropic.textureId != 0) {
+        glActiveTexture(GL_TEXTURE0 + 4);
+        glBindTexture(GL_TEXTURE_2D, _anisotropic.textureId);
+    }
+    if (_emission.textureId != 0) {
+        glActiveTexture(GL_TEXTURE0 + 5);
+        glBindTexture(GL_TEXTURE_2D, _emission.textureId);
+
+        _emission.textureLocation = glGetUniformLocation(Material::_shader->_programId.value(), "emissionMap");
+        glUniform1i(_emission.textureLocation, 5);
+    }
+    if (_normalsMap.textureId != 0) {
+        glActiveTexture(GL_TEXTURE0 + 6);
+        glBindTexture(GL_TEXTURE_2D, _normalsMap.textureId);
+    }
+    if (_opacityMap.textureId != 0) {
+        glActiveTexture(GL_TEXTURE0 + 7);
+        glBindTexture(GL_TEXTURE_2D, _opacityMap.textureId);
+    }
+    if (_occlusionMap.textureId != 0) {
+        glActiveTexture(GL_TEXTURE0 + 8);
+        glBindTexture(GL_TEXTURE_2D, _occlusionMap.textureId);
     }
 }

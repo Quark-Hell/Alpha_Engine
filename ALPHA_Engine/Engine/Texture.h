@@ -50,6 +50,7 @@ private:
 	unsigned int _channelsCount;
 
 	GLuint textureId;
+	unsigned int textureLocation;
 
 	//Other representation(DirectX, Vulkan...)
 

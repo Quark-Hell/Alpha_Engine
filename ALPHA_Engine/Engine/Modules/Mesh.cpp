@@ -85,12 +85,6 @@ bool Mesh::Create(std::string linkToFBX) {
 	}
 
 
-	//Material* mat = (Material*)Mesh::GetSubModuleByType(MaterialType).get();
-	if (Mesh::_material != nullptr) {
-		Mesh::_material->LoadMaterial(TypeOfTextuere::Diffuse,"\\Textures\\Stones.jpg");
-	}
-
-
 	Mesh::_isIndexed = true;
 	//Mesh::_isShifted = true;
 
@@ -166,7 +160,7 @@ bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool
 
 	//Material* mat = (Material*)Mesh::GetSubModuleByType(MaterialType).get();
 	if (Mesh::_material != nullptr && initMaterial) {
-		Mesh::_material->LoadMaterial(TypeOfTextuere::Diffuse,"\\Textures\\Stones.jpg");
+		Mesh::_material->LoadTexture(TypeOfTextuere::Diffuse,"\\Textures\\Stones.jpg");
 	}
 
 

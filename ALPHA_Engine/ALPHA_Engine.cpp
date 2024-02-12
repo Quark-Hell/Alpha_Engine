@@ -39,14 +39,13 @@ GameFunction* Game = new GameFunction;
 Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
 
-std::shared_ptr<Object> plane3;
-std::shared_ptr<Object> plane2;
+std::shared_ptr<Object> Sun;
+std::shared_ptr<Object> Planet1;
+std::shared_ptr<Object> Planet2;
 
-std::shared_ptr<Object> plane1;
-
-DirectLight dirLight;
-SpotLight sLight;
 PointLight pLight;
+//DirectLight dirLight;
+//SpotLight sLight;
 
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
@@ -54,81 +53,36 @@ std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 void GameFunction::Start() {
     SetControl();
 
-    dirLight.Name = "dirLight";
-    dirLight.color = Vector3(1, 0.988, 0.792);
-    dirLight.strength = 0.3f;
+    InitSun();
+    InitPlanet1();
+    InitPlanet2();
 
-    sLight.Name = "SpotLight";
-    
-    sLight.SetPosition(0, -1, 0);
-    sLight.AddRotation(0,0,-15);
-    sLight.color = Vector3(0.639, 0.847, 0.851);
-    sLight.strength = 8.3f;
-    sLight.CutOff = glm::cos(glm::radians(22.5f));
-    sLight.OuterCutOff = glm::cos(glm::radians(35.5f));
+    //dirLight.Name = "dirLight";
+    //dirLight.color = Vector3(1, 0.988, 0.792);
+    //dirLight.strength = 0.3f;
 
-    pLight.Name = "PointLight";
-    
-    pLight.SetPosition(0, 3, 0);
-    pLight.color = Vector3(0.639, 0.847, 0.851);
-    pLight.strength = 30.3f;
-    pLight.radius = 6;
+    //sLight.Name = "SpotLight";
+    //
+    //sLight.SetPosition(0, -1, 0);
+    //sLight.AddRotation(0,0,-15);
+    //sLight.color = Vector3(0.639, 0.847, 0.851);
+    //sLight.strength = 8.3f;
+    //sLight.CutOff = glm::cos(glm::radians(22.5f));
+    //sLight.OuterCutOff = glm::cos(glm::radians(35.5f));
+
 
     World::DebugRenderEnabled = true;
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
 
     //MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
-    Vector3 pos = Vector3{ 0,0,-15 };
-    Vector3 rot = Vector3{ 0,0,0 };
-    Vector3 scale = Vector3{ 1,1,1 };
-
-    plane1 = Primitives::Cube({ 0,0,0 }, rot, scale);
-    plane1->AddRotation(90, 0, 0);
-    plane1->SetScale(10, 10, 0.1f);
-    plane1->AddPosition(0, -2, 0);
-    plane1->AddModule(MeshColliderType);
  
 
-    plane2 = Primitives::Cube({ 0,1,-3 }, rot, scale);
-    plane2->SetScale(0.5f, 0.5f, 0.5f);
-    plane2->AddModule(MeshColliderType);
-    plane2->AddModule(RigidBodyType);
-
-
-    plane3 = Primitives::Sphere({ 0,0,0 }, rot, scale);
-    plane3->SetScale(0.5f, 0.5f, 0.5f);
-    plane3->AddModule(MeshColliderType);
-    plane3->AddModule(RigidBodyType);
     //RigidBody* rb = std::dynamic_pointer_cast<RigidBody>(plane3->GetModuleByType(RigidBodyType)).get();
     //rb->Gravity = Vector3(0, -1, 0);
-
-
-
-
-    //
-    //plane = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    //plane->AddModule(std::static_pointer_cast<Module>(col3));
-    //plane->AddPosition(0, 5, -10);
-    //plane->AddRotation(90, 0, 0);
-    //plane->SetScale(5, 5, 0.5);
-    //// 
-    //plane->AddOriginPosition(-2.5,0,0);
-
-    //object2 = Primitives::Cube({ 0,0,0 }, rot, scale, color);
-    //object2->AddModule(std::static_pointer_cast<Module>(col2));
-    ////object2->AddModule(std::static_pointer_cast<Module>(rb2));
-    //object2->AddRotation(0, 0, 20);
-    //object2->AddPosition(-2.5, 9, -10);
-    //object2->SetScale(1, 1, 1);
-
-    //Mesh* mesh = (Mesh*)(object2->GetModuleByType(MeshType).get());
-    //Material* mat = (Material*)mesh->GetSubModuleByType(MaterialType).get();
-
-    //ambLight.AddPosition(0, -8, 0);
 }
 
 void GameFunction::Update() {
-    sLight.AddRotation(0, -5, 0); 
+    //sLight.AddRotation(0, -5, 0); 
     //plane2->AddRotation(0, -5, 0);
 
       //plane1->AddRotation({ 0, 0, -0.5 });
@@ -144,6 +98,36 @@ void GameFunction::Update() {
 
     //std::cout << object->GetPosition().Z;
     //std::cout << "\n";
+}
+
+void InitSun()
+{
+    pLight.Name = "PointLight";
+
+    pLight.SetPosition(0, 0, 0);
+    pLight.color = Vector3(0.988, 0.792, 0.463);
+    pLight.strength = 4;
+    pLight.radius = 25;
+
+    Sun = Primitives::Sphere({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(1, 1, 1));
+    Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Sun->GetModuleByType(MeshType)).get();
+    mesh->_material->LoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
+    mesh->_material->LoadTexture(Emission, "\\Textures\\suncyl1-grayscale.jpg");
+}
+
+void InitPlanet1()
+{
+    Planet1 = Primitives::Sphere({ 0,1,-3 }, Vector4(0, 0, 0, 1), Vector3(0.3f, 0.3f, 0.3f));
+    Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
+    mesh->_material->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_lava_Base_Color.jpg");
+    mesh->_material->LoadTexture(Emission, "\\Textures\\Planets\\planet_lava_Emissive.png");
+}
+
+void InitPlanet2()
+{
+    Planet2 = Primitives::Sphere({ -6,-1,-3 }, Vector4(70, 0, 0, 1), Vector3(0.5f, 0.5f, 0.5f));
+    Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
+    mesh->_material->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_continental_Base_Color.jpg");
 }
 
 void SetControl() {

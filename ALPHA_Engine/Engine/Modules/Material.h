@@ -45,7 +45,7 @@ public:
 
 	bool InitShader(std::string pathToShader, ShadersType shaderType);
 
-	bool LoadMaterial(TypeOfTextuere typeOfTexture, std::string pathToTexture);
+	bool LoadTexture(TypeOfTextuere typeOfTexture, std::string pathToTexture);
 
 	void ApplyMaterialSettings(std::shared_ptr<Camera> camera);
 
@@ -53,7 +53,7 @@ public:
 	void DeleteTextures();
 
 private:
-	bool LoadMaterial(const aiScene& scene, unsigned int matIndex);
+	bool LoadTexture(const aiScene& scene, unsigned int matIndex);
 
 private:
 	Mesh* _parentMesh;
