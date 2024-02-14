@@ -70,5 +70,8 @@ private:
 	friend class Light;
 	friend class ShaderProgram;
 
+	//TODO: Create interface instead friend
+	friend class OpaqueShader;
+
 	World();
 };

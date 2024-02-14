@@ -33,6 +33,18 @@ enum EnumTypeOfMIPMAP {
 	LinearMipmapLinear = 3
 };
 
+enum TypeOfTextuere {
+	Diffuse = 0,
+	Metallic = 1,
+	Specular = 2,
+	Roughness = 3,
+	Anisotropic = 4,
+	Emission = 5,
+	NormalsMap = 6,
+	OpacityMap = 7,
+	OcclusionMap = 8
+};
+
 class Texture {
 	//https://dtf.ru/gamedev/244935-iz-chego-sostoit-grafika#first
 
@@ -43,13 +55,13 @@ class Texture {
 private:
 	std::string _texturePath;
 
-	std::unique_ptr<unsigned char> _texture = std::unique_ptr<unsigned char>();
+	std::unique_ptr<unsigned char> _textureData = std::unique_ptr<unsigned char>();
 
 	unsigned int _width;
 	unsigned int _height;
 	unsigned int _channelsCount;
 
-	GLuint textureId;
+	unsigned int textureId;
 	unsigned int textureLocation;
 
 	//Other representation(DirectX, Vulkan...)
@@ -65,7 +77,14 @@ public:
 	void CreateTexture(std::string pathToTexture);
 	void DeleteTexture();
 
+	bool TransferToGPU();
+
 	void SetTypeOfWrapping(EnumTypeOfWrapping xType, EnumTypeOfWrapping yType);
 	void SetTypeOfTextureFiltering(EnumTypeOfTextureFiltering minType, EnumTypeOfTextureFiltering magType);
 	void SetTypeOfMIPMAP(EnumTypeOfMIPMAP minType, EnumTypeOfMIPMAP magType);
+
+	unsigned int GetTextureId();
+	unsigned int GetTextureLocation();
+
+	bool BindTexture(unsigned int index, unsigned int programId, std::string samplerName);
 };

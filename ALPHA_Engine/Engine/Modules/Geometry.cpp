@@ -401,3 +401,9 @@ void Geometry::ApplyTransformation()
 {
 
 }
+
+glm::mat4x4 Geometry::GetTransformMatrix()
+{
+    ApplyTransformation();
+    return _transformMatrix;
+}

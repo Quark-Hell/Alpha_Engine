@@ -5,12 +5,7 @@
 #include "Modules/Camera.h"
 
 class Mesh : public Geometry {
-private:
-	friend class Object;
-	friend class Render;
-	friend class MeshCollider;
-
-private:
+protected:
 	std::shared_ptr<std::vector<float>> _vertexColors = std::make_shared<std::vector<float>>();
 	std::shared_ptr<std::vector<float>> _texCoords = std::make_shared<std::vector<float>>();
 
@@ -35,16 +30,18 @@ public:
 	bool Create(std::string linkToFBX, bool initIndices, bool initVertex, bool initNormals, bool initTexCoord, bool initMaterial) override;
 
 	bool LoadTextureCoord(std::string pathToCoords);
-	bool LoadTextureCoord(const aiScene& scene, unsigned int matIndex);
 
 	virtual bool BindMesh();
 
-protected:
-	virtual void ApplyMeshSettings(std::shared_ptr<Camera> camera);
-
 #pragma region Redifine from Transfom
+protected:
 	void ApplyTransformation() override;
 #pragma endregion
+
+protected:
+	friend class Object;
+	friend class Render;
+	friend class MeshCollider;
 
 	//bool Create(std::string linkToFBX) override;
 	//void DeleteMesh() override;

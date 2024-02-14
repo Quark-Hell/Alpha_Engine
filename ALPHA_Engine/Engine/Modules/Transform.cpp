@@ -49,6 +49,11 @@ void Transform::SetOriginPosition(Vector3 position) {
     Transform::AddOriginPosition(direction);
 }
 
+glm::mat4x4 Transform::GetTransformMatrix()
+{
+    return Transform::_transformMatrix;
+}
+
 
 
 Vector4 Transform::GetRotation() {

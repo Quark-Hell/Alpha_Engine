@@ -20,7 +20,7 @@
 
 #include "gtc/type_ptr.hpp"
 
-#include "ShaderProgram.h"
+#include "ShadersProgram/ShaderProgram.h"
 
 #include "Modules/Light/DirectLight.h"
 #include "Modules/Light/PointLight.h"
@@ -162,39 +162,41 @@ void Render::SetDebugRenderOptions() {
 }
 
 void Render::RenderMesh(Mesh& mesh, std::shared_ptr<Camera> camera) {
-    Render::SetMeshRenderOptions();
+    if (mesh._material->Shader == nullptr)
+        return;
 
-    if (mesh._material->_shader->GetCompiledStatus() == true) {
-        glUseProgram(mesh._material->_shader->GetProgramId().value());
-        glBindVertexArray(mesh._vao);
+    if (mesh._material->Shader->GetCompiledStatus() == false)
+        return;
 
-        mesh.ApplyMeshSettings(camera);
+    glUseProgram(mesh._material->Shader->GetProgramId());
+    glBindVertexArray(mesh._vao);
 
-        glDrawElements(GL_TRIANGLES, mesh._indices->size(), GL_UNSIGNED_INT, mesh._indices->data());
-        glBindVertexArray(0);
-    }
+    mesh._material->Shader->ApplyShadersSettings(camera);
+
+    glDrawElements(GL_TRIANGLES, mesh._indices->size(), GL_UNSIGNED_INT, mesh._indices->data());
+    glBindVertexArray(0);
 }
 
 void Render::RenderCollider(MeshCollider& collider, std::shared_ptr<Camera> camera) {
 #ifdef _DEBUG
-    Render::SetDebugRenderOptions();
-    glColor3f(0.2, 0.8, 0.2);
-
-    if (collider._debugMesh->_vertexCount == 0)
-        return;
-
-    if (collider._debugMesh->_indices->size() == 0)
-        return;
-
-    if (collider._debugMesh->_material->_shader->GetCompiledStatus() == true) {
-        glUseProgram(collider._debugMesh->_material->_shader->GetProgramId().value());
-        glBindVertexArray(collider._debugMesh->_vao);
-        
-        collider._debugMesh->ApplyMeshSettings(camera);
-        
-        glDrawElements(GL_TRIANGLES, collider._debugMesh->_indices->size(), GL_UNSIGNED_INT, collider._debugMesh->_indices->data());
-        glBindVertexArray(0);
-    }
+    //Render::SetDebugRenderOptions();
+    //glColor3f(0.2, 0.8, 0.2);
+    //
+    //if (collider._debugMesh->_vertexCount == 0)
+    //    return;
+    //
+    //if (collider._debugMesh->_indices->size() == 0)
+    //    return;
+    //
+    //if (collider._debugMesh->_material->_shader->GetCompiledStatus() == true) {
+    //    glUseProgram(collider._debugMesh->_material->_shader->GetProgramId());
+    //    glBindVertexArray(collider._debugMesh->_vao);
+    //    
+    //    collider._debugMesh->ApplyMeshSettings(camera);
+    //    
+    //    glDrawElements(GL_TRIANGLES, collider._debugMesh->_indices->size(), GL_UNSIGNED_INT, collider._debugMesh->_indices->data());
+    //    glBindVertexArray(0);
+    //}
 #endif
 }
 void Render::RenderRigidBodyInfo(RigidBody& rb) {
@@ -258,6 +260,7 @@ void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
             if (type == MeshType) {
                 std::shared_ptr<Mesh> mesh = std::dynamic_pointer_cast<Mesh>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
                 //Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
+                Render::SetMeshRenderOptions();
                 Render::RenderMesh(*mesh, camera);
             }
 
@@ -271,7 +274,10 @@ void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
           
           if (collider != nullptr) {
               //Render::ApplyTransformation(World::ObjectsOnScene[i]->GetPosition(), World::ObjectsOnScene[i]->GetRotation(), World::ObjectsOnScene[i]->GetScale());
-                RenderCollider(*collider, camera);
+              Render::SetDebugRenderOptions();
+              glColor3f(0.2, 0.8, 0.2);
+              //RenderCollider(*collider, camera);
+              Render::RenderMesh(*collider->_debugMesh, camera);
               //RenderAABB(collider->_AABBvertex, collider->_AABBindices);
           }
           //

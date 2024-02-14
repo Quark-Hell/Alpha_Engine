@@ -30,6 +30,9 @@
 #include "Modules/Light/PointLight.h"
 #include "Modules/Light/SpotLight.h"
 
+#include "ShadersProgram/ShaderProgram.h"
+#include "ShadersProgram/OpaqueShader.h"
+
 #include "Texture.h"
 
 Object Player;
@@ -111,23 +114,35 @@ void InitSun()
 
     Sun = Primitives::Sphere({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(1, 1, 1));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Sun->GetModuleByType(MeshType)).get();
-    mesh->_material->LoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
-    mesh->_material->LoadTexture(Emission, "\\Textures\\suncyl1-grayscale.jpg");
+
+    mesh->_material->Shader = std::make_shared<OpaqueShader>();
+    mesh->_material->Shader->SetParent(*mesh->_material);
+
+    mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
+    mesh->_material->Shader->LoadTexture(Emission, "\\Textures\\suncyl1-grayscale.jpg");
 }
 
 void InitPlanet1()
 {
     Planet1 = Primitives::Sphere({ 0,1,-3 }, Vector4(0, 0, 0, 1), Vector3(0.3f, 0.3f, 0.3f));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
-    mesh->_material->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_lava_Base_Color.jpg");
-    mesh->_material->LoadTexture(Emission, "\\Textures\\Planets\\planet_lava_Emissive.png");
+
+    mesh->_material->Shader = std::make_shared<OpaqueShader>();
+    mesh->_material->Shader->SetParent(*mesh->_material);
+
+    mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_lava_Base_Color.jpg");
+    mesh->_material->Shader->LoadTexture(Emission, "\\Textures\\Planets\\planet_lava_Emissive.png");
 }
 
 void InitPlanet2()
 {
     Planet2 = Primitives::Sphere({ -6,-1,-3 }, Vector4(70, 0, 0, 1), Vector3(0.5f, 0.5f, 0.5f));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
-    mesh->_material->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_continental_Base_Color.jpg");
+
+    mesh->_material->Shader = std::make_shared<OpaqueShader>();
+    mesh->_material->Shader->SetParent(*mesh->_material);
+
+    mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_continental_Base_Color.jpg");
 }
 
 void SetControl() {

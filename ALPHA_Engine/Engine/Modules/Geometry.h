@@ -63,6 +63,8 @@ public:
 	void SetOriginPosition(Vector3 position) override;
 
 	void ApplyTransformation() override;
+
+	glm::mat4x4 GetTransformMatrix() override;
 #pragma endregion
 
 	void ModuleAdded() override;

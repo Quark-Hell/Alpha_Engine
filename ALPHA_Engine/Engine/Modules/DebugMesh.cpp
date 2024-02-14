@@ -1,9 +1,14 @@
 #include "Modules/DebugMesh.h"
 #include "World.h"
 
+#include "ShadersProgram/ColliderWireframeShader.h"
+
 DebugMesh::DebugMesh()
 {
     DebugMesh::Name = "DebugMesh";
+
+    DebugMesh::_material->Shader = std::make_shared<ColliderWireframeShader>();
+    DebugMesh::_material->Shader->SetParent(*DebugMesh::_material);
 }
 
 DebugMesh::~DebugMesh()
@@ -21,41 +26,38 @@ bool DebugMesh::Create(std::string linkToFBX)
         free(DebugMesh::_vertex);
         DebugMesh::_vertexCount = 0;
     }
-
+    
     DebugMesh::_indices->clear();
-
+    
     Assimp::Importer importer;
     std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
-
+    
     //TODO: Check if fbx
     const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
     aiMesh* mesh = s->mMeshes[0];
-
+    
     DebugMesh::_indices->reserve(mesh->mNumFaces * 3);
-
+    
     for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
         for (size_t jt = 0; jt < mesh->mFaces[it].mNumIndices; jt++)
         {
             DebugMesh::_indices->push_back(mesh->mFaces[it].mIndices[jt]);
         }
     }
-
+    
     if (mesh->HasPositions()) {
         DebugMesh::_vertexCount = mesh->mNumVertices;
         DebugMesh::_vertex = new float[DebugMesh::_vertexCount * 3];
-
+    
         for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
-
+    
             DebugMesh::_vertex[it] = mesh->mVertices[it / 3].x;
             DebugMesh::_vertex[it + 1] = mesh->mVertices[it / 3].y;
             DebugMesh::_vertex[it + 2] = mesh->mVertices[it / 3].z;
         }
     }
-
+    
     DebugMesh::BindMesh();
-
-    DebugMesh::_material->InitShader("\\Shaders\\BaseVertexShaders\\WireframeVertexShader.txt", ShadersType::VertexShader);
-    DebugMesh::_material->InitShader("\\Shaders\\BaseFragmentShaders\\WireframeFragmentShader.txt", ShadersType::FragmentShader);
 
     return true;
 }
@@ -63,20 +65,17 @@ bool DebugMesh::Create(std::string linkToFBX)
 bool DebugMesh::Create(Geometry& geometry)
 {
     _indices = geometry._indices;
-
+    
     _vertexCount = geometry._vertexCount;
     _vertex = new float[geometry._vertexCount * 3];
-
+    
     for (std::uint32_t it = 0; it < geometry._vertexCount * 3; it++)
     {
         _vertex[it] = geometry._vertex[it];
     }
-
+    
     BindMesh();
-
-    _material->InitShader("\\Shaders\\BaseVertexShaders\\WireframeVertexShader.txt", ShadersType::VertexShader);
-    _material->InitShader("\\Shaders\\BaseFragmentShaders\\WireframeFragmentShader.txt", ShadersType::FragmentShader);
-
+    
     return true;
 }
 
@@ -106,14 +105,4 @@ bool DebugMesh::BindMesh()
     }
 
     return true;
-}
-
-void DebugMesh::ApplyMeshSettings(std::shared_ptr<Camera> camera)
-{
-    glm::mat4x4 viewMat = camera->GetProjectionMatrix() * camera->GetTransformMatrix();
-    DebugMesh::_material->_shader->SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
-    
-    DebugMesh::_material->_shader->SetValue(ShadersType::VertexShader, "model_matrix", &_transformMatrix);
-    
-    //DebugMesh::_material->_shader->SetValue(ShadersType::VertexShader, "color", &World::DebugWireframeColor);
 }

@@ -43,6 +43,8 @@ public:
 	virtual void SetOriginPosition(float X, float Y, float Z);
 	virtual void SetOriginPosition(Vector3 position);
 
+	virtual glm::mat4x4 GetTransformMatrix();
+
 public:
 	virtual void ApplyTransformation() = 0;
 };

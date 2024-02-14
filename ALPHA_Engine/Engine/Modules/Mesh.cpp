@@ -86,7 +86,7 @@ bool Mesh::Create(std::string linkToFBX) {
 
 
 	Mesh::_isIndexed = true;
-	//Mesh::_isShifted = true;
+	Mesh::_isShifted = true;
 
 	Mesh::BindMesh();
 	return true;
@@ -158,14 +158,8 @@ bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool
 	}
 
 
-	//Material* mat = (Material*)Mesh::GetSubModuleByType(MaterialType).get();
-	if (Mesh::_material != nullptr && initMaterial) {
-		Mesh::_material->LoadTexture(TypeOfTextuere::Diffuse,"\\Textures\\Stones.jpg");
-	}
-
-
 	Mesh::_isIndexed = true;
-	//Mesh::_isShifted = true;
+	Mesh::_isShifted = true;
 
 	Mesh::BindMesh();
 	return true;
@@ -173,30 +167,6 @@ bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool
 
 bool Mesh::LoadTextureCoord(std::string pathToCoords) {
 	return false;
-}
-
-bool Mesh::LoadTextureCoord(const aiScene& scene, unsigned int matIndex) {
-	//TODO: Check if fbx
-	aiMesh* mesh = scene.mMeshes[0];
-	if (!mesh->HasTextureCoords(0))
-		return false;
-
-	Mesh::_texCoords->clear();
-	//Material::_texCoords.get()->resize(mesh->mNumVertices * 2);
-
-	aiMaterial* material = scene.mMaterials[matIndex];
-
-	aiString path;
-	if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-		Mesh::_material->_diffuse._texturePath = path.C_Str();
-	}
-
-	for (std::uint32_t it = 0; it < mesh->mNumVertices * 2; it++) {
-		Mesh::_texCoords->push_back(mesh->mTextureCoords[0][it].x);
-		Mesh::_texCoords->push_back(mesh->mTextureCoords[0][it].y);
-	}
-
-	return true;
 }
 
 bool Mesh::BindMesh() {
@@ -300,17 +270,4 @@ void Mesh::ApplyTransformation()
 	Mesh::_transformMatrix = transMat * rotMat * scaleMat;
 }
 
-void Mesh::ApplyMeshSettings(std::shared_ptr<Camera> camera)
-{
-	Mesh::_material->ApplyMaterialSettings(camera);
-
-	glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
-	Mesh::_material->_shader->SetValue(ShadersType::VertexShader, "model_matrix", &_transformMatrix);
-
-	glm::mat3x3 transMat = glm::transpose(glm::inverse(_transformMatrix));
-	Mesh::_material->_shader->SetValue(ShadersType::VertexShader, "trans_model_mat", &transMat);
-
-	glm::mat4x4 MVP = camera->GetProjectionMatrix() * camera->GetTransformMatrix() * _transformMatrix;
-	Mesh::_material->_shader->SetValue(ShadersType::VertexShader, "MVP", &(MVP));
-}
 #pragma endregion
