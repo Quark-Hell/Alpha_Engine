@@ -32,8 +32,11 @@
 
 #include "ShadersProgram/ShaderProgram.h"
 #include "ShadersProgram/OpaqueShader.h"
+#include "ShadersProgram/CubeMapShader.h"
 
 #include "Texture.h"
+
+std::shared_ptr<Object> CubeMapObj;
 
 Object Player;
 std::shared_ptr<Camera> camera = std::make_shared<Camera>();
@@ -42,9 +45,14 @@ GameFunction* Game = new GameFunction;
 Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
 
+
+
+
 std::shared_ptr<Object> Sun;
 std::shared_ptr<Object> Planet1;
 std::shared_ptr<Object> Planet2;
+
+
 
 PointLight pLight;
 //DirectLight dirLight;
@@ -54,11 +62,31 @@ PointLight pLight;
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 
 void GameFunction::Start() {
+    CubeMapObj = Primitives::Cube({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(1, 1, 1));
+    Mesh* mesh = std::dynamic_pointer_cast<Mesh>(CubeMapObj->GetModuleByType(MeshType)).get();
+    mesh->Name = "CubeMap";
+
+    mesh->_material->Shader = std::make_shared<CubeMapShader>();
+    mesh->_material->Shader->SetParent(*mesh->_material);
+
     SetControl();
 
     InitSun();
     InitPlanet1();
     InitPlanet2();
+
+
+    //
+    //std::shared_ptr<CubeMapShader> cubeMapShad = std::make_shared<CubeMapShader>();
+    //cubeMapShad->LoadTexture(
+    //    "\\Textures\\CubeMap\\Right_Tex.png",
+    //    "\\Textures\\CubeMap\\Left_Tex.png",
+    //    "\\Textures\\CubeMap\\Top_Tex.png",
+    //    "\\Textures\\CubeMap\\Bottom_Tex.png",
+    //    "\\Textures\\CubeMap\\Front_Tex.png",
+    //    "\\Textures\\CubeMap\\Back_Tex.png");
+    //
+    //mesh->_material->Shader = cubeMapShad;
 
     //dirLight.Name = "dirLight";
     //dirLight.color = Vector3(1, 0.988, 0.792);
@@ -114,10 +142,10 @@ void InitSun()
 
     Sun = Primitives::Sphere({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(1, 1, 1));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Sun->GetModuleByType(MeshType)).get();
-
+    
     mesh->_material->Shader = std::make_shared<OpaqueShader>();
     mesh->_material->Shader->SetParent(*mesh->_material);
-
+    
     mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
     mesh->_material->Shader->LoadTexture(Emission, "\\Textures\\suncyl1-grayscale.jpg");
 }

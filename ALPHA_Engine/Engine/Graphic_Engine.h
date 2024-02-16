@@ -74,11 +74,14 @@ private:
 
 	void SetMeshRenderOptions();
 	void SetDebugRenderOptions();
+	void SetCubeMapRenderOptions();
+
 
 	void RenderMesh(Mesh& mesh, std::shared_ptr<Camera>  camera);
 	void RenderCollider(MeshCollider& collider, std::shared_ptr<Camera> camera);
 	void RenderAABB(std::vector<float>& vertex, std::vector<unsigned int>& indices);
 	void RenderWorldAABB(Node& rootNode);
+	void RenderCubeMap(Mesh& mesh, std::shared_ptr<Camera>  camera);
 
 	void RenderRigidBodyInfo(RigidBody& rb);
 

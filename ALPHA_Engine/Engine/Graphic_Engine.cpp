@@ -91,20 +91,20 @@ Screen* Render::GetScreenClass() {
 void Render::PrepareToRender() {
     glClearColor(0.3f, 0.3f, 0.3f, 0.f);
     
-    glEnable(GL_CULL_FACE); // enable culling face
-    glCullFace(GL_BACK); // cull faces from back
-    glFrontFace(GL_CCW); // vertex order (counter clock wise)
-    
-    glShadeModel(GL_SMOOTH);
-    glEnable(GL_NORMALIZE);
-    
-    glEnable(GL_COLOR_MATERIAL);
-    
-    // Enable Z-buffer read and write
-    glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-    glClearDepth(1.f);
-    glDepthFunc(GL_LEQUAL);
+    //glEnable(GL_CULL_FACE); // enable culling face
+    //glCullFace(GL_BACK); // cull faces from back
+    //glFrontFace(GL_CCW); // vertex order (counter clock wise)
+    //
+    //glShadeModel(GL_SMOOTH);
+    //glEnable(GL_NORMALIZE);
+    //
+    //glEnable(GL_COLOR_MATERIAL);
+    //
+    //// Enable Z-buffer read and write
+    //glEnable(GL_DEPTH_TEST);
+    //glDepthMask(GL_TRUE);
+    //glClearDepth(1.f);
+    //glDepthFunc(GL_LEQUAL);
 }
 
 void Render::ApplyCameraTransform(std::shared_ptr<Camera> camera) {
@@ -161,13 +161,16 @@ void Render::SetDebugRenderOptions() {
     glEnable(GL_DEPTH_TEST);
 }
 
+void Render::SetCubeMapRenderOptions() {
+    glDisable(GL_CULL_FACE);
+}
+
 void Render::RenderMesh(Mesh& mesh, std::shared_ptr<Camera> camera) {
     if (mesh._material->Shader == nullptr)
         return;
 
     if (mesh._material->Shader->GetCompiledStatus() == false)
         return;
-
     glUseProgram(mesh._material->Shader->GetProgramId());
     glBindVertexArray(mesh._vao);
 
@@ -250,7 +253,40 @@ void Render::RenderWorldAABB(Node& rootNode) {
 #endif // _DEBUG
 }
 
+void Render::RenderCubeMap(Mesh& mesh, std::shared_ptr<Camera> camera)
+{
+    if (mesh._material->Shader == nullptr)
+        return;
+
+    if (mesh._material->Shader->GetCompiledStatus() == false)
+        return;
+    glDepthFunc(GL_LEQUAL);
+    //glDepthMask(GL_FALSE);
+    glUseProgram(mesh._material->Shader->GetProgramId());
+    glBindVertexArray(mesh._vao);
+
+    mesh._material->Shader->ApplyShadersSettings(camera);
+
+    glDrawElements(GL_TRIANGLES, mesh._indices->size(), GL_UNSIGNED_INT, mesh._indices->data());
+    glBindVertexArray(0);
+  //  glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
+}
+
 void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
+    if (World::ObjectsOnScene[1] != nullptr) {
+        for (size_t j = 0; j < World::ObjectsOnScene[1]->GetCountOfModules(); j++)
+        {
+            ModulesList type = World::ObjectsOnScene[1]->GetModuleByIndex(j)->GetType();
+
+            if (type == MeshType) {
+                std::shared_ptr<Mesh> mesh = std::dynamic_pointer_cast<Mesh>(World::ObjectsOnScene[1]->GetModuleByIndex(j));
+                Render::SetCubeMapRenderOptions();
+                Render::RenderCubeMap(*mesh, camera);
+            }
+        }
+    }
+
     for (size_t i = 0; i < World::ObjectsOnScene.size(); i++)
     {
         for (size_t j = 0; j < World::ObjectsOnScene[i]->GetCountOfModules(); j++)

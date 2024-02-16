@@ -14,15 +14,13 @@ Texture::~Texture() {
 void Texture::CreateTexture(std::string pathToTexture) {
 	int width, height, channelsCount;
 
-	stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(false);
 	unsigned char* data = stbi_load((std::filesystem::current_path().string() + pathToTexture.c_str()).c_str(), &width, &height, &channelsCount, 0);
 	Texture::_textureData = std::unique_ptr<unsigned char>(data);
 
 	Texture::_width = width;
 	Texture::_height = height;
 	Texture::_channelsCount = channelsCount;
-
-
 }
 
 void Texture::DeleteTexture()
@@ -30,10 +28,13 @@ void Texture::DeleteTexture()
 	Texture::_textureData.reset();
 }
 
-bool Texture::TransferToGPU()
+bool Texture::TransferToGPU(bool genTextureAuto, bool unbindTextureAuto)
 {
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
+    if (genTextureAuto) {
+        glGenTextures(1, &textureId);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+    }
+
 
     if (Texture::_textureData == nullptr) {
         std::cout << "Error load texture: undefined path to texture\n";
@@ -68,16 +69,12 @@ bool Texture::TransferToGPU()
             Texture::_textureData.get());
     }
 
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
     Texture::DeleteTexture();
 
-    glBindTexture(GL_TEXTURE_2D, 0);
+    if (unbindTextureAuto) {
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
     return true;
 }
 
@@ -89,6 +86,16 @@ unsigned int Texture::GetTextureId()
 unsigned int Texture::GetTextureLocation()
 {
 	return Texture::textureLocation;
+}
+
+unsigned int Texture::GetWidth()
+{
+    return Texture::_width;
+}
+
+unsigned int Texture::GetHeight()
+{
+    return Texture::_height;
 }
 
 bool Texture::BindTexture(unsigned int index, unsigned int programId, std::string samplerName)

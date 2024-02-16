@@ -33,62 +33,90 @@ OpaqueShader::~OpaqueShader()
 
 bool OpaqueShader::LoadTexture(TypeOfTextuere typeOfTexture, std::string pathToTexture)
 {
-    unsigned char* data = nullptr;
-    unsigned int width = 0;
-    unsigned int height = 0;
-    unsigned int channels = 0;
+    auto genPar = []() {
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        };
 
     switch (typeOfTexture)
     {
     case Diffuse:
         OpaqueShader::_diffuse.CreateTexture(pathToTexture.c_str());
-        if (!OpaqueShader::_diffuse.TransferToGPU())
+        if (!OpaqueShader::_diffuse.TransferToGPU(true, false))
             return false;
+        genPar();
         break;
     case Metallic:
         OpaqueShader::_metallic.CreateTexture(pathToTexture.c_str());
-        if (!OpaqueShader::_metallic.TransferToGPU())
+        if (!OpaqueShader::_metallic.TransferToGPU(true, false))
             return false;
+        genPar();
         break;
     case Specular:
         OpaqueShader::_specular.CreateTexture(pathToTexture.c_str());
-        if (!OpaqueShader::_specular.TransferToGPU())
+        if (!OpaqueShader::_specular.TransferToGPU(true, false))
             return false;
+        genPar();
         break;
     case Roughness:
         OpaqueShader::_roughness.CreateTexture(pathToTexture.c_str());
-        if (!OpaqueShader::_roughness.TransferToGPU())
+        if (!OpaqueShader::_roughness.TransferToGPU(true, false))
             return false;
+        genPar();
         break;
     case Anisotropic:
         OpaqueShader::_anisotropic.CreateTexture(pathToTexture.c_str());
-        if (!OpaqueShader::_anisotropic.TransferToGPU())
+        if (!OpaqueShader::_anisotropic.TransferToGPU(true, false))
             return false;
+        genPar();
         break;
     case Emission:
         OpaqueShader::_emission.CreateTexture(pathToTexture.c_str());
-        if (!OpaqueShader::_emission.TransferToGPU())
+        if (!OpaqueShader::_emission.TransferToGPU(true, false))
             return false;
+        genPar();
         break;
     case NormalsMap:
         OpaqueShader::_normalsMap.CreateTexture(pathToTexture.c_str());
-        if (!OpaqueShader::_normalsMap.TransferToGPU())
+        if (!OpaqueShader::_normalsMap.TransferToGPU(true, false))
             return false;
+        genPar();
         break;
     case OpacityMap:
         OpaqueShader::_opacityMap.CreateTexture(pathToTexture.c_str());
-        if (!OpaqueShader::_opacityMap.TransferToGPU())
+        if (!OpaqueShader::_opacityMap.TransferToGPU(true, false))
             return false;
+        genPar();
         break;
     case OcclusionMap:
         OpaqueShader::_occlusionMap.CreateTexture(pathToTexture.c_str());
-        if (!OpaqueShader::_occlusionMap.TransferToGPU())
+        if (!OpaqueShader::_occlusionMap.TransferToGPU(true, false))
             return false;
+        genPar();
         break;
     default:
         std::cout << "Error load texture: unknown format of texture\n";
         return false;
     }
+
+
+
+    //OpaqueShader::_diffuse.DeleteTexture();
+    //OpaqueShader::_metallic.DeleteTexture();
+    //OpaqueShader::_specular.DeleteTexture();
+    //OpaqueShader::_roughness.DeleteTexture();
+    //OpaqueShader::_anisotropic.DeleteTexture();
+    //OpaqueShader::_emission.DeleteTexture();
+    //OpaqueShader::_normalsMap.DeleteTexture();
+    //OpaqueShader::_opacityMap.DeleteTexture();
+    //OpaqueShader::_occlusionMap.DeleteTexture();
 
     return true;
 }

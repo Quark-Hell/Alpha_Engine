@@ -54,7 +54,7 @@ class Texture {
 
 private:
 	std::string _texturePath;
-
+public:
 	std::unique_ptr<unsigned char> _textureData = std::unique_ptr<unsigned char>();
 
 	unsigned int _width;
@@ -77,7 +77,7 @@ public:
 	void CreateTexture(std::string pathToTexture);
 	void DeleteTexture();
 
-	bool TransferToGPU();
+	bool TransferToGPU(bool genTextureAuto = true, bool unbindTextureAuto = true);
 
 	void SetTypeOfWrapping(EnumTypeOfWrapping xType, EnumTypeOfWrapping yType);
 	void SetTypeOfTextureFiltering(EnumTypeOfTextureFiltering minType, EnumTypeOfTextureFiltering magType);
@@ -85,6 +85,9 @@ public:
 
 	unsigned int GetTextureId();
 	unsigned int GetTextureLocation();
+
+	unsigned int GetWidth();
+	unsigned int GetHeight();
 
 	bool BindTexture(unsigned int index, unsigned int programId, std::string samplerName);
 };
