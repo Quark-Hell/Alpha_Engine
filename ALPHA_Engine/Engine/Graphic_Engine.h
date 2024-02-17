@@ -78,7 +78,6 @@ private:
 
 
 	void RenderMesh(Mesh& mesh, std::shared_ptr<Camera>  camera);
-	void RenderCollider(MeshCollider& collider, std::shared_ptr<Camera> camera);
 	void RenderAABB(std::vector<float>& vertex, std::vector<unsigned int>& indices);
 	void RenderWorldAABB(Node& rootNode);
 	void RenderCubeMap(Mesh& mesh, std::shared_ptr<Camera>  camera);
@@ -86,5 +85,4 @@ private:
 	void RenderRigidBodyInfo(RigidBody& rb);
 
 	void ApplyCameraTransform(std::shared_ptr<Camera>  camera);
-	void ApplyTransformation(Vector3 Position, Vector3 Rotation, Vector3 Scale);
 };

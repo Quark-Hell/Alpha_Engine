@@ -17,16 +17,6 @@ void Geometry::SetParentObject(const Object& parent) {
     ParentObject = const_cast<Object*>(&parent);
 }
 
-void Geometry::ModuleAdded()
-{
-    //Geometry::_position = ParentObject->GetPosition();
-    //Geometry::_rotation = ParentObject->GetRotation();
-    //Geometry::_scale = ParentObject->GetScale();
-
-    //TODO: Add copy origin
-    //Geometry::_origin = ParentObject->geto();
-}
-
 ModulesList Geometry::GetType() {
     return GeometryType;
 }

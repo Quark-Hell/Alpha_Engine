@@ -14,9 +14,9 @@ public:
 	Texture _occlusionMap;
 
 public:
-	OpaqueShader();
+	OpaqueShader(Material* parentMat);
 	~OpaqueShader();
 
-	bool LoadTexture(TypeOfTextuere typeOfTexture, std::string pathToTexture) override;
+	bool LoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture) override;
 	void ApplyShadersSettings(std::shared_ptr<Camera> camera) override;
 };

@@ -7,8 +7,7 @@ DebugMesh::DebugMesh()
 {
     DebugMesh::Name = "DebugMesh";
 
-    DebugMesh::_material->Shader = std::make_shared<ColliderWireframeShader>();
-    DebugMesh::_material->Shader->SetParent(*DebugMesh::_material);
+    DebugMesh::_material->Shader = std::make_shared<ColliderWireframeShader>(DebugMesh::_material.get());
 }
 
 DebugMesh::~DebugMesh()

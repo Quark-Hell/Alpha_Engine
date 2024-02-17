@@ -9,7 +9,7 @@
 
 #include "Modules/Mesh.h"
 
-OpaqueShader::OpaqueShader()
+OpaqueShader::OpaqueShader(Material* parentMat) : ShaderProgram(parentMat)
 {
     OpaqueShader::LoadTexture(Diffuse, "\\Textures\\EmptyTexture.png");
     OpaqueShader::LoadTexture(Metallic, "\\Textures\\EmptyTexture.png");
@@ -31,7 +31,7 @@ OpaqueShader::~OpaqueShader()
 {
 }
 
-bool OpaqueShader::LoadTexture(TypeOfTextuere typeOfTexture, std::string pathToTexture)
+bool OpaqueShader::LoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture)
 {
     auto genPar = []() {
         glGenerateMipmap(GL_TEXTURE_2D);

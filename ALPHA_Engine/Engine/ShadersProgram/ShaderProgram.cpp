@@ -6,9 +6,9 @@
 
 #include "Modules/Mesh.h"
 
-ShaderProgram::ShaderProgram()
+ShaderProgram::ShaderProgram(Material* parentMat)
 {
-
+	ShaderProgram::_parentMaterial = parentMat;
 }
 
 ShaderProgram::~ShaderProgram()
@@ -398,7 +398,7 @@ void ShaderProgram::DeleteShader(ShadersType shaderType)
 	}
 }
 
-bool ShaderProgram::LoadTexture(TypeOfTextuere typeOfTexture, std::string pathToTexture)
+bool ShaderProgram::LoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture)
 {
 	return false;
 }

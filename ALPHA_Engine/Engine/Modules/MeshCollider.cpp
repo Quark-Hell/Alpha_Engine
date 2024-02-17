@@ -214,7 +214,6 @@ void MeshCollider::InitTransformatiom(Object& oldParent, Object& newParent)
 
 void MeshCollider::ModuleAdded()
 {
-    Geometry::ModuleAdded();
     MeshCollider::Create();
     MeshCollider::InitTransformatiom(*ParentObject);
     //MeshCollider::ApplyTransformation();

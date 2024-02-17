@@ -4,7 +4,7 @@
 
 #include "Modules/Mesh.h"
 
-ColliderWireframeShader::ColliderWireframeShader()
+ColliderWireframeShader::ColliderWireframeShader(Material* parentMat) : ShaderProgram(parentMat)
 {
     ColliderWireframeShader::CreateShader("\\Shaders\\ColliderWireframeShaders\\VertexShader.txt", ShadersType::VertexShader);
     ColliderWireframeShader::CreateShader("\\Shaders\\ColliderWireframeShaders\\FragmentShader.txt", ShadersType::FragmentShader);
@@ -22,6 +22,7 @@ void ColliderWireframeShader::ApplyShadersSettings(std::shared_ptr<Camera> camer
     ColliderWireframeShader::SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
 
     ColliderWireframeShader::SetValue(ShadersType::VertexShader, "model_matrix", &ColliderWireframeShader::GetParentMaterial()->GetParentMesh()->GetTransformMatrix());
+
 
     //DebugMesh::_material->_shader->SetValue(ShadersType::VertexShader, "color", &World::DebugWireframeColor);
 }

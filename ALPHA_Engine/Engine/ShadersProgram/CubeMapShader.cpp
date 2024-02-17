@@ -1,6 +1,8 @@
 #include "CubeMapShader.h"
+#include "Modules/Material.h"
 
-CubeMapShader::CubeMapShader()
+
+CubeMapShader::CubeMapShader(Material* parentMat) : ShaderProgram(parentMat)
 {
     CubeMapShader::LoadTexture(
         "\\Textures\\CubeMap\\Right_Tex.png",
@@ -32,24 +34,12 @@ bool CubeMapShader::LoadTexture(std::string rightTexture, std::string leftTextur
     CubeMapShader::_frontSide.CreateTexture(frontTexture.c_str());
     CubeMapShader::_backSide.CreateTexture(backTexture.c_str());
 
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 1,
-        0, GL_RGBA, _rightSide.GetWidth(), _rightSide.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _rightSide._textureData.get()
-    );
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 0,
-        0, GL_RGBA, _leftSide.GetWidth(), _leftSide.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _leftSide._textureData.get()
-    );
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 2,
-        0, GL_RGBA, _topSide.GetWidth(), _topSide.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _topSide._textureData.get()
-    );
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 3,
-        0, GL_RGBA, _bottomSide.GetWidth(), _bottomSide.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _bottomSide._textureData.get()
-    );
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 4,
-        0, GL_RGBA, _frontSide.GetWidth(), _frontSide.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _frontSide._textureData.get()
-    );
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 5,
-        0, GL_RGBA, _backSide.GetWidth(), _backSide.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _backSide._textureData.get()
-    );
+    CubeMapShader::_rightSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 1));
+    CubeMapShader::_leftSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 0));
+    CubeMapShader::_topSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 2));
+    CubeMapShader::_bottomSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 3));
+    CubeMapShader::_frontSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 4));
+    CubeMapShader::_backSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 5));
     
     //CubeMapShader::_rightSide.CreateTexture(rightTexture.c_str());
     //if (!CubeMapShader::_rightSide.TransferToGPU(false, false))
@@ -101,5 +91,8 @@ void CubeMapShader::ApplyShadersSettings(std::shared_ptr<Camera> camera)
     CubeMapShader::SetValue(ShadersType::VertexShader, "view_matrix", &view);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, _textureId);
-    //glDepthMask(GL_TRUE);
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
 }

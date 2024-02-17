@@ -69,10 +69,14 @@ void Camera::AddPosition(float X, float Y, float Z) {
     Camera::_origin.X += X;
     Camera::_origin.Y += Y;
     Camera::_origin.Z += Z;
+
+    //Camera::_isShifted = true;
 }
 void Camera::AddPosition(Vector3 position) {
     Camera::_position += position;
     Camera::_origin += position;
+
+    //Camera::_isShifted = true;
 }
 void Camera::SetPosition(float X, float Y, float Z) {
     Vector3 direction = Vector3(X, Y, Z) - Camera::_position;
@@ -94,6 +98,8 @@ void Camera::AddRotation(float X, float Y, float Z) {
     Camera::_rotation.X += X;
     Camera::_rotation.Y += Y;
     Camera::_rotation.Z += Z;
+
+    //Camera::_isShifted = true;
 }
 void Camera::AddRotation(Vector3 rotation) {
     const float radX = M_PI / 180 * rotation.X;
@@ -103,6 +109,8 @@ void Camera::AddRotation(Vector3 rotation) {
     Camera::_rotation.X += rotation.X;
     Camera::_rotation.Y += rotation.Y;
     Camera::_rotation.Z += rotation.Z;
+
+    //Camera::_isShifted = true;
 }
 
 void Camera::SetRotation(float X, float Y, float Z) {
@@ -161,25 +169,32 @@ void Camera::UpdateProjectionMatrix() {
 
 void Camera::UpdateViewMatrix()
 {
+
+    Vector4 parentRotation;
+    Vector3 parentPosition;
+    Vector3 parentScale;
+
+    if (ParentObject != nullptr) {
+        parentRotation = ParentObject->GetRotation();
+        parentPosition = ParentObject->GetPosition();
+        parentScale = ParentObject->GetScale();
+    }
+
     glm::mat4x4 rotMat(1.0f);
 
-    const float radX = M_PI / 180 * Camera::_rotation.X;
-    const float radY = M_PI / 180 * Camera::_rotation.Y;
-    const float radZ = M_PI / 180 * Camera::_rotation.Z;
+    const float radX = M_PI / 180 * (Camera::_rotation.X + parentRotation.X);
+    const float radY = M_PI / 180 * (Camera::_rotation.Y + parentRotation.Y);
+    const float radZ = M_PI / 180 * (Camera::_rotation.Z + parentRotation.Z);
 
     rotMat = glm::rotate(rotMat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
     rotMat = glm::rotate(rotMat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
     rotMat = glm::rotate(rotMat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
 
     glm::mat4x4 transMat(1.0f);
-    transMat = glm::translate(glm::vec3(Camera::_position.X, Camera::_position.Y, Camera::_position.Z));
-
+    transMat = glm::translate(glm::vec3(
+        Camera::_position.X + parentPosition.X,
+        Camera::_position.Y + parentPosition.Y,
+        Camera::_position.Z + parentPosition.Z));
 
     Camera::_transformMatrix = rotMat * transMat;
-
-   // Camera::_transformMatrix = glm::lookAt(
-   //     glm::vec3(Camera::_position.X, Camera::_position.Y, Camera::_position.Z),
-   //     glm::vec3(0, 1, 0),
-   //     glm::vec3(0, 1, 0)
-   // );
 }

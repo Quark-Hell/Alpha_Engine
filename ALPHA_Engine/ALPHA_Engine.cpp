@@ -44,7 +44,7 @@ std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 GameFunction* Game = new GameFunction;
 Render* render = new Render;
 InputSystem* InpSys = new InputSystem;
-
+float moveSensitive = 0.40f;
 
 
 
@@ -66,8 +66,8 @@ void GameFunction::Start() {
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(CubeMapObj->GetModuleByType(MeshType)).get();
     mesh->Name = "CubeMap";
 
-    mesh->_material->Shader = std::make_shared<CubeMapShader>();
-    mesh->_material->Shader->SetParent(*mesh->_material);
+    mesh->_material->Shader = std::make_shared<CubeMapShader>(mesh->_material.get());
+    //mesh->_material->Shader->SetParent(*mesh->_material);
 
     SetControl();
 
@@ -113,6 +113,7 @@ void GameFunction::Start() {
 }
 
 void GameFunction::Update() {
+    Sun->AddRotation(0.02, -0.1, 0);
     //sLight.AddRotation(0, -5, 0); 
     //plane2->AddRotation(0, -5, 0);
 
@@ -137,26 +138,24 @@ void InitSun()
 
     pLight.SetPosition(0, 0, 0);
     pLight.color = Vector3(0.988, 0.792, 0.463);
-    pLight.strength = 4;
-    pLight.radius = 25;
+    pLight.strength = 5;
+    pLight.radius = 55;
 
-    Sun = Primitives::Sphere({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(1, 1, 1));
+    Sun = Primitives::Sphere({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(10, 10, 10));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Sun->GetModuleByType(MeshType)).get();
     
-    mesh->_material->Shader = std::make_shared<OpaqueShader>();
-    mesh->_material->Shader->SetParent(*mesh->_material);
-    
+    mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
+
     mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
     mesh->_material->Shader->LoadTexture(Emission, "\\Textures\\suncyl1-grayscale.jpg");
 }
 
 void InitPlanet1()
 {
-    Planet1 = Primitives::Sphere({ 0,1,-3 }, Vector4(0, 0, 0, 1), Vector3(0.3f, 0.3f, 0.3f));
+    Planet1 = Primitives::Sphere({ 0,1,-20 }, Vector4(0, 0, 0, 1), Vector3(0.5f, 0.5f, 0.5));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
 
-    mesh->_material->Shader = std::make_shared<OpaqueShader>();
-    mesh->_material->Shader->SetParent(*mesh->_material);
+    mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 
     mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_lava_Base_Color.jpg");
     mesh->_material->Shader->LoadTexture(Emission, "\\Textures\\Planets\\planet_lava_Emissive.png");
@@ -164,19 +163,17 @@ void InitPlanet1()
 
 void InitPlanet2()
 {
-    Planet2 = Primitives::Sphere({ -6,-1,-3 }, Vector4(70, 0, 0, 1), Vector3(0.5f, 0.5f, 0.5f));
+    Planet2 = Primitives::Sphere({ -30,-1,-20 }, Vector4(70, 0, 0, 1), Vector3(1.0f, 1.0f, 1.0f));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
 
-    mesh->_material->Shader = std::make_shared<OpaqueShader>();
-    mesh->_material->Shader->SetParent(*mesh->_material);
+    mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 
     mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_continental_Base_Color.jpg");
 }
 
 void SetControl() {
+    Player.AddPosition(0, 0, -40);
     Player.AddModule(std::static_pointer_cast<Module>(camera));
-    //Player.AddRotation(30, 0, 0);
-    Player.AddPosition(0, 0, -3);
     
     Bind LeftMove; LeftMove.KeyboardBind({ LeftMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_A });
     Bind RightMove; RightMove.KeyboardBind({ RightMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_D });
@@ -225,7 +222,7 @@ void LeftMoveCamera() {
     UpVector.Y = 0;
     UpVector.Z = sin((Player.GetRotation().Y) * 3.14159 / 180);
 
-    newPos += UpVector * 0.1;
+    newPos += UpVector * moveSensitive;
 
     Player.SetPosition(newPos);
 }
@@ -238,7 +235,7 @@ void RightMoveCamera() {
     UpVector.Y = 0;
     UpVector.Z = sin((Player.GetRotation().Y) * 3.14159 / 180);
 
-    newPos += UpVector * (-0.1);
+    newPos += UpVector * (-moveSensitive);
 
     Player.SetPosition(newPos);
 }
@@ -252,7 +249,7 @@ void ForwardMoveCamera() {
     ForwardVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
     ForwardVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
 
-    newPos += ForwardVector * 0.1;
+    newPos += ForwardVector * moveSensitive;
 
     Player.SetPosition(newPos);
 }
@@ -265,7 +262,7 @@ void BackwardMoveCamera() {
     BackwardVector.Y = cos((Player.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
     BackwardVector.Z = sin((Player.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
 
-    newPos += BackwardVector * (-0.1);
+    newPos += BackwardVector * (-moveSensitive);
 
     Player.SetPosition(newPos);
     //Player.AddPosition(0, 0, -0.01f);
@@ -274,14 +271,14 @@ void BackwardMoveCamera() {
 void UpMoveCamera() {
     Vector3 newPos = Player.GetPosition();
 
-    newPos.Y += 0.1;
+    newPos.Y += moveSensitive;
 
     Player.SetPosition(newPos);
 }
 void DownMoveCamera() {
     Vector3 newPos = Player.GetPosition();
 
-    newPos.Y -= 0.1;
+    newPos.Y -= moveSensitive;
 
     Player.SetPosition(newPos);
 }

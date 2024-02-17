@@ -13,7 +13,7 @@ private:
 	unsigned int _textureId;
 
 public:
-	CubeMapShader();
+	CubeMapShader(Material* parentMat);
 	~CubeMapShader();
 
 	bool LoadTexture(

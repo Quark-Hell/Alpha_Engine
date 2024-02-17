@@ -37,12 +37,6 @@ void Object::AddPosition(float X, float Y, float Z) {
 		if (geometry != nullptr) {
 			geometry->_isShifted = true;
 		}
-
-		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
-
-		if (camera != nullptr) {
-			camera->AddPosition(X, Y, Z);
-		}
 	}
 
 	//Object::ApplyTransformation();
@@ -59,12 +53,6 @@ void Object::AddPosition(Vector3 position) {
 
 		if (geometry != nullptr) {
 			geometry->_isShifted = true;
-		}
-
-		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
-
-		if (camera != nullptr) {
-			camera->AddPosition(position);
 		}
 	}
 
@@ -143,12 +131,6 @@ void Object::AddRotation(float X, float Y, float Z) {
 		if (geometry != nullptr) {
 			geometry->_isShifted = true;
 		}
-
-		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
-
-		if (camera != nullptr) {
-			camera->AddRotation(X, Y, Z);
-		}
 	}
 
 	//Object::ApplyTransformation();
@@ -175,10 +157,6 @@ void Object::AddRotation(Vector3 rotation) {
 		}
 
 		std::shared_ptr<Camera> camera = std::dynamic_pointer_cast<Camera>(Object::GetModuleByIndex(it));
-
-		if (camera != nullptr) {
-			camera->AddRotation(rotation);
-		}
 	}
 
 	//Object::ApplyTransformation();

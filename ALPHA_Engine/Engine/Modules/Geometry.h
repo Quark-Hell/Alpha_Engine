@@ -67,8 +67,6 @@ public:
 	glm::mat4x4 GetTransformMatrix() override;
 #pragma endregion
 
-	void ModuleAdded() override;
-
 	ModulesList GetType() override;
 
 	virtual bool Create(std::string linkToFBX);

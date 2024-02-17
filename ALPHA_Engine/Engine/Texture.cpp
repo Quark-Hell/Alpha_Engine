@@ -28,11 +28,40 @@ void Texture::DeleteTexture()
 	Texture::_textureData.reset();
 }
 
-bool Texture::TransferToGPU(bool genTextureAuto, bool unbindTextureAuto)
+bool Texture::TransferToGPU(bool genTextureAuto, bool unbindTextureAuto, EnumTypeOfTexture typeOfTexture)
 {
+    int textureType;
+    switch (typeOfTexture)
+    {
+    case Texture2D:
+        textureType = GL_TEXTURE_2D;
+        break;
+    case TEXTURE_CUBE_MAP_POSITIVE_X:
+        textureType = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+        break;
+    case TEXTURE_CUBE_MAP_NEGATIVE_X:
+        textureType = GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+        break;
+    case TEXTURE_CUBE_MAP_POSITIVE_Y:
+        textureType = GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+        break;
+    case TEXTURE_CUBE_MAP_NEGATIVE_Y:
+        textureType = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+        break;
+    case TEXTURE_CUBE_MAP_POSITIVE_Z:
+        textureType = GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+        break;
+    case TEXTURE_CUBE_MAP_NEGATIVE_Z:
+        textureType = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+        break;
+    default:
+        return false;
+        break;
+    }
+
     if (genTextureAuto) {
         glGenTextures(1, &textureId);
-        glBindTexture(GL_TEXTURE_2D, textureId);
+        glBindTexture(textureType, textureId);
     }
 
 
@@ -47,7 +76,7 @@ bool Texture::TransferToGPU(bool genTextureAuto, bool unbindTextureAuto)
     }
 
     if (Texture::_channelsCount == 3) {
-        glTexImage2D(GL_TEXTURE_2D,
+        glTexImage2D(textureType,
             0,
             GL_RGB,
             Texture::_width,
@@ -58,7 +87,7 @@ bool Texture::TransferToGPU(bool genTextureAuto, bool unbindTextureAuto)
             Texture::_textureData.get());
     }
     else if (Texture::_channelsCount == 4) {
-        glTexImage2D(GL_TEXTURE_2D,
+        glTexImage2D(textureType,
             0,
             GL_RGBA,
             Texture::_width,
@@ -72,7 +101,7 @@ bool Texture::TransferToGPU(bool genTextureAuto, bool unbindTextureAuto)
     Texture::DeleteTexture();
 
     if (unbindTextureAuto) {
-        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(textureType, 0);
     }
 
     return true;

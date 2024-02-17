@@ -18,6 +18,18 @@ enum ShadersType {
 	ComputeShader = 5,
 };
 
+enum TypeOfOpaqueTextuere {
+	Diffuse = 0,
+	Metallic = 1,
+	Specular = 2,
+	Roughness = 3,
+	Anisotropic = 4,
+	Emission = 5,
+	NormalsMap = 6,
+	OpacityMap = 7,
+	OcclusionMap = 8
+};
+
 class ShaderProgram
 {
 private:
@@ -41,7 +53,7 @@ private:
 	Material* _parentMaterial;
 
 public:
-	ShaderProgram();
+	ShaderProgram(Material* parentMat);
 	virtual ~ShaderProgram();
 
 	ShaderProgram& operator=(ShaderProgram&& shaderProgram);
@@ -121,7 +133,7 @@ public:
 	void DeleteShaders();
 	void DeleteShader(ShadersType shaderType);
 
-	virtual bool LoadTexture(TypeOfTextuere typeOfTexture, std::string pathToTexture);
+	virtual bool LoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture);
 
 protected:
 	virtual void ApplyShadersSettings(std::shared_ptr<Camera> camera);

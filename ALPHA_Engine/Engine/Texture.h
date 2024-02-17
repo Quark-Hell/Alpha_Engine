@@ -33,16 +33,14 @@ enum EnumTypeOfMIPMAP {
 	LinearMipmapLinear = 3
 };
 
-enum TypeOfTextuere {
-	Diffuse = 0,
-	Metallic = 1,
-	Specular = 2,
-	Roughness = 3,
-	Anisotropic = 4,
-	Emission = 5,
-	NormalsMap = 6,
-	OpacityMap = 7,
-	OcclusionMap = 8
+enum EnumTypeOfTexture {
+	Texture2D = 0,
+	TEXTURE_CUBE_MAP_POSITIVE_X = 1,
+	TEXTURE_CUBE_MAP_NEGATIVE_X = 2,
+	TEXTURE_CUBE_MAP_POSITIVE_Y = 3,
+	TEXTURE_CUBE_MAP_NEGATIVE_Y = 4,
+	TEXTURE_CUBE_MAP_POSITIVE_Z = 5,
+	TEXTURE_CUBE_MAP_NEGATIVE_Z = 6
 };
 
 class Texture {
@@ -77,7 +75,7 @@ public:
 	void CreateTexture(std::string pathToTexture);
 	void DeleteTexture();
 
-	bool TransferToGPU(bool genTextureAuto = true, bool unbindTextureAuto = true);
+	bool TransferToGPU(bool genTextureAuto = true, bool unbindTextureAuto = true, EnumTypeOfTexture typeOfTexture = EnumTypeOfTexture::Texture2D);
 
 	void SetTypeOfWrapping(EnumTypeOfWrapping xType, EnumTypeOfWrapping yType);
 	void SetTypeOfTextureFiltering(EnumTypeOfTextureFiltering minType, EnumTypeOfTextureFiltering magType);
