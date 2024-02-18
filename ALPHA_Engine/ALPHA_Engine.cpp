@@ -33,6 +33,7 @@
 #include "ShadersProgram/ShaderProgram.h"
 #include "ShadersProgram/OpaqueShader.h"
 #include "ShadersProgram/CubeMapShader.h"
+#include "ShadersProgram/PathShader.h"
 
 #include "Texture.h"
 
@@ -61,7 +62,22 @@ PointLight pLight;
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 
+std::shared_ptr<Object> path1 = std::make_shared<Object>();
+std::shared_ptr<Object> path2 = std::make_shared<Object>();
+
+Mesh* pathMesh1 = std::dynamic_pointer_cast<Mesh>(path1->GetModuleByType(MeshType)).get();
+PathShader* pathShader1;
+
 void GameFunction::Start() {
+    path1->AddModule(MeshType);
+    pathMesh1 = std::dynamic_pointer_cast<Mesh>(path1->GetModuleByType(MeshType)).get();
+    pathMesh1->_material->Shader = std::make_shared<PathShader>(pathMesh1->_material.get());
+    pathShader1 = std::dynamic_pointer_cast<PathShader>(pathMesh1->_material->Shader).get();
+
+
+
+
+
     CubeMapObj = Primitives::Cube({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(1, 1, 1));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(CubeMapObj->GetModuleByType(MeshType)).get();
     mesh->Name = "CubeMap";
@@ -113,7 +129,17 @@ void GameFunction::Start() {
 }
 
 void GameFunction::Update() {
-    Sun->AddRotation(0.02, -0.1, 0);
+    //Sun->AddRotation(0.02, -0.1, 0);
+    Sun->AddRotation(0.1, 0.2, 0);
+    Planet1->AddRotation(0, 0.1, 0);
+    Mesh* mesh1 = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
+    mesh1->AddRotation(0,3,0);
+
+    Planet2->AddRotation(0, 0.3, 0);
+    Mesh* mesh2 = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
+    mesh2->AddRotation(0, 3, 0);
+
+    Path();
     //sLight.AddRotation(0, -5, 0); 
     //plane2->AddRotation(0, -5, 0);
 
@@ -132,6 +158,12 @@ void GameFunction::Update() {
     //std::cout << "\n";
 }
 
+
+void Path() {
+    pathShader1->AddPoint(Planet1->GetPosition());
+    std::cout << "X: " << Planet1->GetPosition().X << " Y: " << Planet1->GetPosition().Y << " Z: " << Planet1->GetPosition().Z << "\n";
+}
+
 void InitSun()
 {
     pLight.Name = "PointLight";
@@ -142,8 +174,10 @@ void InitSun()
     pLight.radius = 55;
 
     Sun = Primitives::Sphere({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(10, 10, 10));
+
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Sun->GetModuleByType(MeshType)).get();
-    
+    mesh->Name = "sun";
+
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 
     mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
@@ -154,6 +188,8 @@ void InitPlanet1()
 {
     Planet1 = Primitives::Sphere({ 0,1,-20 }, Vector4(0, 0, 0, 1), Vector3(0.5f, 0.5f, 0.5));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
+    mesh->Name = "planet1";
+    Planet1->AddOriginPosition(0,0,20);
 
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 
@@ -163,8 +199,10 @@ void InitPlanet1()
 
 void InitPlanet2()
 {
-    Planet2 = Primitives::Sphere({ -30,-1,-20 }, Vector4(70, 0, 0, 1), Vector3(1.0f, 1.0f, 1.0f));
+    Planet2 = Primitives::Sphere({ -30,-1,-20 }, Vector4(0, 0, 0, 1), Vector3(1.0f, 1.0f, 1.0f));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
+    mesh->Name = "planet2";
+    Planet2->AddOriginPosition(30, 0, 20);
 
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 

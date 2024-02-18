@@ -125,7 +125,7 @@ ${glm}glm.hpp
  "Engine/Modules/Light/SpotLight.h" 
  "Engine/Modules/Light/SpotLight.cpp"
  "Engine/Modules/DebugMesh.h"
- "Engine/Modules/DebugMesh.cpp"  "Engine/ShadersProgram/OpaqueShader.h" "Engine/ShadersProgram/OpaqueShader.cpp" "Engine/ShadersProgram/ColliderWireframeShader.h" "Engine/ShadersProgram/ColliderWireframeShader.cpp"  "Engine/ShadersProgram/CubeMapShader.h" "Engine/ShadersProgram/CubeMapShader.cpp")
+ "Engine/Modules/DebugMesh.cpp"  "Engine/ShadersProgram/OpaqueShader.h" "Engine/ShadersProgram/OpaqueShader.cpp" "Engine/ShadersProgram/ColliderWireframeShader.h" "Engine/ShadersProgram/ColliderWireframeShader.cpp"  "Engine/ShadersProgram/CubeMapShader.h" "Engine/ShadersProgram/CubeMapShader.cpp" "Engine/ShadersProgram/PathShader.h" "Engine/ShadersProgram/PathShader.cpp")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib

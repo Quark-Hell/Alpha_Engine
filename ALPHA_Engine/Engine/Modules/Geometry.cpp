@@ -266,6 +266,24 @@ std::vector<Mesh*> Geometry::SeparateByLooseParts() {
     return m;
 }
 
+bool Geometry::InsertVertex(Vector3 vertex, unsigned int pos, bool expand)
+{
+    if (pos > Geometry::_vertexCount && expand == false)
+        return false;
+
+    else if (pos > Geometry::_vertexCount && expand == true) {
+        //TODO: EXPAND
+        return false;
+    }
+    else
+    {
+        Geometry::_vertex[pos * 3] = vertex.X;
+        Geometry::_vertex[pos * 3 + 1] = vertex.Y;
+        Geometry::_vertex[pos * 3 + 2] = vertex.Z;
+    }
+
+}
+
 Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
     Vector3 maxPoint = { 0,0,0 };
     float maxDistance = -FLT_MAX;
@@ -293,15 +311,10 @@ void Geometry::AddPosition(float X, float Y, float Z) {
     Geometry::_position.Y += Y;
     Geometry::_position.Z += Z;
 
-    Geometry::_origin.X += X;
-    Geometry::_origin.Y += Y;
-    Geometry::_origin.Z += Z;
-
     Geometry::_isShifted = true;
 }
 void Geometry::AddPosition(Vector3 position) {
     Geometry::_position += position;
-    Geometry::_origin += position;
 
     Geometry::_isShifted = true;
 }
@@ -320,9 +333,13 @@ void Geometry::AddOriginPosition(float X, float Y, float Z) {
     Geometry::_origin.X += X;
     Geometry::_origin.Y += Y;
     Geometry::_origin.Z += Z;
+
+    Geometry::_isShifted = true;
 }
 void Geometry::AddOriginPosition(Vector3 position) {
     Geometry::_origin += position;
+
+    Geometry::_isShifted = true;
 }
 
 void Geometry::SetOriginPosition(float X, float Y, float Z) {

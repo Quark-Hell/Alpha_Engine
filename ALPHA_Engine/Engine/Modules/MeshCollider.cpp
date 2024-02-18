@@ -216,16 +216,10 @@ void MeshCollider::ModuleAdded()
 {
     MeshCollider::Create();
     MeshCollider::InitTransformatiom(*ParentObject);
-    //MeshCollider::ApplyTransformation();
 
 #ifdef _DEBUG
     MeshCollider::_debugMesh->SetParentObject(*MeshCollider::ParentObject);
-    //MeshCollider::_debugMesh->ModuleAdded();
 #endif
-
-    //Geometry::_isShifted = true;
-    //TODO: Add copy origin
-    //Geometry::_origin = ParentObject->geto();
 }
 
 

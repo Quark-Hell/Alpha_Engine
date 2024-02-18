@@ -1,0 +1,13 @@
+#version 460
+layout(location = 0) in vec3 vertex_position;
+
+out vec3 vertPos;
+
+uniform mat4 projection_matrix;
+uniform mat4 view_matrix;
+
+void main(){
+	vertPos = vertex_position;
+	vec4 pos = projection_matrix * view_matrix * vec4(vertex_position, 1.0);
+   gl_Position = view_matrix * projection_matrix * vec4(vertex_position, 1.0f);
+}

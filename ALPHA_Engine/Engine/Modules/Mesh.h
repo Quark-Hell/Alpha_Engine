@@ -29,6 +29,8 @@ public:
 	bool Create(std::string linkToFBX) override;
 	bool Create(std::string linkToFBX, bool initIndices, bool initVertex, bool initNormals, bool initTexCoord, bool initMaterial) override;
 
+	bool InsertVertex(Vector3 vertex, unsigned int pos, bool expand = false) override;
+
 	bool LoadTextureCoord(std::string pathToCoords);
 
 	virtual bool BindMesh();

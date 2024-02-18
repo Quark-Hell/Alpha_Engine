@@ -24,10 +24,6 @@ void Object::AddPosition(float X, float Y, float Z) {
 	Object::_position.Y += Y;
 	Object::_position.Z += Z;
 
-	Object::_origin.X += X;
-	Object::_origin.Y += Y;
-	Object::_origin.Z += Z;
-
 	//Object::_transformMatrix = glm::translate(Object::_transformMatrix, glm::vec3(_position.X, _position.Y, _position.Z));
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
@@ -43,7 +39,6 @@ void Object::AddPosition(float X, float Y, float Z) {
 }
 void Object::AddPosition(Vector3 position) {
 	Object::_position += position;
-	Object::_origin += position;
 
 	//Object::_transformMatrix = glm::translate(Object::_transformMatrix, glm::vec3(_position.X, _position.Y, _position.Z));
 
@@ -76,10 +71,10 @@ void Object::AddOriginPosition(float X, float Y, float Z) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		std::shared_ptr<Transform> transfrom = std::dynamic_pointer_cast<Transform>(Object::GetModuleByIndex(it));
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
-		if (transfrom != nullptr) {
-			transfrom->AddOriginPosition(X, Y, Z);
+		if (geometry != nullptr) {
+			geometry->_isShifted = true;
 		}
 	}
 }
@@ -88,10 +83,10 @@ void Object::AddOriginPosition(Vector3 position) {
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		std::shared_ptr<Transform> transfrom = std::dynamic_pointer_cast<Transform>(Object::GetModuleByIndex(it));
+		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
-		if (transfrom != nullptr) {
-			transfrom->AddOriginPosition(position);
+		if (geometry != nullptr) {
+			geometry->_isShifted = true;
 		}
 	}
 }
@@ -197,6 +192,11 @@ void Object::SetScale(Vector3 scale) {
 	Object::ApplyTransformation();
 }
 
+Vector3 Object::GetOriginPosition()
+{
+	return Object::_origin;
+}
+
 void Object::ApplyTransformation() {
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
@@ -244,6 +244,9 @@ bool Object::AddModule(ModulesList moduleType, Module** outputModule) {
 	case MeshColliderType:
 		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<MeshCollider>());
 		break;
+	case MeshType:
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<Mesh>());
+		break;
 	case BoxColliderType:
 		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<BoxCollider>());
 		break;
@@ -277,6 +280,9 @@ bool Object::AddModule(ModulesList moduleType) {
 		break;
 	case MeshColliderType:
 		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<MeshCollider>());
+		break;
+	case MeshType:
+		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<Mesh>());
 		break;
 	case BoxColliderType:
 		someModule = std::dynamic_pointer_cast<Module>(std::make_shared<BoxCollider>());

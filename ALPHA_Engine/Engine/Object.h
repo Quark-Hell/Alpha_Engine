@@ -49,6 +49,8 @@ public:
 	void SetScale(float X, float Y, float Z) override;
 	void SetScale(Vector3 scale) override;
 
+	Vector3 GetOriginPosition();
+
 	void AddOriginPosition(float X, float Y, float Z) override;
 	void AddOriginPosition(Vector3 position) override;
 	

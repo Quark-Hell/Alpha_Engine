@@ -12,6 +12,8 @@ void InitSun();
 void InitPlanet1();
 void InitPlanet2();
 
+void Path();
+
 void SetControl();
 
 void LeftMoveTestObject();

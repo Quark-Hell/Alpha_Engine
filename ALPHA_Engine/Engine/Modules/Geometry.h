@@ -20,7 +20,7 @@ protected:
 	//std::shared_ptr<std::vector<float>> _vertex = std::make_shared<std::vector<float>>();
 	std::shared_ptr<std::vector<float>> _normals = std::make_shared<std::vector<float>>();
 	std::shared_ptr<std::vector<unsigned int>> _indices = std::make_shared<std::vector<unsigned int>>();
-	float* _vertex;
+	float* _vertex = nullptr;
 
 	unsigned int _vertexCount = 0;
 
@@ -77,6 +77,9 @@ public:
 		bool initTexCoord = false, 
 		bool initMaterial = false);
 	//virtual void Delete();
+
+	//virtual bool SetVertices(float* vertices, float count);
+	virtual bool InsertVertex(Vector3 vertex, unsigned int pos, bool expand = false);
 
 	virtual Vector3 FindFurthestPoint(Vector3 direction);
 
