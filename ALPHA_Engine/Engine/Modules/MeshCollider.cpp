@@ -23,14 +23,13 @@ bool MeshCollider::Create(std::string linkToFBX) {
     const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
     aiMesh* mesh = s->mMeshes[0];
 
-    Geometry::_vertexCount = mesh->mNumVertices;
-    Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+    Geometry::_vertex->resize(mesh->mNumVertices * 3);
 
     for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
         if (mesh->HasPositions()) {
-            Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
-            Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
-            Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
+            (*Geometry::_vertex)[it] = mesh->mVertices[it / 3].x;
+            (*Geometry::_vertex)[it + 1] = mesh->mVertices[it / 3].y;
+            (*Geometry::_vertex)[it + 2] = mesh->mVertices[it / 3].z;
         }
     }
 
@@ -40,7 +39,7 @@ bool MeshCollider::Create(std::string linkToFBX) {
     MeshCollider::_debugMesh->Create(linkToFBX);
 #endif
 
-    AABB::UpdateAABB(Geometry::_vertex, Geometry::_vertexCount);
+    //AABB::UpdateAABB(Geometry::_vertex, Geometry::_vertexCount);
 
     Geometry::_isIndexed = true;
     Geometry::MakeUnique();
@@ -58,13 +57,11 @@ bool MeshCollider::Create()
     if (mesh == nullptr)
         return false;
 
-
-    MeshCollider::_vertexCount = mesh->_vertexCount;
-    MeshCollider::_vertex = new float[MeshCollider::_vertexCount * 3];
+    Geometry::_vertex->resize(mesh->_vertex->size());
     
-    for (std::uint32_t it = 0; it < mesh->_vertexCount * 3; it++)
+    for (std::uint32_t it = 0; it < mesh->_vertex->size(); it++)
     {
-        MeshCollider::_vertex[it] = mesh->_vertex[it];
+        (*MeshCollider::_vertex)[it] = (*mesh->_vertex)[it];
     }
 
 #ifdef _DEBUG
@@ -99,22 +96,22 @@ void MeshCollider::ApplyTransformation() {
         MeshCollider::_transformMatrix = MeshCollider::GetParentObject()->GetTransformationMatrix() * MeshCollider::_transformMatrix;
     }
 
-    for (size_t jt = 0; jt < MeshCollider::_vertexCount * 3; jt += 3)
+    for (size_t jt = 0; jt < MeshCollider::_vertex->size(); jt += 3)
     {
-        glm::vec4 buf(MeshCollider::_vertex[jt], MeshCollider::_vertex[jt + 1], MeshCollider::_vertex[jt + 2], 1);
+        glm::vec4 buf((*MeshCollider::_vertex)[jt], (*MeshCollider::_vertex)[jt + 1], (*MeshCollider::_vertex)[jt + 2], 1);
 
         glm::vec4 res;
         res = MeshCollider::_transformMatrix * buf;
-        MeshCollider::_vertex[jt + 0] = res.x;
-        MeshCollider::_vertex[jt + 1] = res.y;
-        MeshCollider::_vertex[jt + 2] = res.z;
+        (*MeshCollider::_vertex)[jt + 0] = res.x;
+        (*MeshCollider::_vertex)[jt + 1] = res.y;
+        (*MeshCollider::_vertex)[jt + 2] = res.z;
     }
 
 #ifdef _DEBUG
     MeshCollider::_debugMesh->ApplyTransformation();
 #endif
 
-    AABB::UpdateAABB(MeshCollider::_vertex, MeshCollider::_vertexCount);
+    //AABB::UpdateAABB(MeshCollider::_vertex, MeshCollider::_vertexCount);
     MeshCollider::_transformMatrix = glm::mat4x4(1.0f);
 }
 
@@ -151,15 +148,15 @@ void MeshCollider::InitTransformatiom(Object& newParent)
 
     MeshCollider::_transformMatrix = deltaMat * MeshCollider::_transformMatrix;
 
-    for (size_t jt = 0; jt < MeshCollider::_vertexCount * 3; jt += 3)
+    for (size_t jt = 0; jt < MeshCollider::_vertex->size(); jt += 3)
     {
-        glm::vec4 buf(MeshCollider::_vertex[jt], MeshCollider::_vertex[jt + 1], MeshCollider::_vertex[jt + 2], 1);
+        glm::vec4 buf((*MeshCollider::_vertex)[jt], (*MeshCollider::_vertex)[jt + 1], (*MeshCollider::_vertex)[jt + 2], 1);
 
         glm::vec4 res;
         res = MeshCollider::_transformMatrix * buf;
-        MeshCollider::_vertex[jt + 0] = res.x;
-        MeshCollider::_vertex[jt + 1] = res.y;
-        MeshCollider::_vertex[jt + 2] = res.z;
+        (*MeshCollider::_vertex)[jt + 0] = res.x;
+        (*MeshCollider::_vertex)[jt + 1] = res.y;
+        (*MeshCollider::_vertex)[jt + 2] = res.z;
     }
 
     MeshCollider::_transformMatrix = glm::mat4x4(1.0f);
@@ -198,15 +195,15 @@ void MeshCollider::InitTransformatiom(Object& oldParent, Object& newParent)
 
     MeshCollider::_transformMatrix = deltaMat * MeshCollider::_transformMatrix;
 
-    for (size_t jt = 0; jt < MeshCollider::_vertexCount * 3; jt += 3)
+    for (size_t jt = 0; jt < MeshCollider::_vertex->size(); jt += 3)
     {
-        glm::vec4 buf(MeshCollider::_vertex[jt], MeshCollider::_vertex[jt + 1], MeshCollider::_vertex[jt + 2], 1);
+        glm::vec4 buf((*MeshCollider::_vertex)[jt], (*MeshCollider::_vertex)[jt + 1], (*MeshCollider::_vertex)[jt + 2], 1);
 
         glm::vec4 res;
         res = MeshCollider::_transformMatrix * buf;
-        MeshCollider::_vertex[jt + 0] = res.x;
-        MeshCollider::_vertex[jt + 1] = res.y;
-        MeshCollider::_vertex[jt + 2] = res.z;
+        (*MeshCollider::_vertex)[jt + 0] = res.x;
+        (*MeshCollider::_vertex)[jt + 1] = res.y;
+        (*MeshCollider::_vertex)[jt + 2] = res.z;
     }
 
     MeshCollider::_transformMatrix = glm::mat4x4(1.0f);

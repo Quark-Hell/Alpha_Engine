@@ -20,6 +20,7 @@ void Mesh::SetParentObject(const Object& parent) {
 }
 
 bool Mesh::Create(std::string linkToFBX) {
+	Mesh::_vertex->clear();
 	Mesh::_indices->clear();
 	Mesh::_normals->clear();
 	Mesh::_texCoords->clear();
@@ -42,31 +43,30 @@ bool Mesh::Create(std::string linkToFBX) {
 
 
 	if (mesh->HasPositions()) {
-		Geometry::_vertexCount = mesh->mNumVertices;
-		Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+		Geometry::_vertex->resize(mesh->mNumVertices * 3);
 
 		for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
 
-			Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
-			Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
-			Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
+			(*Geometry::_vertex)[it] = mesh->mVertices[it / 3].x;
+			(*Geometry::_vertex)[it + 1] = mesh->mVertices[it / 3].y;
+			(*Geometry::_vertex)[it + 2] = mesh->mVertices[it / 3].z;
 
-			if (mesh->HasVertexColors(0)) {
-				aiColor4D color = mesh->mColors[0][it / 3];
-				//Mesh::_vertexColors->push_back(mesh->mColors());
-			}
-			else
-			{
-				Mesh::_vertexColors->push_back(0.9f);
-				Mesh::_vertexColors->push_back(0.9f);
-				Mesh::_vertexColors->push_back(0.9f);
-			}
+			//if (mesh->HasVertexColors(0)) {
+			//	aiColor4D color = mesh->mColors[0][it / 3];
+			//	//Mesh::_vertexColors->push_back(mesh->mColors());
+			//}
+			//else
+			//{
+			//	Mesh::_vertexColors->push_back(0.9f);
+			//	Mesh::_vertexColors->push_back(0.9f);
+			//	Mesh::_vertexColors->push_back(0.9f);
+			//}
 		}
 	}
 
 
 	if (mesh->HasNormals()) {
-		Mesh::_normals->resize(Geometry::_vertexCount * 3);
+		Mesh::_normals->resize(Geometry::_vertex->size());
 
 		for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
 			(*Mesh::_normals)[it] = mesh->mNormals[it / 3].x;
@@ -76,7 +76,7 @@ bool Mesh::Create(std::string linkToFBX) {
 	}
 
 	if (mesh->HasTextureCoords(0)) {
-		Mesh::_texCoords->resize(Geometry::_vertexCount * 2);
+		Mesh::_texCoords->resize((Geometry::_vertex->size() / 3) * 2);
 
 		for (std::uint32_t it = 0; it < Mesh::_texCoords->size(); it += 2) {
 			(*Mesh::_texCoords)[it] = mesh->mTextureCoords[0][it / 2].x;
@@ -94,6 +94,7 @@ bool Mesh::Create(std::string linkToFBX) {
 
 bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool initNormals, bool initTexCoord, bool initMaterial)
 {
+	Mesh::_vertex->clear();
 	Mesh::_indices->clear();
 	Mesh::_normals->clear();
 	Mesh::_texCoords->clear();
@@ -126,19 +127,18 @@ bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool
 	}
 
 	if (mesh->HasPositions() && initVertex) {
-		Geometry::_vertexCount = mesh->mNumVertices;
-		Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+		Geometry::_vertex->resize(mesh->mNumVertices * 3);
 		for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
 
-			Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
-			Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
-			Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
+			(*Geometry::_vertex)[it] = mesh->mVertices[it / 3].x;
+			(*Geometry::_vertex)[it + 1] = mesh->mVertices[it / 3].y;
+			(*Geometry::_vertex)[it + 2] = mesh->mVertices[it / 3].z;
 		}
 	}
 
 
 	if (mesh->HasNormals() && initNormals) {
-		Geometry::_normals->resize(Geometry::_vertexCount * 3);
+		Geometry::_normals->resize(Geometry::_vertex->size());
 
 		for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
 
@@ -149,7 +149,7 @@ bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool
 	}
 
 	if (mesh->HasTextureCoords(0) && initTexCoord) {
-		Mesh::_texCoords->resize(Geometry::_vertexCount * 2);
+		Mesh::_texCoords->resize((Geometry::_vertex->size() / 3) * 2);
 
 		for (std::uint32_t it = 0; it < Mesh::_texCoords->size(); it += 2) {
 			(*Mesh::_texCoords)[it] = mesh->mTextureCoords[0][it / 2].x;
@@ -245,7 +245,7 @@ bool Mesh::BindMesh() {
 	if (Mesh::_vertex != nullptr) {
 		glGenBuffers(1, &_vertexVbo);
 		glBindBuffer(GL_ARRAY_BUFFER, _vertexVbo);
-		glBufferData(GL_ARRAY_BUFFER, Mesh::_vertexCount * 3 * sizeof(float), Mesh::_vertex, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, Mesh::_vertex->size() * sizeof(float), Mesh::_vertex->data(), GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, _vertexVbo);

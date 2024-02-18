@@ -53,6 +53,8 @@ std::shared_ptr<Object> Sun;
 std::shared_ptr<Object> Planet1;
 std::shared_ptr<Object> Planet2;
 
+std::shared_ptr<Object> cube;
+std::shared_ptr<Object> plane;
 
 
 PointLight pLight;
@@ -69,6 +71,23 @@ Mesh* pathMesh1 = std::dynamic_pointer_cast<Mesh>(path1->GetModuleByType(MeshTyp
 PathShader* pathShader1;
 
 void GameFunction::Start() {
+    Mesh* mesh;
+    //cube = Primitives::Sphere({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(10, 10, 10));
+    //Mesh* mesh = std::dynamic_pointer_cast<Mesh>(cube->GetModuleByType(MeshType)).get();
+    //mesh->Name = "sun";
+    //
+    //mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
+    //
+    //mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
+    //mesh->_material->Shader->LoadTexture(Emission, "\\Textures\\suncyl1-grayscale.jpg");
+    //
+
+    //cube->AddModule(BoxColliderType);
+    //cube->AddModule(RigidBodyType);
+
+    plane = Primitives::Cube({ 0,0,0 }, { 0,-3,0 }, { 3,3,1 });
+    plane->AddModule(BoxColliderType);
+
     path1->AddModule(MeshType);
     pathMesh1 = std::dynamic_pointer_cast<Mesh>(path1->GetModuleByType(MeshType)).get();
     pathMesh1->_material->Shader = std::make_shared<PathShader>(pathMesh1->_material.get());
@@ -76,20 +95,26 @@ void GameFunction::Start() {
 
 
 
-
-
     CubeMapObj = Primitives::Cube({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(1, 1, 1));
-    Mesh* mesh = std::dynamic_pointer_cast<Mesh>(CubeMapObj->GetModuleByType(MeshType)).get();
+    mesh = std::dynamic_pointer_cast<Mesh>(CubeMapObj->GetModuleByType(MeshType)).get();
     mesh->Name = "CubeMap";
 
     mesh->_material->Shader = std::make_shared<CubeMapShader>(mesh->_material.get());
-    //mesh->_material->Shader->SetParent(*mesh->_material);
 
     SetControl();
 
-    InitSun();
-    InitPlanet1();
-    InitPlanet2();
+    cube = Primitives::Cube({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(10, 1, 1));
+    Mesh* meshs = std::dynamic_pointer_cast<Mesh>(cube->GetModuleByType(MeshType)).get();
+    meshs->_material->Shader = std::make_shared<OpaqueShader>(meshs->_material.get());
+    meshs->_material->Shader->LoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
+    meshs->_material->Shader->LoadTexture(Emission, "\\Textures\\suncyl1-grayscale.jpg");
+
+    //cube->AddModule(BoxColliderType);
+    //cube->AddModule(RigidBodyType);
+
+    //InitSun();
+    //InitPlanet1();
+    //InitPlanet2();
 
 
     //
@@ -130,16 +155,16 @@ void GameFunction::Start() {
 
 void GameFunction::Update() {
     //Sun->AddRotation(0.02, -0.1, 0);
-    Sun->AddRotation(0.1, 0.2, 0);
-    Planet1->AddRotation(0, 0.1, 0);
-    Mesh* mesh1 = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
-    mesh1->AddRotation(0,3,0);
+    //Sun->AddRotation(0.1, 0.2, 0);
+    //Planet1->AddRotation(0, 0.1, 0);
+    //Mesh* mesh1 = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
+    //mesh1->AddRotation(0,3,0);
+    //
+    //Planet2->AddRotation(0, 0.3, 0);
+    //Mesh* mesh2 = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
+    //mesh2->AddRotation(0, 3, 0);
 
-    Planet2->AddRotation(0, 0.3, 0);
-    Mesh* mesh2 = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
-    mesh2->AddRotation(0, 3, 0);
-
-    Path();
+    //Path();
     //sLight.AddRotation(0, -5, 0); 
     //plane2->AddRotation(0, -5, 0);
 

@@ -21,11 +21,7 @@ ModulesList DebugMesh::GetType()
 
 bool DebugMesh::Create(std::string linkToFBX)
 {
-    if (DebugMesh::_vertexCount != 0) {
-        free(DebugMesh::_vertex);
-        DebugMesh::_vertexCount = 0;
-    }
-    
+    DebugMesh::_vertex->clear();  
     DebugMesh::_indices->clear();
     
     Assimp::Importer importer;
@@ -45,14 +41,13 @@ bool DebugMesh::Create(std::string linkToFBX)
     }
     
     if (mesh->HasPositions()) {
-        DebugMesh::_vertexCount = mesh->mNumVertices;
-        DebugMesh::_vertex = new float[DebugMesh::_vertexCount * 3];
+        Geometry::_vertex->resize(mesh->mNumVertices * 3);
     
         for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
     
-            DebugMesh::_vertex[it] = mesh->mVertices[it / 3].x;
-            DebugMesh::_vertex[it + 1] = mesh->mVertices[it / 3].y;
-            DebugMesh::_vertex[it + 2] = mesh->mVertices[it / 3].z;
+            (*DebugMesh::_vertex)[it] = mesh->mVertices[it / 3].x;
+            (*DebugMesh::_vertex)[it + 1] = mesh->mVertices[it / 3].y;
+            (*DebugMesh::_vertex)[it + 2] = mesh->mVertices[it / 3].z;
         }
     }
     
@@ -64,14 +59,7 @@ bool DebugMesh::Create(std::string linkToFBX)
 bool DebugMesh::Create(Geometry& geometry)
 {
     _indices = geometry._indices;
-    
-    _vertexCount = geometry._vertexCount;
-    _vertex = new float[geometry._vertexCount * 3];
-    
-    for (std::uint32_t it = 0; it < geometry._vertexCount * 3; it++)
-    {
-        _vertex[it] = geometry._vertex[it];
-    }
+    _vertex = geometry._vertex;
     
     BindMesh();
     
@@ -94,7 +82,7 @@ bool DebugMesh::BindMesh()
     if (DebugMesh::_vertex != nullptr) {
         glGenBuffers(1, &_vertexVbo);
         glBindBuffer(GL_ARRAY_BUFFER, DebugMesh::_vertexVbo);
-        glBufferData(GL_ARRAY_BUFFER, DebugMesh::_vertexCount * 3 * sizeof(float), DebugMesh::_vertex, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, DebugMesh::_vertex->size() * sizeof(float), DebugMesh::_vertex->data(), GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, DebugMesh::_vertexVbo);

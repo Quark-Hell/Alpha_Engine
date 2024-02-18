@@ -63,29 +63,29 @@ void RigidBody::CalculateCenterMass() {
 	scope[5] = -FLT_MAX;
 
 	for (unsigned int it = 0; it < geometries.size(); it++) {
-		for (unsigned int jt = 0; jt < geometries[it]->_vertexCount * 3; jt += 3) {
+		for (unsigned int jt = 0; jt < geometries[it]->_vertex->size(); jt += 3) {
 			//X
-			if (geometries[it]->_vertex[jt] < scope[0]) {
-				scope[0] = geometries[it]->_vertex[jt];
+			if ((*geometries[it]->_vertex)[jt] < scope[0]) {
+				scope[0] = (*geometries[it]->_vertex)[jt];
 			}
-			else if (geometries[it]->_vertex[jt] > scope[1]) {
-				scope[1] = geometries[it]->_vertex[jt];
+			else if ((*geometries[it]->_vertex)[jt] > scope[1]) {
+				scope[1] = (*geometries[it]->_vertex)[jt];
 			}
 
 			//Y
-			if (geometries[it]->_vertex[jt + 1] < scope[2]) {
-				scope[2] = geometries[it]->_vertex[jt + 1];
+			if ((*geometries[it]->_vertex)[jt + 1] < scope[2]) {
+				scope[2] = (*geometries[it]->_vertex)[jt + 1];
 			}
-			else if (geometries[it]->_vertex[jt + 1] > scope[3]) {
-				scope[3] = geometries[it]->_vertex[jt + 1];
+			else if ((*geometries[it]->_vertex)[jt + 1] > scope[3]) {
+				scope[3] = (*geometries[it]->_vertex)[jt + 1];
 			}
 
 			//Z
-			if (geometries[it]->_vertex[jt + 2] < scope[4]) {
-				scope[4] = geometries[it]->_vertex[jt + 2];
+			if ((*geometries[it]->_vertex)[jt + 2] < scope[4]) {
+				scope[4] = (*geometries[it]->_vertex)[jt + 2];
 			}
-			else if (geometries[it]->_vertex[jt + 2] > scope[5]) {
-				scope[5] = geometries[it]->_vertex[jt + 2];
+			else if ((*geometries[it]->_vertex)[jt + 2] > scope[5]) {
+				scope[5] = (*geometries[it]->_vertex)[jt + 2];
 			}
 		}
 

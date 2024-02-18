@@ -22,6 +22,10 @@ ModulesList Geometry::GetType() {
 }
 
 bool Geometry::Create(std::string linkToFBX) {
+    Geometry::_vertex->clear();
+    Geometry::_indices->clear();
+    Geometry::_normals->clear();
+
     Assimp::Importer importer;
     std::string path = std::filesystem::current_path().string() + linkToFBX.c_str();
 
@@ -38,18 +42,17 @@ bool Geometry::Create(std::string linkToFBX) {
         }
     }
 
-    Geometry::_vertexCount = mesh->mNumVertices;
-    Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+    Geometry::_vertex->resize(mesh->mNumVertices * 3);
 
     for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
         if (mesh->HasPositions()) {
-            Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
-            Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
-            Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
+            (*Geometry::_vertex)[it] = mesh->mVertices[it / 3].x;
+            (*Geometry::_vertex)[it + 1] = mesh->mVertices[it / 3].y;
+            (*Geometry::_vertex)[it + 2] = mesh->mVertices[it / 3].z;
         }
     }
 
-    Geometry::_normals->resize(Geometry::_vertexCount * 3);
+    Geometry::_normals->resize(Geometry::_vertex->size());
 
     for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
         if (mesh->HasNormals()) {
@@ -74,6 +77,7 @@ bool Geometry::Create(std::string linkToFBX,
     bool initTexCoord, 
     bool initMaterial)
 {
+    Geometry::_vertex->clear();
     Geometry::_indices->clear();
     Geometry::_normals->clear();
 
@@ -105,19 +109,18 @@ bool Geometry::Create(std::string linkToFBX,
     }
 
     if (mesh->HasPositions() && initVertex) {
-        Geometry::_vertexCount = mesh->mNumVertices;
-        Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+        Geometry::_vertex->resize(mesh->mNumVertices * 3);
         for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
 
-            Geometry::_vertex[it] = mesh->mVertices[it / 3].x;
-            Geometry::_vertex[it + 1] = mesh->mVertices[it / 3].y;
-            Geometry::_vertex[it + 2] = mesh->mVertices[it / 3].z;
+            (*Geometry::_vertex)[it] = mesh->mVertices[it / 3].x;
+            (*Geometry::_vertex)[it + 1] = mesh->mVertices[it / 3].y;
+            (*Geometry::_vertex)[it + 2] = mesh->mVertices[it / 3].z;
         }
     }
 
 
     if (mesh->HasNormals() && initNormals) {
-        Geometry::_normals->resize(Geometry::_vertexCount * 3);
+        Geometry::_normals->resize(Geometry::_vertex->size());
 
         for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
 
@@ -145,12 +148,12 @@ void Geometry::MakeUnique() {
     hash.resize(arr_len * sizeof(float));
     
     //delete same vertex by use hash map
-    for (size_t it = 0; it < Geometry::_vertexCount * 3; it += 3)
+    for (size_t it = 0; it < Geometry::_vertex->size(); it += 3)
     {
         //insert vert
-        buffer[0] = Geometry::_vertex[it];
-        buffer[1] = Geometry::_vertex[it + 1];
-        buffer[2] = Geometry::_vertex[it + 2];
+        buffer[0] = (*Geometry::_vertex)[it];
+        buffer[1] = (*Geometry::_vertex)[it + 1];
+        buffer[2] = (*Geometry::_vertex)[it + 2];
     
         memcpy((char*)hash.data(), &buffer, arr_len * sizeof(float));
     
@@ -159,9 +162,8 @@ void Geometry::MakeUnique() {
         uniqueMap.insert(vertPair);
     }
     
-    Geometry::_vertexCount = uniqueMap.size();
-    free(Geometry::_vertex);
-    Geometry::_vertex = new float[Geometry::_vertexCount * 3];
+    Geometry::_vertex->clear();
+    Geometry::_vertex->resize(uniqueMap.size() * 3);
 
     //int it = 0;
     //for (const auto& pair : uniqueMap) {
@@ -178,9 +180,9 @@ void Geometry::MakeUnique() {
         auto begin = uniqueMap.begin();
         std::advance(begin, it / 3);
     
-        Geometry::_vertex[it]   = begin->second[0];
-        Geometry::_vertex[it+1] = begin->second[1];
-        Geometry::_vertex[it+2] = begin->second[2];
+        (*Geometry::_vertex)[it]   = begin->second[0];
+        (*Geometry::_vertex)[it+1] = begin->second[1];
+        (*Geometry::_vertex)[it+2] = begin->second[2];
     }
 }
 
@@ -202,16 +204,16 @@ std::vector<Mesh*> Geometry::SeparateByLooseParts() {
     std::string hash;
     hash.resize(arr_len * sizeof(float));
 
-    Graph graph{ unsigned int(Geometry::_vertexCount)};
+    Graph graph{ unsigned int(Geometry::_vertex->size() / 3)};
 
     unsigned int sizeBeforeInsert;
 
     //Create graph
-    for (size_t it = 0; it < Geometry::_vertexCount * 3; it+=3)
+    for (size_t it = 0; it < Geometry::_vertex->size(); it+=3)
     {
-        vert.Point.X = _vertex[it];
-        vert.Point.Y = _vertex[it + 1];
-        vert.Point.Z = _vertex[it + 2];
+        vert.Point.X = (*_vertex)[it];
+        vert.Point.Y = (*_vertex)[it + 1];
+        vert.Point.Z = (*_vertex)[it + 2];
 
         vert.TriangleID = it / 3;
 
@@ -268,20 +270,20 @@ std::vector<Mesh*> Geometry::SeparateByLooseParts() {
 
 bool Geometry::InsertVertex(Vector3 vertex, unsigned int pos, bool expand)
 {
-    if (pos > Geometry::_vertexCount && expand == false)
-        return false;
-
-    else if (pos > Geometry::_vertexCount && expand == true) {
-        //TODO: EXPAND
-        return false;
-    }
-    else
-    {
-        Geometry::_vertex[pos * 3] = vertex.X;
-        Geometry::_vertex[pos * 3 + 1] = vertex.Y;
-        Geometry::_vertex[pos * 3 + 2] = vertex.Z;
-    }
-
+    //if (pos > Geometry::_vertexCount && expand == false)
+    //    return false;
+    //
+    //else if (pos > Geometry::_vertexCount && expand == true) {
+    //    //TODO: EXPAND
+    //    return false;
+    //}
+    //else
+    //{
+    //    Geometry::_vertex[pos * 3] = vertex.X;
+    //    Geometry::_vertex[pos * 3 + 1] = vertex.Y;
+    //    Geometry::_vertex[pos * 3 + 2] = vertex.Z;
+    //}
+    return false;
 }
 
 Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
@@ -289,11 +291,11 @@ Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
     float maxDistance = -FLT_MAX;
     Vector3 vertexPos = { 0,0,0 };
 
-    for (size_t it = 0; it < Geometry::_vertexCount * 3; it+=3) {
+    for (size_t it = 0; it < Geometry::_vertex->size(); it+=3) {
 
-        vertexPos.X = Geometry::_vertex[it];
-        vertexPos.Y = Geometry::_vertex[it + 1];
-        vertexPos.Z = Geometry::_vertex[it + 2];
+        vertexPos.X = (*Geometry::_vertex)[it];
+        vertexPos.Y = (*Geometry::_vertex)[it + 1];
+        vertexPos.Z = (*Geometry::_vertex)[it + 2];
   
         float distance = Vector3::DotProduct(vertexPos, direction);
         if (distance > maxDistance) {

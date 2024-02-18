@@ -64,8 +64,6 @@ private:
 	static std::pair<std::vector<Vector4>, size_t> GetFaceNormals(std::vector<Vector3>& polytope, std::vector<size_t>& faces);
 	static void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces,size_t a,size_t b);
 
-	static std::shared_ptr<std::vector<float>> GetContactPoints(Geometry& geometry, Vector3 moveVector);
-
 	static void CalculateContactPoints(Geometry& contactObject1, Geometry& contactObject2, CollisionInfo& colInfo);
 	static void CheckIntersection(
 		std::vector<std::pair<Vector3, float>>& contactPointsA, 

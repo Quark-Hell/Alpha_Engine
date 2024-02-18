@@ -403,39 +403,6 @@ void Collision::AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges,st
     }
 }
 
-std::shared_ptr<std::vector<float>> Collision::GetContactPoints(Geometry& geometry, Vector3 moveVector) {
-
-    std::shared_ptr<std::vector<float>> ContactPoints = std::make_shared<std::vector<float>>();
-
-    Vector3 vec = Vector3{ geometry._vertex[0], geometry._vertex[1] , geometry._vertex[2] };
-    float maxDotProduct = Vector3::DotProduct(vec, moveVector);
-
-    ContactPoints->push_back(geometry._vertex[0]);
-    ContactPoints->push_back(geometry._vertex[1]);
-    ContactPoints->push_back(geometry._vertex[2]);
-
-    for (unsigned int i = 3; i < geometry._vertexCount * 3; i+=3) {
-        vec = Vector3{ geometry._vertex[i], geometry._vertex[i + 1] , geometry._vertex[i + 2] };
-        float currentDotProduct = Vector3::DotProduct(vec, moveVector);
-
-        if (maxDotProduct < currentDotProduct) {
-            maxDotProduct = currentDotProduct;
-
-            ContactPoints->clear();
-            ContactPoints->push_back(geometry._vertex[i]);
-            ContactPoints->push_back(geometry._vertex[i + 1]);
-            ContactPoints->push_back(geometry._vertex[i + 2]);
-        }
-        else if (Math::ApproximatelyEqual(maxDotProduct,currentDotProduct, 0.001)) {
-            ContactPoints->push_back(geometry._vertex[i]);
-            ContactPoints->push_back(geometry._vertex[i + 1]);
-            ContactPoints->push_back(geometry._vertex[i + 2]);
-        }
-    }
-
-    return ContactPoints;
-}
-
 void Collision::CalculateContactPoints(Geometry& contactObject1, Geometry& contactObject2, CollisionInfo& colInfo) {
     auto findOrigin = [](const std::vector<std::pair<Vector3, float>>& points) {
         Vector3 origin{ 0,0,0 };
@@ -452,9 +419,9 @@ void Collision::CalculateContactPoints(Geometry& contactObject1, Geometry& conta
         return false;
     };
     auto findContactPoints = [](Geometry& contactObject, Plane contactPlane, std::vector<std::pair<Vector3, float>>& contactBuf) {  
-        for (size_t i = 0; i < contactObject._vertexCount * 3; i += 3)
+        for (size_t i = 0; i < contactObject._vertex->size(); i += 3)
         {
-            Vector3 point{ contactObject._vertex[i + 0],contactObject._vertex[i + 1],contactObject._vertex[i + 2] };
+            Vector3 point{ (*contactObject._vertex)[i + 0],(*contactObject._vertex)[i + 1],(*contactObject._vertex)[i + 2] };
             point += contactObject.GetParentObject()->GetPosition();
 
             float distance = Vector3::GetVertexToPlaneDistance(point, contactPlane.P1, contactPlane.Normal);

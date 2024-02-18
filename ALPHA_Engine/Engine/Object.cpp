@@ -381,7 +381,7 @@ unsigned long Object::GetGeometryHeaviness() {
 		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr && geometry->_isShifted == true) {
-			heaviness += geometry->_vertexCount;
+			heaviness += geometry->_vertex->size() / 3;
 			heaviness += geometry->_normals->size() / 3;
 		}
 	}
