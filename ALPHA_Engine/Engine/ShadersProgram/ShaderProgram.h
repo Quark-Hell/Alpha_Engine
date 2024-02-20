@@ -30,6 +30,21 @@ enum TypeOfOpaqueTextuere {
 	OcclusionMap = 8
 };
 
+enum RenderModes {
+	Points = 0,
+	LineStip = 1,
+	LineLoop = 2,
+	Lines = 3,
+	LineStripAdjacency = 4,
+	LinesAdjacency = 5,
+	TriangleStrip = 6,
+	TriangleFan = 7,
+	Triangles = 8,
+	TriangleStripAdjacency = 9,
+	TrianglesAdjacency = 10,
+	Patches = 11,
+};
+
 class ShaderProgram
 {
 private:
@@ -51,6 +66,9 @@ private:
 	std::shared_ptr<std::string> _computeShaderSource = std::make_shared<std::string>();
 	
 	Material* _parentMaterial;
+
+protected:
+	RenderModes RenderMode = RenderModes::Triangles;
 
 public:
 	ShaderProgram(Material* parentMat);

@@ -58,7 +58,6 @@ void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int 
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 
-
     //GLEW Init
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
@@ -74,8 +73,6 @@ void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int 
 
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-
-
     
     ////Todo:
     ////glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE) if MacOs
@@ -90,6 +87,9 @@ Screen* Render::GetScreenClass() {
 
 void Render::PrepareToRender() {
     glClearColor(0.3f, 0.3f, 0.3f, 0.f);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     //glEnable(GL_CULL_FACE); // enable culling face
     //glCullFace(GL_BACK); // cull faces from back
@@ -161,12 +161,18 @@ void Render::RenderMesh(Mesh& mesh, std::shared_ptr<Camera> camera) {
 
     if (mesh._material->Shader->GetCompiledStatus() == false)
         return;
+
     glUseProgram(mesh._material->Shader->GetProgramId());
     glBindVertexArray(mesh._vao);
 
     mesh._material->Shader->ApplyShadersSettings(camera);
+    int renderMode = Render::GetRenderMode(mesh._material->Shader->RenderMode);
 
-    glDrawElements(GL_TRIANGLES, mesh._indices->size(), GL_UNSIGNED_INT, mesh._indices->data());
+    if (mesh._isIndexed)
+        glDrawElements(renderMode, mesh._indices->size(), GL_UNSIGNED_INT, mesh._indices->data());
+    else
+        glDrawArrays(renderMode, 0, mesh._vertex->size() / 3);
+
     glBindVertexArray(0);
 }
 
@@ -221,28 +227,56 @@ void Render::RenderWorldAABB(Node& rootNode) {
 #endif // _DEBUG
 }
 
-void Render::RenderCubeMap(Mesh& mesh, std::shared_ptr<Camera> camera)
-{
-    if (mesh._material->Shader == nullptr)
-        return;
+int Render::GetRenderMode(RenderModes renderMode) {
+    int renderModeID = 0;
+    switch (renderMode)
+    {
+    case Points:
+        renderModeID = GL_POINTS;
+        break;
+    case LineStip:
+        renderModeID = GL_LINE_STRIP;
+        break;
+    case LineLoop:
+        renderModeID = GL_LINE_LOOP;
+        break;
+    case Lines:
+        renderModeID = GL_LINES;
+        break;
+    case LineStripAdjacency:
+        renderModeID = GL_LINE_STRIP_ADJACENCY;
+        break;
+    case LinesAdjacency:
+        renderModeID = GL_LINES_ADJACENCY;
+        break;
+    case TriangleStrip:
+        renderModeID = GL_TRIANGLE_STRIP;
+        break;
+    case TriangleFan:
+        renderModeID = GL_TRIANGLE_FAN;
+        break;
+    case Triangles:
+        renderModeID = GL_TRIANGLES;
+        break;
+    case TriangleStripAdjacency:
+        renderModeID = GL_TRIANGLE_STRIP_ADJACENCY;
+        break;
+    case TrianglesAdjacency:
+        renderModeID = GL_TRIANGLES_ADJACENCY;
+        break;
+    case Patches:
+        renderModeID = GL_PATCHES;
+        break;
+    default:
+        break;
+    }
 
-    if (mesh._material->Shader->GetCompiledStatus() == false)
-        return;
-
-    glDepthFunc(GL_LEQUAL);
-    //glDepthMask(GL_FALSE);
-    glUseProgram(mesh._material->Shader->GetProgramId());
-    glBindVertexArray(mesh._vao);
-
-    mesh._material->Shader->ApplyShadersSettings(camera);
-
-    glDrawElements(GL_TRIANGLES, mesh._indices->size(), GL_UNSIGNED_INT, mesh._indices->data());
-    glBindVertexArray(0);
-    //glDepthMask(GL_TRUE);
-    glDepthFunc(GL_LESS);
+    return renderModeID;
 }
 
 void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
+    Mesh* skyBox = nullptr;
+
     for (size_t i = 0; i < World::ObjectsOnScene.size(); i++)
     {
         for (size_t j = 0; j < World::ObjectsOnScene[i]->GetCountOfModules(); j++)
@@ -251,6 +285,10 @@ void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
 
             if (type == MeshType) {
                 std::shared_ptr<Mesh> mesh = std::dynamic_pointer_cast<Mesh>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+                if (mesh->Name == "SkyBox") {
+                    skyBox = mesh.get();
+                    continue;
+                }
 
                 Render::SetMeshRenderOptions();
                 Render::RenderMesh(*mesh, camera);
@@ -280,6 +318,15 @@ void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
 #pragma endregion
         }
     } 
+
+    if (skyBox != nullptr) {
+        glDepthFunc(GL_LEQUAL);
+        //glDisable(GL_CULL_FACE);
+        //glEnable(GL_DEPTH_TEST);
+        //Render::SetMeshRenderOptions();
+        Render::RenderMesh(*skyBox, camera);
+        glDepthFunc(GL_LESS);
+    }
 
 #ifdef _DEBUG
     //TODO: BVH Tree does not work now
@@ -322,18 +369,6 @@ void Render::RenderLoop(std::shared_ptr<Camera> camera) {
         //Render::ApplyCameraTransform(camera);
 
         Render::SceneAssembler(camera);
-        //if (shader.GetCompiledStatus() == true) {
-        //    //glUseProgram(shader.GetProgramId().value());
-        //    //glBindVertexArray(vao);
-        //    
-        //    //glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
-        //    //shader.SetValue(ShadersType::VertexShader, "model_matrix", &modelMat);
-        //    //
-        //    //glm::mat4x4 viewMat = camera->_projectionMatrix * camera->_transformMatrix;
-        //    //shader.SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
-        //
-        //    glDrawArrays(GL_TRIANGLES, 0, 3);
-        //}
 
         glFinish();
         glfwSwapBuffers(_screenClass._window);

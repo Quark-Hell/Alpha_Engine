@@ -24,6 +24,8 @@ class AABB;
 class Node;
 class MeshCollider;
 
+enum RenderModes;
+
 struct Colors {
 	const Vector3 green { 0.0f, 1.0f, 0.0f }; 
 	const Vector3 orange {	1.0f, 0.5f, 0.0f}; 
@@ -80,7 +82,8 @@ private:
 	void RenderMesh(Mesh& mesh, std::shared_ptr<Camera>  camera);
 	void RenderAABB(std::vector<float>& vertex, std::vector<unsigned int>& indices);
 	void RenderWorldAABB(Node& rootNode);
-	void RenderCubeMap(Mesh& mesh, std::shared_ptr<Camera>  camera);
+
+	int GetRenderMode(RenderModes renderMode);
 
 	void RenderRigidBodyInfo(RigidBody& rb);
 

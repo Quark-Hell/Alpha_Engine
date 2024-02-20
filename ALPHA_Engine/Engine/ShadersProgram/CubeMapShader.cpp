@@ -93,6 +93,5 @@ void CubeMapShader::ApplyShadersSettings(std::shared_ptr<Camera> camera)
     glBindTexture(GL_TEXTURE_CUBE_MAP, _textureId);
     glPolygonMode(GL_FRONT, GL_FILL);
     glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
 }

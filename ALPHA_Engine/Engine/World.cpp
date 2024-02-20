@@ -1,4 +1,5 @@
 #include "World.h"
+#include "GameModels.h"
 //#include <Windows.h>
 //#pragma comment(lib, "winmm.lib")
 
@@ -261,4 +262,12 @@ void World::CreateAABBvolume(Node& outputNode, std::vector<std::shared_ptr<Leaf>
 	}
 
 	outputNode.AABBvolume.SetSize(minX, maxX, minY, maxY, minZ, maxZ);
+}
+
+void World::Init()
+{
+	Mesh* mesh;
+	World::SkyBox = Primitives::Cube({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(1, 1, 1));
+	mesh = std::dynamic_pointer_cast<Mesh>(World::SkyBox->GetModuleByType(MeshType)).get();
+	mesh->Name = "SkyBox";
 }

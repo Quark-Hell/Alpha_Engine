@@ -1,4 +1,6 @@
 ﻿
+class Object;
+class PathShader;
 
 class GameFunction {
 public:
@@ -12,7 +14,7 @@ void InitSun();
 void InitPlanet1();
 void InitPlanet2();
 
-void Path();
+void Path(Object* object, PathShader* shader);
 
 void SetControl();
 

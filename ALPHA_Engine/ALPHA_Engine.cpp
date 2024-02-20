@@ -37,8 +37,6 @@
 
 #include "Texture.h"
 
-std::shared_ptr<Object> CubeMapObj;
-
 Object Player;
 std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 
@@ -55,32 +53,23 @@ std::shared_ptr<Object> Planet2;
 
 
 PointLight pLight;
-//DirectLight dirLight;
-//SpotLight sLight;
-
 
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 
+
 std::shared_ptr<Object> path1 = std::make_shared<Object>();
+
+Mesh* pathMesh1;
+PathShader* pathShader1;
+
 std::shared_ptr<Object> path2 = std::make_shared<Object>();
 
-Mesh* pathMesh1 = std::dynamic_pointer_cast<Mesh>(path1->GetModuleByType(MeshType)).get();
-PathShader* pathShader1;
+Mesh* pathMesh2;
+PathShader* pathShader2;
 
 void GameFunction::Start() {
     Mesh* mesh;
-
-    path1->AddModule(MeshType);
-    pathMesh1 = std::dynamic_pointer_cast<Mesh>(path1->GetModuleByType(MeshType)).get();
-    pathMesh1->_material->Shader = std::make_shared<PathShader>(pathMesh1->_material.get());
-    pathShader1 = std::dynamic_pointer_cast<PathShader>(pathMesh1->_material->Shader).get();
-
-
-
-    CubeMapObj = Primitives::Cube({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(1, 1, 1));
-    mesh = std::dynamic_pointer_cast<Mesh>(CubeMapObj->GetModuleByType(MeshType)).get();
-    mesh->Name = "CubeMap";
-
+    mesh = std::dynamic_pointer_cast<Mesh>(World::SkyBox->GetModuleByType(MeshType)).get();
     mesh->_material->Shader = std::make_shared<CubeMapShader>(mesh->_material.get());
 
     SetControl();
@@ -89,41 +78,8 @@ void GameFunction::Start() {
     InitPlanet1();
     InitPlanet2();
 
-
-    //
-    //std::shared_ptr<CubeMapShader> cubeMapShad = std::make_shared<CubeMapShader>();
-    //cubeMapShad->LoadTexture(
-    //    "\\Textures\\CubeMap\\Right_Tex.png",
-    //    "\\Textures\\CubeMap\\Left_Tex.png",
-    //    "\\Textures\\CubeMap\\Top_Tex.png",
-    //    "\\Textures\\CubeMap\\Bottom_Tex.png",
-    //    "\\Textures\\CubeMap\\Front_Tex.png",
-    //    "\\Textures\\CubeMap\\Back_Tex.png");
-    //
-    //mesh->_material->Shader = cubeMapShad;
-
-    //dirLight.Name = "dirLight";
-    //dirLight.color = Vector3(1, 0.988, 0.792);
-    //dirLight.strength = 0.3f;
-
-    //sLight.Name = "SpotLight";
-    //
-    //sLight.SetPosition(0, -1, 0);
-    //sLight.AddRotation(0,0,-15);
-    //sLight.color = Vector3(0.639, 0.847, 0.851);
-    //sLight.strength = 8.3f;
-    //sLight.CutOff = glm::cos(glm::radians(22.5f));
-    //sLight.OuterCutOff = glm::cos(glm::radians(35.5f));
-
-
     World::DebugRenderEnabled = true;
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
-
-    //MeshCollider* col1 = new MeshCollider; col1->Create("\\Models\\Primitives\\Sphere.fbx");
- 
-
-    //RigidBody* rb = std::dynamic_pointer_cast<RigidBody>(plane3->GetModuleByType(RigidBodyType)).get();
-    //rb->Gravity = Vector3(0, -1, 0);
 }
 
 void GameFunction::Update() {
@@ -137,14 +93,33 @@ void GameFunction::Update() {
     Mesh* mesh2 = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
     mesh2->AddRotation(0, 3, 0);
 
-    //Path();
-    //sLight.AddRotation(0, -5, 0); 
+    Path(Planet1.get(), pathShader1);
+    Path(Planet2.get(), pathShader2);
 }
 
 
-void Path() {
-    pathShader1->AddPoint(Planet1->GetPosition());
-    std::cout << "X: " << Planet1->GetPosition().X << " Y: " << Planet1->GetPosition().Y << " Z: " << Planet1->GetPosition().Z << "\n";
+void Path(Object* object, PathShader* shader) {
+    glm::vec4 p;
+    p.x = object->GetPosition().X;
+    p.y = object->GetPosition().Y;
+    p.z = object->GetPosition().Z;
+    p.w = 1;
+
+    glm::mat4x4 rotMat(1.0f);
+
+    const float radX = M_PI / 180 * object->GetRotation().X;
+    const float radY = M_PI / 180 * object->GetRotation().Y;
+    const float radZ = M_PI / 180 * object->GetRotation().Z;
+
+    rotMat = glm::rotate(rotMat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+    rotMat = glm::rotate(rotMat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+    rotMat = glm::rotate(rotMat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    p = rotMat * p;
+
+    Vector3 point = Vector3(p.x, p.y, p.z);
+
+    shader->AddPoint(point);
 }
 
 void InitSun()
@@ -169,7 +144,7 @@ void InitSun()
 
 void InitPlanet1()
 {
-    Planet1 = Primitives::Sphere({ 0,1,-20 }, Vector4(0, 0, 0, 1), Vector3(0.5f, 0.5f, 0.5));
+    Planet1 = Primitives::Sphere({ 0,0,-20 }, Vector4(0, 0, 0, 1), Vector3(0.5f, 0.5f, 0.5));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
     mesh->Name = "planet1";
     Planet1->AddOriginPosition(0,0,20);
@@ -178,18 +153,27 @@ void InitPlanet1()
 
     mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_lava_Base_Color.jpg");
     mesh->_material->Shader->LoadTexture(Emission, "\\Textures\\Planets\\planet_lava_Emissive.png");
+
+    path1->AddModule(MeshType);
+    pathMesh1 = std::dynamic_pointer_cast<Mesh>(path1->GetModuleByType(MeshType)).get();
+    pathMesh1->_material->Shader = std::make_shared<PathShader>(pathMesh1->_material.get());
+    pathShader1 = std::dynamic_pointer_cast<PathShader>(pathMesh1->_material->Shader).get();
 }
 
 void InitPlanet2()
 {
-    Planet2 = Primitives::Sphere({ -30,-1,-20 }, Vector4(0, 0, 0, 1), Vector3(1.0f, 1.0f, 1.0f));
+    Planet2 = Primitives::Sphere({ -30,0,-20 }, Vector4(0, 0, 0, 1), Vector3(1.0f, 1.0f, 1.0f));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
     mesh->Name = "planet2";
     Planet2->AddOriginPosition(30, 0, 20);
 
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
-
     mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_continental_Base_Color.jpg");
+
+    path2->AddModule(MeshType);
+    pathMesh2 = std::dynamic_pointer_cast<Mesh>(path2->GetModuleByType(MeshType)).get();
+    pathMesh2->_material->Shader = std::make_shared<PathShader>(pathMesh2->_material.get());
+    pathShader2 = std::dynamic_pointer_cast<PathShader>(pathMesh2->_material->Shader).get();
 }
 
 void SetControl() {
@@ -343,8 +327,8 @@ int main()
 {
     //HWND hwnd = GetConsoleWindow();
     //ShowWindow(hwnd, 1);
-
     render->StartRender(camera);
+    World::Init();
     Game->Start();
 
     InpSys->Window = render->GetScreenClass()->GetWindow();

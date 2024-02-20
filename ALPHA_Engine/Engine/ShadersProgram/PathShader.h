@@ -3,13 +3,14 @@
 
 class PathShader : public ShaderProgram {
 private:
-	std::vector<Vector3> points;
 	const int maxPoints = 500;
 	int pointsCount = -1;
+
+	bool isOverflow = false;
 	
 public:
 	Vector3 LineColor = Vector3(0.851, 0.851, 0.851);
-	float LineWidth = 2.0f;
+	float LineWidth = 5.0f;
 
 public:
 	PathShader(Material* parentMat);

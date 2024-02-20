@@ -167,54 +167,27 @@ bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool
 
 bool Mesh::InsertVertex(Vector3 vertex, unsigned int pos, bool expand)
 {
-	//if (pos > Geometry::_vertexCount && expand == false)
-	//	return false;
-	//
-	//else if (pos >= Geometry::_vertexCount && expand == true) {
-	//	//float* vertices = new float[(pos + 1) * 3];
-	//	std::vector<float>* vert = new std::vector<float>();
-	//	vert->resize((pos + 1) * 3);
-	//
-	//	if (vert->size() == 1026 || vert->size() == 1500) {
-	//		std::cout << "error";
-	//	}
-	//
-	//	for (size_t i = 0; i < pos * 3; i+=3) {
-	//		if (i / 3 <= Geometry::_vertexCount) {
-	//			//vertices[i * 3] = Geometry::_vertex[i * 3];
-	//			//vertices[i * 3 + 1] = Geometry::_vertex[i * 3 + 1];
-	//			//vertices[i * 3 + 2] = Geometry::_vertex[i * 3 + 2];
-	//
-	//			(*vert)[i] = Geometry::_vertex[i];
-	//			(*vert)[i + 1] = Geometry::_vertex[i + 1];
-	//			(*vert)[i + 2] = Geometry::_vertex[i + 2];
-	//		}
-	//	}
-	//
-	//	std::cout << "size: " << vert->size() << "\n";
-	//
-	//	(*vert)[pos * 3] = vertex.X;
-	//	(*vert)[pos * 3 + 1] = vertex.Y;
-	//	(*vert)[pos * 3 + 2] = vertex.Z;
-	//
-	//	if(Geometry::_vertex != nullptr)
-	//		free(Geometry::_vertex);
-	//	Geometry::_vertex = vert->data();
-	//
-	//
-	//
-	//	Geometry::_vertexCount = pos + 1;
-	//
-	//	Mesh::BindMesh();
-	//}
-	//else
-	//{
-	//	Geometry::_vertex[pos * 3] = vertex.X;
-	//	Geometry::_vertex[pos * 3 + 1] = vertex.Y;
-	//	Geometry::_vertex[pos * 3 + 2] = vertex.Z;
-	//
-	//	Mesh::BindMesh();
-	//}
+	if (pos >= Geometry::_vertex->size() / 3 && expand == false)
+		return false;
+	
+	else if (pos >= Geometry::_vertex->size() / 3 && expand == true) {
+		Geometry::_vertex->resize((pos + 1) * 3);
+	
+		(*Geometry::_vertex)[pos * 3] = vertex.X;
+		(*Geometry::_vertex)[pos * 3 + 1] = vertex.Y;
+		(*Geometry::_vertex)[pos * 3 + 2] = vertex.Z;
+
+	
+		Mesh::BindMesh();
+	}
+	else
+	{
+		(*Geometry::_vertex)[pos * 3] = vertex.X;
+		(*Geometry::_vertex)[pos * 3 + 1] = vertex.Y;
+		(*Geometry::_vertex)[pos * 3 + 2] = vertex.Z;
+	
+		Mesh::BindMesh();
+	}
 	return false;
 }
 
@@ -332,12 +305,6 @@ void Mesh::ApplyTransformation()
 		Mesh::_scale.Y + parentScale.Y,
 		Mesh::_scale.Z + parentScale.Z));
 
-	//Vector3 shiftOrigin = Mesh::_origin + parentOrigin;
-
-
-
-
-
 
 	glm::mat4x4 parentOriginMat(1.0f);
 	parentOriginMat = glm::translate(parentOriginMat, glm::vec3(
@@ -352,24 +319,21 @@ void Mesh::ApplyTransformation()
 		parentOrigin.Z));
 
 
-
 	glm::mat4x4 childOriginMat(1.0f);
 	childOriginMat = glm::translate(childOriginMat, glm::vec3(
 		-Mesh::_origin.X,
 		-Mesh::_origin.Y,
 		-Mesh::_origin.Z));
 
-	glm::mat4x4 backChildtOriginMat(1.0f);
+	glm::mat4x4 backChildOriginMat(1.0f);
 	backParentOriginMat = glm::translate(backParentOriginMat, glm::vec3(
 		Mesh::_origin.X,
 		Mesh::_origin.Y,
 		Mesh::_origin.Z));
 
-	glm::mat4x4 rotMat = backParentOriginMat * parentRotMat * parentOriginMat * backChildtOriginMat * childRotMat * childOriginMat;
+	glm::mat4x4 rotMat = backParentOriginMat * parentRotMat * parentOriginMat * backChildOriginMat * childRotMat * childOriginMat;
 
-	//rotMat = backOriginMat * rotMat * originMat;
 	Mesh::_transformMatrix = transMat * rotMat * scaleMat;
-	//Mesh::_transformMatrix = transMat  * rotMat  * scaleMat;
 }
 
 #pragma endregion

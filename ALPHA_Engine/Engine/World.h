@@ -33,6 +33,8 @@ public:
 	static inline Vector3 DebugWireframeColor = Vector3{ 0.012, 1, 0.153 };
 	static inline float DebugWireframThickness = 2;
 
+	static inline std::shared_ptr<Object> SkyBox = std::make_shared<Object>();
+
 public:
 	///TODO: In next update debug render will not work in release build
 	static inline bool DebugRenderEnabled = false;
@@ -60,7 +62,7 @@ public:
 	static void CreateAABBvolume(Node& outputNode, std::vector<std::shared_ptr<Leaf>>& leafBuffer);
 	
 	//static inline std::shared_ptr<Object> CubeMapObj;
-
+	static void Init();
 	//TODO: Create interface instead friend class
 private:
 	friend class Render;

@@ -80,6 +80,7 @@ public:
 
 	//virtual bool SetVertices(float* vertices, float count);
 	virtual bool InsertVertex(Vector3 vertex, unsigned int pos, bool expand = false);
+	bool ShiftVertexArray(int shiftCount);
 
 	virtual Vector3 FindFurthestPoint(Vector3 direction);
 

@@ -286,6 +286,33 @@ bool Geometry::InsertVertex(Vector3 vertex, unsigned int pos, bool expand)
     return false;
 }
 
+bool Geometry::ShiftVertexArray(int shiftCount)
+{
+    if (shiftCount == 0)
+        return false;
+
+    if (Geometry::_vertex->size() + shiftCount < 0)
+        return false;
+
+    if (abs(shiftCount) >= Geometry::_vertex->size())
+        return false;
+
+    float* data = Geometry::_vertex->data();
+    if (data == nullptr)
+        return false;
+
+    shiftCount *= -1; 
+    memmove(data, data + (shiftCount * 3), Geometry::_vertex->size() * sizeof(float));
+
+    if (shiftCount < 0) {
+        Geometry::_vertex->erase(Geometry::_vertex->begin(), Geometry::_vertex->begin() + (shiftCount * 3));
+    }
+    else
+    {
+        Geometry::_vertex->erase(Geometry::_vertex->end() - (shiftCount * 3), Geometry::_vertex->end());
+    }
+}
+
 Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
     Vector3 maxPoint = { 0,0,0 };
     float maxDistance = -FLT_MAX;
