@@ -4,12 +4,28 @@
 #include "Modules/BoxCollider.h"
 
 #include "AABB.h"
+#include <map>
 
 enum ModulesList;
 
 class Module;
 class Vector4;
 class Vector3;
+
+class Tag {
+private:
+	static inline std::map<std::string, unsigned> _availableTags;
+	std::string _tag;
+
+public:
+	Tag();
+
+	bool SetTag(std::string tag);
+	bool SetTag(unsigned int tagIndex);
+
+	std::string GetTag();
+	std::vector<std::string> GetAvailablesTag();
+};
 
 class Object : public Transform {
 private:
@@ -23,6 +39,10 @@ private:
 
 	friend class BoxCollider;
 	friend class World;
+
+public:
+	std::string Name = "Object";
+	Tag ObjectTag;
 
 public:
 	Object();

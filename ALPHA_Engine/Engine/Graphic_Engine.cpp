@@ -275,20 +275,29 @@ int Render::GetRenderMode(RenderModes renderMode) {
 }
 
 void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
-    Mesh* skyBox = nullptr;
+    std::shared_ptr<Mesh> skMesh = nullptr;
 
     for (size_t i = 0; i < World::ObjectsOnScene.size(); i++)
     {
+        //Trying get skybox from world
+        if (World::ObjectsOnScene[i]->ObjectTag.GetTag() == "SkyBox") {
+            //Get mesh from skybox
+            for (size_t j = 0; j < World::ObjectsOnScene[i]->GetCountOfModules(); j++)
+            {
+                skMesh = std::dynamic_pointer_cast<Mesh>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
+                if (skMesh == nullptr) {
+                    std::cout << "Sky box has not mesh";
+                    abort();
+                }
+            }
+        }
+
         for (size_t j = 0; j < World::ObjectsOnScene[i]->GetCountOfModules(); j++)
         {
             ModulesList type = World::ObjectsOnScene[i]->GetModuleByIndex(j)->GetType();
 
             if (type == MeshType) {
                 std::shared_ptr<Mesh> mesh = std::dynamic_pointer_cast<Mesh>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
-                if (mesh->Name == "SkyBox") {
-                    skyBox = mesh.get();
-                    continue;
-                }
 
                 Render::SetMeshRenderOptions();
                 Render::RenderMesh(*mesh, camera);
@@ -319,12 +328,10 @@ void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
         }
     } 
 
-    if (skyBox != nullptr) {
+    if (skMesh != nullptr) {
         glDepthFunc(GL_LEQUAL);
-        //glDisable(GL_CULL_FACE);
-        //glEnable(GL_DEPTH_TEST);
         //Render::SetMeshRenderOptions();
-        Render::RenderMesh(*skyBox, camera);
+        Render::RenderMesh(*skMesh, camera);
         glDepthFunc(GL_LESS);
     }
 

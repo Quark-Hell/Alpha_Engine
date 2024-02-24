@@ -270,5 +270,12 @@ void World::Init()
 	Mesh* mesh;
 	World::SkyBox = Primitives::Cube({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(1, 1, 1));
 	mesh = std::dynamic_pointer_cast<Mesh>(World::SkyBox->GetModuleByType(MeshType)).get();
-	mesh->Name = "SkyBox";
+
+
+	if (!SkyBox->ObjectTag.SetTag("SkyBox")) {
+		std::cout << "Cannot set tag to SkyBox object";
+		abort();
+	}
+
+	SkyBox->Name = "SkyBox";
 }

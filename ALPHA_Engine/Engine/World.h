@@ -61,7 +61,6 @@ public:
 	static void FindNearestCollider(Leaf& leafBuffer, std::vector<Collider*>& objectsBuffer, float maxDistance = 300);
 	static void CreateAABBvolume(Node& outputNode, std::vector<std::shared_ptr<Leaf>>& leafBuffer);
 	
-	//static inline std::shared_ptr<Object> CubeMapObj;
 	static void Init();
 	//TODO: Create interface instead friend class
 private:
