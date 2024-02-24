@@ -28,6 +28,7 @@ void World::StartFrame() {
 }
 void World::EndFrame() {
 	World::_endTime = std::chrono::high_resolution_clock::now();
+	//What? Why i should mult this by 0.000001f?
 	World::_deltaTime = std::chrono::duration_cast	<std::chrono::microseconds>(World::_endTime - World::_startTime).count() * 0.000001f;
 	World::_timeLong += World::_deltaTime;
 }

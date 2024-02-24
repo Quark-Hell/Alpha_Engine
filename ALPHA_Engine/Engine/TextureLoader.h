@@ -11,15 +11,14 @@ private:
 	ThreadObject* parent = nullptr;
 	bool _tryStopThread = false;
 
-public:
 	Texture* _texture;
-
 	std::string _path;
-	bool _genTextureAuto = true;
-	bool _unbindTextureAuto = true;
-	EnumTypeOfTexture _typeOfTexture = EnumTypeOfTexture::Texture2D;
+
+public:
+	TextureWork(Texture& texture, std::string path);
 
 private:
+	TextureWork();
 	void CompleteTask();
 
 public:
@@ -29,7 +28,6 @@ public:
 
 class ThreadObject {
 private:
-	//std::thread* _thread = new std::thread(&TextureWork::CompleteTask, &_work);
 	std::thread _thread = std::thread();
 
 	TextureWork _work;
@@ -60,18 +58,14 @@ public:
 	static inline unsigned int MaxThreadCount = 4;
 
 public:
-	TextureLoader();
 	~TextureLoader();
 
 	static void Init();
 
-	static void AddTask(Texture* texture, std::string _path, bool _genTextureAuto = true, bool _unbindTextureAuto = true, EnumTypeOfTexture _typeOfTexture = EnumTypeOfTexture::Texture2D);
+	static void AddTask(Texture& texture, std::string _path);
 	static void AddTask(TextureWork work);
-	static void AddTask();
+	//static void AddTask();
 	static void DoWork();
-
-private:
-	//Logic inverted. Is get 0 then one or more threads is active now
 
 	friend ThreadObject;
 };

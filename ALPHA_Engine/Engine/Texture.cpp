@@ -12,11 +12,6 @@ Texture::~Texture() {
 
 }
 
-void Texture::AsyncCreateTexture(std::string pathToTexture, bool genTextureAuto, bool unbindTextureAuto, EnumTypeOfTexture typeOfTexture)
-{
-    TextureLoader::AddTask(this, pathToTexture, genTextureAuto, unbindTextureAuto, typeOfTexture);
-}
-
 void Texture::CreateTexture(std::string pathToTexture) {
 	int width, height, channelsCount;
 

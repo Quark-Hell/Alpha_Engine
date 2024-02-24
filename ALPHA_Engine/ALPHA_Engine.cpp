@@ -81,12 +81,6 @@ void GameFunction::Start() {
 
     World::DebugRenderEnabled = true;
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
-
-    TextureWork tw1;
-    TextureWork tw2;
-    TextureLoader::AddTask(tw1);
-    TextureLoader::AddTask(tw2);
-    TextureLoader::DoWork();
 }
 
 void GameFunction::Update() {

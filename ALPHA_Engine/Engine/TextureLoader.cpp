@@ -1,10 +1,5 @@
 #include "TextureLoader.h"
 
-TextureLoader::TextureLoader()
-{
-
-}
-
 TextureLoader::~TextureLoader()
 {
 }
@@ -19,15 +14,9 @@ void TextureLoader::Init()
 	};
 }
 
-void TextureLoader::AddTask(Texture* texture, std::string _path, bool _genTextureAuto, bool _unbindTextureAuto, EnumTypeOfTexture _typeOfTexture)
+void TextureLoader::AddTask(Texture& texture, std::string _path)
 {
-	TextureWork newTask;
-	newTask._texture = texture;
-	newTask._path = _path;
-	newTask._genTextureAuto = _genTextureAuto;
-	newTask._unbindTextureAuto = _unbindTextureAuto;
-	newTask._typeOfTexture = _typeOfTexture;
-	
+	TextureWork newTask(texture, _path);	
 	TextureLoader::_taskList.push_back(newTask);
 }
 
@@ -36,11 +25,11 @@ void TextureLoader::AddTask(TextureWork work)
 	TextureLoader::_taskList.push_back(work);
 }
 
-void TextureLoader::AddTask()
-{
-	TextureWork newTask;
-	TextureLoader::_taskList.push_back(newTask);
-}
+//void TextureLoader::AddTask()
+//{
+//	TextureWork newTask;
+//	TextureLoader::_taskList.push_back(newTask);
+//}
 
 void TextureLoader::DoWork()
 {
@@ -68,14 +57,17 @@ void TextureLoader::DoWork()
 	TextureLoader::_threads.clear();
 }
 
-void ThreadObject::DeleteThread() {
-	_isAlive = false;
+TextureWork::TextureWork() {
+
+}
+TextureWork::TextureWork(Texture& texture, std::string path)
+{
+	_texture = &texture;
+	_path = path;
 }
 
 void TextureWork::CompleteTask()
 {
-	using namespace std::chrono_literals;
-
 	while (parent->_isAlive)
 	{
 		if (parent->tryDeleteThread) {
@@ -84,15 +76,20 @@ void TextureWork::CompleteTask()
 
 		if (parent->_isActive == true) {
 			std::cout << "I work\n";
+			if (_texture != nullptr) {
+				_texture->CreateTexture(_path.c_str());
+			}
+
+			//_rightSide.CreateTexture(rightTexture.c_str());
 			parent->_isActive = false;
 		}
 	}
 }
 
-ThreadObject::ThreadObject()
-{
-}
 
+ThreadObject::ThreadObject() {
+
+}
 ThreadObject::~ThreadObject()
 {
 	if (_isStarted) {
@@ -116,4 +113,8 @@ void ThreadObject::Continue(TextureWork work)
 	work.parent = this;
 	ThreadObject::_work = work;
 	ThreadObject::_work.parent->_isActive = true;
+}
+
+void ThreadObject::DeleteThread() {
+	_isAlive = false;
 }

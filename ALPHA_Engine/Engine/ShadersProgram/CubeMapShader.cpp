@@ -27,43 +27,32 @@ bool CubeMapShader::LoadTexture(std::string rightTexture, std::string leftTextur
     glGenTextures(1, &_textureId);
     glBindTexture(GL_TEXTURE_CUBE_MAP, CubeMapShader::_textureId);
 
-    CubeMapShader::_rightSide.CreateTexture(rightTexture.c_str());
-    CubeMapShader::_leftSide.CreateTexture(leftTexture.c_str());
-    CubeMapShader::_topSide.CreateTexture(topTexture.c_str());
-    CubeMapShader::_bottomSide.CreateTexture(bottomTexture.c_str());
-    CubeMapShader::_frontSide.CreateTexture(frontTexture.c_str());
-    CubeMapShader::_backSide.CreateTexture(backTexture.c_str());
-
-    CubeMapShader::_rightSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 1));
-    CubeMapShader::_leftSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 0));
-    CubeMapShader::_topSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 2));
-    CubeMapShader::_bottomSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 3));
-    CubeMapShader::_frontSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 4));
-    CubeMapShader::_backSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 5));
+    TextureLoader::AddTask(_rightSide, rightTexture);
+    TextureLoader::AddTask(_leftSide, leftTexture);
+    TextureLoader::AddTask(_topSide, topTexture);
+    TextureLoader::AddTask(_bottomSide, bottomTexture);
+    TextureLoader::AddTask(_frontSide, frontTexture);
+    TextureLoader::AddTask(_backSide, backTexture);
     
-    //CubeMapShader::_rightSide.CreateTexture(rightTexture.c_str());
-    //if (!CubeMapShader::_rightSide.TransferToGPU(false, false))
-    //    return false;
-    //
-    //CubeMapShader::_leftSide.CreateTexture(leftTexture.c_str());
-    //if (!CubeMapShader::_leftSide.TransferToGPU(false, false))
-    //    return false;
-    //
-    //CubeMapShader::_topSide.CreateTexture(topTexture.c_str());
-    //if (!CubeMapShader::_topSide.TransferToGPU(false, false))
-    //    return false;
-    //
-    //CubeMapShader::_bottomSide.CreateTexture(bottomTexture.c_str());
-    //if (!CubeMapShader::_bottomSide.TransferToGPU(false, false))
-    //    return false;
-    //
-    //CubeMapShader::_frontSide.CreateTexture(frontTexture.c_str());
-    //if (!CubeMapShader::_frontSide.TransferToGPU(false, false))
-    //    return false;
-    //
-    //CubeMapShader::_backSide.CreateTexture(backTexture.c_str());
-    //if (!CubeMapShader::_backSide.TransferToGPU(false, false))
-    //    return false;
+    TextureLoader::DoWork();
+
+    if (!CubeMapShader::_rightSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 1)))
+        return false;
+
+    if (!CubeMapShader::_leftSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 0)))
+        return false;
+
+    if (!CubeMapShader::_topSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 2)))
+        return false;
+
+    if (!CubeMapShader::_bottomSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 3)))
+        return false;
+
+    if (!CubeMapShader::_frontSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 4)))
+        return false;
+
+    if (!CubeMapShader::_backSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 5)))
+        return false;
     
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

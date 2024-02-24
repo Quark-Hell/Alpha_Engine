@@ -72,7 +72,6 @@ public:
 	Texture();
 	~Texture();
 
-	void AsyncCreateTexture(std::string pathToTexture, bool genTextureAuto = true, bool unbindTextureAuto = true, EnumTypeOfTexture typeOfTexture = EnumTypeOfTexture::Texture2D);
 	void CreateTexture(std::string pathToTexture);
 	void DeleteTexture();
 
