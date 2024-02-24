@@ -31,6 +31,9 @@ void Texture::DeleteTexture()
 
 bool Texture::TransferToGPU(bool genTextureAuto, bool unbindTextureAuto, EnumTypeOfTexture typeOfTexture)
 {
+    if (Texture::_textureData.get() == nullptr)
+        return false;
+
     int textureType;
     switch (typeOfTexture)
     {

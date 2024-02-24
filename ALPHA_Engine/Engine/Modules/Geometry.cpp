@@ -86,10 +86,11 @@ bool Geometry::Create(std::string linkToFBX,
 
     //TODO: Check if fbx
     const aiScene* s;
-    aiMesh* mesh = s->mMeshes[0];
+    aiMesh* mesh;
 
     if (initIndices) {
         s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+        mesh = s->mMeshes[0];
 
         Geometry::_indices->resize(mesh->mNumFaces * 3);
 
@@ -105,6 +106,8 @@ bool Geometry::Create(std::string linkToFBX,
     else
     {
         s = importer.ReadFile(path, aiProcess_Triangulate);
+        mesh = s->mMeshes[0];
+
         Geometry::_isIndexed = false;
     }
 
@@ -311,6 +314,8 @@ bool Geometry::ShiftVertexArray(int shiftCount)
     {
         Geometry::_vertex->erase(Geometry::_vertex->end() - (shiftCount * 3), Geometry::_vertex->end());
     }
+
+    return true;
 }
 
 Vector3 Geometry::FindFurthestPoint(Vector3 direction) {

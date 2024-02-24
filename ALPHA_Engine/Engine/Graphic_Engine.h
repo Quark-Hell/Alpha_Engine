@@ -37,12 +37,12 @@ struct Colors {
 
 class Screen {
 private:
-	unsigned int _wight;
-	unsigned int _height;
-	unsigned int _bitsPerPixel;
+	unsigned int _wight = 0;
+	unsigned int _height = 0;
+	unsigned int _bitsPerPixel = 0;
 	std::string _name;
 
-	GLFWwindow* _window;
+	GLFWwindow* _window = nullptr;
 
 private:
 	friend class Render;

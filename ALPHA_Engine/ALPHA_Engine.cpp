@@ -140,8 +140,8 @@ void InitSun()
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 
     //mesh->_material->Shader->AsyncLoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
-    mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
-    mesh->_material->Shader->LoadTexture(Emission, "\\Textures\\suncyl1-grayscale.jpg");
+    OpaqueShader* opShader = std::dynamic_pointer_cast<OpaqueShader>(mesh->_material->Shader).get();
+    opShader->LoadTexture("\\Textures\\suncyl1.jpg", "", "", "", "", "\\Textures\\suncyl1-grayscale.jpg", "", "", "");
 }
 
 void InitPlanet1()
@@ -153,8 +153,8 @@ void InitPlanet1()
 
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 
-    mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_lava_Base_Color.jpg");
-    mesh->_material->Shader->LoadTexture(Emission, "\\Textures\\Planets\\planet_lava_Emissive.png");
+    OpaqueShader* opShader = std::dynamic_pointer_cast<OpaqueShader>(mesh->_material->Shader).get();
+    opShader->LoadTexture("\\Textures\\Planets\\planet_lava_Base_Color.jpg", "", "", "", "", "\\Textures\\Planets\\planet_lava_Emissive.png", "", "", "");
 
     path1->AddModule(MeshType);
     pathMesh1 = std::dynamic_pointer_cast<Mesh>(path1->GetModuleByType(MeshType)).get();

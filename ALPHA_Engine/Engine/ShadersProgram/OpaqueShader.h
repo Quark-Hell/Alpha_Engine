@@ -18,6 +18,16 @@ public:
 	~OpaqueShader();
 
 	bool LoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture) override;
+	bool LoadTexture(
+		std::string diffusePath = "",
+		std::string metallicPath = "",
+		std::string specularPath = "",
+		std::string roughnessPath = "",
+		std::string anisotropicPath = "",
+		std::string emissionPath = "",
+		std::string normalsPath = "",
+		std::string opacityPath = "",
+		std::string occlusionPath = "");
 
 	void ApplyShadersSettings(std::shared_ptr<Camera> camera) override;
 };

@@ -75,12 +75,10 @@ void TextureWork::CompleteTask()
 		}
 
 		if (parent->_isActive == true) {
-			std::cout << "I work\n";
 			if (_texture != nullptr) {
 				_texture->CreateTexture(_path.c_str());
 			}
 
-			//_rightSide.CreateTexture(rightTexture.c_str());
 			parent->_isActive = false;
 		}
 	}

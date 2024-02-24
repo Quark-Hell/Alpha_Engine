@@ -104,10 +104,11 @@ bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool
 
 	//TODO: Check if fbx
 	const aiScene* s;
-	aiMesh* mesh = s->mMeshes[0];
+	aiMesh* mesh;
 
 	if (initIndices) {
 		s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+		mesh = s->mMeshes[0];
 
 		Geometry::_indices->resize(mesh->mNumFaces * 3);
 
@@ -123,6 +124,7 @@ bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool
 	else
 	{
 		s = importer.ReadFile(path, aiProcess_Triangulate);
+		mesh = s->mMeshes[0];
 		Geometry::_isIndexed = false;
 	}
 

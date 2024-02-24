@@ -15,8 +15,6 @@ protected:
 	bool _isShifted = false;
 	bool _isIndexed = false;
 
-	Object* _parentObject;
-
 	std::shared_ptr<std::vector<float>> _vertex = std::make_shared<std::vector<float>>();
 	std::shared_ptr<std::vector<float>> _normals = std::make_shared<std::vector<float>>();
 	std::shared_ptr<std::vector<unsigned int>> _indices = std::make_shared<std::vector<unsigned int>>();

@@ -463,7 +463,7 @@ private:
 	std::vector<uint16_t> _keyboardKeys;
 	std::vector<EnumKeyStates> _mouseKeysState;
 	std::vector<uint8_t> _mouseKeys;
-	EnumMouseSensorStates _mouseSensorState;
+	EnumMouseSensorStates _mouseSensorState{};
 
 public:
 	bool Active = true;

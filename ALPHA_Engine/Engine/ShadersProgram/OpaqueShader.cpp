@@ -2,10 +2,10 @@
 
 #include "World.h"
 
-#include "Modules/Light/Light.h";
-#include "Modules/Light/DirectLight.h";
-#include "Modules/Light/PointLight.h";
-#include "Modules/Light/SpotLight.h";
+#include "Modules/Light/Light.h"
+#include "Modules/Light/DirectLight.h"
+#include "Modules/Light/PointLight.h"
+#include "Modules/Light/SpotLight.h"
 
 #include "Modules/Mesh.h"
 
@@ -21,6 +21,7 @@ OpaqueShader::OpaqueShader(Material* parentMat) : ShaderProgram(parentMat)
     OpaqueShader::LoadTexture(OpacityMap, "\\Textures\\EmptyTexture.png");
     OpaqueShader::LoadTexture(OcclusionMap, "\\Textures\\EmptyTexture.png");
 
+
     OpaqueShader::CreateShader("\\Shaders\\BaseVertexShaders\\VertexShader.txt", ShadersType::VertexShader);
     OpaqueShader::CreateShader("\\Shaders\\BaseFragmentShaders\\FragmentShader.txt", ShadersType::FragmentShader);
 
@@ -29,6 +30,72 @@ OpaqueShader::OpaqueShader(Material* parentMat) : ShaderProgram(parentMat)
 
 OpaqueShader::~OpaqueShader()
 {
+}
+
+bool OpaqueShader::LoadTexture(
+    std::string diffusePath,
+    std::string metallicPath,
+    std::string specularPath,
+    std::string roughnessPath,
+    std::string anisotropicPath,
+    std::string emissionPath,
+    std::string normalsPath,
+    std::string opacityPath,
+    std::string occlusionPath) {
+
+    auto genPar = []() {
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        };
+
+    if(diffusePath != "")
+        TextureLoader::AddTask(_diffuse, diffusePath);
+    if (metallicPath != "")
+        TextureLoader::AddTask(_metallic, metallicPath);
+    if (specularPath != "")
+        TextureLoader::AddTask(_specular, specularPath);
+    if (roughnessPath != "")
+        TextureLoader::AddTask(_roughness, roughnessPath);
+    if (anisotropicPath != "")
+        TextureLoader::AddTask(_anisotropic, anisotropicPath);
+    if (emissionPath != "")
+        TextureLoader::AddTask(_emission, emissionPath);
+    if (normalsPath != "")
+        TextureLoader::AddTask(_normalsMap, normalsPath);
+    if (opacityPath != "")
+        TextureLoader::AddTask(_opacityMap, opacityPath);
+    if (occlusionPath != "")
+        TextureLoader::AddTask(_occlusionMap, occlusionPath);
+
+    TextureLoader::DoWork();
+
+    if (OpaqueShader::_diffuse.TransferToGPU(true, false))
+        genPar();
+    if (OpaqueShader::_metallic.TransferToGPU(true, false))
+        genPar();
+    if (OpaqueShader::_specular.TransferToGPU(true, false))
+        genPar();
+    if (OpaqueShader::_roughness.TransferToGPU(true, false))
+        genPar();
+    if (OpaqueShader::_anisotropic.TransferToGPU(true, false))
+        genPar();
+    if (OpaqueShader::_emission.TransferToGPU(true, false))
+        genPar();
+    if (OpaqueShader::_normalsMap.TransferToGPU(true, false))
+        genPar();
+    if (OpaqueShader::_opacityMap.TransferToGPU(true, false))
+        genPar();
+    if (OpaqueShader::_occlusionMap.TransferToGPU(true, false))
+        genPar();
+
+    return true;
 }
 
 bool OpaqueShader::LoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture)
@@ -105,18 +172,6 @@ bool OpaqueShader::LoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string p
         std::cout << "Error load texture: unknown format of texture\n";
         return false;
     }
-
-
-
-    //OpaqueShader::_diffuse.DeleteTexture();
-    //OpaqueShader::_metallic.DeleteTexture();
-    //OpaqueShader::_specular.DeleteTexture();
-    //OpaqueShader::_roughness.DeleteTexture();
-    //OpaqueShader::_anisotropic.DeleteTexture();
-    //OpaqueShader::_emission.DeleteTexture();
-    //OpaqueShader::_normalsMap.DeleteTexture();
-    //OpaqueShader::_opacityMap.DeleteTexture();
-    //OpaqueShader::_occlusionMap.DeleteTexture();
 
     return true;
 }

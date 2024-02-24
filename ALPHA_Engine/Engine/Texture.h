@@ -55,12 +55,12 @@ private:
 public:
 	std::unique_ptr<unsigned char> _textureData = std::unique_ptr<unsigned char>();
 
-	unsigned int _width;
-	unsigned int _height;
-	unsigned int _channelsCount;
+	unsigned int _width = 0;
+	unsigned int _height = 0;
+	unsigned int _channelsCount = 0;
 
-	unsigned int textureId;
-	unsigned int textureLocation;
+	unsigned int textureId = 0;
+	unsigned int textureLocation = 0;
 
 	//Other representation(DirectX, Vulkan...)
 
