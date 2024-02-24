@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include "TextureLoader.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -9,6 +10,11 @@ Texture::Texture() {
 
 Texture::~Texture() {
 
+}
+
+void Texture::AsyncCreateTexture(std::string pathToTexture, bool genTextureAuto, bool unbindTextureAuto, EnumTypeOfTexture typeOfTexture)
+{
+    TextureLoader::AddTask(this, pathToTexture, genTextureAuto, unbindTextureAuto, typeOfTexture);
 }
 
 void Texture::CreateTexture(std::string pathToTexture) {

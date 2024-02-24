@@ -36,6 +36,7 @@
 #include "ShadersProgram/PathShader.h"
 
 #include "Texture.h"
+//#include "TextureLoader.h"
 
 Object Player;
 std::shared_ptr<Camera> camera = std::make_shared<Camera>();
@@ -80,6 +81,12 @@ void GameFunction::Start() {
 
     World::DebugRenderEnabled = true;
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
+
+    TextureWork tw1;
+    TextureWork tw2;
+    TextureLoader::AddTask(tw1);
+    TextureLoader::AddTask(tw2);
+    TextureLoader::DoWork();
 }
 
 void GameFunction::Update() {
@@ -138,6 +145,7 @@ void InitSun()
 
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 
+    //mesh->_material->Shader->AsyncLoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
     mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
     mesh->_material->Shader->LoadTexture(Emission, "\\Textures\\suncyl1-grayscale.jpg");
 }

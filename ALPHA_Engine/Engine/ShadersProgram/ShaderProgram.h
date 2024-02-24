@@ -6,6 +6,7 @@
 #include "Modules/Camera.h"
 
 #include "Texture.h"
+#include "TextureLoader.h"
 
 class Material;
 
@@ -152,6 +153,7 @@ public:
 	void DeleteShader(ShadersType shaderType);
 
 	virtual bool LoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture);
+	virtual bool AsyncLoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture);
 
 protected:
 	virtual void ApplyShadersSettings(std::shared_ptr<Camera> camera);

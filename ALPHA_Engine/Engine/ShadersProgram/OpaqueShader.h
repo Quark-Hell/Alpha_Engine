@@ -18,5 +18,7 @@ public:
 	~OpaqueShader();
 
 	bool LoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture) override;
+	bool AsyncLoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture) override;
+
 	void ApplyShadersSettings(std::shared_ptr<Camera> camera) override;
 };

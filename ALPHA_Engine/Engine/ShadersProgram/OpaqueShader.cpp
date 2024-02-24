@@ -121,6 +121,34 @@ bool OpaqueShader::LoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string p
     return true;
 }
 
+bool OpaqueShader::AsyncLoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture) {
+    switch (typeOfTexture)
+    {
+    case Diffuse:
+        OpaqueShader::_diffuse.AsyncCreateTexture(pathToTexture);
+        break;
+    case Metallic:
+        break;
+    case Specular:
+        break;
+    case Roughness:
+        break;
+    case Anisotropic:
+        break;
+    case Emission:
+        break;
+    case NormalsMap:
+        break;
+    case OpacityMap:
+        break;
+    case OcclusionMap:
+        break;
+    default:
+        std::cout << "Error load texture: unknown format of texture\n";
+        return false;
+    }
+}
+
 void OpaqueShader::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 {
 	int ambientLightsCount = 0;

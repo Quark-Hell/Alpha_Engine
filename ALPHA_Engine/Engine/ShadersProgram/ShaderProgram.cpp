@@ -403,6 +403,11 @@ bool ShaderProgram::LoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string 
 	return false;
 }
 
+bool ShaderProgram::AsyncLoadTexture(TypeOfOpaqueTextuere typeOfTexture, std::string pathToTexture)
+{
+	return false;
+}
+
 void ShaderProgram::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 {
 
