@@ -144,7 +144,7 @@ void Render::SetMeshRenderOptions() {
 void Render::SetDebugRenderOptions() {
     glPolygonMode(GL_FRONT, GL_LINE);
     glLineWidth(World::DebugWireframThickness);
-    glDisable(GL_CULL_FACE);
+    //glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glColor3f(0.2, 0.8, 0.2);
 }
@@ -368,7 +368,7 @@ bool Render::CompileShaders() {
 void Render::RenderLoop(std::shared_ptr<Camera> camera) {
     if (!glfwWindowShouldClose(_screenClass._window))
     {
-        glfwPollEvents();
+        glfwPollEvents();//make render more slower
 
         Render::ClearFrameBuffer();
 

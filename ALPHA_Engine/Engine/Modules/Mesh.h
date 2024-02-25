@@ -44,6 +44,7 @@ protected:
 	friend class Object;
 	friend class Render;
 	friend class MeshCollider;
+	friend class BoxCollider;
 
 	//bool Create(std::string linkToFBX) override;
 	//void DeleteMesh() override;

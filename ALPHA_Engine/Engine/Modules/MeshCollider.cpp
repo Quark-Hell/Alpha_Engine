@@ -57,12 +57,13 @@ bool MeshCollider::Create()
     if (mesh == nullptr)
         return false;
 
-    Geometry::_vertex->resize(mesh->_vertex->size());
-    
-    for (std::uint32_t it = 0; it < mesh->_vertex->size(); it++)
-    {
-        (*MeshCollider::_vertex)[it] = (*mesh->_vertex)[it];
-    }
+    Geometry::_vertex = mesh->_vertex;
+    //Geometry::_vertex->resize(mesh->_vertex->size());
+    //
+    //for (std::uint32_t it = 0; it < mesh->_vertex->size(); it++)
+    //{
+    //    (*MeshCollider::_vertex)[it] = (*mesh->_vertex)[it];
+    //}
 
 #ifdef _DEBUG
     MeshCollider::_debugMesh->Create(*mesh);
@@ -71,7 +72,7 @@ bool MeshCollider::Create()
     //AABB::UpdateAABB(Geometry::_vertex, Geometry::_vertexCount);
 
     //MeshCollider::_isIndexed = true;
-    //Geometry::MakeUnique();
+    Geometry::MakeUnique();
     Geometry::_isShifted = true;
 
     return true;
@@ -79,15 +80,22 @@ bool MeshCollider::Create()
 
 void MeshCollider::SetParentObject(const Object& parent)
 {
+    MeshCollider::ParentObject = const_cast<Object*>(&parent);
     if (MeshCollider::ParentObject != nullptr) {
         Object* obj = const_cast<Object*>(&parent);
-        MeshCollider::InitTransformatiom(*ParentObject, *obj);
+        MeshCollider::Create();
+        //MeshCollider::InitTransformatiom(*ParentObject, *obj);
+
+
+        MeshCollider::InitTransformatiom(*ParentObject);
     }
 
-    MeshCollider::ParentObject = const_cast<Object*>(&parent);
+
 #ifdef _DEBUG
     MeshCollider::_debugMesh->SetParentObject(*MeshCollider::ParentObject);
 #endif
+
+
 }
 
 void MeshCollider::ApplyTransformation() {
@@ -211,12 +219,7 @@ void MeshCollider::InitTransformatiom(Object& oldParent, Object& newParent)
 
 void MeshCollider::ModuleAdded()
 {
-    MeshCollider::Create();
-    MeshCollider::InitTransformatiom(*ParentObject);
 
-#ifdef _DEBUG
-    MeshCollider::_debugMesh->SetParentObject(*MeshCollider::ParentObject);
-#endif
 }
 
 

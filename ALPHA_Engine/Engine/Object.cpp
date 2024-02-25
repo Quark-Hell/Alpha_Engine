@@ -221,7 +221,6 @@ void Object::ApplyTransformation() {
 bool Object::AddModule(std::shared_ptr<Module> someModule) {
 	Object::Modules.push_back(someModule);
 	someModule->SetParentObject(*this);
-	someModule->ModuleAdded();
 	return true;
 }
 bool Object::AddModule(ModulesList moduleType, Module** outputModule) {

@@ -51,15 +51,21 @@ bool DebugMesh::Create(std::string linkToFBX)
         }
     }
     
+    if (DebugMesh::_indices->size() != 0) {
+        DebugMesh::_isIndexed = true;
+    }
     DebugMesh::BindMesh();
 
     return true;
 }
 
-bool DebugMesh::Create(Geometry& geometry)
+bool DebugMesh::Create(Geometry& geometry, bool copyIndices)
 {
-    _indices = geometry._indices;
+    if(copyIndices)
+        _indices = geometry._indices;
     _vertex = geometry._vertex;
+
+    DebugMesh::_isIndexed = copyIndices;
     
     BindMesh();
     

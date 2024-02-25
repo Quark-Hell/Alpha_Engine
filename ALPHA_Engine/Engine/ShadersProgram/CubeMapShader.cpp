@@ -5,12 +5,12 @@
 CubeMapShader::CubeMapShader(Material* parentMat) : ShaderProgram(parentMat)
 {
     CubeMapShader::LoadTexture(
-        "\\Textures\\CubeMap\\Right_Tex.png",
-        "\\Textures\\CubeMap\\Left_Tex.png",
-        "\\Textures\\CubeMap\\Top_Tex.png",
-        "\\Textures\\CubeMap\\Bottom_Tex.png",
-        "\\Textures\\CubeMap\\Front_Tex.png",
-        "\\Textures\\CubeMap\\Back_Tex.png");
+        "\\Textures\\CubeMap\\Right_Tex.tga",
+        "\\Textures\\CubeMap\\Left_Tex.tga",
+        "\\Textures\\CubeMap\\Top_Tex.tga",
+        "\\Textures\\CubeMap\\Bottom_Tex.tga",
+        "\\Textures\\CubeMap\\Front_Tex.tga",
+        "\\Textures\\CubeMap\\Back_Tex.tga");
 
     CubeMapShader::CreateShader("\\Shaders\\CubeMapShader\\VertexShader.txt", ShadersType::VertexShader);
     CubeMapShader::CreateShader("\\Shaders\\CubeMapShader\\FragmentShader.txt", ShadersType::FragmentShader);
@@ -35,6 +35,14 @@ bool CubeMapShader::LoadTexture(std::string rightTexture, std::string leftTextur
     TextureLoader::AddTask(_backSide, backTexture);
     
     TextureLoader::DoWork();
+
+
+    //CubeMapShader::_rightSide.CreateTexture(rightTexture.c_str());
+    //CubeMapShader::_leftSide.CreateTexture(leftTexture.c_str());
+    //CubeMapShader::_topSide.CreateTexture(topTexture.c_str());
+    //CubeMapShader::_bottomSide.CreateTexture(bottomTexture.c_str());
+    //CubeMapShader::_frontSide.CreateTexture(frontTexture.c_str());
+    //CubeMapShader::_backSide.CreateTexture(backTexture.c_str());
 
     if (!CubeMapShader::_rightSide.TransferToGPU(false, false, (EnumTypeOfTexture)(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 1)))
         return false;

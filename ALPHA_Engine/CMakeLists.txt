@@ -6,6 +6,13 @@ cmake_minimum_required (VERSION 3.8)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+#set(CMAKE_CXX_FLAGS_DEBUG "-g")
+#set(CMAKE_CXX_FLAGS_RELEASE "-O4") #glfw permission denied
+
 set (GLEW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLEW/")
 set (GLFW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
 set (glm "${PROJECT_SOURCE_DIR}/ALPHA_Engine/glm/")

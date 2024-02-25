@@ -69,30 +69,37 @@ Mesh* pathMesh2;
 PathShader* pathShader2;
 
 void GameFunction::Start() {
+    std::chrono::steady_clock::time_point _startTime = std::chrono::high_resolution_clock::now();
+
     Mesh* mesh;
     mesh = std::dynamic_pointer_cast<Mesh>(World::SkyBox->GetModuleByType(MeshType)).get();
     mesh->_material->Shader = std::make_shared<CubeMapShader>(mesh->_material.get());
 
     SetControl();
 
-    InitSun();
     InitPlanet1();
+    InitSun();
+
     InitPlanet2();
 
     World::DebugRenderEnabled = true;
     World::DebugRenderMode = (DebugRenderModes)(LinesRender | PointsRender);
+
+    std::chrono::steady_clock::time_point _endTime = std::chrono::high_resolution_clock::now();
+    float _deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(_endTime - _startTime).count() * 0.000001f;
+    std::cout << "work time: " << _deltaTime << "\n";
 }
 
 void GameFunction::Update() {
-    Sun->AddRotation(0.02, -0.1, 0);
-    Sun->AddRotation(0.1, 0.2, 0);
-    Planet1->AddRotation(0, 0.1, 0);
-    Mesh* mesh1 = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
-    mesh1->AddRotation(0,3,0);
-    
-    Planet2->AddRotation(0, 0.3, 0);
-    Mesh* mesh2 = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
-    mesh2->AddRotation(0, 3, 0);
+    //Sun->AddRotation(0.02, -0.1, 0);
+    //Sun->AddRotation(0.1, 0.2, 0);
+    //Planet1->AddRotation(0, 0.1, 0);
+    //Mesh* mesh1 = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
+    //mesh1->AddRotation(0,3,0);
+    //
+    //Planet2->AddRotation(0, 0.3, 0);
+    //Mesh* mesh2 = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
+    //mesh2->AddRotation(0, 3, 0);
 
     Path(Planet1.get(), pathShader1);
     Path(Planet2.get(), pathShader2);
@@ -132,7 +139,9 @@ void InitSun()
     pLight.strength = 5;
     pLight.radius = 55;
 
-    Sun = Primitives::Sphere({ 0,0,0 }, Vector4(0, 0, 0, 1), Vector3(10, 10, 10));
+    Sun = Primitives::Sphere(Vector3( 0,0,0 ), Vector4(0, 0, 0, 1), Vector3(10, 10, 10));
+    Sun->AddModule(BoxColliderType);
+    Sun->AddModule(RigidBodyType);
 
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Sun->GetModuleByType(MeshType)).get();
     mesh->Name = "sun";
@@ -141,20 +150,21 @@ void InitSun()
 
     //mesh->_material->Shader->AsyncLoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
     OpaqueShader* opShader = std::dynamic_pointer_cast<OpaqueShader>(mesh->_material->Shader).get();
-    opShader->LoadTexture("\\Textures\\suncyl1.jpg", "", "", "", "", "\\Textures\\suncyl1-grayscale.jpg", "", "", "");
+    opShader->LoadTexture("\\Textures\\suncyl1.tga", "", "", "", "", "\\Textures\\suncyl1-grayscale.bmp", "", "", "");
 }
 
 void InitPlanet1()
 {
-    Planet1 = Primitives::Sphere({ 0,0,-20 }, Vector4(0, 0, 0, 1), Vector3(0.5f, 0.5f, 0.5));
+    Planet1 = Primitives::Cube({ 0,-20,-20 }, Vector4(0, 0, 0, 1), Vector3(50, 0.5, 50));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
     mesh->Name = "planet1";
-    Planet1->AddOriginPosition(0,0,20);
+    //Planet1->AddOriginPosition(0,0,20);
+    Planet1->AddModule(BoxColliderType);
 
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 
     OpaqueShader* opShader = std::dynamic_pointer_cast<OpaqueShader>(mesh->_material->Shader).get();
-    opShader->LoadTexture("\\Textures\\Planets\\planet_lava_Base_Color.jpg", "", "", "", "", "\\Textures\\Planets\\planet_lava_Emissive.png", "", "", "");
+    opShader->LoadTexture("\\Textures\\Planets\\planet_lava_Base_Color.tga", "", "", "", "", "\\Textures\\Planets\\planet_lava_Emissive.tga", "", "", "");
 
     path1->AddModule(MeshType);
     pathMesh1 = std::dynamic_pointer_cast<Mesh>(path1->GetModuleByType(MeshType)).get();
@@ -170,7 +180,7 @@ void InitPlanet2()
     Planet2->AddOriginPosition(30, 0, 20);
 
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
-    mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_continental_Base_Color.jpg");
+    mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_continental_Base_Color.tga");
 
     path2->AddModule(MeshType);
     pathMesh2 = std::dynamic_pointer_cast<Mesh>(path2->GetModuleByType(MeshType)).get();
@@ -352,7 +362,6 @@ int main()
         render->RenderLoop(camera);
         World::EndFrame();
         std::cout << World::GetTimeLong() << " timeLong\t" << World::GetDeltaTime() << " deltaTime\t" << "\n";
-        //std::cout << "X: " << plane2->GetPosition().X << " Y:" << plane2->GetPosition().Y << " Z:" << plane2->GetPosition().Z << "\n";
     }
 
     glfwTerminate();

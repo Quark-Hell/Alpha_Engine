@@ -336,7 +336,6 @@ Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
         }
     }
 
-    Vector3 res = maxPoint + Geometry::GetParentObject()->GetPosition();
     return maxPoint + Geometry::GetParentObject()->GetPosition();
 }
 
