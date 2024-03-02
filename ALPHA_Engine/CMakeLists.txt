@@ -12,6 +12,7 @@ endif()
 
 #set(CMAKE_CXX_FLAGS_DEBUG "-g")
 #set(CMAKE_CXX_FLAGS_RELEASE "-O4") #glfw permission denied
+set (ALPHA "${PROJECT_SOURCE_DIR}")
 
 set (GLEW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLEW/")
 set (GLFW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
@@ -24,6 +25,7 @@ set (glmInclude "${PROJECT_SOURCE_DIR}/ALPHA_Engine/glm/glm/")
 SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/")
 SET (assimpLIB "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/lib/")
 SET (assimpINCLUDE "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/include/")
+SET (assimp "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimpB/")
 SET (Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Engine/")
 SET (Game "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Game/")
 
@@ -33,10 +35,13 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/GLFW")
 set(CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW/")
 
 find_library(GLEW glew)
+#find_package(glm)
 #find_package(glew REQUIRED)
 #find_package(GLFW REQUIRED)
 #find_package(OpenGL REQUIRED)
 #find_package(ASSIMP REQUIRED)
+
+include_directories(${ALPHA})
 
 include_directories(${GLEWinclude})
 include_directories(${GLFWinclude})
@@ -105,7 +110,7 @@ ${Engine}Modules/Physics.cpp
 "Engine/AdditionalMath.cpp" 
 "Engine/Modules/BoxCollider.h"
 "Engine/Modules/BoxCollider.cpp" 
-${glm}glm.hpp 
+
  "Engine/Modules/MeshCollider.h"
  "Engine/Modules/MeshCollider.cpp"
  "Engine/Modules/Transform.h"
@@ -132,7 +137,18 @@ ${glm}glm.hpp
  "Engine/Modules/Light/SpotLight.h" 
  "Engine/Modules/Light/SpotLight.cpp"
  "Engine/Modules/DebugMesh.h"
- "Engine/Modules/DebugMesh.cpp"  "Engine/ShadersProgram/OpaqueShader.h" "Engine/ShadersProgram/OpaqueShader.cpp" "Engine/ShadersProgram/ColliderWireframeShader.h" "Engine/ShadersProgram/ColliderWireframeShader.cpp"  "Engine/ShadersProgram/CubeMapShader.h" "Engine/ShadersProgram/CubeMapShader.cpp" "Engine/ShadersProgram/PathShader.h" "Engine/ShadersProgram/PathShader.cpp" "Engine/TextureLoader.h" "Engine/TextureLoader.cpp")
+ "Engine/Modules/DebugMesh.cpp"  
+ "Engine/ShadersProgram/OpaqueShader.h" 
+ "Engine/ShadersProgram/OpaqueShader.cpp" 
+ "Engine/ShadersProgram/ColliderWireframeShader.h"
+ "Engine/ShadersProgram/ColliderWireframeShader.cpp" 
+ "Engine/ShadersProgram/CubeMapShader.h"
+ "Engine/ShadersProgram/CubeMapShader.cpp"
+ "Engine/ShadersProgram/PathShader.h" 
+ "Engine/ShadersProgram/PathShader.cpp" 
+ "Engine/TextureLoader.h" 
+ "Engine/TextureLoader.cpp" 
+ "Engine/MemoryManager.h" )
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib
@@ -141,7 +157,7 @@ PRIVATE opengl32.lib
 PRIVATE ${assimpLIB}assimp-vc143-mtd.lib
 )
 
-target_compile_options(ALPHA_Engine PUBLIC "/Zc:__cplusplus")
+#target_compile_options(ALPHA_Engine PUBLIC "/Zc:__cplusplus")
 
 add_custom_target(copy_dll ALL
 	COMMAND ${CMAKE_COMMAND} -E copy_directory

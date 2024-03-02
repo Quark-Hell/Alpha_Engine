@@ -14,7 +14,11 @@ class Vector3;
 
 class Tag {
 private:
-	static inline std::map<std::string, unsigned> _availableTags;
+	static inline std::map<std::string, unsigned> _availableTags = {
+		{"Object", 0},
+		{"Player", 1},
+		{"SkyBox", 2}
+	};
 	std::string _tag;
 
 public:
@@ -39,6 +43,9 @@ private:
 
 	friend class BoxCollider;
 	friend class World;
+
+protected:
+	bool _instDelete = false;
 
 public:
 	std::string Name = "Object";
@@ -98,7 +105,6 @@ public:
 
 	glm::mat4x4& GetTransformationMatrix();
 
-	void DeleteObject();
-
 	unsigned long GetGeometryHeaviness();
+	void Delete();
 };

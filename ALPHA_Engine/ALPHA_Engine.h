@@ -18,14 +18,14 @@ void Path(Object* object, PathShader* shader);
 
 void SetControl();
 
-void LeftMoveTestObject();
-void RightMoveTestObject();
+//void LeftMoveTestObject();
+//void RightMoveTestObject();
 
-void ForwardMoveTestObject();
-void BackwardMoveTestObject();
+//void ForwardMoveTestObject();
+//void BackwardMoveTestObject();
 
-void UpMoveTestObject();
-void DownMoveTestObject();
+//void UpMoveTestObject();
+//void DownMoveTestObject();
 
 void LeftMoveCamera();
 void RightMoveCamera();
@@ -35,9 +35,6 @@ void BackwardMoveCamera();
 
 void UpMoveCamera();
 void DownMoveCamera();
-
-void Stop();
-void Jump();
 
 void CameraRotate();
 

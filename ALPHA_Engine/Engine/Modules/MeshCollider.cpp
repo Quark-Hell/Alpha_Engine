@@ -58,12 +58,6 @@ bool MeshCollider::Create()
         return false;
 
     Geometry::_vertex = mesh->_vertex;
-    //Geometry::_vertex->resize(mesh->_vertex->size());
-    //
-    //for (std::uint32_t it = 0; it < mesh->_vertex->size(); it++)
-    //{
-    //    (*MeshCollider::_vertex)[it] = (*mesh->_vertex)[it];
-    //}
 
 #ifdef _DEBUG
     MeshCollider::_debugMesh->Create(*mesh);
@@ -80,22 +74,16 @@ bool MeshCollider::Create()
 
 void MeshCollider::SetParentObject(const Object& parent)
 {
+    //Object* oldParent = MeshCollider::ParentObject;
     MeshCollider::ParentObject = const_cast<Object*>(&parent);
-    if (MeshCollider::ParentObject != nullptr) {
-        Object* obj = const_cast<Object*>(&parent);
-        MeshCollider::Create();
-        //MeshCollider::InitTransformatiom(*ParentObject, *obj);
-
-
-        MeshCollider::InitTransformatiom(*ParentObject);
-    }
+    MeshCollider::Create();
+    //MeshCollider::InitTransformatiom(*ParentObject, *obj);
+    MeshCollider::InitTransformatiom(*ParentObject);
 
 
 #ifdef _DEBUG
     MeshCollider::_debugMesh->SetParentObject(*MeshCollider::ParentObject);
 #endif
-
-
 }
 
 void MeshCollider::ApplyTransformation() {
@@ -215,11 +203,6 @@ void MeshCollider::InitTransformatiom(Object& oldParent, Object& newParent)
     }
 
     MeshCollider::_transformMatrix = glm::mat4x4(1.0f);
-}
-
-void MeshCollider::ModuleAdded()
-{
-
 }
 
 

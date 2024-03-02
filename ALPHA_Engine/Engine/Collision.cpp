@@ -63,9 +63,6 @@ bool Simplex::Triangle(Simplex& points, Vector3& direction) {
 
     Vector3 abc = ab.CrossProduct(ac);
 
-    Vector3 cr1 = abc.CrossProduct(ac);
-    Vector3 cr2 = ab.CrossProduct(abc);
-
     if (SameDirection(abc.CrossProduct(ac), ao)) {
         if (SameDirection(ac, ao)) {
             points = { a, c };
@@ -204,7 +201,7 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB) {
 
             if (rb1 != nullptr && rb2 == nullptr) {
                 if (Collision::EPA(points, colliderA, colliderB, colInfo)) {
-                    Vector3 nowPos = colliderA.GetParentObject()->GetPosition();
+                    //Vector3 nowPos = colliderA.GetParentObject()->GetPosition();
 
                     rb1->_pullingVectors.push_back(-colInfo.Normal * colInfo.PenetrationDepth);
 
@@ -224,7 +221,7 @@ bool Collision::GJK(Geometry& colliderA, Geometry& colliderB) {
             }
             else if (rb1 == nullptr && rb2 != nullptr) {
                 if (Collision::EPA(points, colliderA, colliderB, colInfo)) {
-                    Vector3 nowPos = colliderB.GetParentObject()->GetPosition();
+                    //Vector3 nowPos = colliderB.GetParentObject()->GetPosition();
             
                     rb2->_pullingVectors.push_back(colInfo.Normal * colInfo.PenetrationDepth);
             

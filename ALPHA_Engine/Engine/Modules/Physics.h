@@ -70,7 +70,7 @@ public:
 	bool GetContactPoints(std::vector<Vector3>& contactPoint);
 
 	RigidBody();
-	~RigidBody();
+	virtual ~RigidBody();
 
 private:
 	void SetMovementVector(Vector3 vec);

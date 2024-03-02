@@ -184,45 +184,45 @@ void OpaqueShader::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 	int spotLightsCount = 0;
 
 	for (int i = 0; i < World::LightsOnScene.size(); i++) {
-
+    
 		ModulesList type = World::LightsOnScene[i]->GetType();
-
+    
 		if (type == ModulesList::DirectLightType) {
 			auto light = (DirectLight*)(World::LightsOnScene[i]);
-
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("directLights[").append(std::to_string(directLightsCount)).append("].direction"), &light->GetDirection());
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("directLights[").append(std::to_string(directLightsCount)).append("].color"), &light->color);
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("directLights[").append(std::to_string(directLightsCount)).append("].strength"), &light->strength);
-
+            
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("directLights[").append(std::to_string(directLightsCount)).append("].direction"), light->GetDirection());
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("directLights[").append(std::to_string(directLightsCount)).append("].color"), light->color);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("directLights[").append(std::to_string(directLightsCount)).append("].strength"), light->strength);
+    
 			directLightsCount++;
 			continue;
 		}
 		if (type == ModulesList::PointLightType) {
-			auto light = (PointLight*)(World::LightsOnScene[i]);
-
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].position"), &light->GetPosition());
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].color"), &light->color);
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].radius"), &light->radius);
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].strength"), &light->strength);
-
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].constant"), &light->constant);
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].linear"), &light->linear);
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].quadratic"), &light->quadratic);
-
+            PointLight* light = (PointLight*)(World::LightsOnScene[i]);
+            
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].position"), light->GetPosition());
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].color"), light->color);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].radius"), light->radius);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].strength"), light->strength);
+            
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].constant"), light->constant);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].linear"), light->linear);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].quadratic"), light->quadratic);
+    
 			pointLightsCount++;
 			continue;
 		}
 		if (type == ModulesList::SpotLightType) {
 			auto light = (SpotLight*)(World::LightsOnScene[i]);
-
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].direction"), &light->GetDirection());
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].position"), &light->GetPosition());
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].color"), &light->color);
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].strength"), &light->strength);
-
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].cutOff"), &light->CutOff);
-			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].outerCutOff"), &light->OuterCutOff);
-
+            
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].direction"), light->GetDirection());
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].position"), light->GetPosition());
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].color"), light->color);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].strength"), light->strength);
+            
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].cutOff"), light->CutOff);
+			ShaderProgram::SetValue(ShadersType::FragmentShader, std::string("spotLights[").append(std::to_string(spotLightsCount)).append("].outerCutOff"), light->OuterCutOff);
+    
 			spotLightsCount++;
 			continue;
 		}
@@ -239,7 +239,7 @@ void OpaqueShader::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 	ShaderProgram::SetValue(ShadersType::FragmentShader, "SpotLightsCount", &spotLightsCount);
 
 
-	ShaderProgram::SetValue(ShadersType::FragmentShader, "viewPos", &camera->GetPosition());
+	ShaderProgram::SetValue(ShadersType::FragmentShader, "viewPos", camera->GetPosition());
 
 	_diffuse.BindTexture(0, OpaqueShader::GetProgramId(), "diffuseMap");
 	//_metallic.BindTexture(1, OpaqueShader::GetProgramId(), "diffuseMap");
@@ -251,8 +251,8 @@ void OpaqueShader::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 	//_opacityMap.BindTexture(7, OpaqueShader::GetProgramId(), "diffuseMap");
 	//_occlusionMap.BindTexture(8, OpaqueShader::GetProgramId(), "diffuseMap");
 
-	glm::mat4x4 modelMat = glm::translate(glm::vec3(0, 0, 0));
-	OpaqueShader::GetParentMaterial()->Shader->SetValue(ShadersType::VertexShader, "model_matrix", &OpaqueShader::GetParentMaterial()->GetParentMesh()->GetTransformMatrix());
+    glm::mat4x4 modelMat = OpaqueShader::GetParentMaterial()->GetParentMesh()->GetTransformMatrix();
+	OpaqueShader::GetParentMaterial()->Shader->SetValue(ShadersType::VertexShader, "model_matrix", &modelMat);
 
 	glm::mat3x3 transMat = glm::transpose(glm::inverse(OpaqueShader::GetParentMaterial()->GetParentMesh()->GetTransformMatrix()));
 	OpaqueShader::GetParentMaterial()->Shader->SetValue(ShadersType::VertexShader, "trans_model_mat", &transMat);

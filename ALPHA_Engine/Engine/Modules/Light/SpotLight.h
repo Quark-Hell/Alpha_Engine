@@ -9,7 +9,7 @@ public:
 
 public:
 	SpotLight();
-	virtual ~SpotLight();
+	~SpotLight();
 
 	ModulesList GetType() override;
 };

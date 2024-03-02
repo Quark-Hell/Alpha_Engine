@@ -7,10 +7,13 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl.exe",
-                "CMAKE_CXX_COMPILER": "cl.exe"
-            },
+          "cacheVariables": {
+            "enableClangTidyCodeAnalysis": true,
+            "CMAKE_CXX_FLAGS_INIT": "-Wall -std=c++17",
+            "CMAKE_CXX_FLAGS_DEBUG_INIT": "-g",
+            "CMAKE_C_COMPILER": "clang",
+            "CMAKE_CXX_COMPILER": "clang"
+          },
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",

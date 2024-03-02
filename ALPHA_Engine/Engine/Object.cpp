@@ -15,6 +15,8 @@
 #include "Vectors.h"
 #include "World.h"
 
+#include "MemoryManager.h"
+
 Vector3 Object::GetPosition() {
 	return Object::_position;
 }
@@ -355,28 +357,11 @@ glm::mat4x4& Object::GetTransformationMatrix() {
 	return Object::_transformMatrix;
 }
 
-void Object::DeleteObject() {
-	Object::~Object();
-}
-
-/*
-inline void Object::DeleteObject() {
-	for (size_t i = 0; i < World::ObjectsOnScene.size(); i++)
-	{
-		if (this == &World::ObjectsOnScene[i]) {
-			World::ObjectsOnScene.erase(World::ObjectsOnScene.begin() + i);
-			free(this);
-		}
-	}
-}
-*/
-
 unsigned long Object::GetGeometryHeaviness() {
 	unsigned long heaviness = 0;
 
 	for (size_t it = 0; it < Object::GetCountOfModules(); it++)
 	{
-		Object* obj = this;
 		std::shared_ptr<Geometry> geometry = std::dynamic_pointer_cast<Geometry>(Object::GetModuleByIndex(it));
 
 		if (geometry != nullptr && geometry->_isShifted == true) {
@@ -388,17 +373,11 @@ unsigned long Object::GetGeometryHeaviness() {
 	return heaviness;
 }
 
+void Object::Delete() {
+	_instDelete = true;
+}
+
 Object::Object() {
-	bool isHave = false;
-	for (size_t i = 0; i < World::ObjectsOnScene.size(); i++) {
-		if (this == World::ObjectsOnScene[i]) {
-			isHave = true;
-		}
-	}
-
-	if (isHave == true)
-		return;
-
 	World::ObjectsOnScene.push_back(this);
 }
 
@@ -418,12 +397,6 @@ Tag::Tag() {
 		Tag::_tag = Tag::_availableTags.begin()->first;
 		return;
 	}
-
-
-	unsigned int count = 0;
-	Tag::_availableTags.emplace(std::make_pair("Object", count++));
-	Tag::_availableTags.emplace(std::make_pair("Player", count++));
-	Tag::_availableTags.emplace(std::make_pair("SkyBox", count++));
 }
 
 

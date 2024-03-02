@@ -9,8 +9,8 @@
 //OpenGL
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")
-#include <gl/gl.h>
-#include <gl/glu.h>
+#include <Gl/gl.h>
+#include <Gl/glu.h>
 
 enum ProjectionMode {
 	Perspective = 0,
@@ -46,7 +46,7 @@ public:
 
 	Vector3 GetDirectionOfView();
 	glm::mat4x4 GetProjectionMatrix();
-	glm::mat4x4 GetTransformMatrix();
+	glm::mat4x4 GetTransformMatrix() override;
 	
 #pragma region Redifine from Transfom
 	void AddPosition(float X, float Y, float Z) override;

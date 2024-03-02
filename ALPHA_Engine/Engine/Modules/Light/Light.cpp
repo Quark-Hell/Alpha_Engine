@@ -7,10 +7,10 @@ Light::Light() {
             isHave = true;
         }
     }
-    
+
     if (isHave == true)
         return;
-    
+
     World::LightsOnScene.push_back(this);
 }
 

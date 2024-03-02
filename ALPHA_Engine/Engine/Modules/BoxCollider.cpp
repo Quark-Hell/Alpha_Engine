@@ -134,7 +134,7 @@ Vector3 BoxCollider::CalculateCoverScale() {
 	if (maxSize.Z < BoxCollider::GetParentObject()->GetScale().Z)
 		maxSize.Z = BoxCollider::GetParentObject()->GetScale().Z;
 
-	glm::mat4x4 scaleMat = glm::mat4x4(1.0f);
+	//glm::mat4x4 scaleMat = glm::mat4x4(1.0f);
 	//BoxCollider::_transformMatrix = glm::scale(scaleMat, glm::vec3(maxSize.X * 2, maxSize.Y * 2, maxSize.Z * 2));
 
 #ifdef _DEBUG

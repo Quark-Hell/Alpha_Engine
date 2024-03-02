@@ -25,8 +25,6 @@ public:
 	void InitTransformatiom(Object& newParent);
 	void InitTransformatiom(Object& oldParent, Object& newParent);
 
-	void ModuleAdded() override;
-
 #ifdef _DEBUG
 protected:
 	std::unique_ptr<DebugMesh> _debugMesh = std::make_unique<DebugMesh>();

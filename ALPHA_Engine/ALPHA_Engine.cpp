@@ -1,6 +1,7 @@
 ﻿// ALPHA_Engine.cpp : Defines the entry point for the application.
 //
 #include "ALPHA_Engine.h"
+#include "MemoryManager.h"
 
 #include "Engine/Alghoritms.h"
 #include "Engine/Basical_Type.h"
@@ -36,7 +37,7 @@
 #include "ShadersProgram/PathShader.h"
 
 #include "Texture.h"
-//#include "TextureLoader.h"
+
 
 Object Player;
 std::shared_ptr<Camera> camera = std::make_shared<Camera>();
@@ -47,25 +48,21 @@ InputSystem* InpSys = new InputSystem;
 float moveSensitive = 0.40f;
 
 
-
 std::shared_ptr<Object> Sun;
 std::shared_ptr<Object> Planet1;
 std::shared_ptr<Object> Planet2;
 
-
-PointLight pLight;
-
 std::shared_ptr<RigidBody> rb2 = std::make_shared<RigidBody>();
 
 
-std::shared_ptr<Object> path1 = std::make_shared<Object>();
 
-Mesh* pathMesh1;
+
+Mesh* pathMesh1 = new Mesh();
 PathShader* pathShader1;
 
-std::shared_ptr<Object> path2 = std::make_shared<Object>();
 
-Mesh* pathMesh2;
+
+Mesh* pathMesh2 = new Mesh();
 PathShader* pathShader2;
 
 void GameFunction::Start() {
@@ -91,15 +88,15 @@ void GameFunction::Start() {
 }
 
 void GameFunction::Update() {
-    //Sun->AddRotation(0.02, -0.1, 0);
-    //Sun->AddRotation(0.1, 0.2, 0);
-    //Planet1->AddRotation(0, 0.1, 0);
-    //Mesh* mesh1 = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
-    //mesh1->AddRotation(0,3,0);
-    //
-    //Planet2->AddRotation(0, 0.3, 0);
-    //Mesh* mesh2 = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
-    //mesh2->AddRotation(0, 3, 0);
+    Sun->AddRotation(0.02, -0.1, 0);
+    Sun->AddRotation(0.1, 0.2, 0);
+    Planet1->AddRotation(0, 0.1, 0);
+    Mesh* mesh1 = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
+    mesh1->AddRotation(0, 3, 0);
+
+    Planet2->AddRotation(0, 0.3, 0);
+    Mesh* mesh2 = std::dynamic_pointer_cast<Mesh>(Planet2->GetModuleByType(MeshType)).get();
+    mesh2->AddRotation(0, 3, 0);
 
     Path(Planet1.get(), pathShader1);
     Path(Planet2.get(), pathShader2);
@@ -130,42 +127,43 @@ void Path(Object* object, PathShader* shader) {
     shader->AddPoint(point);
 }
 
+
 void InitSun()
 {
-    pLight.Name = "PointLight";
+    PointLight* pLight = new PointLight();
+    pLight->Name = "PointLight";
 
-    pLight.SetPosition(0, 0, 0);
-    pLight.color = Vector3(0.988, 0.792, 0.463);
-    pLight.strength = 5;
-    pLight.radius = 55;
+    pLight->SetPosition(0, 0, 0);
+    pLight->color = Vector3(0.988, 0.792, 0.463);
+    pLight->strength = 5;
+    pLight->radius = 55;
 
-    Sun = Primitives::Sphere(Vector3( 0,0,0 ), Vector4(0, 0, 0, 1), Vector3(10, 10, 10));
-    Sun->AddModule(BoxColliderType);
-    Sun->AddModule(RigidBodyType);
+    Sun = Primitives::Sphere(Vector3(0, 0, 0), Vector4(0, 0, 0, 1), Vector3(10, 10, 10));
 
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Sun->GetModuleByType(MeshType)).get();
-    mesh->Name = "sun";
-
+    //mesh->Name = "sun";
+    //
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 
     //mesh->_material->Shader->AsyncLoadTexture(Diffuse, "\\Textures\\suncyl1.jpg");
     OpaqueShader* opShader = std::dynamic_pointer_cast<OpaqueShader>(mesh->_material->Shader).get();
     opShader->LoadTexture("\\Textures\\suncyl1.tga", "", "", "", "", "\\Textures\\suncyl1-grayscale.bmp", "", "", "");
+
 }
 
 void InitPlanet1()
 {
-    Planet1 = Primitives::Cube({ 0,-20,-20 }, Vector4(0, 0, 0, 1), Vector3(50, 0.5, 50));
+    Planet1 = Primitives::Sphere({ 0,0,-20 }, Vector4(0, 0, 0, 1), Vector3(0.5f, 0.5f, 0.5));
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Planet1->GetModuleByType(MeshType)).get();
     mesh->Name = "planet1";
-    //Planet1->AddOriginPosition(0,0,20);
-    Planet1->AddModule(BoxColliderType);
+    Planet1->AddOriginPosition(0, 0, 20);
 
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 
     OpaqueShader* opShader = std::dynamic_pointer_cast<OpaqueShader>(mesh->_material->Shader).get();
     opShader->LoadTexture("\\Textures\\Planets\\planet_lava_Base_Color.tga", "", "", "", "", "\\Textures\\Planets\\planet_lava_Emissive.tga", "", "", "");
 
+    Object* path1 = new Object();
     path1->AddModule(MeshType);
     pathMesh1 = std::dynamic_pointer_cast<Mesh>(path1->GetModuleByType(MeshType)).get();
     pathMesh1->_material->Shader = std::make_shared<PathShader>(pathMesh1->_material.get());
@@ -182,6 +180,7 @@ void InitPlanet2()
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
     mesh->_material->Shader->LoadTexture(Diffuse, "\\Textures\\Planets\\planet_continental_Base_Color.tga");
 
+    Object* path2 = new Object();
     path2->AddModule(MeshType);
     pathMesh2 = std::dynamic_pointer_cast<Mesh>(path2->GetModuleByType(MeshType)).get();
     pathMesh2->_material->Shader = std::make_shared<PathShader>(pathMesh2->_material.get());
@@ -191,44 +190,32 @@ void InitPlanet2()
 void SetControl() {
     Player.AddPosition(0, 0, -40);
     Player.AddModule(std::static_pointer_cast<Module>(camera));
-    
+
     Bind LeftMove; LeftMove.KeyboardBind({ LeftMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_A });
     Bind RightMove; RightMove.KeyboardBind({ RightMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_D });
-    
-    Bind ForwardMove; ForwardMove.KeyboardBind({ ForwardMoveCamera }, { EnumKeyStates::KeyHold, EnumKeyStates::KeyHold }, { GLFW_KEY_W, GLFW_KEY_LEFT_SHIFT});
+
+    Bind ForwardMove; ForwardMove.KeyboardBind({ ForwardMoveCamera }, { EnumKeyStates::KeyHold, EnumKeyStates::KeyHold }, { GLFW_KEY_W, GLFW_KEY_LEFT_SHIFT });
     Bind BackwardMove; BackwardMove.KeyboardBind({ BackwardMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_S });
-    
+
     Bind UpMove; UpMove.KeyboardBind({ UpMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_Q });
     Bind DownMove; DownMove.KeyboardBind({ DownMoveCamera }, { EnumKeyStates::KeyHold }, { GLFW_KEY_E });
-    
+
     Bind CameraRot; CameraRot.MouseSensorBind({ CameraRotate }, EnumMouseSensorStates(MouseKeepMoved | MouseStartMoved));
-    
+
     Bind CloseGameFirstMethod; CloseGameFirstMethod.KeyboardBind({ World::CloseGame }, { EnumKeyStates::KeyReleased }, { GLFW_KEY_ESCAPE });
-    
-    Bind jump; jump.KeyboardBind({ Jump }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_SPACE });
-    Bind stop; stop.KeyboardBind({ Stop }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_L });
-
-    Bind toLeft; toLeft.KeyboardBind({ LeftMoveTestObject }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_G });
-    Bind toRight; toRight.KeyboardBind({ RightMoveTestObject }, { EnumKeyStates::KeyPressed }, { GLFW_KEY_H });
-
-    InpSys->InsertBind(toLeft);
-    InpSys->InsertBind(toRight);
 
     InpSys->InsertBind(CameraRot);
-    
+
     InpSys->InsertBind(LeftMove);
     InpSys->InsertBind(RightMove);
-    
+
     InpSys->InsertBind(ForwardMove);
     InpSys->InsertBind(BackwardMove);
-    
+
     InpSys->InsertBind(UpMove);
     InpSys->InsertBind(DownMove);
-    
-    InpSys->InsertBind(CloseGameFirstMethod);
 
-    InpSys->InsertBind(stop);
-    InpSys->InsertBind(jump);
+    InpSys->InsertBind(CloseGameFirstMethod);
 }
 void LeftMoveCamera() {
     Vector3 newPos = Player.GetPosition();
@@ -300,39 +287,24 @@ void DownMoveCamera() {
     Player.SetPosition(newPos);
 }
 
-void LeftMoveTestObject() {
-    //object2->AddPosition(-0.02,0,0);
-}
-void RightMoveTestObject() {
-    //object2->AddPosition(0.02, 0, 0);
-}
-
 void CameraRotate() {
     float sensitive = 0.15;
 
     if (InpSys->GetMouseClass()->IsMouseChangePosition()) {
-    
+
         Vector3 delta;
         delta.X = InpSys->GetMouseClass()->GetMouseDelta().XPos;
         delta.Y = InpSys->GetMouseClass()->GetMouseDelta().YPos;
-    
+
         if (delta.GetMagnitude() < 100) {
             Vector3 newRot = Player.GetRotation();
-    
+
             newRot.X += delta.Y * sensitive;
             newRot.Y += delta.X * sensitive;
-    
+
             Player.SetRotation(newRot);
         }
     }
-}
-
-void Stop() {
-    rb2->AddForce(10, 0, 0);
-}
-void Jump() {
-    rb2->AddForce(0,10,0);
-    printf("jump");
 }
 
 int main()
@@ -348,7 +320,7 @@ int main()
     render->CompileShaders();
 
     //World::CreateWorldTree();
-    
+
     while (!World::GetStateOfGame())
     {
         World::StartFrame();

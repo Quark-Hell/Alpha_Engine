@@ -358,6 +358,8 @@ public:
 		Vector3::Z = z;
 	}
 
+	virtual ~Vector3() = default;
+
 public:
 	virtual inline float GetMagnitude() override {
 		return sqrtf(powf(X, 2) + powf(Y, 2) + powf(Z, 2));
@@ -511,7 +513,6 @@ public:
 			return false;
 
 		Vector3 cn = Vector3::GetNormalize(Vector3::CrossProduct(axis2Vector ,axis1Vector));
-		Vector3 projection = axis1Vector * Vector3::DotProduct(axis2.first - axis1.first, axis1Vector);
 		Vector3 rejection = axis2.first - axis1.first - axis1Vector * Vector3::DotProduct(axis2.first - axis1.first, axis1Vector) - cn * Vector3::DotProduct(axis2.first - axis1.first, cn);
 		Vector3 closetApproach = axis2.first - axis2Vector * Vector3::GetMagnitude(rejection) / Vector3::DotProduct(axis2Vector, Vector3::GetNormalize(rejection));
 
@@ -521,7 +522,6 @@ public:
 
 	static inline float DistanceBetweenAxis(std::pair<Vector3, Vector3> axis1, std::pair<Vector3, Vector3> axis2) {
 		Vector3 axis1Vector = Vector3::GetNormalize(axis1.second - axis1.first);
-		Vector3 axis2Vector = axis2.second - axis2.first;
 		
 		Vector3 delta = axis2.first - axis1.first;
 
@@ -834,6 +834,7 @@ public:
 		Vector4::Z = z;
 		Vector4::W = w;
 	}
+	virtual ~Vector4() = default;
 
 public:
 	virtual inline float GetMagnitude() override {

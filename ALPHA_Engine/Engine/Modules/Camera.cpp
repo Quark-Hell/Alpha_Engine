@@ -91,10 +91,6 @@ void Camera::SetPosition(Vector3 position) {
 
 
 void Camera::AddRotation(float X, float Y, float Z) {
-    const float radX = M_PI / 180 * X;
-    const float radY = M_PI / 180 * Y;
-    const float radZ = M_PI / 180 * Z;
-
     Camera::_rotation.X += X;
     Camera::_rotation.Y += Y;
     Camera::_rotation.Z += Z;
@@ -102,10 +98,6 @@ void Camera::AddRotation(float X, float Y, float Z) {
     //Camera::_isShifted = true;
 }
 void Camera::AddRotation(Vector3 rotation) {
-    const float radX = M_PI / 180 * rotation.X;
-    const float radY = M_PI / 180 * rotation.Y;
-    const float radZ = M_PI / 180 * rotation.Z;
-
     Camera::_rotation.X += rotation.X;
     Camera::_rotation.Y += rotation.Y;
     Camera::_rotation.Z += rotation.Z;
@@ -129,7 +121,7 @@ void Camera::ApplyTransformation() {
     if (GetParentObject() == nullptr)
         return;
 
-    Vector3 originShift = Camera::GetParentObject()->_origin - Camera::GetParentObject()->_position;
+    //Vector3 originShift = Camera::GetParentObject()->_origin - Camera::GetParentObject()->_position;
 
     Camera::UpdateProjectionMatrix();
     Camera::UpdateViewMatrix();
@@ -138,12 +130,12 @@ void Camera::ApplyTransformation() {
 void Camera::UpdateProjectionMatrix() {
     if (_projectionMode == ProjectionMode::Perspective)
     {
-        float r = 0.1f;
-        float t = 0.1f;
+        //float r = 0.1f;
+        //float t = 0.1f;
 
         float aspect = 16.0f / 9.0f;
         float fov = 60;
-        float far = 1000;
+        //float far = 1000;
 
 
         _projectionMatrix = glm::perspective(glm::radians(fov), aspect, ZNear, ZFar);

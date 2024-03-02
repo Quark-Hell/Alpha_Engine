@@ -331,6 +331,7 @@ void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
     if (skMesh != nullptr) {
         glDepthFunc(GL_LEQUAL);
         //Render::SetMeshRenderOptions();
+        //TODO: Wtf, skybox rendered if it was commented
         Render::RenderMesh(*skMesh, camera);
         glDepthFunc(GL_LESS);
     }

@@ -17,7 +17,7 @@ protected:
 	friend Render;
 
 protected:
-	void ApplyTransformation();
+	void ApplyTransformation() override;
 	virtual void InitCollider(bool isExpand = true);
 
 public:

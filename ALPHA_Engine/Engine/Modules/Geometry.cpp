@@ -143,7 +143,7 @@ void Geometry::MakeUnique() {
     const int arr_len = 3;
     std::array<float, arr_len> buffer;
     
-    unsigned int count = 0;
+    //unsigned int count = 0;
     
     std::unordered_map<std::string, std::array<float,arr_len>> uniqueMap;
     
@@ -191,82 +191,82 @@ void Geometry::MakeUnique() {
 
 /*Not work now*/
 std::vector<Mesh*> Geometry::SeparateByLooseParts() {
-    struct VertInfo
-    {
-        Vector3 Point;
-        unsigned int TriangleID;
-    };
-
-    VertInfo vert{};
-    std::unordered_map<std::string, VertInfo> vertMap;
-    std::vector<bool> triangleBool;
-
-    const int arr_len = 3;
-    float vertArr[arr_len];
-
-    std::string hash;
-    hash.resize(arr_len * sizeof(float));
-
-    Graph graph{ unsigned int(Geometry::_vertex->size() / 3)};
-
-    unsigned int sizeBeforeInsert;
-
-    //Create graph
-    for (size_t it = 0; it < Geometry::_vertex->size(); it+=3)
-    {
-        vert.Point.X = (*_vertex)[it];
-        vert.Point.Y = (*_vertex)[it + 1];
-        vert.Point.Z = (*_vertex)[it + 2];
-
-        vert.TriangleID = it / 3;
-
-        vertArr[0] = { vert.Point.X };
-        vertArr[1] = { vert.Point.Y };
-        vertArr[2] = { vert.Point.Z };
-
-        sizeBeforeInsert = vertMap.size();
-
-        //create hash
-        memcpy((char*)hash.data(), vertArr, arr_len * sizeof(float));
-
-        //insert hash
-        std::pair<std::string, VertInfo> p(hash, vert);
-        vertMap.insert(p);
-
-        //chech if hash map not changed size after insert hash
-        //is not changed => found same edges => found adjacent triangles
-        if (sizeBeforeInsert == vertMap.size()) {
-            unsigned int TriangleID = vertMap.find(hash)->second.TriangleID;
-            graph.AddEdge(TriangleID, vert.TriangleID);
-            graph.AddEdge(vert.TriangleID, TriangleID);
-        }
-    }
-
-    triangleBool.resize(graph.GetAdjListSize());
-    std::vector<std::vector<int>> separatedMesh;
-
-    while (true) {
-        int notConnected = -1;
-        //Searches first triangle that does not belong to separated mesh
-        for (size_t i = 0; i < triangleBool.size(); i++)
-        {
-            if (triangleBool[i] == false) {
-                notConnected = i;
-                break;
-            }
-        }
-        if (notConnected == -1)
-            break;
-
-        separatedMesh.resize(separatedMesh.size() + 1);
-        graph.BFS(notConnected, &separatedMesh[separatedMesh.size() - 1]);
-
-        for (size_t i = 0; i < separatedMesh[separatedMesh.size() - 1].size(); i++)
-        {
-            triangleBool[separatedMesh[separatedMesh.size() - 1][i]] = true;
-        }
-    }
-
+    //struct VertInfo
+    //{
+    //    Vector3 Point;
+    //    unsigned int TriangleID;
+    //};
+    //
+    //VertInfo vert{};
+    //std::unordered_map<std::string, VertInfo> vertMap;
+    //std::vector<bool> triangleBool;
+    //
+    //const int arr_len = 3;
+    //float vertArr[arr_len];
+    //
+    //std::string hash;
+    //hash.resize(arr_len * sizeof(float));
+    //
+    //Graph graph{ unsigned int(Geometry::_vertex->size() / 3)};
+    //
+    //unsigned int sizeBeforeInsert;
+    //
+    ////Create graph
+    //for (size_t it = 0; it < Geometry::_vertex->size(); it+=3)
+    //{
+    //    vert.Point.X = (*_vertex)[it];
+    //    vert.Point.Y = (*_vertex)[it + 1];
+    //    vert.Point.Z = (*_vertex)[it + 2];
+    //
+    //    vert.TriangleID = it / 3;
+    //
+    //    vertArr[0] = { vert.Point.X };
+    //    vertArr[1] = { vert.Point.Y };
+    //    vertArr[2] = { vert.Point.Z };
+    //
+    //    sizeBeforeInsert = vertMap.size();
+    //
+    //    //create hash
+    //    memcpy((char*)hash.data(), vertArr, arr_len * sizeof(float));
+    //
+    //    //insert hash
+    //    std::pair<std::string, VertInfo> p(hash, vert);
+    //    vertMap.insert(p);
+    //
+    //    //chech if hash map not changed size after insert hash
+    //    //is not changed => found same edges => found adjacent triangles
+    //    if (sizeBeforeInsert == vertMap.size()) {
+    //        unsigned int TriangleID = vertMap.find(hash)->second.TriangleID;
+    //        graph.AddEdge(TriangleID, vert.TriangleID);
+    //        graph.AddEdge(vert.TriangleID, TriangleID);
+    //    }
+    //}
+    //
+    //triangleBool.resize(graph.GetAdjListSize());
+    //std::vector<std::vector<int>> separatedMesh;
+    //
+    //while (true) {
+    //    int notConnected = -1;
+    //    //Searches first triangle that does not belong to separated mesh
+    //    for (size_t i = 0; i < triangleBool.size(); i++)
+    //    {
+    //        if (triangleBool[i] == false) {
+    //            notConnected = i;
+    //            break;
+    //        }
+    //    }
+    //    if (notConnected == -1)
+    //        break;
+    //
+    //    separatedMesh.resize(separatedMesh.size() + 1);
+    //    graph.BFS(notConnected, &separatedMesh[separatedMesh.size() - 1]);
+    //
+    //    for (size_t i = 0; i < separatedMesh[separatedMesh.size() - 1].size(); i++)
+    //    {
+    //        triangleBool[separatedMesh[separatedMesh.size() - 1][i]] = true;
+    //    }
+    //}
+    //
     std::vector<Mesh*> m;
     return m;
 }
@@ -388,10 +388,6 @@ void Geometry::SetOriginPosition(Vector3 position) {
 
 
 void Geometry::AddRotation(float X, float Y, float Z) {
-    const float radX = M_PI / 180 * X;
-    const float radY = M_PI / 180 * Y;
-    const float radZ = M_PI / 180 * Z;
-
     Geometry::_rotation.X += X;
     Geometry::_rotation.Y += Y;
     Geometry::_rotation.Z += Z;
@@ -399,10 +395,6 @@ void Geometry::AddRotation(float X, float Y, float Z) {
     Geometry::_isShifted = true;
 }
 void Geometry::AddRotation(Vector3 rotation) {
-    const float radX = M_PI / 180 * rotation.X;
-    const float radY = M_PI / 180 * rotation.Y;
-    const float radZ = M_PI / 180 * rotation.Z;
-
     Geometry::_rotation.X += rotation.X;
     Geometry::_rotation.Y += rotation.Y;
     Geometry::_rotation.Z += rotation.Z;

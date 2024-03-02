@@ -5,17 +5,18 @@
 
 class Light : public MovableModule {
 protected:
+	bool _instDelete = false;
 	Vector3 _lookingPoint = Vector3(-1, 0, 0);
 
 public:
-	Vector3 color;
-	float strength;
+	Vector3 color = Vector3(1, 1, 1);
+	float strength = 1;
 
 public:
 	Light();
 	virtual ~Light();
 
-	ModulesList GetType() override = 0;
+	ModulesList GetType() override;
 
 #pragma region Redifine from Transfom
 	void AddPosition(float X, float Y, float Z) override;

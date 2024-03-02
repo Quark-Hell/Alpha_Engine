@@ -31,7 +31,7 @@ enum TypeOfOpaqueTextuere {
 	OcclusionMap = 8
 };
 
-enum RenderModes {
+enum RenderModes : unsigned short {
 	Points = 0,
 	LineStip = 1,
 	LineLoop = 2,
@@ -129,6 +129,44 @@ public:
 		}
 		else if (std::is_same<Vector3, T>::value) {
 			Vector3* v = reinterpret_cast<Vector3*>(value);
+			glUniform3f(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), v->X, v->Y, v->Z);
+		}
+	}
+
+	template <typename T, typename = std::enable_if_t<
+		std::is_same<glm::mat4x4, T>::value ||
+		std::is_same<glm::mat3x3, T>::value ||
+		std::is_same<int, T>::value ||
+		std::is_same<unsigned int, T>::value ||
+		std::is_same<float, T>::value ||
+		std::is_same<Vector3, T>::value
+		>>
+		inline void SetValue(ShadersType shaderType, std::string fieldName, T value) {
+		if (ShaderProgram::_programId == 0)
+			return;
+
+		if (std::is_same<glm::mat4x4, T>::value) {
+			glm::mat4x4* v = reinterpret_cast<glm::mat4x4*>(&value);
+			glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), 1, GL_FALSE, glm::value_ptr(*v));
+		}
+		else if (std::is_same<glm::mat3x3, T>::value) {
+			glm::mat3x3* v = reinterpret_cast<glm::mat3x3*>(&value);
+			glUniformMatrix3fv(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), 1, GL_FALSE, glm::value_ptr(*v));
+		}
+		else if (std::is_same<int, T>::value) {
+			int* v = reinterpret_cast<int*>(&value);
+			glUniform1i(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *v);
+		}
+		else if (std::is_same<unsigned int, T>::value) {
+			unsigned int* v = reinterpret_cast<unsigned int*>(&value);
+			glUniform1ui(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *v);
+		}
+		else if (std::is_same<float, T>::value) {
+			float* v = reinterpret_cast<float*>(&value);
+			glUniform1f(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *v);
+		}
+		else if (std::is_same<Vector3, T>::value) {
+			Vector3* v = reinterpret_cast<Vector3*>(&value);
 			glUniform3f(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), v->X, v->Y, v->Z);
 		}
 	}

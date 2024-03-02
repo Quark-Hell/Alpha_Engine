@@ -11,8 +11,8 @@
 //OpenGL
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")
-#include <gl/gl.h>
-#include <gl/glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 enum EnumTypeOfWrapping {
 	Repeat = 0,

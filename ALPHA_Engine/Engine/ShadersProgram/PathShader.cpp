@@ -18,7 +18,7 @@ void PathShader::ApplyShadersSettings(std::shared_ptr<Camera> camera) {
 	glm::mat4x4 viewMat = camera->GetProjectionMatrix() * camera->GetTransformMatrix();
 	PathShader::SetValue(ShadersType::VertexShader, "view_projection_matrix", &(viewMat));
 
-	PathShader::SetValue(ShadersType::FragmentShader, "color", &Vector3(0.839, 0.839, 0.839));
+	PathShader::SetValue(ShadersType::FragmentShader, "color", Vector3(0.839, 0.839, 0.839));
 
 	glm::mat4x4 mat = glm::mat4x4(1.0f);
 	glm::mat4x4 scaleMat(1.0f);

@@ -35,11 +35,11 @@ private:
 public:
 	Module();
 	~Module();
+
+	virtual void Delete();
 	
 	virtual ModulesList GetType() = 0;
 
 	virtual Object* GetParentObject();
 	virtual void SetParentObject(const Object& parent);
-
-	virtual void ModuleAdded();
 };

@@ -240,10 +240,9 @@ bool ShaderProgram::CompileShader()
 		return true;
 	};
 
-	bool successCompile = false;
 
 	if (_vertexShaderId != 0)
-		if (!(successCompile = TryCompile(ShaderProgram::_vertexShaderId, ShaderProgram::_isCompiled)))
+		if (!(TryCompile(ShaderProgram::_vertexShaderId, ShaderProgram::_isCompiled)))
 			return false;
 	
 	if (_tessellationControlShaderId != 0)

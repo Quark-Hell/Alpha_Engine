@@ -8,6 +8,10 @@ Module::~Module() {
 
 }
 
+void Module::Delete()
+{
+}
+
 ModulesList Module::GetType() {
 	return ModulesList::ModuleType;
 }
@@ -17,8 +21,4 @@ Object* Module::GetParentObject() {
 }
 void Module::SetParentObject(const Object& parent) {
 	ParentObject = const_cast<Object*>(&parent);
-}
-
-void Module::ModuleAdded()
-{
 }

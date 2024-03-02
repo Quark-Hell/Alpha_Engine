@@ -9,8 +9,8 @@
 //OpenGL
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")
-#include <gl/gl.h>
-#include <gl/glu.h>
+#include <Gl/gl.h>
+#include <Gl/glu.h>
 
 class Camera;
 class Geometry;
@@ -24,7 +24,7 @@ class AABB;
 class Node;
 class MeshCollider;
 
-enum RenderModes;
+enum RenderModes : unsigned short;
 
 struct Colors {
 	const Vector3 green { 0.0f, 1.0f, 0.0f }; 

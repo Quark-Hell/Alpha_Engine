@@ -81,7 +81,7 @@ bool CubeMapShader::LoadTexture(std::string rightTexture, std::string leftTextur
 
 void CubeMapShader::ApplyShadersSettings(std::shared_ptr<Camera> camera)
 {
-    CubeMapShader::SetValue(ShadersType::VertexShader, "projection_matrix", &camera->GetProjectionMatrix());
+    CubeMapShader::SetValue(ShadersType::VertexShader, "projection_matrix", camera->GetProjectionMatrix());
     //CubeMapShader::SetValue(ShadersType::VertexShader, "view_matrix", &camera->GetTransformMatrix());
 
     glm::mat4 view = glm::mat4(glm::mat3(camera->GetTransformMatrix()));
