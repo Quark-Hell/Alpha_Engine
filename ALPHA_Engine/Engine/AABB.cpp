@@ -3,19 +3,29 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "ShadersProgram/ColliderWireframeShader.h"
+#include "Object.h"
+
 AABB::AABB() {
 #ifdef _DEBUG
+    _AABBMesh->_material->Shader = std::make_shared<ColliderWireframeShader>(_AABBMesh->_material.get());
+    ColliderWireframeShader* shader = reinterpret_cast<ColliderWireframeShader*>(_AABBMesh->_material->Shader.get());
+    shader->color = Vector3(0.812, 0.812, 0.812);
     AABB::CreateAABB();
 #endif // _DEBUG
+
     std::cout << "create\n";
 }
 
-AABB::AABB(
-	float minX, float maxX,
-	float minY, float maxY,
-	float minZ, float maxZ) {
+AABB::AABB(Object& parentObject) {
+    AABB::SetSize(parentObject.GetScale());
+    AABB::_position = parentObject.GetPosition();
+    AABB::_originPos = parentObject.GetOriginPosition();
 
-    AABB::SetSize(minX, maxX, minY, maxY, minZ, maxZ);
+#ifdef _DEBUG
+    _AABBMesh->_material->Shader = std::make_shared<ColliderWireframeShader>(_AABBMesh->_material.get());
+    AABB::CreateAABB();
+#endif // _DEBUG
 
     std::cout << "create\n";
 }
@@ -26,174 +36,120 @@ AABB::~AABB() {
 
 #ifdef _DEBUG
 void AABB::CreateAABB() {
-#ifdef _DEBUG
+    _AABBMesh->InsertVertex(Vector3(-1, -1, 1), 0, true);
+    _AABBMesh->InsertVertex(Vector3(-1, 1, 1), 1, true);
 
-    AABB::_AABBvertex.clear();
-    AABB::_AABBindices.clear();
+    _AABBMesh->InsertVertex(Vector3(-1, 1, 1), 2, true);
+    _AABBMesh->InsertVertex(Vector3(1, 1, 1), 3, true);
 
-    AABB::_AABBvertex.reserve(24);
-    AABB::_AABBindices.reserve(20);
-    
-    //front side
-    AABB::_AABBvertex.push_back(-0.5f);
-    AABB::_AABBvertex.push_back(-0.5f);
-    AABB::_AABBvertex.push_back(0.5f);
-    
-    AABB::_AABBvertex.push_back(-0.5f);
-    AABB::_AABBvertex.push_back(0.5f);
-    AABB::_AABBvertex.push_back(0.5f);
-    
-    AABB::_AABBvertex.push_back(0.5f);
-    AABB::_AABBvertex.push_back(0.5f);
-    AABB::_AABBvertex.push_back(0.5f);
-    
-    AABB::_AABBvertex.push_back(0.5f);
-    AABB::_AABBvertex.push_back(-0.5f);
-    AABB::_AABBvertex.push_back(0.5f);
-    
-    //back side
-    AABB::_AABBvertex.push_back(-0.5f);
-    AABB::_AABBvertex.push_back(-0.5f);
-    AABB::_AABBvertex.push_back(-0.5f);
-    
-    AABB::_AABBvertex.push_back(-0.5f);
-    AABB::_AABBvertex.push_back(0.5f);
-    AABB::_AABBvertex.push_back(-0.5f);
-    
-    AABB::_AABBvertex.push_back(0.5f);
-    AABB::_AABBvertex.push_back(0.5f);
-    AABB::_AABBvertex.push_back(-0.5f);
-    
-    AABB::_AABBvertex.push_back(0.5f);
-    AABB::_AABBvertex.push_back(-0.5f);
-    AABB::_AABBvertex.push_back(-0.5f);
-      
-    
-    AABB::_AABBindices.push_back(0);
-    AABB::_AABBindices.push_back(1);
-    AABB::_AABBindices.push_back(2);
-    AABB::_AABBindices.push_back(3);
-    
-    AABB::_AABBindices.push_back(0);
-    AABB::_AABBindices.push_back(4);
-    AABB::_AABBindices.push_back(7);
-    AABB::_AABBindices.push_back(3);
-    
-    AABB::_AABBindices.push_back(3);
-    AABB::_AABBindices.push_back(2);
-    AABB::_AABBindices.push_back(6);
-    AABB::_AABBindices.push_back(7);
-    
-    AABB::_AABBindices.push_back(7);
-    AABB::_AABBindices.push_back(6);
-    AABB::_AABBindices.push_back(5);
-    AABB::_AABBindices.push_back(4);
-    
-    AABB::_AABBindices.push_back(4);
-    AABB::_AABBindices.push_back(5);
-    AABB::_AABBindices.push_back(5);
-    AABB::_AABBindices.push_back(1);
-#endif 
+    _AABBMesh->InsertVertex(Vector3(1, 1, 1), 4, true);
+    _AABBMesh->InsertVertex(Vector3(1, -1, 1), 5, true);
+
+    _AABBMesh->InsertVertex(Vector3(1, -1, 1), 6, true);
+    _AABBMesh->InsertVertex(Vector3(-1, -1, 1), 7, true);
+
+    _AABBMesh->InsertVertex(Vector3(-1, -1, 1), 8, true);
+    _AABBMesh->InsertVertex(Vector3(-1, -1, -1), 9, true);
+
+    _AABBMesh->InsertVertex(Vector3(-1, -1, -1), 10, true);
+    _AABBMesh->InsertVertex(Vector3(-1, 1, -1), 11, true);
+
+    _AABBMesh->InsertVertex(Vector3(-1, 1, -1), 12, true);
+    _AABBMesh->InsertVertex(Vector3(-1, 1, 1), 13, true);
+
+    _AABBMesh->InsertVertex(Vector3(-1, 1, -1), 14, true);
+    _AABBMesh->InsertVertex(Vector3(1, 1, -1), 15, true);
+
+    _AABBMesh->InsertVertex(Vector3(1, 1, -1), 16, true);
+    _AABBMesh->InsertVertex(Vector3(1, -1, -1), 17, true);
+
+    _AABBMesh->InsertVertex(Vector3(1, -1, -1), 18, true);
+    _AABBMesh->InsertVertex(Vector3(-1, -1, -1), 19, true);
+
+    _AABBMesh->InsertVertex(Vector3(1, -1, -1), 20, true);
+    _AABBMesh->InsertVertex(Vector3(1, -1, 1), 21, true);
+
+    _AABBMesh->InsertVertex(Vector3(1, 1, -1), 22, true);
+    _AABBMesh->InsertVertex(Vector3(1, 1, 1), 23, true);
+
+    _AABBMesh->SetPosition(0, 0, 0);
+    _AABBMesh->SetScale(1, 1, 1);
 }
+
 #endif // _DEBUG
 
-void AABB::SetSize(
-    float minX, float maxX,
-    float minY, float maxY,
-    float minZ, float maxZ){
+void AABB::SetSize(Vector3 scale){
  
 #ifdef _DEBUG
-    AABB::CreateAABB();
+    AABB::_scale = scale;
+    AABB::_AABBMesh->SetScale(AABB::_scale);
 
-    glm::mat4x4 transformMat(1.0f);
-    
-    Vector3 nowScale = Vector3(1, 1, 1);
-    Vector3 setScale = Vector3(maxX - minX, maxY - minY, maxZ - minZ);
-
-    AABB::_scale = setScale;
-    
-    Vector3 delta = nowScale / setScale;
-    transformMat = glm::scale(transformMat, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
-
-    for (size_t jt = 0; jt < _AABBvertex.size(); jt += 3)
-    {
-        glm::vec4 buf(AABB::_AABBvertex[jt], AABB::_AABBvertex[jt + 1], AABB::_AABBvertex[jt + 2], 1);
-    
-        glm::vec4 res;
-        res = transformMat * buf;
-        AABB::_AABBvertex[jt + 0] = res.x;
-        AABB::_AABBvertex[jt + 1] = res.y;
-        AABB::_AABBvertex[jt + 2] = res.z;
-    }
 #endif // _DEBUG
-
-    AABB::_minX = minX;	AABB::_maxX = maxX;
-    AABB::_minY = minY;	AABB::_maxY = maxY;
-    AABB::_minZ = minZ;	AABB::_maxZ = maxZ;
 }
 
-float AABB::GetMinX() {
-    return AABB::_minX;
-}
-float AABB::GetMaxX() {
-    return AABB::_maxX;
-}
-float AABB::GetMinY() {
-    return AABB::_minY;
-}
-float AABB::GetMaxY() {
-    return AABB::_maxY;
-}
-float AABB::GetMinZ() {
-    return AABB::_minZ;
-}
-float AABB::GetMaxZ() {
-    return AABB::_maxZ;
-}
-
-void AABB::GetSize(float& minX, float& maxX, float& minY, float& maxY, float& minZ, float& maxZ) {
-    minX = AABB::_minX;
-    maxX = AABB::_maxX;
-
-    minY = AABB::_minY;
-    maxY = AABB::_maxY;
-
-    minZ = AABB::_minZ;
-    maxZ = AABB::_maxZ;
+Vector3 AABB::GetSize() {
+    return AABB::_scale;
 }
 
 Vector3 AABB::GetAABBPosition() {
-    return { (AABB::_maxX + AABB::_minX) * 0.5f, (AABB::_maxY + AABB::_minY) * 0.5f, (AABB::_maxZ + AABB::_minZ) * 0.5f };
-
+    return _position;
 }
 
-void AABB::UpdateAABB(const float* vertex, float vertexCount) {
-    float minX = FLT_MAX,  minY = FLT_MAX,  minZ = FLT_MAX;
-    float maxX = -FLT_MAX, maxY = -FLT_MAX, maxZ = -FLT_MAX;
+void AABB::UpdateAABB(Object& parentObject) {
+    AABB::SetSize(parentObject.GetScale());
+    AABB::_position = parentObject.GetPosition();
+    AABB::_originPos = parentObject.GetOriginPosition();
 
-    for (size_t i = 0; i < vertexCount * 3; i += 3)
-    {
-        //Min
-        if (minX > vertex[i + 0])
-            minX = vertex[i + 0];
+#ifdef _DEBUG
+    AABB::ApplyTransformation(parentObject);
+    AABB::_AABBMesh->SetPosition(AABB::_position);
+#endif // _DEBUG
+}
 
-        if (minY > vertex[i + 1])
-            minY = vertex[i + 1];
+void AABB::ApplyTransformation(Object& parentObject)
+{
+	Vector4 parentRotation = parentObject.GetRotation();
+	Vector3 parentPosition = parentObject.GetPosition();
+	Vector3 parentScale = parentObject.GetScale();
+	Vector3 parentOrigin = parentObject.GetOriginPosition();
 
-        if (minZ > vertex[i + 2])
-            minZ = vertex[i + 2];
+	glm::mat4x4 parentRotMat(1.0f);
+
+	const float parentRadX = M_PI / 180 * parentRotation.X;
+	const float parentRadY = M_PI / 180 * parentRotation.Y;
+	const float parentRadZ = M_PI / 180 * parentRotation.Z;
+
+	parentRotMat = glm::rotate(parentRotMat, parentRadX, glm::vec3(1.0f, 0.0f, 0.0f));
+	parentRotMat = glm::rotate(parentRotMat, parentRadY, glm::vec3(0.0f, 1.0f, 0.0f));
+	parentRotMat = glm::rotate(parentRotMat, parentRadZ, glm::vec3(0.0f, 0.0f, 1.0f));
+
+	glm::mat4x4 transMat(1.0f);
+	transMat = glm::translate(glm::vec3(
+		AABB::_position.X ,
+		AABB::_position.Y ,
+		AABB::_position.Z ));
+
+	glm::mat4x4 parentOriginMat(1.0f);
+	parentOriginMat = glm::translate(parentOriginMat, glm::vec3(
+		-parentOrigin.X,
+		-parentOrigin.Y,
+		-parentOrigin.Z));
+
+	glm::mat4x4 backParentOriginMat(1.0f);
+	backParentOriginMat = glm::translate(backParentOriginMat, glm::vec3(
+		parentOrigin.X,
+		parentOrigin.Y,
+		parentOrigin.Z));
 
 
-        //Max
-        if (maxX < vertex[i + 0])
-            maxX = vertex[i + 0];
+    glm::mat4x4 rotMat = backParentOriginMat * parentRotMat * parentOriginMat;
 
-        if (maxY < vertex[i + 1])
-            maxY = vertex[i + 1];
+	glm::mat4x4 _transformMatrix = transMat * rotMat;
 
-        if (maxZ < vertex[i + 2])
-            maxZ = vertex[i + 2];
-    }
 
-    AABB::SetSize(minX, maxX, minY, maxY, minZ, maxZ);
+    glm::vec4 pos = glm::vec4(0, 0, 0, 1);
+    pos = _transformMatrix * pos;
+
+    AABB::_position = Vector3(pos.x, pos.y, pos.z);
+    std::cout << "X: " << AABB::_position.X << " Y: " << AABB::_position.Y << " Z: " << AABB::_position.Z << "\n";
 }

@@ -148,7 +148,7 @@ ${Engine}Modules/Physics.cpp
  "Engine/ShadersProgram/PathShader.cpp" 
  "Engine/TextureLoader.h" 
  "Engine/TextureLoader.cpp" 
- "Engine/MemoryManager.h" )
+ "Engine/MemoryManager.h"  "Engine/Logger/ILogger.h" "Engine/Logger/ILogger.cpp" "Engine/Logger/ConsoleLogger.h" "Engine/Logger/ConsoleLogger.cpp")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib

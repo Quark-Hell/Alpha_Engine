@@ -77,11 +77,11 @@ private:
 	void SetMeshRenderOptions();
 	void SetDebugRenderOptions();
 	void SetCubeMapRenderOptions();
+	void SetAABBRenderOptions();
 
 
 	void RenderMesh(Mesh& mesh, std::shared_ptr<Camera>  camera);
 	void RenderAABB(std::vector<float>& vertex, std::vector<unsigned int>& indices);
-	void RenderWorldAABB(Node& rootNode);
 
 	int GetRenderMode(RenderModes renderMode);
 

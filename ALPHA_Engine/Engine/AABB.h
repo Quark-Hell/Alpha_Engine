@@ -1,55 +1,49 @@
 #pragma once
 #include "Basical_Type.h"
+#include "Modules/Mesh.h"
+#include "Modules/DebugMesh.h"
 
 class Render;
+class MeshCollider;
+class Object;
 
 class AABB {
 private:
-	float _minX = 0, _minY = 0, _minZ = 0;
-	float _maxX = 1, _maxY = 1, _maxZ = 1;
-
-private:
 	Vector3 _position;
+	Vector3 _originPos;
+
 	Vector3 _scale{0,0,0};
 
+private:
+	void UpdateAABB(Object& parentObject);
+	void UpdateAABB(float radius);
+
+	void ApplyTransformation(Object& parentObject);
+
+#ifdef _DEBUG
+protected:
+	std::unique_ptr<DebugMesh> _AABBMesh = std::make_unique<DebugMesh>();
+#endif // _DEBUG
+
 public:
-	AABB(
-		float minX, float maxX,
-		float minY, float maxY,
-		float minZ, float maxZ);
+	AABB(Object& parentObject);
 	AABB();
 
 	virtual ~AABB();
 
-	void SetSize(
-		float minX = 0, float maxX = 0,
-		float minY = 0, float maxY = 0,
-		float minZ = 0, float maxZ = 0);
+	void SetSize(Vector3 scale);
 
-	float GetMinX();
-	float GetMaxX();
-	float GetMinY();
-	float GetMaxY();
-	float GetMinZ();
-	float GetMaxZ();
-
-	void GetSize(float& minX, float& maxX, float& minY, float& maxY, float& minZ, float& maxZ);
+	Vector3 GetSize();
 
 	Vector3 GetAABBPosition();
 
-protected:
-	void UpdateAABB(const float* vertex, float vertexCount);
-	void UpdateAABB(float radius);
-
 	friend Render;
+	friend MeshCollider;
 
 #ifdef _DEBUG
 protected:
-	std::vector<float> _AABBvertex;
-	std::vector<unsigned int> _AABBindices;
-
-protected:
 	void CreateAABB();
 #endif // _DEBUG
+
 
 };

@@ -7,12 +7,10 @@
 class Object;
 struct aiScene;
 
-class Collider : public virtual MovableModule, public AABB
+class Collider : public virtual MovableModule
 {
 protected:
-	std::vector<float> _debugVertex;
-	std::vector<unsigned int> _debugIndices;
-
+	std::unique_ptr<AABB> _AABB = std::make_unique<AABB>();
 
 	friend Render;
 

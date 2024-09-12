@@ -1,5 +1,4 @@
 #include "PointLight.h"
-#include "MemoryManager.h"
 
 PointLight::PointLight() {
 

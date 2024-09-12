@@ -20,6 +20,8 @@ Collider::Collider()
         return;
 
     World::CollidersOnScene.push_back(this);
+
+
 }
 
 Collider::~Collider()

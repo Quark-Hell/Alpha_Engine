@@ -190,7 +190,7 @@ bool Mesh::InsertVertex(Vector3 vertex, unsigned int pos, bool expand)
 	
 		Mesh::BindMesh();
 	}
-	return false;
+	return true;
 }
 
 bool Mesh::LoadTextureCoord(std::string pathToCoords) {

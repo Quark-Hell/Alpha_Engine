@@ -39,7 +39,8 @@ bool MeshCollider::Create(std::string linkToFBX) {
     MeshCollider::_debugMesh->Create(linkToFBX);
 #endif
 
-    //AABB::UpdateAABB(Geometry::_vertex, Geometry::_vertexCount);
+    if(MeshCollider::ParentObject != nullptr)
+        _AABB->UpdateAABB(*MeshCollider::ParentObject);
 
     Geometry::_isIndexed = true;
     Geometry::MakeUnique();
@@ -63,7 +64,8 @@ bool MeshCollider::Create()
     MeshCollider::_debugMesh->Create(*mesh);
 #endif
 
-    //AABB::UpdateAABB(Geometry::_vertex, Geometry::_vertexCount);
+    if (MeshCollider::ParentObject != nullptr)
+        _AABB->UpdateAABB(*MeshCollider::ParentObject);
 
     //MeshCollider::_isIndexed = true;
     Geometry::MakeUnique();
@@ -107,7 +109,8 @@ void MeshCollider::ApplyTransformation() {
     MeshCollider::_debugMesh->ApplyTransformation();
 #endif
 
-    //AABB::UpdateAABB(MeshCollider::_vertex, MeshCollider::_vertexCount);
+    if (MeshCollider::ParentObject != nullptr)
+        _AABB->UpdateAABB(*MeshCollider::ParentObject);
     MeshCollider::_transformMatrix = glm::mat4x4(1.0f);
 }
 

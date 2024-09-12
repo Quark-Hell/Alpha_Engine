@@ -35,6 +35,7 @@
 #include "ShadersProgram/OpaqueShader.h"
 #include "ShadersProgram/CubeMapShader.h"
 #include "ShadersProgram/PathShader.h"
+#include "ShadersProgram/ColliderWireframeShader.h"
 
 #include "Texture.h"
 
@@ -127,9 +128,13 @@ void Path(Object* object, PathShader* shader) {
     shader->AddPoint(point);
 }
 
-
+//std::shared_ptr<Object> obj;
 void InitSun()
 {
+    //obj = Primitives::Cube(Vector3(0, 0, 0), Vector4(0, 0, 0, 1), Vector3(1, 1, 1));
+    //Mesh* aabb = std::dynamic_pointer_cast<Mesh>(obj->GetModuleByType(MeshType)).get();
+    //aabb->_material->Shader = std::make_shared<ColliderWireframeShader>(aabb->_material.get());
+
     PointLight* pLight = new PointLight();
     pLight->Name = "PointLight";
 
@@ -141,7 +146,8 @@ void InitSun()
     Sun = Primitives::Sphere(Vector3(0, 0, 0), Vector4(0, 0, 0, 1), Vector3(10, 10, 10));
 
     Mesh* mesh = std::dynamic_pointer_cast<Mesh>(Sun->GetModuleByType(MeshType)).get();
-    //mesh->Name = "sun";
+    mesh->Name = "sun";
+
     //
     mesh->_material->Shader = std::make_shared<OpaqueShader>(mesh->_material.get());
 

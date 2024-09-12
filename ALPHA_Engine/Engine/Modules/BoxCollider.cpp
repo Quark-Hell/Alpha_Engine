@@ -141,8 +141,6 @@ Vector3 BoxCollider::CalculateCoverScale() {
 	BoxCollider::_debugMesh->ApplyTransformation();
 #endif
 
-
-
 	return maxSize;
 }
 

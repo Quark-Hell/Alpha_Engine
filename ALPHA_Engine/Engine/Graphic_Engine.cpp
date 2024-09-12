@@ -155,6 +155,15 @@ void Render::SetCubeMapRenderOptions() {
     //glDisable(GL_DEPTH_TEST);
 }
 
+void Render::SetAABBRenderOptions()
+{
+    glPolygonMode(GL_FRONT, GL_LINE);
+    glLineWidth(World::DebugWireframThickness);
+    //glDisable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glColor3f(0.2, 0.8, 0.2);
+}
+
 void Render::RenderMesh(Mesh& mesh, std::shared_ptr<Camera> camera) {
     if (mesh._material->Shader == nullptr)
         return;
@@ -175,6 +184,8 @@ void Render::RenderMesh(Mesh& mesh, std::shared_ptr<Camera> camera) {
 
     glBindVertexArray(0);
 }
+
+
 
 void Render::RenderRigidBodyInfo(RigidBody& rb) {
     std::vector<Vector3> contactPoint;
@@ -208,21 +219,6 @@ void Render::RenderAABB(std::vector<float>& vertex, std::vector<unsigned int>& i
     glVertexPointer(3, GL_FLOAT, 0, &vertex[0]);
     glDrawElements(GL_LINE_LOOP, indices.size(), GL_UNSIGNED_INT, &indices[0]);
     
-    glDisableClientState(GL_VERTEX_ARRAY);
-#endif // _DEBUG
-}
-void Render::RenderWorldAABB(Node& rootNode) {
-#ifdef _DEBUG
-    Render::SetDebugRenderOptions();
-    //glDisable(GL_DEPTH_TEST);
-    glColor3f(0.5, 0, 0.5);
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-
-
-    glVertexPointer(3, GL_FLOAT, 0, &rootNode.AABBvolume._AABBvertex[0]);
-    glDrawElements(GL_LINE_LOOP, rootNode.AABBvolume._AABBindices.size(), GL_UNSIGNED_INT, &rootNode.AABBvolume._AABBindices[0]);
-
     glDisableClientState(GL_VERTEX_ARRAY);
 #endif // _DEBUG
 }
@@ -296,13 +292,12 @@ void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
         {
             ModulesList type = World::ObjectsOnScene[i]->GetModuleByIndex(j)->GetType();
 
-            if (type == MeshType) {
+            if (type == MeshType && World::ObjectsOnScene[i]->ObjectTag.GetTag() != "SkyBox") {
                 std::shared_ptr<Mesh> mesh = std::dynamic_pointer_cast<Mesh>(World::ObjectsOnScene[i]->GetModuleByIndex(j));
 
                 Render::SetMeshRenderOptions();
                 Render::RenderMesh(*mesh, camera);
             }
-
 
 #pragma region DebugRender
 #ifdef _DEBUG
@@ -314,6 +309,11 @@ void Render::SceneAssembler(std::shared_ptr<Camera> camera) {
           if (collider != nullptr) {
               Render::SetDebugRenderOptions();
               Render::RenderMesh(*collider->_debugMesh, camera);
+
+              Render::SetAABBRenderOptions();
+              Collider* col = reinterpret_cast<Collider*>(collider.get());
+              col->_AABB->_AABBMesh->_material->Shader->RenderMode = RenderModes::Lines;
+              Render::RenderMesh(*col->_AABB->_AABBMesh, camera);
               //RenderAABB(collider->_AABBvertex, collider->_AABBindices);
           }
           //

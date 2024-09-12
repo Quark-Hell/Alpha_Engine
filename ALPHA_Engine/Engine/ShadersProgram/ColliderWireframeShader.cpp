@@ -10,6 +10,8 @@ ColliderWireframeShader::ColliderWireframeShader(Material* parentMat) : ShaderPr
     ColliderWireframeShader::CreateShader("\\Shaders\\ColliderWireframeShaders\\FragmentShader.txt", ShadersType::FragmentShader);
 
     ColliderWireframeShader::InitShader();
+
+    //ColliderWireframeShader::RenderMode = RenderModes::LineStip;
 }
 
 ColliderWireframeShader::~ColliderWireframeShader()
@@ -23,6 +25,7 @@ void ColliderWireframeShader::ApplyShadersSettings(std::shared_ptr<Camera> camer
 
     ColliderWireframeShader::SetValue(ShadersType::VertexShader, "model_matrix", ColliderWireframeShader::GetParentMaterial()->GetParentMesh()->GetTransformMatrix());
 
+    ColliderWireframeShader::SetValue(ShadersType::FragmentShader, "color", ColliderWireframeShader::color);
 
     //DebugMesh::_material->_shader->SetValue(ShadersType::VertexShader, "color", &World::DebugWireframeColor);
 }
