@@ -26,7 +26,9 @@ SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/")
 SET (assimpLIB "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/lib/")
 SET (assimpINCLUDE "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp/include/")
 SET (assimp "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimpB/")
+
 SET (Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Engine/")
+
 SET (Game "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Game/")
 
 SET(STB "${PROJECT_SOURCE_DIR}/ALPHA_Engine/STB/")
@@ -48,7 +50,9 @@ include_directories(${GLFWinclude})
 include_directories(${glmInclude})
 
 include_directories(${assimpINCLUDE})
+
 include_directories(${Engine})
+
 include_directories(${Game})
 include_directories(${glm})
 
@@ -64,97 +68,46 @@ set(EXE_DEST "${PROJECT_BINARY_DIR}/ALPHA_Engine")
 add_executable (ALPHA_Engine 
 ALPHA_Engine.cpp
 ALPHA_Engine.h
-${assimpINCLUDE}assimp/Importer.hpp
-${assimpINCLUDE}assimp/scene.h
-${assimpINCLUDE}assimp/postprocess.h
 
-${Game}GameModels.h 
-${Game}GameModels.cpp 
+${Engine}ModuleList.h
+${Engine}BaseConfig.h
 
-${Engine}Binds.h
-${Engine}Binds.cpp
+${Engine}Core/Host/Host.h
+${Engine}Core/Host/Host.cpp
+${Engine}Core/World.h
+${Engine}Core/World.cpp
+${Engine}Core/Object.h
+${Engine}Core/Object.cpp
+${Engine}Core/Tag.h
+${Engine}Core/Tag.cpp
 
-${Engine}Alghoritms.h
-${Engine}Alghoritms.cpp
-${Engine}Basical_Type.h
-${Engine}Basical_Type.cpp
-${Engine}Collision.h
-${Engine}Collision.cpp
-${Engine}Graphic_Engine.h
-${Engine}Graphic_Engine.cpp
-"Engine/Modules/Material.h"
-"Engine/Modules/Material.cpp"
+${Engine}Core/Modules/Module.h
+${Engine}Core/Modules/Module.cpp
 
-${Engine}Object.h 
-${Engine}Object.cpp   
-${Engine}Texture.h 
-${Engine}Texture.cpp
-${Engine}Timer.h
-${Engine}Timer.cpp
-${Engine}Vectors.h
-${Engine}Vectors.cpp
-${Engine}World.h  
-${Engine}World.cpp 
+${Engine}Core/Modules/Transform.h
+${Engine}Core/Modules/Transform.cpp
 
-${Engine}Modules/Camera.h
-${Engine}Modules/Camera.cpp
-${Engine}Modules/Geometry.h
-${Engine}Modules/Geometry.cpp
-${Engine}Modules/Mesh.h
-${Engine}Modules/Mesh.cpp
-${Engine}Modules/Module.h
-${Engine}Modules/Module.cpp
-${Engine}Modules/Physics.h
-${Engine}Modules/Physics.cpp
-"Engine/AdditionalMath.h" 
-"Engine/AdditionalMath.cpp" 
-"Engine/Modules/BoxCollider.h"
-"Engine/Modules/BoxCollider.cpp" 
+${Engine}Core/Math/Vectors.h
+${Engine}Core/Math/Vectors.h
+${Engine}Core/CoreConfig.h 
 
- "Engine/Modules/MeshCollider.h"
- "Engine/Modules/MeshCollider.cpp"
- "Engine/Modules/Transform.h"
- "Engine/Modules/Transform.cpp"
- "Engine/Plane.h" 
-  
- 
- "Engine/BVH_Tree.h" 
- "Engine/BVH_Tree.cpp" 
- "Engine/AABB.h" 
- "Engine/AABB.cpp"
- "Engine/Modules/Collider.h" 
- "Engine/Modules/Collider.cpp" 
- "Engine/Modules/MovableModule.h" 
- "Engine/Modules/MovableModule.cpp"  
- "Engine/ShadersProgram/ShaderProgram.h" 
- "Engine/ShadersProgram/ShaderProgram.cpp"
- "Engine/Modules/Light/Light.h" 
- "Engine/Modules/Light/Light.cpp" 
- "Engine/Modules/Light/DirectLight.h"
- "Engine/Modules/Light/DirectLight.cpp"
- "Engine/Modules/Light/PointLight.h" 
- "Engine/Modules/Light/PointLight.cpp"
- "Engine/Modules/Light/SpotLight.h" 
- "Engine/Modules/Light/SpotLight.cpp"
- "Engine/Modules/DebugMesh.h"
- "Engine/Modules/DebugMesh.cpp"  
- "Engine/ShadersProgram/OpaqueShader.h" 
- "Engine/ShadersProgram/OpaqueShader.cpp" 
- "Engine/ShadersProgram/ColliderWireframeShader.h"
- "Engine/ShadersProgram/ColliderWireframeShader.cpp" 
- "Engine/ShadersProgram/CubeMapShader.h"
- "Engine/ShadersProgram/CubeMapShader.cpp"
- "Engine/ShadersProgram/PathShader.h" 
- "Engine/ShadersProgram/PathShader.cpp" 
- "Engine/TextureLoader.h" 
- "Engine/TextureLoader.cpp" 
- "Engine/MemoryManager.h"  "Engine/Logger/ILogger.h" "Engine/Logger/ILogger.cpp" "Engine/Logger/ConsoleLogger.h" "Engine/Logger/ConsoleLogger.cpp")
+${Engine}Graphics_Engine/GraphicsEngineConfig.h
+${Engine}Graphics_Engine/Graphics_Engine.h
+${Engine}Graphics_Engine/Graphics_Engine.cpp
+#${Engine}Graphics_Engine/TextureLoader.h 
+#${Engine}Graphics_Engine/TextureLoader.cpp
+${Engine}Graphics_Engine/Modules/Camera.h
+${Engine}Graphics_Engine/Modules/Camera.cpp
+${Engine}Graphics_Engine/Modules/Screen.h
+${Engine}Graphics_Engine/Modules/Screen.cpp
+ "Engine/EngineConfig.h")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib
 PRIVATE ${GLEW}/glew32s.lib
 PRIVATE opengl32.lib
 PRIVATE ${assimpLIB}assimp-vc143-mtd.lib
+
 )
 
 #target_compile_options(ALPHA_Engine PUBLIC "/Zc:__cplusplus")
