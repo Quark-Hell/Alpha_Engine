@@ -22,14 +22,14 @@
 
 
 
-Camera::Camera() {
+GraphicsEngine::Camera::Camera() {
     Camera::UpdateProjectionMatrix();
 }
-Camera::~Camera() {
+GraphicsEngine::Camera::~Camera() {
 
 }
 
-void Camera::SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar) {
+void GraphicsEngine::Camera::SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar) {
     Camera::Fov = Fov;
     Camera::Aspect = Aspect;
     Camera::ZNear = ZNear;
@@ -39,43 +39,43 @@ void Camera::SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar) {
     glLoadIdentity();
     gluPerspective(Fov, Aspect, ZNear, ZFar);
 }
-void Camera::GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float* ZFar) {
+void GraphicsEngine::Camera::GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float* ZFar) {
     *Fov = Camera::Fov;
     *Aspect = Camera::Aspect;
     *ZNear = Camera::ZNear;
     *ZFar = Camera::ZFar;
 }
 
-ModulesList Camera::GetType() {
+ModulesList GraphicsEngine::Camera::GetType() {
     return ModulesList::CameraType;
 }
 
-Object* Camera::GetParentObject() {
+Object* GraphicsEngine::Camera::GetParentObject() {
     return Module::GetParentObject();
 }
-void Camera::SetParentObject(const Object& parent) {
+void GraphicsEngine::Camera::SetParentObject(const Object& parent) {
     Module::SetParentObject(parent);
 }
 
-float Camera::GetFov() {
+float GraphicsEngine::Camera::GetFov() {
     return Camera::Fov;
 }
-float Camera::GetAspect() {
+float GraphicsEngine::Camera::GetAspect() {
     return Camera::Aspect;
 }
-float Camera::GetZNear() {
+float GraphicsEngine::Camera::GetZNear() {
     return Camera::ZNear;
 }
-float Camera::GetZFar() {
+float GraphicsEngine::Camera::GetZFar() {
     return Camera::ZFar;
 }
 
-glm::mat4x4 Camera::GetProjectionMatrix()
+glm::mat4x4 GraphicsEngine::Camera::GetProjectionMatrix()
 {
     return Camera::_projectionMatrix;
 }
 
-void Camera::UpdateProjectionMatrix() {
+void GraphicsEngine::Camera::UpdateProjectionMatrix() {
     if (_projectionMode == ProjectionMode::Perspective)
     {
         float aspect = 16.0f / 9.0f;

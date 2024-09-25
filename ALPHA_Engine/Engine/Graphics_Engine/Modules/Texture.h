@@ -47,7 +47,7 @@ class Texture {
 	//https://dtf.ru/gamedev/244935-iz-chego-sostoit-grafika#first
 
 	friend class Material;
-	friend class Render;
+	friend class RenderCore;
 	friend class Mesh;
 
 private:

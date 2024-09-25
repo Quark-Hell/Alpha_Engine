@@ -10,15 +10,15 @@
 #include <Gl/gl.h>
 #include <Gl/glu.h>
 
-Screen::Screen() {
+GraphicsEngine::Screen::Screen() {
 
 }
 
-Screen::~Screen() {
+GraphicsEngine::Screen::~Screen() {
 
 }
 
-void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name) {
+void GraphicsEngine::Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int BitsPerPixel, std::string Name) {
     _wight = Wight;
     _height = Height;
     _bitsPerPixel = BitsPerPixel;
@@ -69,6 +69,6 @@ void Screen::CreateScreen(unsigned int Wight, unsigned int Height, unsigned int 
     ////Todo:
     ////glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE) if MacOs
 }
-GLFWwindow* Screen::GetWindow() {
+GLFWwindow* GraphicsEngine::Screen::GetWindow() {
     return Screen::_window;
 }

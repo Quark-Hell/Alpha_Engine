@@ -2,24 +2,24 @@
 #include "Object.h"
 
 #pragma region Mesh Define
-Mesh::Mesh() {
+GraphicsEngine::Mesh::Mesh() {
 	_material->_parentMesh = this;
 
 	_scale = Vector3(0,0,0);
 }
-Mesh::~Mesh() {
+GraphicsEngine::Mesh::~Mesh() {
 
 }
 
-ModulesList Mesh::GetType() {
+ModulesList GraphicsEngine::Mesh::GetType() {
 	return ModulesList::MeshType;
 }
 
-void Mesh::SetParentObject(const Object& parent) {
+void GraphicsEngine::Mesh::SetParentObject(const Object& parent) {
 	ParentObject = const_cast<Object*>(&parent);
 }
 
-bool Mesh::Create(std::string linkToFBX) {
+bool GraphicsEngine::Mesh::Create(std::string linkToFBX) {
 	Mesh::_vertex->clear();
 	Mesh::_indices->clear();
 	Mesh::_normals->clear();
@@ -81,7 +81,7 @@ bool Mesh::Create(std::string linkToFBX) {
 	return true;
 }
 
-bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool initNormals, bool initTexCoord, bool initMaterial)
+bool GraphicsEngine::Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool initNormals, bool initTexCoord, bool initMaterial)
 {
 	Mesh::_vertex->clear();
 	Mesh::_indices->clear();
@@ -156,11 +156,11 @@ bool Mesh::Create(std::string linkToFBX, bool initIndices, bool initVertex, bool
 	return true;
 }
 
-bool Mesh::LoadTextureCoord(std::string pathToCoords) {
+bool GraphicsEngine::Mesh::LoadTextureCoord(std::string pathToCoords) {
 	return false;
 }
 
-bool Mesh::BindMesh() {
+bool GraphicsEngine::Mesh::BindMesh() {
 	if (Mesh::_vertexVbo != 0)
 		glDeleteBuffers(1, &_vertexVbo);
 

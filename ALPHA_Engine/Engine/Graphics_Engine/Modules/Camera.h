@@ -7,45 +7,48 @@ class Vector3;
 #include "glm.hpp"
 
 
-enum ProjectionMode {
-	Perspective = 0,
-	Orthographic = 1,
-};
+namespace GraphicsEngine {
+	enum ProjectionMode {
+		Perspective = 0,
+		Orthographic = 1,
+	};
 
-class Camera : public Module {
-private:
-	Transform _transform;
+	class Camera : public Core::Module {
+	private:
+		Core::Transform _transform;
 
-	float Fov = 90;
-	float Aspect = 1;
-	float ZNear = 0.1f;
-	float ZFar = 300;
+		float Fov = 90;
+		float Aspect = 1;
+		float ZNear = 0.1f;
+		float ZFar = 300;
 
-	//TODO: Add function for change mode
-	ProjectionMode _projectionMode = ProjectionMode::Perspective;
+		//TODO: Add function for change mode
+		ProjectionMode _projectionMode = ProjectionMode::Perspective;
 
-	glm::mat4x4 _projectionMatrix = glm::mat4x4(1.0f);
+		glm::mat4x4 _projectionMatrix = glm::mat4x4(1.0f);
 
-public:
-	Camera();
-	~Camera();
+	public:
+		Camera();
+		~Camera();
 
-	void SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar);
-	void GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float* ZFar);
+		void SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar);
+		void GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float* ZFar);
 
-	ModulesList GetType() override;
+		ModulesList GetType() override;
 
-	Object* GetParentObject() override;
-	void SetParentObject(const Object& parent) override;
+		Object* GetParentObject() override;
+		void SetParentObject(const Object& parent) override;
 
-	float GetFov();
-	float GetAspect();
-	float GetZNear();
-	float GetZFar();
+		float GetFov();
+		float GetAspect();
+		float GetZNear();
+		float GetZFar();
 
-	glm::mat4x4 GetProjectionMatrix();
-	glm::mat4x4 GetTransformMatrix();
+		glm::mat4x4 GetProjectionMatrix();
+		glm::mat4x4 GetTransformMatrix();
 
-	void UpdateProjectionMatrix();
-	void UpdateViewMatrix();
-};
+		void UpdateProjectionMatrix();
+		void UpdateViewMatrix();
+	};
+
+}

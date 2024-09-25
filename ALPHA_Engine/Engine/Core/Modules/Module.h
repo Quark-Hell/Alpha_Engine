@@ -4,22 +4,26 @@
 class Object;
 enum ModulesList : unsigned short;
 
-class Module
-{
-public:
-	std::string Name = "Undefined";
+namespace Core {
 
-protected:
-	Object* ParentObject = nullptr;
+	class Module
+	{
+	public:
+		std::string Name = "Undefined";
 
-public:
-	Module();
-	~Module();
+	protected:
+		Object* ParentObject = nullptr;
 
-	virtual void Delete();
+	public:
+		Module();
+		~Module();
 
-	virtual ModulesList GetType() = 0;
+		virtual void Delete();
 
-	virtual Object* GetParentObject();
-	virtual void SetParentObject(const Object& parent);
-};
+		virtual ModulesList GetType() = 0;
+
+		virtual Object* GetParentObject();
+		virtual void SetParentObject(const Object& parent);
+	};
+
+}

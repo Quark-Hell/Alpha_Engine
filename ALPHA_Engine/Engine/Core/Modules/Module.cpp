@@ -1,24 +1,24 @@
 #include "Module.h"
 #include "ModuleList.h"
 
-Module::Module() {
+Core::Module::Module() {
 
 }
-Module::~Module() {
-
-}
-
-void Module::Delete(){
+Core::Module::~Module() {
 
 }
 
-ModulesList Module::GetType() {
+void Core::Module::Delete(){
+
+}
+
+ModulesList Core::Module::GetType() {
 	return ModulesList::ModuleType;
 }
 
-Object* Module::GetParentObject() {
+Object* Core::Module::GetParentObject() {
 	return ParentObject;
 }
-void Module::SetParentObject(const Object& parent) {
+void Core::Module::SetParentObject(const Object& parent) {
 	ParentObject = const_cast<Object*>(&parent);
 }

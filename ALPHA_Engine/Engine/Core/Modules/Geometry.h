@@ -5,7 +5,7 @@
 
 class Geometry : public Module
 {
-	friend class Graphics_Engine;
+	friend class RenderCore;
 
 protected:
 	bool _isIndexed = false;

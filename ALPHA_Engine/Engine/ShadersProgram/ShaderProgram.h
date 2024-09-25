@@ -196,7 +196,7 @@ public:
 protected:
 	virtual void ApplyShadersSettings(std::shared_ptr<Camera> camera);
 
-	friend class Render;
+	friend class RenderCore;
 	friend class Material;
 };
 

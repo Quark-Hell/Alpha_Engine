@@ -6,38 +6,44 @@ enum RenderModes : unsigned short;
 #include "BaseConfig.h"
 #include "Graphics_Engine/Modules/Screen.h"
 
-class Graphics_Engine {
-	friend class Host;
+namespace Core {
+	class Host;
+}
 
-private:
-	Screen _screenClass;
-	//std::vector<std::unique_ptr<Camera>>* _cameras;
+namespace GraphicsEngine {
+	class RenderCore {
+		friend class Core::Host;
 
-private:
-	static std::unique_ptr<Graphics_Engine> MakeGraphics_Engine();
-	Graphics_Engine();
+	private:
+		Screen _screenClass;
+		//std::vector<std::unique_ptr<Camera>>* _cameras;
 
-	void PrepareToRender();
-	void ClearFrameBuffer();
+	private:
+		static std::unique_ptr<GraphicsEngine::RenderCore> MakeRenderCore();
+		RenderCore();
 
-public:
-	~Graphics_Engine();
+		void PrepareToRender();
+		void ClearFrameBuffer();
 
-	void StartRender();
-	void RenderLoop();
-	Screen* GetScreenClass();
+	public:
+		~RenderCore();
 
-	bool CompileShaders();
+		void StartRender();
+		void RenderLoop();
+		Screen* GetScreenClass();
 
-private:
-	void SceneAssembler(std::shared_ptr<Camera> camera);
+		bool CompileShaders();
 
-	void SetMeshRenderOptions();
+	private:
+		void SceneAssembler(std::shared_ptr<Camera> camera);
+
+		void SetMeshRenderOptions();
 
 
-	//void RenderMesh(Mesh& mesh, std::shared_ptr<Camera>  camera);
+		//void RenderMesh(Mesh& mesh, std::shared_ptr<Camera>  camera);
 
-	int GetRenderMode(RenderModes renderMode);
+		int GetRenderMode(RenderModes renderMode);
 
-	void ApplyCameraTransform(std::shared_ptr<Camera>  camera);
-};
+		void ApplyCameraTransform(std::shared_ptr<Camera>  camera);
+	};
+}

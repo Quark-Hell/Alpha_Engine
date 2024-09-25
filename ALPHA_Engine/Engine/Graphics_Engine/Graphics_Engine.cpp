@@ -33,56 +33,56 @@ enum RenderModes : unsigned short {
     Patches = 11,
 };
 
-std::unique_ptr<Graphics_Engine> Graphics_Engine::MakeGraphics_Engine() {
-    return std::unique_ptr<Graphics_Engine>(new Graphics_Engine());
+std::unique_ptr<GraphicsEngine::RenderCore> GraphicsEngine::RenderCore::MakeRenderCore() {
+    return std::unique_ptr<RenderCore>(new RenderCore());
 }
 
-Graphics_Engine::Graphics_Engine() {
-
-}
-
-Graphics_Engine::~Graphics_Engine() {
+GraphicsEngine::RenderCore::RenderCore() {
 
 }
 
-Screen* Graphics_Engine::GetScreenClass() {
-    return &(Graphics_Engine::_screenClass);
+GraphicsEngine::RenderCore::~RenderCore() {
+
 }
 
-void Graphics_Engine::PrepareToRender() {
+GraphicsEngine::Screen* GraphicsEngine::RenderCore::GetScreenClass() {
+    return &(RenderCore::_screenClass);
+}
+
+void GraphicsEngine::RenderCore::PrepareToRender() {
     glClearColor(0.3f, 0.3f, 0.3f, 0.f);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void Graphics_Engine::ClearFrameBuffer() {
+void GraphicsEngine::RenderCore::ClearFrameBuffer() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
 
-void Graphics_Engine::StartRender() {
+void GraphicsEngine::RenderCore::StartRender() {
     _screenClass.CreateScreen(1280, 720, 32, "GLFW OpenGL");
 
     int width, height;
     glfwGetFramebufferSize(_screenClass._window, &width, &height);
     glViewport(0, 0, width, height);
 
-    Graphics_Engine::PrepareToRender();
+    RenderCore::PrepareToRender();
     //Render::ApplyCameraTransform(camera);
 
     //camera->SetCameraInfo(60, 16.0 / 9.0, 0.1, 300);
 }
 
-void Graphics_Engine::RenderLoop() {
+void GraphicsEngine::RenderCore::RenderLoop() {
     if (!glfwWindowShouldClose(_screenClass._window))
     {
         glfwPollEvents();//make render more slower
 
-        Graphics_Engine::ClearFrameBuffer();
+        RenderCore::ClearFrameBuffer();
 
-        Graphics_Engine::PrepareToRender();
+        RenderCore::PrepareToRender();
         //Render::ApplyCameraTransform(camera);
 
         //Graphics_Engine::SceneAssembler(camera);

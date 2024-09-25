@@ -27,7 +27,7 @@ public:
 	Mesh* GetParentMesh();
 
 protected:
-	friend class Render;
+	friend class RenderCore;
 	friend class Mesh;
 	friend class ShaderProgram;
 };

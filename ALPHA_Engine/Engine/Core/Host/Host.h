@@ -1,25 +1,44 @@
 #pragma once
 #include "BaseConfig.h"
 
-class Graphics_Engine;
+namespace Core {
+	class World;
+}
 
-class Host
-{
-	friend class World;
+namespace GraphicsEngine {
+	class RenderCore;
+}
+namespace Register {
+	class Registry;
+}
 
-private:
-	std::unique_ptr<Graphics_Engine> _graphics_engine;
+namespace Core {
 
-private:
-	static std::unique_ptr<Host> MakeHost();
-	Host();
+	class Host
+	{
+		friend class Core::World;
 
-public:
-	~Host();
+	private:
+#if __has_include("Graphics_Engine/GraphicsEngineConfig.h")
+		std::unique_ptr<GraphicsEngine::RenderCore> _graphics_engine;
+#endif
 
-	void StartRender();
+#if __has_include("UserScriptsRegister/UserScriptConfig.h")
+		std::unique_ptr<Register::Registry> _registry;
+#endif
 
-	void Graphics();
-	void Physics();
-};
+	private:
+		static std::unique_ptr<Host> MakeHost();
+		Host();
 
+	public:
+		~Host();
+
+		void StartRender();
+
+		void Regestry();
+		void Graphics();
+		void Physics();
+	};
+
+}

@@ -64,13 +64,16 @@ set(GameTextures "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Textures")
 set(GameShaders "${PROJECT_SOURCE_DIR}/ALPHA_Engine/Shaders")
 set(EXE_DEST "${PROJECT_BINARY_DIR}/ALPHA_Engine")
 
+set(Game_DEST "${PROJECT_SOURCE_DIR}/Game/Game/ALPHA_Engine")
+
 # Add source to this project's executable.
-add_executable (ALPHA_Engine 
+add_library (ALPHA_Engine SHARED
 ALPHA_Engine.cpp
 ALPHA_Engine.h
 
 ${Engine}ModuleList.h
 ${Engine}BaseConfig.h
+${Engine}EngineConfig.h
 
 ${Engine}Core/Host/Host.h
 ${Engine}Core/Host/Host.cpp
@@ -100,7 +103,13 @@ ${Engine}Graphics_Engine/Modules/Camera.h
 ${Engine}Graphics_Engine/Modules/Camera.cpp
 ${Engine}Graphics_Engine/Modules/Screen.h
 ${Engine}Graphics_Engine/Modules/Screen.cpp
- "Engine/EngineConfig.h")
+
+${Engine}UserScriptsRegister/UserScriptConfig.h
+${Engine}UserScriptsRegister/Registry.h
+${Engine}UserScriptsRegister/Registry.cpp
+${Engine}UserScriptsRegister/UserScript.h
+${Engine}UserScriptsRegister/UserScript.cpp
+)
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib
@@ -112,6 +121,7 @@ PRIVATE ${assimpLIB}assimp-vc143-mtd.lib
 
 #target_compile_options(ALPHA_Engine PUBLIC "/Zc:__cplusplus")
 
+#copy files in engine build
 add_custom_target(copy_dll ALL
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
 	${dll_Files}
@@ -143,6 +153,44 @@ add_custom_target(copy_shaders ALL
 	DEPENDS ${dll_Files}
 	COMMENT "Copying resources to ${EXE_DEST}/Shaders"
 )
+#copy files in engine build
 
+#copy files in game build
+add_custom_command(TARGET ALPHA_Engine POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E make_directory 
+	${Game_DEST}/dll
+	COMMAND ${CMAKE_COMMAND} -E copy
+	${EXE_DEST}/ALPHA_Engine.dll
+	${Game_DEST}/dll/ALPHA_Engine.dll
+)
+
+add_custom_target(copy_dll_game ALL 
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${dll_Files}
+	${Game_DEST}/dll
+	COMMENT "Copying resources to ${Game_DEST}"
+)
+
+add_custom_target(copy_shaders_game ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${GameShaders}
+	${Game_DEST}/shaders
+	COMMENT "Copying resources to ${Game_DEST}/shaders"
+)
+
+add_custom_target(copy_textures_game ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${GameTextures}
+	${Game_DEST}/textures
+	COMMENT "Copying resources to ${Game_DEST}/textures"
+)
+
+add_custom_target(copy_models_game ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${GameModels}
+	${Game_DEST}/models
+	COMMENT "Copying resources to ${Game_DEST}/models"
+)
+#copy files in game build
 
 # TODO: Add tests and install targets if needed.

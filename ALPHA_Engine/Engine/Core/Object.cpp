@@ -3,15 +3,16 @@
 #include "BaseConfig.h"
 
 #include "Core/Modules/Transform.h"
+#include "Core/Modules/Module.h"
 #include "Core/Tag.h"
 
-#include "Core/Modules/Module.h"
+#include "ModuleList.h"
 
-Object::Object() {
+Core::Object::Object() {
 	//World::ObjectsOnScene.push_back(this);
 }
 
-Object::~Object() {
+Core::Object::~Object() {
 	//for (size_t i = 0; i < World::ObjectsOnScene.size(); i++) {
 	//	if (this == World::ObjectsOnScene[i]) {
 	//		World::ObjectsOnScene.erase(World::ObjectsOnScene.begin() + i);
@@ -20,17 +21,17 @@ Object::~Object() {
 	//}
 }
 
-void Object::Delete() {
+void Core::Object::Delete() {
 	Object::~Object();
 }
 
-bool Object::AddModule(std::shared_ptr<Module> someModule) {
+bool Core::Object::AddModule(std::shared_ptr<Core::Module> someModule) {
 	Object::_modules.push_back(someModule);
 	someModule->SetParentObject(*this);
 	return true;
 }
-bool Object::AddModule(ModulesList moduleType, Module** outputModule) {
-	std::shared_ptr<Module> someModule;
+bool Core::Object::AddModule(ModulesList moduleType, Core::Module** outputModule) {
+	std::shared_ptr<Core::Module> someModule;
 
 	switch (moduleType)
 	{
@@ -78,8 +79,8 @@ bool Object::AddModule(ModulesList moduleType, Module** outputModule) {
 
 	return true;
 }
-bool Object::AddModule(ModulesList moduleType) {
-	std::shared_ptr<Module> someModule;
+bool Core::Object::AddModule(ModulesList moduleType) {
+	std::shared_ptr<Core::Module> someModule;
 
 	switch (moduleType)
 	{
@@ -125,12 +126,12 @@ bool Object::AddModule(ModulesList moduleType) {
 	return true;
 }
 
-int Object::GetCountOfModules() {
+int Core::Object::GetCountOfModules() {
 	return Object::_modules.size();
 }
 
 
-bool Object::DeleteModuleByType(ModulesList type) {
+bool Core::Object::DeleteModuleByType(ModulesList type) {
 	for (size_t i = 0; i < Object::_modules.size(); i++) {
 		if (type == Object::_modules[i]->GetType()) {
 			Object::_modules.erase(Object::_modules.begin() + i);
@@ -140,7 +141,7 @@ bool Object::DeleteModuleByType(ModulesList type) {
 
 	return false;
 }
-bool Object::DeleteModuleByIndex(int index) {
+bool Core::Object::DeleteModuleByIndex(int index) {
 	if (index >= 0 && index < Object::_modules.size()) {
 		Object::_modules.erase(Object::_modules.begin() + index);
 		return true;
@@ -149,7 +150,7 @@ bool Object::DeleteModuleByIndex(int index) {
 	return false;
 }
 
-std::shared_ptr<Module> Object::GetModuleByType(ModulesList type) {
+std::shared_ptr<Core::Module> Core::Object::GetModuleByType(ModulesList type) {
 	for (size_t i = 0; i < Object::_modules.size(); i++) {
 		if (type == Object::_modules[i]->GetType()) {
 			return Object::_modules[i];
@@ -158,10 +159,10 @@ std::shared_ptr<Module> Object::GetModuleByType(ModulesList type) {
 
 	return nullptr;
 }
-std::vector<std::shared_ptr<Module>> Object::GetModuleByTypes(std::vector<ModulesList> typesArray) {
-	std::vector<std::shared_ptr<Module>> buffer;
+std::vector<std::shared_ptr<Core::Module>> Core::Object::GetModuleByTypes(std::vector<ModulesList> typesArray) {
+	std::vector<std::shared_ptr<Core::Module>> buffer;
 
-	for (size_t i = 0; i < Object::_modules.size(); i++) {
+	for (size_t i = 0; i < Core::Object::_modules.size(); i++) {
 		for (size_t j = 0; j < typesArray.size(); j++) {
 			if (typesArray[j] == Object::_modules[i]->GetType()) {
 				buffer.push_back(Object::_modules[i]);
@@ -172,7 +173,7 @@ std::vector<std::shared_ptr<Module>> Object::GetModuleByTypes(std::vector<Module
 	return buffer;
 }
 
-std::shared_ptr<Module> Object::GetModuleByIndex(size_t index) {
+std::shared_ptr<Core::Module> Core::Object::GetModuleByIndex(size_t index) {
 	if (index >= 0 && index < Object::_modules.size()) {
 		return Object::_modules[index];
 	}

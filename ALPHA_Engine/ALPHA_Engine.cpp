@@ -13,7 +13,7 @@ void GameFunction::Update() {
 
 int main()
 {
-    std::unique_ptr<World> world = std::make_unique<World>();
+    std::unique_ptr<Core::World> world = std::make_unique<Core::World>();
     world->Simulation();
 
     std::cout << "Hello World";
