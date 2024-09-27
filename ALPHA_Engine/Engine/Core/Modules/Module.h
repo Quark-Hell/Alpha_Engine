@@ -1,10 +1,11 @@
 #pragma once
 #include "BaseConfig.h"
 
-class Object;
+
 enum ModulesList : unsigned short;
 
 namespace Core {
+	class Object;
 
 	class Module
 	{
@@ -16,14 +17,14 @@ namespace Core {
 
 	public:
 		Module();
-		~Module();
+		virtual ~Module();
 
 		virtual void Delete();
 
 		virtual ModulesList GetType() = 0;
 
 		virtual Object* GetParentObject();
-		virtual void SetParentObject(const Object& parent);
+		virtual void SetParentObject(const Core::Object& parent);
 	};
 
 }

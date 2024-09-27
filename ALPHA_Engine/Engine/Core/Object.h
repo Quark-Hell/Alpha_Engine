@@ -14,6 +14,7 @@ namespace Core {
 	class Object
 	{
 	private:
+		std::string _name = "Undefined";
 		Transform _transform;
 		std::vector<std::shared_ptr<Core::Module>> _modules = std::vector<std::shared_ptr<Core::Module>>();
 		Tag _tag;
@@ -23,6 +24,9 @@ namespace Core {
 		~Object();
 
 		void Delete();
+
+		void SetName(std::string newName);
+		std::string GetName();
 
 		bool AddModule(std::shared_ptr<Core::Module> someModule);
 		bool AddModule(ModulesList moduleType, Core::Module** outputModule);

@@ -1,10 +1,9 @@
 #pragma once
 #include "Geometry.h"
-#include "Modules/Material.h"
-
-#include "Modules/Camera.h"
 
 namespace GraphicsEngine {
+	class Material;
+
 	class Mesh : public Geometry {
 	protected:
 		std::shared_ptr<std::vector<float>> _vertexColors = std::make_shared<std::vector<float>>();

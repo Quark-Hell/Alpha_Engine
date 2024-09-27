@@ -10,24 +10,28 @@
 
 enum ShadersType;
 
-class Material
-{
-private:
-	Mesh* _parentMesh;
+namespace GraphicsEngine {
 
-public:
-	std::shared_ptr<ShaderProgram> Shader;
+	class Material
+	{
+	private:
+		Mesh* _parentMesh;
 
-public:	
-	Material();
-	~Material();
+	public:
+		std::shared_ptr<ShaderProgram> Shader;
 
-	bool InitShader();
+	public:
+		Material();
+		~Material();
 
-	Mesh* GetParentMesh();
+		bool InitShader();
 
-protected:
-	friend class RenderCore;
-	friend class Mesh;
-	friend class ShaderProgram;
-};
+		Mesh* GetParentMesh();
+
+	protected:
+		friend class RenderCore;
+		friend class Mesh;
+		friend class ShaderProgram;
+	};
+
+}

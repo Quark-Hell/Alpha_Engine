@@ -1,40 +1,16 @@
-﻿
-class Object;
-class PathShader;
+﻿#pragma once
 
-class GameFunction {
-public:
-	virtual void Start();
-	virtual void Update();
+#ifdef ALPHA_Engine
+	#define ALPHA_ENGINE_API __declspec(dllexport)
+#else
+	#define ALPHA_ENGINE_API __declspec(dllimport)
+#endif
 
-};
+#include <iostream>
 
-void InitSun();
-
-void InitPlanet1();
-void InitPlanet2();
-
-void Path(Object* object, PathShader* shader);
-
-void SetControl();
-
-//void LeftMoveTestObject();
-//void RightMoveTestObject();
-
-//void ForwardMoveTestObject();
-//void BackwardMoveTestObject();
-
-//void UpMoveTestObject();
-//void DownMoveTestObject();
-
-void LeftMoveCamera();
-void RightMoveCamera();
-
-void ForwardMoveCamera();
-void BackwardMoveCamera();
-
-void UpMoveCamera();
-void DownMoveCamera();
-
-void CameraRotate();
-
+#ifdef ALPHA_Engine
+int main(int argc, char** argv) {
+	std::cout << "Complete";
+	return 0;
+}
+#endif

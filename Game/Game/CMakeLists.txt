@@ -20,19 +20,33 @@ ${Game}Game/GameFolder/Game.cpp
 )
 
 set (dll_Files "${PROJECT_SOURCE_DIR}/Game/ALPHA_Engine/ALPHA_Engine.dll")
-set (EXE_DEST "${PROJECT_BINARY_DIR}/Game/")
+set (EXE_DEST "${PROJECT_BINARY_DIR}/Game")
+set (Engine "${PROJECT_SOURCE_DIR}/Game/ALPHA_Engine")
+
+set(Game "${PROJECT_SOURCE_DIR}/Game")
+
+include_directories(${Game})
+include_directories(${Engine})
+
 
 target_link_libraries(MyGame 
-PRIVATE ${Game}Game/ALPHA_Engine/ALPHA_Engine.lib
+PRIVATE ${Game}/ALPHA_Engine.lib
 )
 
-#add_custom_target(copy_dll ALL
-#	COMMAND ${CMAKE_COMMAND} -E copy_directory
-#	${dll_Files}
-#	${EXE_DEST}
-#	DEPENDS ${dll_Files}
-#	COMMENT "Copying resources to ${EXE_DEST}"
-#)
+add_custom_target(copy_engine ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${Game}/ALPHA_Engine
+	${EXE_DEST}/ALPHA_Engine
+	COMMENT "Copying resources to ${EXE_DEST}"
+)
+
+add_custom_target(copy_engine_library ALL
+	COMMAND ${CMAKE_COMMAND} -E copy
+	${Game}/ALPHA_Engine.dll
+	${EXE_DEST}/ALPHA_Engine.dll
+	COMMENT "Copying resources to ${EXE_DEST}"
+)
+
 
 #add_custom_target(copy_dll ALL
 #	COMMAND ${CMAKE_COMMAND} -E copy_directory

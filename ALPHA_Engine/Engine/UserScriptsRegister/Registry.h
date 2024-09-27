@@ -1,6 +1,12 @@
 #pragma once
 #include "BaseConfig.h"
 
+#ifdef ALPHA_Engine
+#define ALPHA_ENGINE_API __declspec(dllexport)
+#else
+#define ALPHA_ENGINE_API __declspec(dllimport)
+#endif
+
 namespace Core {
 	class Host;
 }
@@ -18,8 +24,9 @@ namespace Register {
 	public:
 		~Registry();
 
-		bool RegisterScript(std::string path);
-
+		bool RegisterActorWithComponent(Register::UserScript* script, std::string objectName = "Undefined");
+		static bool RegisterActor(std::string objectName = "Undefined");
+		
 	private:
 		static std::unique_ptr<Register::Registry> MakeRegistry();
 		Registry();

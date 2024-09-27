@@ -10,6 +10,8 @@
 
 class Math;
 
+namespace Core {
+
 class Vector2 {
 
 public:
@@ -1223,3 +1225,5 @@ public:
 	}
 #pragma endregion
 };
+
+}

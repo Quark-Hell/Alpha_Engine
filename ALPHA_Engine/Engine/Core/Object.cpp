@@ -25,6 +25,13 @@ void Core::Object::Delete() {
 	Object::~Object();
 }
 
+void Core::Object::SetName(std::string newName) {
+	_name = newName;
+}
+std::string Core::Object::GetName() {
+	return _name;
+}
+
 bool Core::Object::AddModule(std::shared_ptr<Core::Module> someModule) {
 	Object::_modules.push_back(someModule);
 	someModule->SetParentObject(*this);

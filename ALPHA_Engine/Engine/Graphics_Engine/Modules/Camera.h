@@ -7,7 +7,13 @@ class Vector3;
 #include "glm.hpp"
 
 
+namespace Core {
+	class Object;
+	class Module;
+}
+
 namespace GraphicsEngine {
+
 	enum ProjectionMode {
 		Perspective = 0,
 		Orthographic = 1,
@@ -36,8 +42,8 @@ namespace GraphicsEngine {
 
 		ModulesList GetType() override;
 
-		Object* GetParentObject() override;
-		void SetParentObject(const Object& parent) override;
+		Core::Object* GetParentObject() override;
+		void SetParentObject(const Core::Object& parent) override;
 
 		float GetFov();
 		float GetAspect();

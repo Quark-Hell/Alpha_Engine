@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "Object.h"
+#include "Modules/Material.h"
 
 #pragma region Mesh Define
 GraphicsEngine::Mesh::Mesh() {

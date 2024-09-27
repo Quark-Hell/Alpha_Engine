@@ -3,18 +3,10 @@
 #include "ALPHA_Engine.h"
 #include "Core/World.h"
 
-void GameFunction::Start() {
+#include <iostream>
 
-}
-
-void GameFunction::Update() {
-
-}
-
-int main()
-{
-    std::unique_ptr<Core::World> world = std::make_unique<Core::World>();
-    world->Simulation();
-
-    std::cout << "Hello World";
-}
+#ifdef ALPHA_Engine
+//int main(int argc, char** argv) {
+//    std::cout << "Complete";
+//}
+#endif

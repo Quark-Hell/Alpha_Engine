@@ -50,11 +50,11 @@ ModulesList GraphicsEngine::Camera::GetType() {
     return ModulesList::CameraType;
 }
 
-Object* GraphicsEngine::Camera::GetParentObject() {
-    return Module::GetParentObject();
+Core::Object* GraphicsEngine::Camera::GetParentObject() {
+    return Core::Module::GetParentObject();
 }
-void GraphicsEngine::Camera::SetParentObject(const Object& parent) {
-    Module::SetParentObject(parent);
+void GraphicsEngine::Camera::SetParentObject(const Core::Object& parent) {
+    Core::Module::SetParentObject(parent);
 }
 
 float GraphicsEngine::Camera::GetFov() {

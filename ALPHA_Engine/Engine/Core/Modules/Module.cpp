@@ -1,6 +1,8 @@
 #include "Module.h"
 #include "ModuleList.h"
 
+#include "Core/Object.h"
+
 Core::Module::Module() {
 
 }
@@ -16,9 +18,9 @@ ModulesList Core::Module::GetType() {
 	return ModulesList::ModuleType;
 }
 
-Object* Core::Module::GetParentObject() {
+Core::Object* Core::Module::GetParentObject() {
 	return ParentObject;
 }
-void Core::Module::SetParentObject(const Object& parent) {
+void Core::Module::SetParentObject(const Core::Object& parent) {
 	ParentObject = const_cast<Object*>(&parent);
 }

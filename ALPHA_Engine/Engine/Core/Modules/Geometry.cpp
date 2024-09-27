@@ -1,24 +1,24 @@
 #include "Core/Modules/Geometry.h"
 
-Geometry::Geometry() {
+Core::Geometry::Geometry() {
 
 }
-Geometry::~Geometry() {
+Core::Geometry::~Geometry() {
 
 }
 
-Object* Geometry::GetParentObject() {
+Object* Core::Geometry::GetParentObject() {
     return ParentObject;
 }
-void Geometry::SetParentObject(const Object& parent) {
+void Core::Geometry::SetParentObject(const Object& parent) {
     ParentObject = const_cast<Object*>(&parent);
 }
 
-ModulesList Geometry::GetType() {
+ModulesList Core::Geometry::GetType() {
     return GeometryType;
 }
 
-bool Geometry::Create(std::string linkToFBX) {
+bool Core::Geometry::Create(std::string linkToFBX) {
     Geometry::_vertex->clear();
     Geometry::_indices->clear();
     Geometry::_normals->clear();
@@ -65,7 +65,7 @@ bool Geometry::Create(std::string linkToFBX) {
     return true;
 }
 
-bool Geometry::Create(std::string linkToFBX,
+bool Core::Geometry::Create(std::string linkToFBX,
     bool initIndices,
     bool initVertex,
     bool initNormals,
@@ -131,7 +131,7 @@ bool Geometry::Create(std::string linkToFBX,
     return true;
 }
 
-bool Geometry::ShiftVertexArray(int shiftCount)
+bool Core::Geometry::ShiftVertexArray(int shiftCount)
 {
     if (shiftCount == 0)
         return false;
@@ -160,7 +160,7 @@ bool Geometry::ShiftVertexArray(int shiftCount)
     return true;
 }
 
-Vector3 Geometry::FindFurthestPoint(Vector3 direction) {
+Vector3 Core::Geometry::FindFurthestPoint(Vector3 direction) {
     Vector3 maxPoint = { 0,0,0 };
     float maxDistance = -FLT_MAX;
     Vector3 vertexPos = { 0,0,0 };

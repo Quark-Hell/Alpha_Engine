@@ -3,14 +3,17 @@
 #include "BaseConfig.h"
 
 namespace Register {
-	class UserScript
+	class _declspec(dllexport) UserScript
 	{
 	public:
 		UserScript();
-		~UserScript();
+		virtual ~UserScript();
+
+		void Start();
+		void Update();
+		void End();
 
 	private:
-		std::string _path;
 
 	};
 }

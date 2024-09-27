@@ -1,14 +1,14 @@
 #include "Material.h"
 
-Material::Material()
+GraphicsEngine::Material::Material()
 {
 }
 
-Material::~Material()
+GraphicsEngine::Material::~Material()
 {
 }
 
-bool Material::InitShader()
+bool GraphicsEngine::Material::InitShader()
 {
     if (!Shader->InitShader())
         return false;
@@ -16,7 +16,7 @@ bool Material::InitShader()
     return true;
 }
 
-Mesh* Material::GetParentMesh()
+Mesh* GraphicsEngine::Material::GetParentMesh()
 {
     return Material::_parentMesh;
 }

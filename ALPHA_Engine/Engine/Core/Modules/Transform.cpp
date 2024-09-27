@@ -12,7 +12,7 @@ Core::Transform::~Transform() {
 
 }
 
-Vector3 Core::Transform::GetPosition() {
+Core::Vector3 Core::Transform::GetPosition() {
     return Transform::_position;
 }
 void Core::Transform::AddPosition(float X, float Y, float Z) {
@@ -61,7 +61,7 @@ glm::mat4x4 Core::Transform::GetTransformMatrix()
 
 
 
-Vector4 Core::Transform::GetRotation() {
+Core::Vector4 Core::Transform::GetRotation() {
     return Transform::_rotation;
 }
 void Core::Transform::AddRotation(float X, float Y, float Z) {
@@ -102,7 +102,7 @@ void Core::Transform::SetRotation(Vector3 rotation) {
 }
 
 
-Vector3 Core::Transform::GetScale() {
+Core::Vector3 Core::Transform::GetScale() {
     return Transform::_scale;
 }
 void Core::Transform::SetScale(float X, float Y, float Z) {
