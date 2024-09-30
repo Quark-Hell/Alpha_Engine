@@ -112,7 +112,7 @@ ${Engine}UserScriptsRegister/Registry.h
 ${Engine}UserScriptsRegister/Registry.cpp
 ${Engine}UserScriptsRegister/UserScript.h
 ${Engine}UserScriptsRegister/UserScript.cpp
-)
+ "Engine/EngineDefines.h")
 
 target_link_libraries(ALPHA_Engine 
 PRIVATE ${GLFW}/glfw3.lib
@@ -160,10 +160,6 @@ add_custom_target(copy_shaders ALL
 
 #copy files in game build
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy
-	${EXE_DEST}/ALPHA_Engine.dll
-	${Game_EXE_Dest}/ALPHA_Engine.dll
-
 	COMMAND ${CMAKE_COMMAND} -E copy
 	${EXE_DEST}/ALPHA_Engine.lib
 	${Game_EXE_Dest}/ALPHA_Engine.lib

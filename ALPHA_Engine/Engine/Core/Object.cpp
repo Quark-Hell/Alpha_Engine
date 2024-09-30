@@ -2,23 +2,37 @@
 
 #include "BaseConfig.h"
 
-#include "Core/Modules/Transform.h"
-#include "Core/Modules/Module.h"
-#include "Core/Tag.h"
+#include "Modules/Transform.h"
+#include "Modules/Module.h"
+#include "Tag.h"
 
 #include "ModuleList.h"
+#include "Core/World.h"
 
 Core::Object::Object() {
-	//World::ObjectsOnScene.push_back(this);
+
+}
+
+std::shared_ptr<Core::Object> Core::Object::CreateObject() {
+	Core::Object* obj = new Core::Object();
+	World::GetObjects().push_back(std::shared_ptr<Core::Object>(obj));
+	return World::GetObjects().back();
 }
 
 Core::Object::~Object() {
-	//for (size_t i = 0; i < World::ObjectsOnScene.size(); i++) {
-	//	if (this == World::ObjectsOnScene[i]) {
-	//		World::ObjectsOnScene.erase(World::ObjectsOnScene.begin() + i);
-	//		return;
-	//	}
-	//}
+	std::list<std::shared_ptr<Core::Object>> list = Core::World::GetObjects();
+	size_t t = 0;
+
+	for (auto i : list) {
+		if (i.get() == this) {
+			auto it = list.begin();
+			std::advance(it, t);
+
+			list.erase(it);
+			return;
+		}
+		t++;
+	}
 }
 
 void Core::Object::Delete() {

@@ -1,13 +1,23 @@
 #include "World.h"
 
 #include "ModuleList.h"
-#include "Core/Host/Host.h"
+#include "Host/Host.h"
+#include "Core/Object.h"
 
 Core::World::World() {
 	_host = Core::Host::MakeHost();
 }
 Core::World::~World() {
 
+}
+
+std::list<std::shared_ptr<Core::Object>>& Core::World::GetObjects() {
+	static std::list<std::shared_ptr<Core::Object>> objects{};
+	return objects;
+}
+
+std::unique_ptr<Core::World> Core::World::MakeWorld() {
+	return std::unique_ptr<Core::World>(new Core::World());
 }
 
 void Core::World::CloseGame() {
@@ -41,17 +51,14 @@ void Core::World::SetSimulationSpeed(float simSpeed) {
 	}
 }
 
-
 void Core::World::Simulation() {
-#if __has_include("Graphics_Engine/GraphicsEngineConfig.h")
-	//_host->StartRender();
-#endif
+	_host->StartRender();
 
-//	while (IsCloseGame)
-//	{
-//#if __has_include("Graphics_Engine/GraphicsEngineConfig.h")
-//		//_host->Graphics();
-//#endif
+	while (IsCloseGame)
+	{
+		_host->Regestry();
+		_host->Graphics();
+
 //		//_host->Physics();
-//	}
+	}
 }

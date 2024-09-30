@@ -1,17 +1,23 @@
 #pragma once
 
 #include "BaseConfig.h"
+#include "Core/Modules/Module.h"
 
 namespace Register {
-	class _declspec(dllexport) UserScript
+	enum UserScriptType : unsigned short {
+		Actor = 0,
+		Component = 1
+	};
+
+	class UserScript
 	{
 	public:
-		UserScript();
+		UserScript(enum Register::UserScriptType type);
 		virtual ~UserScript();
 
-		void Start();
-		void Update();
-		void End();
+		void virtual Start();
+		void virtual Update();
+		void virtual End();
 
 	private:
 

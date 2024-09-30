@@ -12,10 +12,15 @@ enum DebugRenderModes {
 };
 
 namespace Core {
+	class Object;
 
 	class World {
+		friend class Object;
+
 	private:
-		//static inline std::vector<Object*> ObjectsOnScene;
+		static std::list<std::shared_ptr<Core::Object>>& GetObjects();
+
+		//static std::vector<Object*> ObjectsOnScene;
 		//static inline std::vector<Collider*> CollidersOnScene;
 		//static inline std::vector<Light*> LightsOnScene;
 
@@ -41,6 +46,8 @@ namespace Core {
 		World(const World& obj) = delete;
 		World();
 		~World();
+
+		static std::unique_ptr<Core::World> MakeWorld();
 
 		void StartFrame();
 		void EndFrame();

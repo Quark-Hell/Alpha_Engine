@@ -1,3 +1,3 @@
 #pragma once
-#include "UserScriptsRegister/Registry.h"
-#include "UserScriptsRegister/UserScript.h"
+#include "Registry.h"
+#include "UserScript.h"

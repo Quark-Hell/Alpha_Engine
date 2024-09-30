@@ -1,7 +1,14 @@
-#include "UserScriptsRegister/Registry.h"
-#include "UserScriptsRegister/UserScript.h"
+#include "Registry.h"
+#include "UserScript.h"
 
 #include "Core/Object.h"
+
+//std::vector<Register::UserScript*> Register::Registry::_userScripts{};
+
+std::vector<std::shared_ptr<Register::UserScript>>& Register::Registry::GetUsertScripts() {
+	static std::vector<std::shared_ptr<Register::UserScript>> _userScripts{};
+	return _userScripts;
+}
 
 std::unique_ptr<Register::Registry> Register::Registry::MakeRegistry() {
 	return std::unique_ptr<Register::Registry>(new Register::Registry);
@@ -17,28 +24,29 @@ Register::Registry::~Registry() {
 
 void Register::Registry::RegistryLoop()
 {
-	for (size_t i = 0; i < _userScripts.size(); i++) {
-		if (_userScripts[i] != nullptr) {
-			//_userScripts[i]->Update();
+	for (size_t i = 0; i < GetUsertScripts().size(); i++) {
+		if (GetUsertScripts()[i] != nullptr) {
+			GetUsertScripts()[i]->Update();
 		}
 	}
 }
 
 bool Register::Registry::RegisterActorWithComponent(Register::UserScript* script, std::string objectName) {
 	//Check if script cannot be converted
-	//if (dynamic_cast<Register::UserScript*>(script) == nullptr)
-	//	return false;
-
-	//Later Host will call all UserScript functions
-	//_userScripts.push_back(std::unique_ptr<Register::UserScript>(script));
+	if (dynamic_cast<Register::UserScript*>(script) == nullptr)
+		return false;
 	
-	RegisterActor(objectName);
+	//Later Host will call all UserScript functions
+	GetUsertScripts().push_back(std::shared_ptr<Register::UserScript>(script));
+	std::cout << GetUsertScripts().size() << std::endl;
+	return RegisterActor(objectName);
 }
 
 bool Register::Registry::RegisterActor(std::string objectName) {
 	//Don't care about raw pointer
 	//We don't need object in register
 	//Object will be added in World inside the constructor of object
-	Core::Object* newObject = new Core::Object();
+	auto newObject = Core::Object::CreateObject();
 	newObject->SetName(objectName);
+	return true;
 }

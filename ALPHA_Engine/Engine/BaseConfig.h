@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <list>
 #include <filesystem>
 #include <fstream>
 #include <string>  
@@ -18,3 +19,9 @@
 #include <cstring> 
 #include <type_traits>
 #include <map>
+
+#ifdef ALPHA_Engine
+#define ALPHA_ENGINE_API __declspec(dllexport)
+#else
+#define ALPHA_ENGINE_API __declspec(dllimport)
+#endif

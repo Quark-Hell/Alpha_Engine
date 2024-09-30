@@ -1,12 +1,6 @@
 #pragma once
 #include "BaseConfig.h"
 
-#ifdef ALPHA_Engine
-#define ALPHA_ENGINE_API __declspec(dllexport)
-#else
-#define ALPHA_ENGINE_API __declspec(dllimport)
-#endif
-
 namespace Core {
 	class Host;
 }
@@ -19,12 +13,12 @@ namespace Register {
 		friend class Core::Host;
 
 	private:
-		std::vector<std::unique_ptr<Register::UserScript>> _userScripts;
+		static std::vector<std::shared_ptr<Register::UserScript>>& GetUsertScripts();
 
 	public:
 		~Registry();
 
-		bool RegisterActorWithComponent(Register::UserScript* script, std::string objectName = "Undefined");
+		static bool RegisterActorWithComponent(Register::UserScript* script, std::string objectName = "Undefined");
 		static bool RegisterActor(std::string objectName = "Undefined");
 		
 	private:
@@ -35,4 +29,3 @@ namespace Register {
 		void RegistryLoop();
 	};
 }
-

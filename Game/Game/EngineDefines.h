@@ -1,0 +1,3 @@
+#pragma once
+#define GRAPHICS_ENGINE_INCLUDED false
+#define USER_SCRIPTS_REGISTER_INCLUDED true

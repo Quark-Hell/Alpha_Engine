@@ -3,8 +3,8 @@ class Module;
 
 #include "BaseConfig.h"
 
-#include "Core/Tag.h"
-#include "Core/Modules/Transform.h"
+#include "Tag.h"
+#include "Modules/Transform.h"
 
 enum ModulesList : unsigned short;
 
@@ -16,11 +16,15 @@ namespace Core {
 	private:
 		std::string _name = "Undefined";
 		Transform _transform;
-		std::vector<std::shared_ptr<Core::Module>> _modules = std::vector<std::shared_ptr<Core::Module>>();
+		std::vector<std::shared_ptr<Core::Module>> _modules;
 		Tag _tag;
 
-	public:
+	private:
+		//Do not use this if you want to create new object. Use static method CreateObject for this!!!
 		Object();
+
+	public:
+		static std::shared_ptr<Core::Object> CreateObject();
 		~Object();
 
 		void Delete();
