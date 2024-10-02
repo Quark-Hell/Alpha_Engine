@@ -1,15 +1,14 @@
 #pragma once
 class Vector3;
 
-#include "Core/Modules/Module.h"
-#include "Core/Modules/Transform.h"
+#include "Core/Components/Component.h"
+#include "Core/Components/Transform.h"
 
 #include "glm.hpp"
 
 
 namespace Core {
 	class Object;
-	class Module;
 }
 
 namespace GraphicsEngine {
@@ -19,7 +18,7 @@ namespace GraphicsEngine {
 		Orthographic = 1,
 	};
 
-	class Camera : public Core::Module {
+	class Camera : public Core::Component {
 	private:
 		Core::Transform _transform;
 
@@ -33,16 +32,16 @@ namespace GraphicsEngine {
 
 		glm::mat4x4 _projectionMatrix = glm::mat4x4(1.0f);
 
-	public:
+	protected:
 		Camera();
+
+	public:
+
 		~Camera();
 
 		void SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar);
 		void GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float* ZFar);
 
-		ModulesList GetType() override;
-
-		Core::Object* GetParentObject() override;
 		void SetParentObject(const Core::Object& parent) override;
 
 		float GetFov();

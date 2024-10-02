@@ -2,8 +2,6 @@
 #include "BaseConfig.h"
 
 #include "Registry.h"
-#include "ModuleList.h"
-
 
 Register::UserScript::UserScript(enum Register::UserScriptType type) {
 	switch (type)

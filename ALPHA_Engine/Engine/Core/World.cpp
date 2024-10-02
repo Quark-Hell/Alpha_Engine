@@ -1,6 +1,4 @@
 #include "World.h"
-
-#include "ModuleList.h"
 #include "Host/Host.h"
 #include "Core/Object.h"
 

@@ -1,22 +1,18 @@
 #pragma once
-class Module;
-
 #include "BaseConfig.h"
 
 #include "Tag.h"
-#include "Modules/Transform.h"
-
-enum ModulesList : unsigned short;
+#include "Components/Transform.h"
 
 namespace Core {
-	class Module;
+	class Component;
 
 	class Object
 	{
 	private:
 		std::string _name = "Undefined";
 		Transform _transform;
-		std::vector<std::shared_ptr<Core::Module>> _modules;
+		std::vector<std::shared_ptr<Core::Component>> _modules;
 		Tag _tag;
 
 	private:
@@ -32,18 +28,13 @@ namespace Core {
 		void SetName(std::string newName);
 		std::string GetName();
 
-		bool AddModule(std::shared_ptr<Core::Module> someModule);
-		bool AddModule(ModulesList moduleType, Core::Module** outputModule);
-		bool AddModule(ModulesList moduleType);
-
 		int GetCountOfModules();
 
-		bool DeleteModuleByType(ModulesList type);
 		bool DeleteModuleByIndex(int index);
 
-		std::shared_ptr<Core::Module> GetModuleByType(ModulesList type);
-		std::vector<std::shared_ptr<Core::Module>> GetModuleByTypes(std::vector<ModulesList> typesArray);
-		std::shared_ptr<Core::Module> GetModuleByIndex(size_t index);
+		//std::shared_ptr<Core::Component> GetModuleByType(ModulesList type);
+		//std::vector<std::shared_ptr<Core::Component>> GetModuleByTypes(std::vector<ModulesList> typesArray);
+		//std::shared_ptr<Core::Component> GetModuleByIndex(size_t index);
 	};
 
 }

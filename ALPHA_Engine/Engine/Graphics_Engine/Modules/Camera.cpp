@@ -1,13 +1,9 @@
 #define _USE_MATH_DEFINES
 
 #include "Camera.h"
-
-#include "Core/Modules/Module.h"
-#include "Core/Modules/Transform.h"
+#include "Core/Components/Transform.h"
 #include "Core/Math/Vectors.h"
 #include "Core/Object.h"
-
-#include "ModuleList.h"
 
 
 #define GLEW_STATIC
@@ -46,15 +42,8 @@ void GraphicsEngine::Camera::GetCameraInfo(float* Fov, float* Aspect, float* ZNe
     *ZFar = Camera::ZFar;
 }
 
-ModulesList GraphicsEngine::Camera::GetType() {
-    return ModulesList::CameraType;
-}
-
-Core::Object* GraphicsEngine::Camera::GetParentObject() {
-    return Core::Module::GetParentObject();
-}
 void GraphicsEngine::Camera::SetParentObject(const Core::Object& parent) {
-    Core::Module::SetParentObject(parent);
+    Core::Component::SetParentObject(parent);
 }
 
 float GraphicsEngine::Camera::GetFov() {

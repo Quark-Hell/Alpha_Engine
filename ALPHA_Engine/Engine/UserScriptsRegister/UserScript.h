@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BaseConfig.h"
-#include "Core/Modules/Module.h"
+#include "Core/Components/Component.h"
 
 namespace Register {
 	enum UserScriptType : unsigned short {
