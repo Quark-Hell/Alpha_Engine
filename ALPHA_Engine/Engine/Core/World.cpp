@@ -14,8 +14,8 @@ std::list<std::shared_ptr<Core::Object>>& Core::World::GetObjects() {
 	return objects;
 }
 
-std::unique_ptr<Core::World> Core::World::MakeWorld() {
-	return std::unique_ptr<Core::World>(new Core::World());
+Core::World& Core::World::GetWorld() {
+	return *new Core::World();
 }
 
 void Core::World::CloseGame() {
@@ -34,13 +34,13 @@ float Core::World::GetDeltaTime() {
 }
 
 void Core::World::StartFrame() {
-	World::_startTime = std::chrono::high_resolution_clock::now();
+	//World::_startTime = std::chrono::high_resolution_clock::now();
 }
 void Core::World::EndFrame() {
-	World::_endTime = std::chrono::high_resolution_clock::now();
+	//World::_endTime = std::chrono::high_resolution_clock::now();
 	//What? Why i should mult this by 0.000001f?
-	World::_deltaTime = std::chrono::duration_cast	<std::chrono::microseconds>(World::_endTime - World::_startTime).count() * 0.000001f;
-	World::_timeLong += World::_deltaTime;
+	//World::_deltaTime = std::chrono::duration_cast	<std::chrono::microseconds>(World::_endTime - World::_startTime).count() * 0.000001f;
+	//World::_timeLong += World::_deltaTime;
 }
 
 void Core::World::SetSimulationSpeed(float simSpeed) {

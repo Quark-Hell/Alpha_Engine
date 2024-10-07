@@ -1,5 +1,5 @@
 #pragma once
-#include "glm.hpp"
+//#include "glm.hpp"
 #include "Core/Math/Vectors.h"
 
 namespace Core {
@@ -12,7 +12,7 @@ namespace Core {
 
 		Vector3 _origin{ 0,0,0 };
 
-		glm::mat4x4 _transformMatrix{};
+		//glm::mat4x4 _transformMatrix{};
 
 	public:
 		Transform();
@@ -44,7 +44,7 @@ namespace Core {
 		void SetOriginPosition(float X, float Y, float Z);
 		void SetOriginPosition(Vector3 position);
 
-		glm::mat4x4 GetTransformMatrix();
+		//glm::mat4x4 GetTransformMatrix();
 	};
 
 }

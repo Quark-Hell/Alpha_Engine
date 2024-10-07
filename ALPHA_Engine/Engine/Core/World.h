@@ -1,11 +1,6 @@
 #pragma once
 #include "BaseConfig.h"
 
-namespace Core {
-	class Host;
-}
-
-
 enum DebugRenderModes {
 	LinesRender = 1 << 0,
 	PointsRender = 1 << 1
@@ -13,6 +8,7 @@ enum DebugRenderModes {
 
 namespace Core {
 	class Object;
+	class Host;
 
 	class World {
 		friend class Object;
@@ -47,7 +43,7 @@ namespace Core {
 		World();
 		~World();
 
-		static std::unique_ptr<Core::World> MakeWorld();
+		static Core::World& GetWorld();
 
 		void StartFrame();
 		void EndFrame();
@@ -63,5 +59,4 @@ namespace Core {
 
 		void Simulation();
 	};
-
 }

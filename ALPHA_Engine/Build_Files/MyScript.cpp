@@ -1,4 +1,5 @@
-#include "Game.h"
+#include "MyScript.h"
+#include <iostream>
 
 MyScript* script = new MyScript(Register::UserScriptType::Component);
 

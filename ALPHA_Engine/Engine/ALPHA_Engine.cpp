@@ -4,15 +4,13 @@
 //#include "Core/World.h"
 //#include "BaseConfig.h"
 
-
-#include <iostream>
 #include "Core/World.h"
 
 int main(int argc, char** argv) {
 	std::cout << "Engine integrated successfully";
-	std::unique_ptr<Core::World> worldInstance = Core::World::MakeWorld();
+	Core::World& worldInstance = Core::World::GetWorld();
 
-	worldInstance->Simulation();
+	worldInstance.Simulation();
 
 	return 0;
 }

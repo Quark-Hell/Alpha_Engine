@@ -5,11 +5,11 @@
 
 
 
-Core::Transform::Transform() {
-    Transform::_transformMatrix = glm::mat4x4(1.0f);
-}
+//Core::Transform::Transform() {
+ //   Transform::_transformMatrix = glm::mat4x4(1.0f);
+//}
 Core::Transform::~Transform() {
-
+//
 }
 
 Core::Vector3 Core::Transform::GetPosition() {
@@ -54,10 +54,10 @@ void Core::Transform::SetOriginPosition(Vector3 position) {
     Transform::AddOriginPosition(direction);
 }
 
-glm::mat4x4 Core::Transform::GetTransformMatrix()
-{
-    return Transform::_transformMatrix;
-}
+//glm::mat4x4 Core::Transform::GetTransformMatrix()
+//{
+ //   return Transform::_transformMatrix;
+//}
 
 
 
@@ -69,9 +69,9 @@ void Core::Transform::AddRotation(float X, float Y, float Z) {
     const float radY = M_PI / 180.0f * Y;
     const float radZ = M_PI / 180.0f * Z;
 
-    Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-    Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-    Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+    //Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+    //Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+    //Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
 
     Transform::_rotation.X += X;
     Transform::_rotation.Y += Y;
@@ -82,9 +82,9 @@ void Core::Transform::AddRotation(Vector3 rotation) {
     const float radY = M_PI / 180.0f * rotation.Y;
     const float radZ = M_PI / 180.0f * rotation.Z;
 
-    Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-    Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-    Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+    //Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
+    //Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
+    //Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
 
     Transform::_rotation.X += rotation.X;
     Transform::_rotation.Y += rotation.Y;
@@ -107,7 +107,7 @@ Core::Vector3 Core::Transform::GetScale() {
 }
 void Core::Transform::SetScale(float X, float Y, float Z) {
     Vector3 delta = Transform::_scale / Vector3(X, Y, Z);
-    Transform::_transformMatrix = glm::scale(Transform::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
+    //Transform::_transformMatrix = glm::scale(Transform::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
 
     Transform::_scale.X = X;
     Transform::_scale.Y = Y;
@@ -115,7 +115,7 @@ void Core::Transform::SetScale(float X, float Y, float Z) {
 }
 void Core::Transform::SetScale(Vector3 scale) {
     Vector3 delta = Transform::_scale / scale;
-    Transform::_transformMatrix = glm::scale(Transform::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
+    //Transform::_transformMatrix = glm::scale(Transform::_transformMatrix, glm::vec3(1 / delta.X, 1 / delta.Y, 1 / delta.Z));
 
     Transform::_scale.X = scale.X;
     Transform::_scale.Y = scale.Y;

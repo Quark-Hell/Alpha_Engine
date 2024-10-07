@@ -10,13 +10,22 @@ include_directories("${Game_Source}")
 
 set (Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine")
 set (Engine_Assets "${Engine}/Engine_Assets")
+
 set (Engine_Headers "${Engine}/headers")
+include_directories("${Engine_Headers}")
+
 set (Engine_Libs "${Engine}/lib")
 
 add_executable(Game
 	${Game_Source}/MyScript.cpp
 )
 
+if(WIN32)
 target_link_libraries(Game
 PRIVATE ${Engine_Libs}/ALPHA_Engine.lib
 )
+else()
+target_link_libraries(Game
+PRIVATE ${Engine_Libs}/ALPHA_Engine.a
+)
+endif()
