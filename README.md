@@ -30,7 +30,7 @@ This game engine is being developed to make it easier for developers to create s
 ## Build
 ### Windows with MSVC:
 
-<b>Step 1:</b>
+<br><b>Step 1:</br></b>
 In CMake GUI select engine folder and target folder, after that click configure and generate it.
 <br><b>Step 2:</br></b>
 In Visual Studio rebuild projects as you need(Debug or Release)
