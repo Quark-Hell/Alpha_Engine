@@ -77,12 +77,12 @@ Create build folder and generate cmake files(I use ninja as generator and clang 
 mkdir build
 cmake -G "Ninja" -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -B build
 ```
-<b>Step 5:</b>
+<b>Step 4:</b>
 Build engine
 ```
 Ninja
 ```
-<b>Step 6:</b>
+<b>Step 5:</b>
 Create folder for game and repeat step 3:
 ```
 mkdir game_build 
