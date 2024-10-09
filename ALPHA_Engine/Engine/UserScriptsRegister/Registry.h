@@ -13,13 +13,13 @@ namespace Register {
 		friend class Core::Host;
 
 	private:
-		static std::vector<std::shared_ptr<Register::UserScript>>& GetUsertScripts();
+		static std::vector<std::shared_ptr<Register::UserScript>>& GetUserScripts();
 
 	public:
 		~Registry();
 
-		static bool RegisterActorWithComponent(Register::UserScript* script, std::string objectName = "Undefined");
-		static bool RegisterActor(std::string objectName = "Undefined");
+		static bool RegisterActorWithComponent(Register::UserScript* script, const std::string &objectName = "Undefined");
+		static bool RegisterActor(const std::string& objectName = "Undefined");
 		
 	private:
 		static std::unique_ptr<Register::Registry> MakeRegistry();

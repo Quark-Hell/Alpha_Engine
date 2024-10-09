@@ -445,8 +445,8 @@ public:
 	}
 	static inline float GetAngle(Vector3 A, Vector3 B) {
 		float cos = DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B));
-		if (abs(cos) > 1)
-			cos = round(cos);
+		if (std::abs(cos) > 1)
+			cos = std::round(cos);
 
 		return acosf(cos);
 	}

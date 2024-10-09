@@ -20,7 +20,7 @@ namespace Core {
 		Object();
 
 	public:
-		static std::shared_ptr<Core::Object> CreateObject();
+		static std::shared_ptr<Core::Object> CreateObject(const std::string& name);
 		~Object();
 
 		void Delete();

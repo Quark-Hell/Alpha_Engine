@@ -38,7 +38,7 @@ include_directories(${STB})
 #Engine libraries
 
 #Engine source
-SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine")
+SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}")
 SET (Engine_Source "${ALPHA_Engine}/Engine")
 SET (Engine_Assets "${ALPHA_Engine}/Engine_Assets")
 SET (Build_Files "${ALPHA_Engine}/Build_Files")
@@ -46,8 +46,9 @@ include_directories(${Engine_Source})
 
 #Game source
 set (Game "${PROJECT_BINARY_DIR}")
-set (Game_Engine_Dest "${Game}/ALPHA_Engine")
-
+set (Game_Files_Dest "${Game}/Game")
+set (Game_Engine_Dest "${Game_Files_Dest}/ALPHA_Engine")
+set (Game_Source_Dest "${Game_Files_Dest}/Source")
 
 set(EXE_DEST "${PROJECT_BINARY_DIR}/ALPHA_Engine")
 
@@ -146,7 +147,7 @@ function(copy_assets src dest)
 endfunction()
 
 copy_assets(${Engine_Assets} "${Game_Engine_Dest}/Engine_Assets")
-copy_assets(${Build_Files} "${Game}/Source")
+copy_assets(${Build_Files} "${Game_Source_Dest}")
 
 if(WIN32)
 #Stupid method, but it's working
@@ -171,11 +172,11 @@ endif()
 
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
-	${Game}/Source/CMakeLists.txt
-	${Game}/CMakeLists.txt
+	${Game_Source_Dest}/CMakeLists.txt
+	${Game_Files_Dest}/CMakeLists.txt
 
 	COMMAND ${CMAKE_COMMAND} -E remove
-	${Game}/Source/CMakeLists.txt
+	${Game_Source_Dest}/CMakeLists.txt
 )
 
 #Configure game folder

@@ -11,27 +11,14 @@ Core::Object::Object() {
 
 }
 
-std::shared_ptr<Core::Object> Core::Object::CreateObject() {
-	Core::Object* obj = new Core::Object();
-	World::GetObjects().push_back(std::shared_ptr<Core::Object>(obj));
+std::shared_ptr<Core::Object> Core::Object::CreateObject(const std::string& name) {
+	World::GetObjects().push_back(std::shared_ptr<Core::Object>(new Core::Object()));
+	World::GetObjects().back()->_name = name;
+	std::cout << "Name of object: " << World::GetObjects().back()->_name << std::endl;
 	return World::GetObjects().back();
 }
 
-Core::Object::~Object() {
-	std::list<std::shared_ptr<Core::Object>> list = Core::World::GetObjects();
-	size_t t = 0;
-
-	for (auto i : list) {
-		if (i.get() == this) {
-			auto it = list.begin();
-			std::advance(it, t);
-
-			list.erase(it);
-			return;
-		}
-		t++;
-	}
-}
+Core::Object::~Object() = default;
 
 void Core::Object::Delete() {
 	Object::~Object();

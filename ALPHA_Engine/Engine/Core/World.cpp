@@ -1,17 +1,36 @@
 #include "World.h"
+
+#include <assert.h>
+
 #include "Host/Host.h"
 #include "Core/Object.h"
 
 Core::World::World() {
 	_host = Core::Host::MakeHost();
 }
-Core::World::~World() {
-
-}
+Core::World::~World() = default;
 
 std::list<std::shared_ptr<Core::Object>>& Core::World::GetObjects() {
 	static std::list<std::shared_ptr<Core::Object>> objects{};
 	return objects;
+}
+
+bool Core::World::RemoveObject(const Core::Object* object) {
+	auto list = GetObjects();
+	auto it = std::begin(list);
+
+	for (size_t i = 0; i < GetObjects().size(); ++i) {
+		if (it->get() == &object[i]) {
+			std::cout << "Removing object " << std::endl;
+			GetObjects().erase(it);
+			std::cout << "Removed object " << std::endl;
+			return true;
+		}
+		std::advance(it, 1);
+	}
+
+	assert("Object cannot be removed");
+	return false;
 }
 
 Core::World& Core::World::GetWorld() {

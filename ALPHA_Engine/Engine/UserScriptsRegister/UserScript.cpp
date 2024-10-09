@@ -6,24 +6,24 @@
 Register::UserScript::UserScript(enum Register::UserScriptType type) {
 	switch (type)
 	{
-	case Register::Actor:
-		std::cout << "Actor";
+		case Register::Actor:
+		std::cout << "Creating new actor" << std::endl;
 		Register::Registry::RegisterActor();
 		break;
 	case Register::Component:
-		std::cout << "Component";
+		std::cout << "Creating new component" << std::endl;
 		Register::Registry::RegisterActorWithComponent(this);
 		break;
 	default:
 		break;
 	}
 
-	Start();
+	UserScript::Start();
 }
 
 Register::UserScript::~UserScript() {
-	std::cout << "I miss you";
-	End();
+	UserScript::End();
+	std::cout << "Script deleted successfully" << std::endl;
 }
 
 

@@ -14,8 +14,6 @@ namespace Core {
 		friend class Object;
 
 	private:
-		static std::list<std::shared_ptr<Core::Object>>& GetObjects();
-
 		//static std::vector<Object*> ObjectsOnScene;
 		//static inline std::vector<Collider*> CollidersOnScene;
 		//static inline std::vector<Light*> LightsOnScene;
@@ -37,19 +35,22 @@ namespace Core {
 		static inline bool DebugRenderEnabled = false;
 		static inline DebugRenderModes DebugRenderMode;
 
-	public:
-		//TODO: Make constructor is private
-		World(const World& obj) = delete;
+	private:
 		World();
-		~World();
 
-		static Core::World& GetWorld();
+		static std::list<std::shared_ptr<Core::Object>>& GetObjects();
 
 		void StartFrame();
 		void EndFrame();
 
-		void CloseGame();
+	public:
+		World(const World& obj) = delete;
+		~World();
 
+		static bool RemoveObject(const Core::Object* object);
+		static Core::World& GetWorld();
+
+		void CloseGame();
 		bool GetStateOfGame();
 
 		double GetTimeLong();
@@ -57,6 +58,7 @@ namespace Core {
 
 		void SetSimulationSpeed(float simSpeed);
 
+		//TODO: Make it private
 		void Simulation();
 	};
 }
