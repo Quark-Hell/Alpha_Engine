@@ -20,10 +20,10 @@ namespace Core {
 
 		Vector3 GetPosition();
 		void AddPosition(float X, float Y, float Z);
-		void AddPosition(Vector3 position);
+		void AddPosition(const Vector3& position);
 
 		void SetPosition(float X, float Y, float Z);
-		void SetPosition(Vector3 position);
+		void SetPosition(const Vector3& position);
 
 
 		Vector4 GetRotation();
@@ -39,10 +39,10 @@ namespace Core {
 		void SetScale(Vector3 scale);
 
 		void AddOriginPosition(float X, float Y, float Z);
-		void AddOriginPosition(Vector3 position);
+		void AddOriginPosition(const Vector3& position);
 
 		void SetOriginPosition(float X, float Y, float Z);
-		void SetOriginPosition(Vector3 position);
+		void SetOriginPosition(const Vector3 &position);
 
 		//glm::mat4x4 GetTransformMatrix();
 	};

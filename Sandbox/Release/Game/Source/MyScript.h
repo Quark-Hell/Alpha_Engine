@@ -7,7 +7,7 @@
 class MyScript : public Register::UserScript {
 
 public:
-	MyScript(enum Register::UserScriptType type) : Register::UserScript(type) {}
+	MyScript() = default;
 
 	void Start() override;
 	void Update() override;

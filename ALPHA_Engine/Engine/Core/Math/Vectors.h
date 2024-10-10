@@ -29,14 +29,14 @@ public:
 	virtual float GetMagnitude() {
 		return sqrtf(powf(X, 2) + powf(Y, 2));
 	}
-	static float GetMagnitude(Vector2 Vector) {
+	static float GetMagnitude(const Vector2& Vector) {
 		return sqrtf(powf(Vector.X, 2) + powf(Vector.Y, 2));
 	}
 
 	virtual float GetNonSqrtMagnitude() {
 		return powf(X, 2) + powf(Y, 2);
 	}
-	static float GetNonSqrtMagnitude(Vector2 Vector) {
+	static float GetNonSqrtMagnitude(const Vector2& Vector) {
 		return powf(Vector.X, 2) + powf(Vector.Y, 2);
 	}
 
@@ -45,17 +45,17 @@ public:
 		if (locLength == 0)
 			return;
 
-		float inv_length = (1 / locLength);
+		const float inv_length = (1 / locLength);
 
 		X *= inv_length;
 		Y *= inv_length;
 	}
 	static Vector2 GetNormalize(Vector2 vector) {
-		float locLength = Vector2::GetMagnitude(vector);
+		const float locLength = Vector2::GetMagnitude(vector);
 		if (locLength == 0)
 			return vector;
 
-		float inv_length = (1 / locLength);
+		const float inv_length = (1 / locLength);
 
 		vector.X *= inv_length;
 		vector.Y *= inv_length;
@@ -63,7 +63,7 @@ public:
 		return vector;
 	}
 
-	static Vector2 LinearInteprolation(Vector2 A, Vector2 B, float T) {
+	static Vector2 LinearInterpolation(const Vector2& A, const Vector2& B, const float T) {
 		Vector2 newVector;
 
 		newVector.X = (A.X * (1.0f - T)) + (B.X * T);
@@ -72,21 +72,21 @@ public:
 		return newVector;
 	}
 
-	virtual float DotProduct(Vector2 B) {
+	[[nodiscard]] float DotProduct(const Vector2& B) const {
 		return (X * B.X) + (Y * B.Y);
 	}
-	static float DotProduct(Vector2 A, Vector2 B) {
+	static float DotProduct(const Vector2& A, const Vector2& B) {
 		return (A.X * B.X) + (A.Y * B.Y);
 	}
 
-	virtual float GetAngle(Vector2 B = { 1,0 }) {
+	float GetAngle(Vector2 B = { 1,0 }) {
 		return cosf(DotProduct(B) / (GetMagnitude() * GetMagnitude(B)));
 	}
-	static float GetAngle(Vector2 A = { 1,0 }, Vector2 B = { 1,0 }) {
+	static float GetAngle(const Vector2& A = { 1,0 }, const Vector2& B = { 1,0 }) {
 		return cosf(DotProduct(A, B) / (GetMagnitude(A) * GetMagnitude(B)));
 	}
 
-	static Vector2 ReflectVector(Vector2 vector, Vector2 normal) {
+	static Vector2 ReflectVector(const Vector2& vector, Vector2 normal) {
 		normal.NormilizeSelf();
 		return normal * Vector2::DotProduct(vector, normal) * 2 - vector;
 	}
@@ -381,16 +381,16 @@ public:
 	virtual inline float GetNonSqrtMagnitude() override {
 		return powf(X, 2) + powf(Y, 2) + powf(Z, 2);
 	}
-	static inline float GetNonSqrtMagnitude(Vector3 Vector) {
+	static inline float GetNonSqrtMagnitude(const Vector3& Vector) {
 		return powf(Vector.X, 2) + powf(Vector.Y, 2) + powf(Vector.Z, 2);
 	}
 
 	virtual inline void NormilizeSelf() override {
-		float locLength = GetMagnitude();
+		const float locLength = GetMagnitude();
 		if (locLength == 0)
 			return;
 
-		float inv_length = (1 / locLength);
+		const float inv_length = (1 / locLength);
 
 		X *= inv_length;
 		Y *= inv_length;

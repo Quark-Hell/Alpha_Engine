@@ -1,6 +1,5 @@
 #pragma once
 #include "BaseConfig.h"
-#include "EngineDefines.h"
 
 namespace Core {
 	class World;
@@ -11,6 +10,7 @@ namespace GraphicsEngine {
 }
 namespace Register {
 	class Registry;
+	class UserScript;
 }
 
 namespace Core {
@@ -36,8 +36,9 @@ namespace Core {
 		~Host();
 
 		void StartRender();
-
-		void Regestry();
+#if USER_SCRIPTS_REGISTER_INCLUDED
+		void Registry(const std::list<std::unique_ptr<Register::UserScript>>* scripts);
+#endif
 		void Graphics();
 		void Physics();
 	};

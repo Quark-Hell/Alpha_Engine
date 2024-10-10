@@ -9,26 +9,29 @@ namespace Core {
 
 	class Object
 	{
+		friend class World;
+
 	private:
 		std::string _name = "Undefined";
 		//Transform _transform;
-		std::vector<std::shared_ptr<Core::Component>> _modules;
+		std::vector<std::shared_ptr<Core::Component>> _components;
 		Tag _tag;
 
 	private:
-		//Do not use this if you want to create new object. Use static method CreateObject for this!!!
+		///Do not use this if you want to create new object. Use static method CreateObject for this!!!
 		Object();
 
 	public:
-		static std::shared_ptr<Core::Object> CreateObject(const std::string& name);
+		static Core::Object& CreateObject(const std::string& name = "Undefined");
+
 		~Object();
 
 		void Delete();
 
-		void SetName(std::string newName);
+		void SetName(const std::string &newName);
 		std::string GetName();
 
-		int GetCountOfModules();
+		[[nodiscard]] size_t GetCountOfComponents() const;
 
 		bool DeleteModuleByIndex(int index);
 

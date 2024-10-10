@@ -1,8 +1,6 @@
 #pragma once
-
-#include "Basical_Type.h"
-
-#include <GLFW/glfw3.h>
+#include "BaseConfig.h"
+#include "GLFW/glfw3.h"
 
 struct MousePos {
 public:

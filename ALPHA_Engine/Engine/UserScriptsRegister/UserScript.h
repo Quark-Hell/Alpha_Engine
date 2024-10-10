@@ -4,22 +4,21 @@
 #include "Core/Components/Component.h"
 
 namespace Register {
-	enum UserScriptType : unsigned short {
-		Actor = 0,
-		Component = 1
-	};
-
-	class UserScript
+	class UserScript : public Core::Component
 	{
+	friend class Registry;
+
+	private:
+		bool _isStarted = false;
+
 	public:
-		UserScript(enum Register::UserScriptType type);
-		virtual ~UserScript();
+		UserScript();
+		~UserScript() override;
+
+		//void Delete() final;
 
 		void virtual Start();
 		void virtual Update();
 		void virtual End();
-
-	private:
-
 	};
 }

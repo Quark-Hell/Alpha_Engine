@@ -20,11 +20,12 @@ Core::Host::~Host()
 {
 }
 
-void Core::Host::Regestry() {
 #if USER_SCRIPTS_REGISTER_INCLUDED
-	_registry->RegistryLoop();
-#endif
+void Core::Host::Registry(const std::list<std::unique_ptr<Register::UserScript>>* scripts) {
+
+	_registry->RegistryLoop(scripts);
 }
+#endif
 
 void Core::Host::StartRender() {
 #if GRAPHICS_ENGINE_INCLUDED

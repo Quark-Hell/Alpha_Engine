@@ -7,31 +7,28 @@
 #include "Tag.h"
 #include "Core/World.h"
 
-Core::Object::Object() {
-
-}
-
-std::shared_ptr<Core::Object> Core::Object::CreateObject(const std::string& name) {
-	World::GetObjects().push_back(std::shared_ptr<Core::Object>(new Core::Object()));
-	World::GetObjects().back()->_name = name;
-	std::cout << "Name of object: " << World::GetObjects().back()->_name << std::endl;
-	return World::GetObjects().back();
-}
-
+Core::Object::Object() = default;
 Core::Object::~Object() = default;
+
+Core::Object& Core::Object::CreateObject(const std::string& name) {
+	auto obj = Core::World::CreateObject();
+	obj._name = name;
+	std::cout << "Name of object: " << obj._name << std::endl;
+	return Core::World::CreateObject();
+}
 
 void Core::Object::Delete() {
 	Object::~Object();
 }
 
-void Core::Object::SetName(std::string newName) {
+void Core::Object::SetName(const std::string &newName) {
 	_name = newName;
 }
 std::string Core::Object::GetName() {
 	return _name;
 }
 
-int Core::Object::GetCountOfModules() {
-	return Object::_modules.size();
+size_t Core::Object::GetCountOfComponents() const {
+	return Object::_components.size();
 }
 

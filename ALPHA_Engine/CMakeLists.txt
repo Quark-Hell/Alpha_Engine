@@ -19,30 +19,29 @@ SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
 SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
 SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
 
-
-#Engine libraries
-set (GLFW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLFW")
-include_directories("${GLFW}/include")
-
-set (glm "${PROJECT_SOURCE_DIR}/ALPHA_Engine/glm")
-include_directories("${glm}/glm")
-
-set (GLEW "${PROJECT_SOURCE_DIR}/ALPHA_Engine/GLEW")
-include_directories("${GLEW}/include/")
-
-SET (assimp "${PROJECT_SOURCE_DIR}/ALPHA_Engine/assimp")
-include_directories("${assimp}/include")
-
-SET(STB "${PROJECT_SOURCE_DIR}/ALPHA_Engine/STB")
-include_directories(${STB})
-#Engine libraries
-
 #Engine source
 SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}")
 SET (Engine_Source "${ALPHA_Engine}/Engine")
 SET (Engine_Assets "${ALPHA_Engine}/Engine_Assets")
 SET (Build_Files "${ALPHA_Engine}/Build_Files")
 include_directories(${Engine_Source})
+
+#Engine libraries
+set (GLFW "${ALPHA_Engine}/GLFW")
+include_directories("${GLFW}/include")
+
+set (glm "${ALPHA_Engine}/glm")
+include_directories("${glm}/glm")
+
+set (GLEW "${ALPHA_Engine}/GLEW")
+include_directories("${GLEW}/include/")
+
+SET (assimp "${ALPHA_Engine}/assimp")
+include_directories("${assimp}/include")
+
+SET(STB "${ALPHA_Engine}/STB")
+include_directories(${STB})
+#Engine libraries
 
 #Game source
 set (Game "${PROJECT_BINARY_DIR}")
@@ -63,16 +62,32 @@ file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.cpp")
 	set(${return_list} "${${return_list}}" PARENT_SCOPE)
 endfunction()
 
-set(engine_core_list "")
-libraries_source(${Engine_Source}/Core engine_core_list)
+set(engine_core_list)
 set(engine_binds_list)
-libraries_source(${Engine_Source}/Binds engine_binds_list)
 set(engine_graphics_engine_list)
-libraries_source(${Engine_Source}/Graphics_Engine engine_graphics_engine_list)
 set(engine_shader_program_list)
-libraries_source(${Engine_Source}/ShadersProgram engine_shader_program_list)
 set(engine_user_scripts_list)
-libraries_source(${Engine_Source}/UserScriptsRegister engine_user_scripts_list)
+
+set(BINDS_INCLUDED ON CACHE BOOL "")
+if (BINDS_INCLUDED)
+	add_compile_definitions(BINDS_INCLUDED)
+	libraries_source(${Engine_Source}/Binds engine_binds_list)
+endif ()
+
+set(GRAPHICS_ENGINE_INCLUDED OFF CACHE BOOL "")
+if (GRAPHICS_ENGINE_INCLUDED)
+	add_compile_definitions(GRAPHICS_ENGINE_INCLUDED)
+	libraries_source(${Engine_Source}/Graphics_Engine engine_graphics_engine_list)
+endif ()
+
+set(USER_SCRIPTS_REGISTER_INCLUDED ON CACHE BOOL "")
+if (USER_SCRIPTS_REGISTER_INCLUDED)
+	add_compile_definitions(USER_SCRIPTS_REGISTER_INCLUDED)
+	libraries_source(${Engine_Source}/UserScriptsRegister engine_user_scripts_list)
+endif ()
+
+libraries_source(${Engine_Source}/Core engine_core_list)
+#libraries_source(${Engine_Source}/ShadersProgram engine_shader_program_list)
 
 message(${Engine_Source}/ALPHA_Engine.cpp)
 

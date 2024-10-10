@@ -1,6 +1,12 @@
 #pragma once
 #include "BaseConfig.h"
 
+#if USER_SCRIPTS_REGISTER_INCLUDED
+	namespace Register {
+		class UserScript;
+	}
+#endif
+
 enum DebugRenderModes {
 	LinesRender = 1 << 0,
 	PointsRender = 1 << 1
@@ -11,16 +17,14 @@ namespace Core {
 	class Host;
 
 	class World {
-		friend class Object;
-
 	private:
-		//static std::vector<Object*> ObjectsOnScene;
 		//static inline std::vector<Collider*> CollidersOnScene;
 		//static inline std::vector<Light*> LightsOnScene;
 
-#if __has_include("Graphics_Engine/GraphicsEngineConfig.h")
-	//std::vector<std::unique_ptr<Camera>>_cameras;
+#if GRAPHICS_ENGINE_INCLUDED
+	std::vector<std::unique_ptr<Camera>>_cameras;
 #endif
+
 		std::unique_ptr<Core::Host> _host;
 
 		bool IsCloseGame = true;
@@ -35,10 +39,25 @@ namespace Core {
 		static inline bool DebugRenderEnabled = false;
 		static inline DebugRenderModes DebugRenderMode;
 
+#if USER_SCRIPTS_REGISTER_INCLUDED
+	private:
+		static std::list<std::unique_ptr<Register::UserScript>>* GetUserScripts();
+	public:
+		static bool RemoveUserScript(const Register::UserScript* object);
+		static Register::UserScript& CreateUserScript();
+		static Register::UserScript* CreateUserScript(Register::UserScript* script);
+#endif
+
+#pragma region ObjectManager
+	private:
+		static std::list<std::unique_ptr<Core::Object>>* GetObjects();
+	public:
+		static bool RemoveObject(const Core::Object* object);
+		static Core::Object& CreateObject();
+#pragma endregion
+
 	private:
 		World();
-
-		static std::list<std::shared_ptr<Core::Object>>& GetObjects();
 
 		void StartFrame();
 		void EndFrame();
@@ -47,14 +66,13 @@ namespace Core {
 		World(const World& obj) = delete;
 		~World();
 
-		static bool RemoveObject(const Core::Object* object);
 		static Core::World& GetWorld();
 
 		void CloseGame();
-		bool GetStateOfGame();
+		[[nodiscard]] bool GetStateOfGame() const;
 
-		double GetTimeLong();
-		float GetDeltaTime();
+		[[nodiscard]] double GetTimeLong() const;
+		[[nodiscard]] float GetDeltaTime() const;
 
 		void SetSimulationSpeed(float simSpeed);
 

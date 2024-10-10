@@ -1,38 +1,23 @@
 #include "UserScript.h"
 #include "BaseConfig.h"
-
 #include "Registry.h"
 
-Register::UserScript::UserScript(enum Register::UserScriptType type) {
-	switch (type)
-	{
-		case Register::Actor:
-		std::cout << "Creating new actor" << std::endl;
-		Register::Registry::RegisterActor();
-		break;
-	case Register::Component:
-		std::cout << "Creating new component" << std::endl;
-		Register::Registry::RegisterActorWithComponent(this);
-		break;
-	default:
-		break;
-	}
-
-	UserScript::Start();
+Register::UserScript::UserScript() {
+	std::cout << "Creating new component" << std::endl;
+	Register::Registry::RegisterActorWithComponent(this);
 }
 
 Register::UserScript::~UserScript() {
-	UserScript::End();
 	std::cout << "Script deleted successfully" << std::endl;
 }
 
 
 void Register::UserScript::Start()  {
-	std::cout << "Start" << std::endl;
+	std::cout << "Base start, function can be redefined" << std::endl;
 }
 void Register::UserScript::Update() {
-	std::cout << "Update" << std::endl;
+	std::cout << "Base update, function can be redefined" << std::endl;
 }
 void Register::UserScript::End() {
-	std::cout << "End" << std::endl;
+	std::cout << "Base end, function can be redefined" << std::endl;
 }

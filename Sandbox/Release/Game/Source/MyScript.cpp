@@ -1,17 +1,18 @@
 #include "MyScript.h"
+#include "Core/Object.h"
 #include <iostream>
 
-MyScript* script = new MyScript(Register::UserScriptType::Component);
+MyScript* script = new MyScript();
 
-//Call by constructor
+//Call after created
 void MyScript::Start() {
-
+    std::cout << "Start from " << script->GetParentObject().GetName() << std::endl;
 }
 //Call every frame
 void MyScript::Update() {
 
 }
-//Call by destructor
+//Call before deleted
 void MyScript::End() {
 
 }

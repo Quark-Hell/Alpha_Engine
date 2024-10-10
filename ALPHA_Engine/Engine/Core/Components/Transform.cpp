@@ -1,4 +1,4 @@
-#define _USE_MATH_DEFINES
+#define USE_MATH_DEFINES
 #include "Transform.h"
 
 #include "Core/Math/Vectors.h"
@@ -8,48 +8,46 @@
 //Core::Transform::Transform() {
  //   Transform::_transformMatrix = glm::mat4x4(1.0f);
 //}
-Core::Transform::~Transform() {
-//
-}
+Core::Transform::~Transform() = default;
 
 Core::Vector3 Core::Transform::GetPosition() {
     return Transform::_position;
 }
-void Core::Transform::AddPosition(float X, float Y, float Z) {
+void Core::Transform::AddPosition(const float X, const float Y, const float Z) {
     Transform::_position.X += X;
     Transform::_position.Y += Y;
     Transform::_position.Z += Z;
 }
-void Core::Transform::AddPosition(Vector3 position) {
+void Core::Transform::AddPosition(const Vector3& position) {
     Transform::_position.X += position.X;
     Transform::_position.Y += position.Y;
     Transform::_position.Z += position.Z;
 }
-void Core::Transform::SetPosition(float X, float Y, float Z) {
-    Vector3 direction = Vector3(X, Y, Z) - Transform::_position;
+void Core::Transform::SetPosition(const float X, const float Y, const float Z) {
+    const Vector3 direction = Vector3(X, Y, Z) - Transform::_position;
 
     Transform::AddPosition(direction);
 }
-void Core::Transform::SetPosition(Vector3 position) {
-    Vector3 direction = position - Transform::_position;
+void Core::Transform::SetPosition(const Vector3& position) {
+    const Vector3 direction = position - Transform::_position;
 
     Transform::AddPosition(direction);
 }
-void Core::Transform::AddOriginPosition(float X, float Y, float Z) {
+void Core::Transform::AddOriginPosition(const float X, const float Y, const float Z) {
     Transform::_origin.X += X;
     Transform::_origin.Y += Y;
     Transform::_origin.Z += Z;
 }
-void Core::Transform::AddOriginPosition(Vector3 position) {
+void Core::Transform::AddOriginPosition(const Vector3& position) {
     Transform::_origin += position;
 }
-void Core::Transform::SetOriginPosition(float X, float Y, float Z) {
-    Vector3 direction = Vector3(X, Y, Z) - Transform::_origin;
+void Core::Transform::SetOriginPosition(const float X, const float Y, const float Z) {
+    const Vector3 direction = Vector3(X, Y, Z) - Transform::_origin;
 
     Transform::AddOriginPosition(direction);
 }
-void Core::Transform::SetOriginPosition(Vector3 position) {
-    Vector3 direction = position - Transform::_origin;
+void Core::Transform::SetOriginPosition(const Vector3& position) {
+    const Vector3 direction = position - Transform::_origin;
 
     Transform::AddOriginPosition(direction);
 }
@@ -90,7 +88,7 @@ void Core::Transform::AddRotation(Vector3 rotation) {
     Transform::_rotation.Y += rotation.Y;
     Transform::_rotation.Z += rotation.Z;
 }
-void Core::Transform::SetRotation(float X, float Y, float Z) {
+void Core::Transform::SetRotation(const float X, const float Y, const float Z) {
     Vector3 direction = Vector3(X, Y, Z) - Transform::_rotation;
 
     Transform::AddRotation(direction);

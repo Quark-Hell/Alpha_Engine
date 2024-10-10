@@ -18,7 +18,7 @@ namespace Core {
 	public:
 		virtual ~Component();
 
-		virtual void Delete();
+		//virtual void Delete() = 0;
 
 		Object& GetParentObject();
 		virtual void SetParentObject(const Core::Object& parent);
