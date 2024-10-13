@@ -5,19 +5,14 @@ Core::Host* Core::Host::GetInstance() {
 	return new Host();
 }
 
-Core::Host::Host()
-{
-
-#if USER_SCRIPTS_REGISTER_INCLUDED
-	_registry = Register::Registry::MakeRegistry();
-#endif
-}
-
+Core::Host::Host() = default;
 Core::Host::~Host() = default;
 
 void Core::Host::Registry(const std::list<std::unique_ptr<Register::UserScript>>* scripts) {
 #if USER_SCRIPTS_REGISTER_INCLUDED
-	_registry->RegistryLoop(scripts);
+	auto registry = Register::Registry::GetInstance();
+
+	registry.RegistryLoop(scripts);
 #endif
 }
 

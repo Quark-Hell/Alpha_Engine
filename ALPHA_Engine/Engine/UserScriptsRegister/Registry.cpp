@@ -6,12 +6,11 @@
 
 #include "Core/Object.h"
 
-std::unique_ptr<Register::Registry> Register::Registry::MakeRegistry() {
-	return std::unique_ptr<Register::Registry>(new Register::Registry);
+Register::Registry& Register::Registry::GetInstance() {
+	return *new Register::Registry();
 }
 
 Register::Registry::Registry() = default;
-
 Register::Registry::~Registry() = default;
 
 void Register::Registry::RegistryLoop(const std::list<std::unique_ptr<Register::UserScript>>* scripts)

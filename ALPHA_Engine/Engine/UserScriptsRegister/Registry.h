@@ -12,15 +12,13 @@ namespace Register {
 	{
 		friend class Core::Host;
 
-	private:
-
 	public:
 		~Registry();
 
 		static bool RegisterActorWithComponent(Register::UserScript* script, const std::string &objectName = "Undefined");
 		
 	private:
-		static std::unique_ptr<Register::Registry> MakeRegistry();
+		static Register::Registry& GetInstance();
 		Registry();
 
 		//void RegistryStart();
