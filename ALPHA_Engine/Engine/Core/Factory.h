@@ -6,9 +6,14 @@ namespace Register {
   class UserScript;
 }
 
-namespace AnomalyEngine::WindowsManager {
-      class Window;
+namespace AnomalyEngine {
+  namespace WindowsManager {
+    class Window;
   }
+  namespace Render {
+    class Camera;
+  }
+}
 
 namespace Core {
 
@@ -31,8 +36,11 @@ public:
   static Register::UserScript& CreateUserScript();
   static Register::UserScript* CreateUserScript(Register::UserScript* script);
 
-  static void CreateWindow();
+  static void CreateWindow(int width, int height, const char* title);
 
+public:
+  static AnomalyEngine::Render::Camera& CreateCamera();
+  static bool RemoveCamera(AnomalyEngine::Render::Camera* camera);
 };
 
 }

@@ -28,6 +28,11 @@ std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* Core::World
 	static std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>> windows{};
 	return &windows;
 }
+
+std::vector<std::unique_ptr<AnomalyEngine::Render::Camera>>* Core::World::GetCameras() {
+	static std::vector<std::unique_ptr<AnomalyEngine::Render::Camera>> cameras{};
+	return &cameras;
+}
 #endif
 
 #pragma region WorldFunctions

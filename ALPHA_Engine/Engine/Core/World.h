@@ -8,9 +8,14 @@
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-	namespace AnomalyEngine::WindowsManager {
-	  class Window;
-	}
+namespace AnomalyEngine {
+  	namespace WindowsManager {
+  		class Window;
+  	}
+  	namespace Render {
+  		class Camera;
+  	}
+  }
 #endif
 
 namespace Core {
@@ -41,6 +46,7 @@ namespace Core {
 
 #if ANOMALY_ENGINE_INCLUDED
 		static std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* GetWindows();
+		static std::vector<std::unique_ptr<AnomalyEngine::Render::Camera>>* GetCameras();
 #endif
 
 	private:

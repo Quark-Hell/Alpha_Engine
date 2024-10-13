@@ -1,16 +1,24 @@
-//
-// Created by admin on 13.10.24.
-//
+#pragma once
+#include "Core/Components/Component.h"
 
-#ifndef CAMERA_H
-#define CAMERA_H
+namespace AnomalyEngine::WindowsManager {
+    class Window;
+}
+namespace Core {
+    class Factory;
+}
 
+namespace AnomalyEngine::Render {
+    class Camera : public Core::Component {
+    friend class Core::Factory;
 
+    private:
+        Camera();
+        AnomalyEngine::WindowsManager::Window* _window = nullptr;
 
-class Camera {
+    public:
+        ~Camera();
 
-};
-
-
-
-#endif //CAMERA_H
+        bool AttachWindow(AnomalyEngine::WindowsManager::Window* window);
+    };
+}

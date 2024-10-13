@@ -70,7 +70,7 @@ Register::UserScript* Core::Factory::CreateUserScript(Register::UserScript* scri
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
-void Core::Factory::CreateWindow() {
+void Core::Factory::CreateWindow(int width, int height, const char* title) {
   using namespace AnomalyEngine::WindowsManager;
   WindowsManager& WinMan = WindowsManager::GetInstance();
 
@@ -93,9 +93,35 @@ void Core::Factory::CreateWindow() {
   }
 
   auto windows = Core::World::GetWindows();
-  auto* wm = new Window(800,600, "New window");
+  auto* wm = new Window(width,height, title);
 
   windows->push_back(std::unique_ptr<Window>(wm));
+}
+
+AnomalyEngine::Render::Camera& Core::Factory::CreateCamera() {
+  auto camera = new AnomalyEngine::Render::Camera();
+
+  auto cameras = World::GetCameras();
+  cameras->push_back(std::unique_ptr<AnomalyEngine::Render::Camera>(camera));
+
+  return *camera;
+}
+
+bool Core::Factory::RemoveCamera(AnomalyEngine::Render::Camera* camera) {
+  const auto list = World::GetCameras();
+  auto it = std::begin(*list);
+
+  for (size_t i = 0; i < World::GetCameras()->size(); ++i) {
+    if (it->get() == &camera[i]) {
+      std::cout << "Removing camera" << std::endl;
+      World::GetCameras()->erase(it);
+      std::cout << "Removed camera" << std::endl;
+      return true;
+    }
+    std::advance(it, 1);
+  }
+  assert("Camera cannot be removed");
+  return false;
 }
 #endif
 

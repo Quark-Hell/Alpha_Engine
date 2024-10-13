@@ -27,14 +27,15 @@ namespace AnomalyEngine::Render {
 
     void Render::RenderLoop(std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* windows) {
         for (auto& window : *windows) {
-            glfwPollEvents();
-
-            Render::ClearFrameBuffer();
-            Render::PrepareRender();
-
             int width, height;
             glfwGetFramebufferSize(window->_window, &width, &height);
             glViewport(0, 0, width, height);
+
+            glfwMakeContextCurrent(window->_window);
+
+            glfwPollEvents();
+            Render::ClearFrameBuffer();
+            Render::PrepareRender();
 
             glFinish();
             glfwSwapBuffers(window->_window);
