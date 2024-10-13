@@ -75,11 +75,12 @@ void Core::World::Simulation() {
 
 	while (IsCloseGame)
 	{
-#ifdef USER_SCRIPTS_REGISTER_INCLUDED
+#if USER_SCRIPTS_REGISTER_INCLUDED
 		Host::GetInstance()->Registry(GetUserScripts());
 #endif
+#if ANOMALY_ENGINE_INCLUDED
 		Host::GetInstance()->Graphics(GetWindows());
-
+#endif
 		//_host->Physics();
 	}
 }

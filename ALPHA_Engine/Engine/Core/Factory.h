@@ -31,16 +31,20 @@ public:
   static bool RemoveObject(const Core::Object* object);
   static Core::Object& CreateObject();
 
+#if USER_SCRIPTS_REGISTER_INCLUDED
 public:
   static bool RemoveUserScript(const Register::UserScript* object);
   static Register::UserScript& CreateUserScript();
   static Register::UserScript* CreateUserScript(Register::UserScript* script);
+#endif
 
+#if ANOMALY_ENGINE_INCLUDED
+public:
   static void CreateWindow(int width, int height, const char* title);
 
-public:
   static AnomalyEngine::Render::Camera& CreateCamera();
   static bool RemoveCamera(AnomalyEngine::Render::Camera* camera);
+#endif
 };
 
 }

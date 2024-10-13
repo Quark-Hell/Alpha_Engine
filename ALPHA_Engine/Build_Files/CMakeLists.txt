@@ -20,6 +20,8 @@ include_directories("${Engine_Headers}")
 
 set (Engine_Libs "${Engine}/lib")
 
+include("${Game_Source}/IncludedModules.cmake")
+
 add_executable(Game
 	${Game_Source}/MyScript.cpp
 )

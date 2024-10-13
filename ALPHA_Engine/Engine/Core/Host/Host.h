@@ -31,9 +31,13 @@ namespace Core {
 		~Host();
 
 	private:
+#if USER_SCRIPTS_REGISTER_INCLUDED
 		void Registry(const std::list<std::unique_ptr<Register::UserScript>>* scripts);
+#endif
 
+#if ANOMALY_ENGINE_INCLUDED
 		void Graphics(std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* windows);
+#endif
 		void Physics();
 	};
 

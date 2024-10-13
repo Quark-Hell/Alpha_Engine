@@ -8,23 +8,19 @@ Core::Host* Core::Host::GetInstance() {
 Core::Host::Host() = default;
 Core::Host::~Host() = default;
 
-void Core::Host::Registry(const std::list<std::unique_ptr<Register::UserScript>>* scripts) {
 #if USER_SCRIPTS_REGISTER_INCLUDED
+void Core::Host::Registry(const std::list<std::unique_ptr<Register::UserScript>>* scripts) {
 	auto registry = Register::Registry::GetInstance();
-
 	registry.RegistryLoop(scripts);
-#endif
 }
+#endif
 
-//#include "Anomaly/WinManager/AnomalyEngine/Render.h"
-void Core::Host::Graphics(std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* windows) {
 #if ANOMALY_ENGINE_INCLUDED
+void Core::Host::Graphics(std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* windows) {
 	auto rend = AnomalyEngine::Render::Render::GetInstance();
-
 	rend.RenderLoop(windows);
-#endif
 }
-
+#endif
 
 void Core::Host::Physics() {
 

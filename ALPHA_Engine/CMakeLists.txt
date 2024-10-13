@@ -94,7 +94,7 @@ if (LINUX)
 endif ()
 
 
-	function(libraries_source src return_list)
+function(libraries_source src return_list)
 file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.cpp")
     foreach(file ${templateFiles})
 		set(copy_src "${src}/${file}")
@@ -131,6 +131,26 @@ endif ()
 message("${Cyan}include .cpp engine_core_list${ColourReset}")
 libraries_source(${Engine_Source}/Core engine_core_list)
 #libraries_source(${Engine_Source}/ShadersProgram engine_shader_program_list)
+
+function(ExportModulesConfig ModuleName Value)
+
+	set(ExportModule
+			"set(${ModuleName} ${Value} CACHE BOOL \"\")\n"
+			"if(${ModuleName})\n"
+			"add_compile_definitions(${ModuleName})\n"
+			"endif()\n"
+			"\n"
+	)
+
+	file(APPEND "${Game_Source_Dest}/IncludedModules.cmake"
+			${ExportModule}
+	)
+
+endfunction()
+
+file(WRITE "${Game_Source_Dest}/IncludedModules.cmake" "")
+ExportModulesConfig("ANOMALY_ENGINE_INCLUDED" ${ANOMALY_ENGINE_INCLUDED})
+ExportModulesConfig("USER_SCRIPTS_REGISTER_INCLUDED" ${USER_SCRIPTS_REGISTER_INCLUDED})
 
 add_library (
 	ALPHA_Engine STATIC
