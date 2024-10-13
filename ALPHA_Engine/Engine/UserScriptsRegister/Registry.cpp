@@ -1,6 +1,6 @@
 #include "Registry.h"
 
-#include <Core/World.h>
+#include "Core/Factory.h"
 
 #include "UserScript.h"
 
@@ -39,7 +39,7 @@ bool Register::Registry::RegisterActorWithComponent(Register::UserScript* script
 		return false;
 	
 	//Later Host will call all UserScript functions
-	auto component = Core::World::CreateUserScript(script);
+	auto component = Core::Factory::CreateUserScript(script);
 	component->SetParentObject(Core::Object::CreateObject(objectName));
 	std::cout << "Component created" << std::endl;
 	return true;

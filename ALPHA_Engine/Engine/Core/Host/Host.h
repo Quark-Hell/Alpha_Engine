@@ -1,12 +1,16 @@
 #pragma once
+#include <Anomaly/WinManager/Window.h>
+
 #include "BaseConfig.h"
 
 namespace Core {
 	class World;
 }
 
-namespace GraphicsEngine {
-	class RenderCore;
+namespace AnomalyEngine {
+	namespace WindowsManager {
+		class WindowsManager;
+	}
 }
 namespace Register {
 	class Registry;
@@ -20,26 +24,22 @@ namespace Core {
 		friend class Core::World;
 
 	private:
-#if GRAPHICS_ENGINE_INCLUDED
-		std::unique_ptr<GraphicsEngine::RenderCore> _graphics_engine;
-#endif
-
 #if USER_SCRIPTS_REGISTER_INCLUDED
 		std::unique_ptr<Register::Registry> _registry;
 #endif
 
 	private:
-		static std::unique_ptr<Host> MakeHost();
+		static Host* GetInstance();
 		Host();
 
 	public:
 		~Host();
 
-		void StartRender();
 #if USER_SCRIPTS_REGISTER_INCLUDED
 		void Registry(const std::list<std::unique_ptr<Register::UserScript>>* scripts);
 #endif
-		void Graphics();
+
+		void Graphics(std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* windows);
 		void Physics();
 	};
 

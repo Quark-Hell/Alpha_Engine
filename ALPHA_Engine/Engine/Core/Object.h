@@ -9,7 +9,7 @@ namespace Core {
 
 	class Object
 	{
-		friend class World;
+		friend class Factory;
 
 	private:
 		std::string _name = "Undefined";

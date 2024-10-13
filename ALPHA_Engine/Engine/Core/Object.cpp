@@ -1,20 +1,16 @@
 #include "Object.h"
 
 #include "BaseConfig.h"
-
-#include "Components/Transform.h"
-#include "Components/Component.h"
-#include "Tag.h"
-#include "Core/World.h"
+#include "Factory.h"
 
 Core::Object::Object() = default;
 Core::Object::~Object() = default;
 
 Core::Object& Core::Object::CreateObject(const std::string& name) {
-	auto obj = Core::World::CreateObject();
+	auto obj = Core::Factory::CreateObject();
 	obj._name = name;
 	std::cout << "Name of object: " << obj._name << std::endl;
-	return Core::World::CreateObject();
+	return Core::Factory::CreateObject();
 }
 
 void Core::Object::Delete() {

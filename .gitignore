@@ -2,6 +2,8 @@ out
 .vs
 .idea
 
+ALPHA_Engine/cmake-build-debug
+
 Sandbox/Debug/Game/ALPHA_Engine
 Sandbox/Debug/Game/build
 Sandbox/Debug/.ninja_log

@@ -2,31 +2,25 @@
 #include "BaseConfig.h"
 
 #if USER_SCRIPTS_REGISTER_INCLUDED
-	namespace Register {
-		class UserScript;
-	}
+  namespace Register {
+  	class UserScript;
+  }
 #endif
 
-enum DebugRenderModes {
-	LinesRender = 1 << 0,
-	PointsRender = 1 << 1
-};
+#if ANOMALY_ENGINE_INCLUDED
+	namespace AnomalyEngine::WindowsManager {
+	  class Window;
+	}
+#endif
 
 namespace Core {
 	class Object;
 	class Host;
 
 	class World {
+		friend class Factory;
+
 	private:
-		//static inline std::vector<Collider*> CollidersOnScene;
-		//static inline std::vector<Light*> LightsOnScene;
-
-#if GRAPHICS_ENGINE_INCLUDED
-	std::vector<std::unique_ptr<Camera>>_cameras;
-#endif
-
-		std::unique_ptr<Core::Host> _host;
-
 		bool IsCloseGame = true;
 		double _timeLong = 0;
 		float _deltaTime = 0;
@@ -35,26 +29,19 @@ namespace Core {
 
 		float SimulationSpeed = 1;
 
-	public:
-		static inline bool DebugRenderEnabled = false;
-		static inline DebugRenderModes DebugRenderMode;
-
 #if USER_SCRIPTS_REGISTER_INCLUDED
 	private:
 		static std::list<std::unique_ptr<Register::UserScript>>* GetUserScripts();
-	public:
-		static bool RemoveUserScript(const Register::UserScript* object);
-		static Register::UserScript& CreateUserScript();
-		static Register::UserScript* CreateUserScript(Register::UserScript* script);
 #endif
 
 #pragma region ObjectManager
 	private:
 		static std::list<std::unique_ptr<Core::Object>>* GetObjects();
-	public:
-		static bool RemoveObject(const Core::Object* object);
-		static Core::Object& CreateObject();
 #pragma endregion
+
+#if ANOMALY_ENGINE_INCLUDED
+		static std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* GetWindows();
+#endif
 
 	private:
 		World();

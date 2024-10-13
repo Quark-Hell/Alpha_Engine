@@ -2,6 +2,10 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("Game")
 
+if (POLICY CMP0072)
+	cmake_policy (SET CMP0072 NEW)
+endif(POLICY CMP0072)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -20,12 +24,21 @@ add_executable(Game
 	${Game_Source}/MyScript.cpp
 )
 
+find_package(GLEW REQUIRED)
+find_package(OpenGL REQUIRED)
+
 if(WIN32)
 target_link_libraries(Game
-PRIVATE ${Engine_Libs}/ALPHA_Engine.lib
+	PRIVATE ${Engine_Libs}/ALPHA_Engine.lib
+	PRIVATE ${Engine_Libs}/glfw3.lib
+	PRIVATE	GLEW::GLEW
+	PRIVATE ${OPENGL_LIBRARIES}
 )
 else()
 target_link_libraries(Game
-PRIVATE ${Engine_Libs}/ALPHA_Engine.a
+	PRIVATE ${Engine_Libs}/ALPHA_Engine.a
+	PRIVATE ${Engine_Libs}/glfw3.a
+	PRIVATE	GLEW::GLEW
+	PRIVATE OpenGL::GL
 )
 endif()
