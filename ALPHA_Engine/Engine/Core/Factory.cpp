@@ -66,7 +66,7 @@ Register::UserScript* Core::Factory::CreateUserScript(Register::UserScript* scri
 
 #if ANOMALY_ENGINE_INCLUDED
 #define GLEW_STATIC
-#include <GL/glew.h>
+#include <GLEW/glew.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 

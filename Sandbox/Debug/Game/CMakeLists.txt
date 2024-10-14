@@ -23,24 +23,23 @@ set (Engine_Libs "${Engine}/lib")
 include("${Game_Source}/IncludedModules.cmake")
 
 add_executable(Game
-	${Game_Source}/MyScript.cpp
+		${Game_Source}/MyScript.cpp
 )
 
-find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 
 if(WIN32)
-target_link_libraries(Game
-	PRIVATE ${Engine_Libs}/ALPHA_Engine.lib
-	PRIVATE ${Engine_Libs}/glfw3.lib
-	PRIVATE	GLEW::GLEW
-	PRIVATE ${OPENGL_LIBRARIES}
-)
+	target_link_libraries(Game
+			PRIVATE ${Engine_Libs}/ALPHA_Engine.lib
+			PRIVATE ${Engine_Libs}/glfw3.lib
+			PRIVATE ${Engine_Libs}/glew32.lib
+			PRIVATE ${OPENGL_LIBRARIES}
+	)
 else()
-target_link_libraries(Game
-	PRIVATE ${Engine_Libs}/ALPHA_Engine.a
-	PRIVATE ${Engine_Libs}/glfw3.a
-	PRIVATE	GLEW::GLEW
-	PRIVATE OpenGL::GL
-)
+	target_link_libraries(Game
+			PRIVATE ${Engine_Libs}/ALPHA_Engine.a
+			PRIVATE ${Engine_Libs}/glfw3.a
+			PRIVATE ${Engine_Libs}/libGLEW.a
+			PRIVATE ${OPENGL_LIBRARIES}
+	)
 endif()

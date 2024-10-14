@@ -69,7 +69,7 @@ set (glm "${ALPHA_Engine}/glm")
 include_directories("${glm}/glm")
 
 set (GLEW "${ALPHA_Engine}/GLEW")
-include_directories("${GLEW}/include/")
+include_directories("${GLEW}")
 
 SET (assimp "${ALPHA_Engine}/assimp")
 include_directories("${assimp}/include")
@@ -167,7 +167,6 @@ add_library (
 set_target_properties(ALPHA_Engine PROPERTIES PREFIX "")
 set_target_properties(ALPHA_Engine PROPERTIES OUTPUT_NAME "ALPHA_Engine")
 
-find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 
 #Configure game folder
@@ -215,28 +214,36 @@ if(WIN32)
 #Stupid method, but it's working
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
-	${Game}/ALPHA_Engine.lib
-	${Game_Engine_Dest}/lib/ALPHA_Engine.lib
+	"${Game}/ALPHA_Engine.lib"
+	"${Game_Engine_Dest}/lib/ALPHA_Engine.lib"
 
 	COMMAND ${CMAKE_COMMAND} -E remove
-	${Game}/ALPHA_Engine.lib
+	"${Game}/ALPHA_Engine.lib"
 
 	COMMAND ${CMAKE_COMMAND} -E copy
-	${GLFW}/glfw3.lib
-	${Game_Engine_Dest}/lib/glfw3.lib
+	"${GLFW}/glfw3.lib"
+	"${Game_Engine_Dest}/lib/glfw3.lib"
+
+	COMMAND ${CMAKE_COMMAND} -E copy
+	"${GLEW}/lib/Windows/x64/glew32.lib"
+	"${Game_Engine_Dest}/lib/glew32.lib"
 )
 else()
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
-	${Game}/ALPHA_Engine.a
-	${Game_Engine_Dest}/lib/ALPHA_Engine.a
+	"${Game}/ALPHA_Engine.a"
+	"${Game_Engine_Dest}/lib/ALPHA_Engine.a"
 
 	COMMAND ${CMAKE_COMMAND} -E remove
-	${Game}/ALPHA_Engine.a
+	"${Game}/ALPHA_Engine.a"
 
 	COMMAND ${CMAKE_COMMAND} -E copy
-	${GLFW}/glfw3.a
-	${Game_Engine_Dest}/lib/glfw3.a
+	"${GLFW}/glfw3.a"
+	"${Game_Engine_Dest}/lib/glfw3.a"
+
+	COMMAND ${CMAKE_COMMAND} -E copy
+	"${GLEW}/lib/Linux/libGLEW.a"
+	"${Game_Engine_Dest}/lib/libGLEW.a"
 )
 endif()
 
