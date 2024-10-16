@@ -40,10 +40,10 @@ public:
 
 #if ANOMALY_ENGINE_INCLUDED
 public:
-  static void CreateWindow(int width, int height, const char* title);
+  static AnomalyEngine::WindowsManager::Window* CreateWindow(int width, int height, const char* title);
 
-  static AnomalyEngine::Render::Camera& CreateCamera();
-  static bool RemoveCamera(AnomalyEngine::Render::Camera* camera);
+  static AnomalyEngine::Render::Camera* CreateCamera(float fov = 90,float aspect = 1,float zNear = 0.1f,float zFar = 300);
+  static bool RemoveCamera(const AnomalyEngine::Render::Camera* camera);
 #endif
 };
 

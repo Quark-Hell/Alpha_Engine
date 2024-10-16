@@ -5,15 +5,19 @@
 #include <GL/gl.h>
 #include "GLFW/glfw3.h"
 
+#include <iostream>
+
 namespace AnomalyEngine::WindowsManager {
     Window::Window(const int width, const int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share) {
-
         if (!glfwInit()) {
             glfwTerminate();
             assert("glfw do not init");
         }
 
         _window = glfwCreateWindow(width, height, title, monitor, share);
+        _width = width;
+        _height = height;
+
         if (_window == nullptr)
         {
             assert("Failed to create GLFW window");
@@ -34,6 +38,19 @@ namespace AnomalyEngine::WindowsManager {
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     }
 
+    void Window::Init()
+    {
+        if (_initialized == false) {
+            glfwWindowHint(GLFW_SAMPLES, 4);
+            glEnable(GL_MULTISAMPLE);
+
+            std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+            std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+
+            _initialized = true;
+        }
+    }
+
     void Window::Resize(int width, int height) {
 
     }
@@ -43,6 +60,10 @@ namespace AnomalyEngine::WindowsManager {
         glfwMakeContextCurrent(_window);
         if (_isSync == true) glfwSwapInterval(1);
         else glfwSwapInterval(0);
+    }
+
+    void Window::SetCamera(AnomalyEngine::Render::Camera* camera) {
+        _activeCamera = camera;
     }
 
 }

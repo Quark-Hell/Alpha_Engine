@@ -3,9 +3,9 @@
 
 int main(int argc, char** argv) {
 	std::cout << "Engine integrated successfully" << std::endl;
-	Core::World& worldInstance = Core::World::GetWorld();
+	auto worldInstance = Core::World::GetWorld();
 
-	worldInstance.Simulation();
+	worldInstance->Simulation();
 
 	return 0;
 }

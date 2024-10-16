@@ -65,49 +65,33 @@ Register::UserScript* Core::Factory::CreateUserScript(Register::UserScript* scri
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-#define GLEW_STATIC
+
 #include <GLEW/glew.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
-void Core::Factory::CreateWindow(int width, int height, const char* title) {
+AnomalyEngine::WindowsManager::Window* Core::Factory::CreateWindow(const int width, const int height, const char* title) {
   using namespace AnomalyEngine::WindowsManager;
-  WindowsManager& WinMan = WindowsManager::GetInstance();
 
-  if (WinMan._initialized == false) {
-    glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK)
-    {
-      glfwTerminate();
-      assert("Cannot init GLFW Window");
-    }
+  const auto windows = Core::World::GetWindows();
 
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    glEnable(GL_MULTISAMPLE);
+  windows->push_back(std::unique_ptr<Window>
+    (new Window(width,height, title)));
 
-    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-
-    WinMan._initialized = true;
-
-  }
-
-  auto windows = Core::World::GetWindows();
-  auto* wm = new Window(width,height, title);
-
-  windows->push_back(std::unique_ptr<Window>(wm));
+  return windows->back().get();
 }
 
-AnomalyEngine::Render::Camera& Core::Factory::CreateCamera() {
-  auto camera = new AnomalyEngine::Render::Camera();
+AnomalyEngine::Render::Camera* Core::Factory::CreateCamera(const float fov, const float aspect, const float zNear, const float zFar) {
+  const auto cameras = World::GetCameras();
 
-  auto cameras = World::GetCameras();
-  cameras->push_back(std::unique_ptr<AnomalyEngine::Render::Camera>(camera));
+  cameras->push_back(std::unique_ptr<AnomalyEngine::Render::Camera>
+    (new AnomalyEngine::Render::Camera(fov, aspect, zNear, zFar)));
 
-  return *camera;
+  std::cout << "Camera created" << std::endl;
+  return cameras->back().get();
 }
 
-bool Core::Factory::RemoveCamera(AnomalyEngine::Render::Camera* camera) {
+bool Core::Factory::RemoveCamera(const AnomalyEngine::Render::Camera* camera) {
   const auto list = World::GetCameras();
   auto it = std::begin(*list);
 

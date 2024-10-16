@@ -20,13 +20,12 @@ class WindowsManager {
     friend class Core::Factory;
 
     private:
-      bool _initialized = false;
-
-      WindowsManager();
-      static WindowsManager& GetInstance();
+        WindowsManager();
+        static WindowsManager* GetInstance();
+        void Init();
 
      public:
-       ~WindowsManager();
+        ~WindowsManager();
 };
 
 }

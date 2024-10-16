@@ -5,6 +5,7 @@
 #include "EngineConfig.h"
 #include "Core/Object.h"
 #include "Anomaly/WinManager/Window.h"
+#include <cassert>
 
 Core::World::World() = default;
 Core::World::~World() = default;
@@ -36,8 +37,9 @@ std::vector<std::unique_ptr<AnomalyEngine::Render::Camera>>* Core::World::GetCam
 #endif
 
 #pragma region WorldFunctions
-Core::World& Core::World::GetWorld() {
-	return *new Core::World();
+Core::World* Core::World::GetWorld() {
+	static World world;
+	return &world;
 }
 
 void Core::World::CloseGame() {
@@ -72,6 +74,9 @@ void Core::World::SetSimulationSpeed(float simSpeed) {
 }
 
 void Core::World::Simulation() {
+#if ANOMALY_ENGINE_INCLUDED
+	Host::GetInstance()->InitRender();
+#endif
 
 	while (IsCloseGame)
 	{

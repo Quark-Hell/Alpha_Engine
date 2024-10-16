@@ -1,15 +1,12 @@
 #include "Camera.h"
 
 namespace AnomalyEngine::Render {
-    Camera::Camera() = default;
-    Camera::~Camera() = default;
-
-    bool Camera::AttachWindow(AnomalyEngine::WindowsManager::Window *window) {
-        if (window == nullptr)
-            return false;
-
-        _window = window;
-        return true;
+    Camera::Camera(const float fov, const float aspect , const float zNear, const float zFar)
+    {
+        _fov = fov;
+        _aspect = aspect;
+        _zNear = zNear;
+        _zFar = zFar;
     }
-
+    Camera::~Camera() = default;
 }

@@ -36,6 +36,7 @@ namespace Core {
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
+		void InitRender();
 		void Graphics(std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* windows);
 #endif
 		void Physics();

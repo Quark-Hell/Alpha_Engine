@@ -13,12 +13,15 @@ namespace AnomalyEngine::Render {
     friend class Core::Factory;
 
     private:
-        Camera();
+        explicit Camera(float fov = 90,float aspect = 1,float zNear = 0.1f,float zFar = 300);
         AnomalyEngine::WindowsManager::Window* _window = nullptr;
+
+        float _fov = 90;
+        float _aspect = 1;
+        float _zNear = 0.1f;
+        float _zFar = 300;
 
     public:
         ~Camera();
-
-        bool AttachWindow(AnomalyEngine::WindowsManager::Window* window);
     };
 }

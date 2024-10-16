@@ -59,7 +59,7 @@ namespace Core {
 		World(const World& obj) = delete;
 		~World();
 
-		static Core::World& GetWorld();
+		static Core::World* GetWorld();
 
 		void CloseGame();
 		[[nodiscard]] bool GetStateOfGame() const;

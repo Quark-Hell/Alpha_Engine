@@ -6,8 +6,9 @@
 
 #include "Core/Object.h"
 
-Register::Registry& Register::Registry::GetInstance() {
-	return *new Register::Registry();
+Register::Registry* Register::Registry::GetInstance() {
+	static Register::Registry reg;
+	return &reg;
 }
 
 Register::Registry::Registry() = default;

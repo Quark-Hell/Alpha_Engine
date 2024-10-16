@@ -18,7 +18,7 @@ namespace Register {
 		static bool RegisterActorWithComponent(Register::UserScript* script, const std::string &objectName = "Undefined");
 		
 	private:
-		static Register::Registry& GetInstance();
+		static Register::Registry* GetInstance();
 		Registry();
 
 		//void RegistryStart();
