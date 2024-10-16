@@ -45,16 +45,8 @@ You should get the following structure:
       <img src="https://i.ibb.co/TWH4Rn2/image-2024-10-08-074747846.png" alt="image-2024-10-08-074747846" border="0">
       <img src="https://i.ibb.co/b54Fhsg/image-2024-10-08-075251718.png" alt="image-2024-10-08-075251718" border="0">
 </p>
-<br><b>Step 6(This step will be removed in next update):</br></b>
-Add next lines into Game CMakeList:
 
-```
-SET(CMAKE_CXX_FLAGS "-Wall -frtti")
-SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
-SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
-SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
-```
-<br><b>Step 7:</br></b>
+<br><b>Step 6:</br></b>
 Run game project as CMake project and build it
 
 <br></br>
