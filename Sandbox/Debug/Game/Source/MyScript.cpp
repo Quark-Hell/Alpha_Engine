@@ -13,7 +13,7 @@ MyScript* script = new MyScript();
 void MyScript::Start() {
     std::cout << "Start from " << script->GetParentObject().GetName() << std::endl;
 #if ANOMALY_ENGINE_INCLUDED
-    auto win1 = Core::Factory::CreateWindow(400, 600, "Windows 1");
+    auto win1 = Core::Factory::CreateWindow(800, 600, "Windows 1");
     auto win2 = Core::Factory::CreateWindow(800, 600, "Windows 2");
 
     auto cam1 = Core::Factory::CreateCamera();
