@@ -23,6 +23,9 @@ set (Engine_Assets "${Engine}/Engine_Assets")
 set (Engine_Headers "${Engine}/headers")
 include_directories("${Engine_Headers}")
 
+set (GLM "${Engine}/GLM")
+include_directories("${GLM}")
+
 set (Engine_Libs "${Engine}/lib")
 
 include("${Game_Source}/IncludedModules.cmake")

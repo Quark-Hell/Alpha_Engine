@@ -2,7 +2,7 @@
 #include "BaseConfig.h"
 
 #include "Tag.h"
-//#include "Components/Transform.h"
+#include "Components/Transform.h"
 
 namespace Core {
 	class Component;
@@ -13,7 +13,7 @@ namespace Core {
 
 	private:
 		std::string _name = "Undefined";
-		//Transform _transform;
+		Transform _transform;
 		std::vector<std::shared_ptr<Core::Component>> _components;
 		Tag _tag;
 

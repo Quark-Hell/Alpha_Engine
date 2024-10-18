@@ -25,13 +25,17 @@ namespace AnomalyEngine::Render {
 
         void ClearFrameBuffer();
         void PrepareRender();
-        void SetActiveWindow(const AnomalyEngine::WindowsManager::Window& window);
+        void SetActiveWindow(const AnomalyEngine::WindowsManager::Window* window);
 
         void SetWindowMatrix(int width, int height);
         void SetModelMatrix();
 
+        //Orto or perspective
+        //Before use SetWindowMatrix()
+        void SetCameraProjection(const AnomalyEngine::WindowsManager::Window* window);
+
         void RenderLoop(std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* windows);
-        void RenderScene(const AnomalyEngine::WindowsManager::Window* camera);
+        void RenderScene(const AnomalyEngine::WindowsManager::Window* window);
     public:
         ~Render() = default;
 

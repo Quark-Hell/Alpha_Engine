@@ -1,6 +1,4 @@
 #pragma once
-#include <list>
-#include <memory>
 
 namespace Register {
   class UserScript;
@@ -34,7 +32,7 @@ public:
 #if USER_SCRIPTS_REGISTER_INCLUDED
 public:
   static bool RemoveUserScript(const Register::UserScript* object);
-  static Register::UserScript& CreateUserScript();
+  static Register::UserScript* CreateUserScript();
   static Register::UserScript* CreateUserScript(Register::UserScript* script);
 #endif
 

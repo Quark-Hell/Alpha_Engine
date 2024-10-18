@@ -65,8 +65,8 @@ include_directories(${Engine_Source})
 set (GLFW "${ALPHA_Engine}/GLFW")
 include_directories("${GLFW}/include")
 
-set (glm "${ALPHA_Engine}/glm")
-include_directories("${glm}/glm")
+set (GLM "${ALPHA_Engine}/GLM")
+include_directories("${GLM}")
 
 set (GLEW "${ALPHA_Engine}/GLEW")
 include_directories("${GLEW}")
@@ -167,15 +167,13 @@ add_library (
 set_target_properties(ALPHA_Engine PROPERTIES PREFIX "")
 set_target_properties(ALPHA_Engine PROPERTIES OUTPUT_NAME "ALPHA_Engine")
 
-find_package(OpenGL REQUIRED)
-
 #Configure game folder
 function(copy_headers src dest)
 	message("${Red}copy headers${ColourReset}")
 	file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.h")
 	foreach(templateFile ${templateFiles})
 		set(copy_src "${src}/${templateFile}")
-		set(copy_dest "${dest}/headers/${templateFile}")	
+		set(copy_dest "${dest}/${templateFile}")
 
 		message("${Cyan}copy header${ColourReset} ${copy_src} to\n ${copy_dest}")
 
@@ -185,9 +183,23 @@ function(copy_headers src dest)
 		${copy_dest}
 		)
 	endforeach(templateFile)
+
+	file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.hpp")
+	foreach(templateFile ${templateFiles})
+		set(copy_src "${src}/${templateFile}")
+		set(copy_dest "${dest}/${templateFile}")
+
+		message("${Cyan}copy header${ColourReset} ${copy_src} to\n ${copy_dest}")
+
+		add_custom_command(TARGET ALPHA_Engine POST_BUILD
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different
+				${copy_src}
+				${copy_dest}
+		)
+	endforeach(templateFile)
 endfunction()
 
-copy_headers(${Engine_Source} ${Game_Engine_Dest})
+copy_headers(${Engine_Source} ${Game_Engine_Dest}/headers)
 
 function(copy_assets src dest)
 	message("\n${Red}copy assets${ColourReset}")
@@ -208,6 +220,7 @@ endfunction()
 
 copy_assets(${Engine_Assets} "${Game_Engine_Dest}/Engine_Assets")
 copy_assets(${Build_Files} "${Game_Source_Dest}")
+copy_assets(${GLM} "${Game_Engine_Dest}/GLM")
 message("\n")
 
 if(WIN32)

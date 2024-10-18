@@ -46,9 +46,9 @@ bool Core::Factory::RemoveUserScript(const Register::UserScript* script) {
 }
 
 #if USER_SCRIPTS_REGISTER_INCLUDED
-Register::UserScript& Core::Factory::CreateUserScript() {
+Register::UserScript* Core::Factory::CreateUserScript() {
   World::GetUserScripts()->push_back(std::unique_ptr<Register::UserScript>(new Register::UserScript()));
-  return *World::GetUserScripts()->back().get();
+  return World::GetUserScripts()->back().get();
 }
 Register::UserScript* Core::Factory::CreateUserScript(Register::UserScript* script) {
   const auto list = World::GetUserScripts();
