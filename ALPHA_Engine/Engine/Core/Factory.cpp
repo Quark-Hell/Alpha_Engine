@@ -24,9 +24,10 @@ bool Core::Factory::RemoveObject(const Core::Object* object) {
   return false;
 }
 
-Core::Object& Core::Factory::CreateObject() {
+Core::Object* Core::Factory::CreateObject() {
   World::GetObjects()->push_back(std::unique_ptr<Core::Object>(new Core::Object()));
-  return *World::GetObjects()->back().get();
+  std::cout << "Object created" << std::endl;
+  return World::GetObjects()->back().get();
 }
 
 bool Core::Factory::RemoveUserScript(const Register::UserScript* script) {
@@ -106,6 +107,29 @@ bool Core::Factory::RemoveCamera(const AnomalyEngine::Render::Camera* camera) {
   }
   assert("Camera cannot be removed");
   return false;
+}
+
+AnomalyEngine::Render::Mesh* Core::Factory::CreateMesh() {
+  const auto meshes = World::GetMeshes();
+
+  meshes->push_back(std::unique_ptr<AnomalyEngine::Render::Mesh>
+    (new AnomalyEngine::Render::Mesh()));
+
+  std::cout << "Mesh created" << std::endl;
+
+  return meshes->back().get();
+}
+
+AnomalyEngine::Render::Mesh* Core::Factory::CreateMesh(const std::string& path) {
+  const auto meshes = World::GetMeshes();
+
+  meshes->push_back(std::unique_ptr<AnomalyEngine::Render::Mesh>
+    (new AnomalyEngine::Render::Mesh()));
+
+  meshes->back().get()->Create(path);
+  std::cout << "Mesh created" << std::endl;
+
+  return meshes->back().get();
 }
 #endif
 

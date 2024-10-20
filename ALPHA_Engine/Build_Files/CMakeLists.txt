@@ -41,6 +41,7 @@ if(WIN32)
 			PRIVATE ${Engine_Libs}/ALPHA_Engine.lib
 			PRIVATE ${Engine_Libs}/glfw3.lib
 			PRIVATE ${Engine_Libs}/glew32.lib
+			PRIVATE ${Engine_Libs}/assimp.dll
 			PRIVATE ${OPENGL_LIBRARIES}
 	)
 else()
@@ -48,6 +49,7 @@ else()
 			PRIVATE ${Engine_Libs}/ALPHA_Engine.a
 			PRIVATE ${Engine_Libs}/glfw3.a
 			PRIVATE ${Engine_Libs}/libGLEW.a
+			PRIVATE ${Engine_Libs}/libassimp.so.5
 			PRIVATE ${OPENGL_LIBRARIES}
 	)
 endif()

@@ -34,6 +34,10 @@ std::vector<std::unique_ptr<AnomalyEngine::Render::Camera>>* Core::World::GetCam
 	static std::vector<std::unique_ptr<AnomalyEngine::Render::Camera>> cameras{};
 	return &cameras;
 }
+std::vector<std::unique_ptr<AnomalyEngine::Render::Mesh>>* Core::World::GetMeshes() {
+	static std::vector<std::unique_ptr<AnomalyEngine::Render::Mesh>> meshes{};
+	return &meshes;
+}
 #endif
 
 #pragma region WorldFunctions

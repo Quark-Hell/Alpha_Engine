@@ -14,6 +14,7 @@ namespace AnomalyEngine {
   	}
   	namespace Render {
   		class Camera;
+  		class Mesh;
   	}
   }
 #endif
@@ -47,6 +48,7 @@ namespace Core {
 #if ANOMALY_ENGINE_INCLUDED
 		static std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* GetWindows();
 		static std::vector<std::unique_ptr<AnomalyEngine::Render::Camera>>* GetCameras();
+		static std::vector<std::unique_ptr<AnomalyEngine::Render::Mesh>>* GetMeshes();
 #endif
 
 	private:

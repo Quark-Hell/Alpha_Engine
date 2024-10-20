@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <Anomaly/WinManager/AnomalyEngine/Components/Mesh.h>
 
 namespace Register {
   class UserScript;
@@ -27,7 +29,7 @@ class Factory {
 
 public:
   static bool RemoveObject(const Core::Object* object);
-  static Core::Object& CreateObject();
+  static Core::Object* CreateObject();
 
 #if USER_SCRIPTS_REGISTER_INCLUDED
 public:
@@ -42,6 +44,9 @@ public:
 
   static AnomalyEngine::Render::Camera* CreateCamera(float fov = 90,float aspect = 1,float zNear = 0.1f,float zFar = 300);
   static bool RemoveCamera(const AnomalyEngine::Render::Camera* camera);
+
+  static AnomalyEngine::Render::Mesh* CreateMesh();
+  static AnomalyEngine::Render::Mesh* CreateMesh(const std::string& path);
 #endif
 };
 

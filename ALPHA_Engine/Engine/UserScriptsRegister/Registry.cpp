@@ -40,7 +40,8 @@ bool Register::Registry::RegisterActorWithComponent(Register::UserScript* script
 	
 	//Later Host will call all UserScript functions
 	auto component = Core::Factory::CreateUserScript(script);
-	component->SetParentObject(Core::Object::CreateObject(objectName));
+	Core::Object* obj = Core::Factory::CreateObject();
+	obj->AddComponent(component);
 	std::cout << "Component created" << std::endl;
 	return true;
 }

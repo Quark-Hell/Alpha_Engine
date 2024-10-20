@@ -200,6 +200,7 @@ function(copy_headers src dest)
 endfunction()
 
 copy_headers(${Engine_Source} ${Game_Engine_Dest}/headers)
+copy_headers(${assimp} "${Game_Engine_Dest}/assimp")
 
 function(copy_assets src dest)
 	message("\n${Red}copy assets${ColourReset}")
@@ -240,6 +241,10 @@ add_custom_command(TARGET ALPHA_Engine POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
 	"${GLEW}/lib/Windows/x64/glew32.lib"
 	"${Game_Engine_Dest}/lib/glew32.lib"
+
+	COMMAND ${CMAKE_COMMAND} -E copy
+	"${assimp}/lib/libassimp-5.dll"
+	"${Game_Engine_Dest}/lib/assimp.dll"
 )
 else()
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
@@ -257,6 +262,10 @@ add_custom_command(TARGET ALPHA_Engine POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
 	"${GLEW}/lib/Linux/libGLEW.a"
 	"${Game_Engine_Dest}/lib/libGLEW.a"
+
+	COMMAND ${CMAKE_COMMAND} -E copy
+	"${assimp}/lib/libassimp.so.5.4.3"
+	"${Game_Engine_Dest}/lib/libassimp.so.5"
 )
 endif()
 

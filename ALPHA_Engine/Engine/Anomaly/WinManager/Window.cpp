@@ -9,11 +9,6 @@
 
 namespace AnomalyEngine::WindowsManager {
     Window::Window(const int width, const int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share) {
-        if (!glfwInit()) {
-            glfwTerminate();
-            assert("glfw do not init");
-        }
-
         _window = glfwCreateWindow(width, height, title, monitor, share);
         _width = width;
         _height = height;
@@ -36,6 +31,16 @@ namespace AnomalyEngine::WindowsManager {
 
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
+        glewExperimental = GL_TRUE;
+        GLenum err = glewInit();
+        if (GLEW_OK != err)
+        {
+            std::cout << "glew does not inited" << std::endl;
+            fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+            glfwTerminate();
+            abort();
+        }
     }
 
     void Window::Init()

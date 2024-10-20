@@ -33,6 +33,7 @@ namespace AnomalyEngine::Render {
         //Orto or perspective
         //Before use SetWindowMatrix()
         void SetCameraProjection(const AnomalyEngine::WindowsManager::Window* window);
+        void SetCameraTransform(AnomalyEngine::Render::Camera* camera);
 
         void RenderLoop(std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* windows);
         void RenderScene(const AnomalyEngine::WindowsManager::Window* window);

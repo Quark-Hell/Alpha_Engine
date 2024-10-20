@@ -5,6 +5,7 @@
 
 #include "Anomaly/WinManager/Window.h"
 #include <iostream>
+#include <Core/Object.h>
 
 #include "Components/Camera.h"
 
@@ -47,6 +48,24 @@ namespace AnomalyEngine::Render {
         //}
     }
 
+    void Render::SetCameraTransform(AnomalyEngine::Render::Camera* camera) {
+        Core::Object* parent = camera->GetParentObject();
+
+        if (parent == nullptr) {
+            glTranslatef(0, 0, 0);
+        }
+        else {
+            glRotatef(0, 1.f, 0.f, 0.f);
+            glRotatef(0, 0.f, 1.f, 0.f);
+            glRotatef(0, 0.f, 0.f, 1.f);
+
+            glTranslatef(
+                parent->_transform.GetPosition().X,
+                parent->_transform.GetPosition().Y,
+                parent->_transform.GetPosition().Z);
+        }
+    }
+
 
     void Render::PrepareRender() {
         glClearColor(0.3f, 0.3f, 0.3f, 0.f);
@@ -67,6 +86,8 @@ namespace AnomalyEngine::Render {
             Render::SetWindowMatrix(window->_width, window->_height);
             Render::SetCameraProjection(window);
 
+
+            Render::SetCameraTransform(window->_activeCamera);
             Render::SetModelMatrix();
 
             glBegin(GL_TRIANGLES);

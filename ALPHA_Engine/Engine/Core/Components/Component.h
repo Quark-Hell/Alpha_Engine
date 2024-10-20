@@ -6,6 +6,8 @@ namespace Core {
 
 	class Component
 	{
+		friend class Object;
+
 	public:
 		std::string Name = "Undefined";
 
@@ -20,8 +22,7 @@ namespace Core {
 
 		//virtual void Delete() = 0;
 
-		Object& GetParentObject();
-		virtual void SetParentObject(const Core::Object& parent);
+		Object* GetParentObject();
 	};
 
 }

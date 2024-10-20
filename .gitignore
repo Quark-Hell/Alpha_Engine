@@ -15,6 +15,11 @@ Sandbox/Debug/.cmake
 Sandbox/Debug/CMakeFiles
 Sandbox/Debug/Testing
 
+
+Sandbox/Debug/Game/CMakeFiles
+Sandbox/Debug/Game/Testing
+
+
 Sandbox/Release/Game/ALPHA_Engine
 Sandbox/Release/Game/build
 Sandbox/Release/.ninja_log
@@ -25,3 +30,14 @@ Sandbox/Release/CMakeCache.txt
 Sandbox/Release/.cmake
 Sandbox/Release/CMakeFiles
 Sandbox/Release/Testing
+
+Sandbox/Release/Game/CMakeFiles
+Sandbox/Release/Game/Testing
+
+
+.ninja_log
+build.ninja
+.ninja_deps
+cmake_install.cmake
+.cmake
+.ninja_deps

@@ -5,6 +5,7 @@
 #include "GLFW/glfw3.h"
 
 #include  <cassert>
+#include <iostream>
 
 namespace AnomalyEngine::WindowsManager {
     WindowsManager::WindowsManager() = default;
@@ -16,12 +17,14 @@ namespace AnomalyEngine::WindowsManager {
     }
 
     void WindowsManager::Init() {
-        glewExperimental = GL_TRUE;
-        if (glewInit() != GLEW_OK)
-        {
-            assert("Cannot init GLFW Window");
-            glfwTerminate();
+        if (!glfwInit()) {
+            std::cout << "glfw does not inited" << std::endl;
+            abort();
         }
+
+        int major, minor, revision;
+        glfwGetVersion(&major, &minor, &revision);
+        printf("Running against GLFW %i.%i.%i\n", major, minor, revision);
     }
 
 }
