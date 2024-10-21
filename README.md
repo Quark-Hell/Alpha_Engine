@@ -50,7 +50,7 @@ You should get the following structure:
 Run game project as CMake project and build it
 
 <br></br>
-### Linux(tested with manjaro and openSUSE):
+### Linux(tested with: manjaro, arch and openSUSE):
 
 <b>Step 1:</b>
 Clone the repo
