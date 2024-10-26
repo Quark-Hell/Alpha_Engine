@@ -39,9 +39,9 @@ find_package(OpenGL REQUIRED)
 if(WIN32)
 	target_link_libraries(Game
 			PRIVATE ${Engine_Libs}/ALPHA_Engine.lib
-			PRIVATE ${Engine_Libs}/glfw3.lib
-			PRIVATE ${Engine_Libs}/glew32.lib
-			PRIVATE ${Engine_Libs}/assimp.dll
+			PRIVATE ${Engine_Libs}/glfw3dll.lib
+			PRIVATE ${Engine_Libs}/glew32s.lib
+			PRIVATE ${Engine_Libs}/assimp-vc143-mt.lib
 			PRIVATE ${OPENGL_LIBRARIES}
 	)
 else()

@@ -244,16 +244,24 @@ if(WIN32)
 #Stupid method, but it's working
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLFW}/glfw3.lib"
-	"${Game_Engine_Dest}/lib/glfw3.lib"
+	"${GLFW}/glfw3dll.lib"
+	"${Game_Engine_Dest}/lib/glfw3dll.lib"
 
 	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLEW}/lib/Windows/glew32.lib"
-	"${Game_Engine_Dest}/lib/glew32.lib"
+	"${GLFW}/glfw3.dll"
+	"${Game_Engine_Dest}/lib/glfw3.dll"
 
 	COMMAND ${CMAKE_COMMAND} -E copy
-	"${assimp}/lib/libassimp-5.dll"
-	"${Game_Engine_Dest}/lib/assimp.dll"
+	"${GLEW}/lib/Windows/glew32s.lib"
+	"${Game_Engine_Dest}/lib/glew32s.lib"
+
+	COMMAND ${CMAKE_COMMAND} -E copy
+	"${assimp}/lib/assimp-vc143-mt.dll"
+	"${Game_Engine_Dest}/lib/assimp-vc143-mt.dll"
+
+	COMMAND ${CMAKE_COMMAND} -E copy
+	"${assimp}/lib/assimp-vc143-mt.lib"
+	"${Game_Engine_Dest}/lib/assimp-vc143-mt.lib"
 )
 else()
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
