@@ -79,15 +79,21 @@ include_directories(${STB})
 #Engine libraries
 
 #Build Directory
-#get_filename_component(SandBox "${PROJECT_SOURCE_DIR}/../Sandbox" ABSOLUTE)
-#
-#if(CMAKE_BUILD_TYPE MATCHES "Debug")
-#set(BuildDir "${SandBox}/Debug")
-#else() 
-#set(BuildDir "${SandBox}/Release")
-#endif()
-#
-#message(SandBox${BuildDir})
+get_filename_component(SandBox "${PROJECT_SOURCE_DIR}/../Sandbox" ABSOLUTE)
+
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+set(BuildDir "${SandBox}/Debug")
+else() 
+set(BuildDir "${SandBox}/Release")
+endif()
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BuildDir})
+set(LIBRARY_OUTPUT_PATH ${BuildDir}/Game/ALPHA_Engine/lib)
+
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BuildDir})
+#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BuildDir})
+
+message(SandBox${BuildDir})
 #Build Directory
 
 #Game source
@@ -237,13 +243,6 @@ message("\n")
 if(WIN32)
 #Stupid method, but it's working
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
-	#COMMAND ${CMAKE_COMMAND} -E copy
-	#"${Game}/ALPHA_Engine.lib"
-	#"${Game_Engine_Dest}/lib/ALPHA_Engine.lib"
-	#
-	#COMMAND ${CMAKE_COMMAND} -E remove
-	#"${Game}/ALPHA_Engine.lib"
-
 	COMMAND ${CMAKE_COMMAND} -E copy
 	"${GLFW}/glfw3.lib"
 	"${Game_Engine_Dest}/lib/glfw3.lib"
