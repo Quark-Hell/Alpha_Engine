@@ -78,13 +78,23 @@ SET(STB "${ALPHA_Engine}/STB")
 include_directories(${STB})
 #Engine libraries
 
+#Build Directory
+#get_filename_component(SandBox "${PROJECT_SOURCE_DIR}/../Sandbox" ABSOLUTE)
+#
+#if(CMAKE_BUILD_TYPE MATCHES "Debug")
+#set(BuildDir "${SandBox}/Debug")
+#else() 
+#set(BuildDir "${SandBox}/Release")
+#endif()
+#
+#message(SandBox${BuildDir})
+#Build Directory
+
 #Game source
-set (Game "${PROJECT_BINARY_DIR}")
+set (Game "${BuildDir}")
 set (Game_Files_Dest "${Game}/Game")
 set (Game_Engine_Dest "${Game_Files_Dest}/ALPHA_Engine")
 set (Game_Source_Dest "${Game_Files_Dest}/Source")
-
-set(EXE_DEST "${PROJECT_BINARY_DIR}/ALPHA_Engine")
 
 if(WIN32)
 	message("\n${BoldRed}Windows build${ColourReset}\n")
@@ -227,19 +237,19 @@ message("\n")
 if(WIN32)
 #Stupid method, but it's working
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${Game}/ALPHA_Engine.lib"
-	"${Game_Engine_Dest}/lib/ALPHA_Engine.lib"
-
-	COMMAND ${CMAKE_COMMAND} -E remove
-	"${Game}/ALPHA_Engine.lib"
+	#COMMAND ${CMAKE_COMMAND} -E copy
+	#"${Game}/ALPHA_Engine.lib"
+	#"${Game_Engine_Dest}/lib/ALPHA_Engine.lib"
+	#
+	#COMMAND ${CMAKE_COMMAND} -E remove
+	#"${Game}/ALPHA_Engine.lib"
 
 	COMMAND ${CMAKE_COMMAND} -E copy
 	"${GLFW}/glfw3.lib"
 	"${Game_Engine_Dest}/lib/glfw3.lib"
 
 	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLEW}/lib/Windows/x64/glew32.lib"
+	"${GLEW}/lib/Windows/glew32.lib"
 	"${Game_Engine_Dest}/lib/glew32.lib"
 
 	COMMAND ${CMAKE_COMMAND} -E copy
