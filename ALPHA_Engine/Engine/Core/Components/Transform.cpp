@@ -1,4 +1,4 @@
-#define USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
 #include "Transform.h"
 
 #include "Core/Math/Vectors.h"
