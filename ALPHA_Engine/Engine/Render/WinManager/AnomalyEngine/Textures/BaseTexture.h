@@ -58,7 +58,7 @@ namespace Render::AnomalyEngine::Textures {
         BaseTexture() = default;
         virtual ~BaseTexture() = default;
 
-        void CreateTexture(const std::string& pathToTexture);
+        void CreateTexture(std::string pathToTexture);
         void DeleteTexture();
 
         virtual bool TransferToGPU(

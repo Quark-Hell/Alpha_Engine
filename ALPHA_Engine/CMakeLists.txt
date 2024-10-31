@@ -104,9 +104,11 @@ set (Game_Source_Dest "${Game_Files_Dest}/Source")
 
 if(WIN32)
 	message("\n${BoldRed}Windows build${ColourReset}\n")
+	add_compile_definitions(PLATFORM=Windows)
 endif ()
 if (LINUX)
 	message("\n${BoldRed}Linux build${ColourReset}\n")
+	add_compile_definitions(PLATFORM=Linux)
 endif ()
 
 
@@ -238,6 +240,7 @@ endfunction()
 copy_assets(${Engine_Assets} "${Game_Engine_Dest}/Engine_Assets")
 copy_assets(${Build_Files} "${Game_Source_Dest}")
 copy_assets(${GLM} "${Game_Engine_Dest}/GLM")
+copy_assets(${GLEW} "${Game_Engine_Dest}/GLEW")
 message("\n")
 
 if(WIN32)

@@ -6,6 +6,15 @@ if (POLICY CMP0072)
 	cmake_policy (SET CMP0072 NEW)
 endif(POLICY CMP0072)
 
+if(WIN32)
+	message("\n${BoldRed}Windows build${ColourReset}\n")
+	add_compile_definitions(PLATFORM=Windows)
+endif ()
+if (LINUX)
+	message("\n${BoldRed}Linux build${ColourReset}\n")
+	add_compile_definitions(PLATFORM=Linux)
+endif ()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -25,6 +34,9 @@ include_directories("${Engine_Headers}")
 
 set (GLM "${Engine}/GLM")
 include_directories("${GLM}")
+
+set (GLEW "${Engine}/GLEW")
+include_directories("${GLEW}")
 
 set (Engine_Libs "${Engine}/lib")
 
@@ -55,3 +67,22 @@ else()
 			PRIVATE ${OPENGL_LIBRARIES}
 	)
 endif()
+
+function(copy_assets src dest)
+	message("\n${Red}copy assets${ColourReset}")
+	file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*")
+	foreach(templateFile ${templateFiles})
+		set(copy_src "${src}/${templateFile}")
+		set(copy_dest "${dest}/${templateFile}")	
+
+		message("${Cyan}copy asset${ColourReset} ${copy_src} to\n ${copy_dest}")
+
+		add_custom_command(TARGET Game POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		${copy_src}
+		${copy_dest}
+		)
+	endforeach(templateFile)
+endfunction()
+
+copy_assets(${Engine_Assets} "${PROJECT_BINARY_DIR}/ALPHA_Engine/Engine_Assets")

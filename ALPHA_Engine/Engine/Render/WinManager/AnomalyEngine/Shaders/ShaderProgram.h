@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 
-#include <GL/glew.h>
+#include <GLEW/glew.h>
 
 #include "Core/Math/Vectors.h"
 

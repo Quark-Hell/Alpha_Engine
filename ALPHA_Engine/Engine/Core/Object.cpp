@@ -4,6 +4,8 @@
 #include "Factory.h"
 #include "Components/Component.h"
 
+#define M_PI 3.14159265358979323846
+
 Core::Object::Object() = default;
 Core::Object::~Object() = default;
 

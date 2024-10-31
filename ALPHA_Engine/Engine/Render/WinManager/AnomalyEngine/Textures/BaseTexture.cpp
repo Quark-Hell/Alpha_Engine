@@ -6,9 +6,19 @@
 #include <iostream>
 #include <filesystem>
 
+#include <string>
+
 namespace Render::AnomalyEngine::Textures {
-    void BaseTexture::CreateTexture(const std::string& pathToTexture) {
+    void BaseTexture::CreateTexture(std::string pathToTexture) {
         int width, height, channelsCount;
+
+#if PLATFORM == Windows
+        std::replace(pathToTexture.begin(), pathToTexture.end(), '/', '\\');
+#else
+        std::replace(pathToTexture.begin(), pathToTexture.end(), '\\', '/');
+        std::cout << "Linux: " << pathToTexture << std::endl;
+#endif
+
 
         stbi_set_flip_vertically_on_load(false);
         unsigned char *data = stbi_load((std::filesystem::current_path().string() + pathToTexture).c_str(),

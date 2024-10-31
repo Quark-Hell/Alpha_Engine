@@ -1,6 +1,6 @@
 #include "OpenGLTexture.h"
 
-#include <GL/glew.h>
+#include <GLEW/glew.h>
 #include <iostream>
 
 namespace Render::AnomalyEngine::Textures {
