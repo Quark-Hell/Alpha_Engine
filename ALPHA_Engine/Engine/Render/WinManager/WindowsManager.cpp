@@ -1,10 +1,8 @@
 #include "WindowsManager.h"
 
-#include <GLEW/glew.h>
-#include <GL/gl.h>
 #include "GLFW/glfw3.h"
 
-#include  <cassert>
+#include <cassert>
 #include <iostream>
 
 namespace AnomalyEngine::WindowsManager {

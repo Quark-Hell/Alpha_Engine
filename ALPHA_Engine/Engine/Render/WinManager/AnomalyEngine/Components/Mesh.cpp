@@ -4,17 +4,13 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
-#include <GLEW/glew.h>
-#include <GL/gl.h>
+#include "../Binder.h"
 
-namespace AnomalyEngine::Render {
-    Mesh::Mesh() {
-
-    }
+namespace AnomalyEngine::Render::Components {
+    Mesh::Mesh() = default;
     Mesh::~Mesh() {
 
     }
-
 
     bool Mesh::Create(const std::string &linkToFBX) {
         std::cout << "Mesh load process started" << std::endl;
@@ -84,7 +80,7 @@ namespace AnomalyEngine::Render {
         Mesh::_isIndexed = true;
         std::cout << "Mesh has been load" << std::endl;
 
-        Mesh::BindMesh();
+        Binder::BindMesh(this);
         return true;
     }
 
@@ -169,86 +165,7 @@ namespace AnomalyEngine::Render {
         Mesh::_isIndexed = true;
         std::cout << "Mesh has been load" << std::endl;
 
-        Mesh::BindMesh();
+        Binder::BindMesh(this);
         return true;
     }
-
-    bool Mesh::BindMesh() {
-        if (Mesh::_vertexVbo != 0)
-            glDeleteBuffers(1, &_vertexVbo);
-
-        if (Mesh::_colorsVbo != 0)
-            glDeleteBuffers(1, &_colorsVbo);
-
-        if (Mesh::_normalsVbo != 0)
-            glDeleteBuffers(1, &_normalsVbo);
-
-        if (Mesh::_texCoordsVbo != 0) {
-            glDeleteBuffers(1, &_texCoordsVbo);
-        }
-
-        if (Mesh::_vao != 0)
-            glDeleteBuffers(1, &_vao);
-
-        std::cout << "Old buffers deleted" << std::endl;
-
-        glGenVertexArrays(1, &_vao);
-        glBindVertexArray(_vao);
-
-        std::cout << "VAO generated" << std::endl;
-
-        if (Mesh::_vertex != nullptr) {
-            glGenBuffers(1, &_vertexVbo);
-            glBindBuffer(GL_ARRAY_BUFFER, _vertexVbo);
-            glBufferData(GL_ARRAY_BUFFER, Mesh::_vertex->size() * sizeof(float), Mesh::_vertex->data(), GL_STATIC_DRAW);
-
-            glEnableVertexAttribArray(0);
-            glBindBuffer(GL_ARRAY_BUFFER, _vertexVbo);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-            std::cout << "Vertex binded" << std::endl;
-        }
-
-        if (Mesh::_normals->data() != nullptr) {
-            glGenBuffers(1, &_normalsVbo);
-            glBindBuffer(GL_ARRAY_BUFFER, Mesh::_normalsVbo);
-            glBufferData(GL_ARRAY_BUFFER, Mesh::_normals->size() * sizeof(float), Mesh::_normals->data(), GL_STATIC_DRAW);
-
-            glEnableVertexAttribArray(1);
-            glBindBuffer(GL_ARRAY_BUFFER, _normalsVbo);
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-            std::cout << "Normals binded" << std::endl;
-        }
-
-        if (Mesh::_vertexColors->data() != nullptr) {
-            glGenBuffers(1, &_colorsVbo);
-            glBindBuffer(GL_ARRAY_BUFFER, Mesh::_colorsVbo);
-            glBufferData(GL_ARRAY_BUFFER, Mesh::_vertexColors->size() * sizeof(float), Mesh::_vertexColors->data(), GL_STATIC_DRAW);
-
-            glEnableVertexAttribArray(2);
-            glBindBuffer(GL_ARRAY_BUFFER, _colorsVbo);
-            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-            std::cout << "Vertex colors binded" << std::endl;
-        }
-
-        if (Mesh::_texCoords->data() != nullptr) {
-
-            glGenBuffers(1, &_texCoordsVbo);
-            glBindBuffer(GL_ARRAY_BUFFER, Mesh::_texCoordsVbo);
-            glBufferData(GL_ARRAY_BUFFER, Mesh::_texCoords->size() * sizeof(float), Mesh::_texCoords->data(), GL_STATIC_DRAW);
-
-            glEnableVertexAttribArray(3);
-            glBindBuffer(GL_ARRAY_BUFFER, _texCoordsVbo);
-            glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-            std::cout << "Texture coordinate binded" << std::endl;
-        }
-
-        std::cout << "Mesh has been bind to OpenGL" << std::endl;
-        return true;
-    }
-
-
 }

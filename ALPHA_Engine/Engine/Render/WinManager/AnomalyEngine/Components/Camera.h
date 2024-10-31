@@ -1,5 +1,7 @@
 #pragma once
 #include "Core/Components/Component.h"
+#include "glm/glm.hpp"
+#include "glm/gtx/transform.hpp"
 
 namespace AnomalyEngine::WindowsManager {
     class Window;
@@ -8,7 +10,7 @@ namespace Core {
     class Factory;
 }
 
-namespace AnomalyEngine::Render {
+namespace AnomalyEngine::Render::Components {
     class Camera : public Core::Component {
     friend class Core::Factory;
 
@@ -30,6 +32,7 @@ namespace AnomalyEngine::Render {
         //True = perspective matrix
         //otherwise ortho matrix
         bool GetProjection() const;
+        glm::mat4x4 GetProjectionMatrix();
 
         void GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float* ZFar);
     };

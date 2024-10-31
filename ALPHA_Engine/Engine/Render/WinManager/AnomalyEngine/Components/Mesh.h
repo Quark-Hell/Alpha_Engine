@@ -1,21 +1,29 @@
 #pragma once
 
 #include "Core/Components/Geometry.h"
+#include "Material.h"
 
 namespace Core {
     class Factory;
 }
 
 namespace AnomalyEngine::Render {
+    class Render;
+    class Binder;
+}
+
+namespace AnomalyEngine::Render::Components {
     class Mesh : public Core::Geometry {
         friend class Core::Factory;
+        friend class AnomalyEngine::Render::Render;
+        friend class AnomalyEngine::Render::Binder;
 
     private:
         Mesh();
 
     protected:
-        std::shared_ptr<std::vector<float>> _vertexColors = std::make_shared<std::vector<float>>();
-        std::shared_ptr<std::vector<float>> _texCoords = std::make_shared<std::vector<float>>();
+        std::unique_ptr<std::vector<float>> _vertexColors = std::make_unique<std::vector<float>>();
+        std::unique_ptr<std::vector<float>> _texCoords = std::make_unique<std::vector<float>>();
 
         unsigned int _vertexVbo = 0;
         unsigned int _colorsVbo = 0;
@@ -24,7 +32,7 @@ namespace AnomalyEngine::Render {
         unsigned int _vao = 0;
 
     public:
-        //std::shared_ptr<Material> _material = std::make_shared<Material>();
+        Material _material{this};
 
     public:
         ~Mesh() override;
@@ -39,8 +47,6 @@ namespace AnomalyEngine::Render {
             const bool initMaterial) override;
 
         bool LoadTextureCoord(std::string pathToCoords);
-
-        bool BindMesh();
     };
 }
 

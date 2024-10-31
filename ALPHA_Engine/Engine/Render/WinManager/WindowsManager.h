@@ -1,5 +1,4 @@
 #pragma once
-#include <cstdint>
 
 namespace AnomalyEngine::Render {
     class Render;

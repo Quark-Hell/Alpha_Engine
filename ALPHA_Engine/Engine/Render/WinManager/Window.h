@@ -5,7 +5,9 @@ struct GLFWmonitor;
 
 namespace AnomalyEngine::Render {
     class Render;
-    class Camera;
+    namespace Components {
+        class Camera;
+    }
 }
 
 namespace AnomalyEngine::WindowsManager {
@@ -15,7 +17,7 @@ class Window {
 
      private:
         GLFWwindow* _window;
-        AnomalyEngine::Render::Camera* _activeCamera;
+        AnomalyEngine::Render::Components::Camera* _activeCamera;
 
         int _width = 100;
         int _height = 100;
@@ -33,7 +35,7 @@ class Window {
         void Resize(int width, int height);
         void SetSync(bool sync);
 
-        void SetCamera(AnomalyEngine::Render::Camera* camera);
+        void SetCamera(AnomalyEngine::Render::Components::Camera* camera);
 };
 
 }

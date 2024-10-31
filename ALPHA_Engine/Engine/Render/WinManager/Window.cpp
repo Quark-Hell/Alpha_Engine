@@ -16,8 +16,9 @@ namespace AnomalyEngine::WindowsManager {
 
         if (_window == nullptr)
         {
-            assert("Failed to create GLFW window");
+            assert("Critical: Failed to create GLFW window");
             glfwTerminate();
+            abort();
         }
 
         int bufferWidth, bufferHeight;
@@ -37,7 +38,7 @@ namespace AnomalyEngine::WindowsManager {
         GLenum err = glewInit();
         if (GLEW_OK != err)
         {
-            std::cout << "glew does not inited" << std::endl;
+            std::cout << "Critical: glew does not inited" << std::endl;
             fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
             glfwTerminate();
             abort();
@@ -68,7 +69,7 @@ namespace AnomalyEngine::WindowsManager {
         else glfwSwapInterval(0);
     }
 
-    void Window::SetCamera(AnomalyEngine::Render::Camera* camera) {
+    void Window::SetCamera(AnomalyEngine::Render::Components::Camera* camera) {
         _activeCamera = camera;
     }
 
