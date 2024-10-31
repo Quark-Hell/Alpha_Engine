@@ -11,6 +11,8 @@
 #include "Components/Mesh.h"
 #include "Shaders/ShaderProgram.h"
 
+#include "Binder.h"
+
 namespace Render::AnomalyEngine {
     RenderEngine* RenderEngine::GetInstance() {
         static RenderEngine render;
@@ -97,16 +99,6 @@ namespace Render::AnomalyEngine {
 
             RenderEngine::SetModelMatrix();
 
-            glBegin(GL_TRIANGLES);
-////
-            glColor3f(0.5,0,0);
-////
-            glVertex3f(1.0,1.0,-5);
-            glVertex3f(-20.0,20.5,3);
-            glVertex3f(1.0,1.0,3);
-////
-            glEnd();
-
             RenderMeshes(window->_activeCamera);
 
     }
@@ -127,7 +119,7 @@ namespace Render::AnomalyEngine {
 
         for (size_t i = 0; i < _meshBuffer->size(); i++) {
 
-            const Components::Mesh* mesh = _meshBuffer->at(i).get();
+            Components::Mesh* mesh = _meshBuffer->at(i).get();
             if (mesh == nullptr) {
                 std::cout << "Error: Mesh was null" << std::endl;
                 continue;
@@ -148,6 +140,29 @@ namespace Render::AnomalyEngine {
                 continue;
             }
 
+            glGenVertexArrays(1, &mesh->_vao);
+            glBindVertexArray(mesh->_vao);
+            if (mesh->_vertexVbo != 0) {
+                glEnableVertexAttribArray(0);
+                glBindBuffer(GL_ARRAY_BUFFER, mesh->_vertexVbo);
+                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+            }
+            if (mesh->_normalsVbo != 0) {
+                glEnableVertexAttribArray(1);
+                glBindBuffer(GL_ARRAY_BUFFER, mesh->_normalsVbo);
+                glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+            }
+            if (mesh->_colorsVbo != 0) {
+                glEnableVertexAttribArray(2);
+                glBindBuffer(GL_ARRAY_BUFFER, mesh->_colorsVbo);
+                glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+            }
+            if (mesh->_texCoordsVbo != 0) {
+                glEnableVertexAttribArray(3);
+                glBindBuffer(GL_ARRAY_BUFFER, mesh->_texCoordsVbo);
+                glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+            }
+
             //SetModelMatrix();
             glDepthFunc(GL_LEQUAL);
 
@@ -163,6 +178,7 @@ namespace Render::AnomalyEngine {
                 glDrawArrays(GL_TRIANGLES, 0, mesh->_vertex->size() / 3);
             glDepthFunc(GL_LESS);
             glBindVertexArray(0);
+            glDeleteVertexArrays(1, &mesh->_vao);
         }
     }
 
@@ -182,7 +198,6 @@ namespace Render::AnomalyEngine {
 
             glFinish();
             glfwSwapBuffers(window->_window);
-            //break;
         }
     }
 }

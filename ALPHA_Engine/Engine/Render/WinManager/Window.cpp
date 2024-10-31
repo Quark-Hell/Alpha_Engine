@@ -16,6 +16,8 @@ namespace Render::WindowsManager {
         _width = width;
         _height = height;
 
+
+
         if (_window == nullptr)
         {
             assert("Critical: Failed to create GLFW window");

@@ -38,6 +38,12 @@ void MyScript::Start() {
     obj2->AddComponent(mesh);
     mesh->_material.InitShader<Render::AnomalyEngine::Shaders::CubeMapShader>();
 
+    auto win3 = Core::Factory::CreateWindow(800, 600, "Windows 3");
+    win3->SetCamera(cam1);
+
+    auto win4 = Core::Factory::CreateWindow(800, 600, "Windows 4");
+    win4->SetCamera(cam1);
+
 #endif
 }
 //Call every frame

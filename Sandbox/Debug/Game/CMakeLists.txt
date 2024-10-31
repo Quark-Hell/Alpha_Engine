@@ -35,7 +35,6 @@ add_executable(Game
 )
 
 find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
 
 if(WIN32)
 	target_link_libraries(Game
@@ -46,6 +45,8 @@ if(WIN32)
 			PRIVATE ${OPENGL_LIBRARIES}
 	)
 else()
+	find_package(GLEW REQUIRED)
+
 	target_link_libraries(Game
 			PRIVATE ${Engine_Libs}/ALPHA_Engine.a
 			PRIVATE ${Engine_Libs}/glfw3.a

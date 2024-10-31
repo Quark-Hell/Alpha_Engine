@@ -75,11 +75,21 @@ Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, con
   using namespace Render::WindowsManager;
 
   const auto windows = Core::World::GetWindows();
+  size_t count = windows->size();
 
+  if (count >= 1) {
     windows->push_back(std::unique_ptr<Window>
-  (new Window(width,height, title)));
+(new Window(width,height, title,nullptr,windows->at(0)->_window)));
 
-  std::cout << "Info: Window created" << std::endl;
+    std::cout << "Info: Created shared window" << std::endl;
+  }
+  else {
+    windows->push_back(std::unique_ptr<Window>
+(new Window(width,height, title,nullptr,nullptr)));
+
+    std::cout << "Info: Window created" << std::endl;
+  }
+
   return windows->back().get();
 }
 

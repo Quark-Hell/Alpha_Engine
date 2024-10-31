@@ -1,5 +1,9 @@
 #pragma once
 
+namespace Render::WindowsManager {
+    class Window;
+}
+
 namespace Render::AnomalyEngine::Components {
     class Mesh;
 }
@@ -15,6 +19,7 @@ class Binder {
 
       static bool BindMesh(Components::Mesh* mesh);
       static bool BindImage();
+      //static bool SharedBindMesh(Components::Mesh* mesh);
       //static bool Bind...
 };
 
