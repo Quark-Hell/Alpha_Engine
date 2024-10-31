@@ -2,9 +2,9 @@
 #include "Core/World.h"
 
 int main(int argc, char** argv) {
-	std::cout << "Engine integrated successfully" << std::endl;
+	std::cout << "Info: Engine integrated successfully" << std::endl;
 	auto worldInstance = Core::World::GetWorld();
-	std::cout << "World created" << std::endl;
+	std::cout << "Info: World created" << std::endl;
 
 	worldInstance->Simulation();
 

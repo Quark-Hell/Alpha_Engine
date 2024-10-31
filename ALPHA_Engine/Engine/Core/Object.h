@@ -17,7 +17,7 @@ namespace Core {
 		Tag _tag;
 
 	public:
-		Transform _transform;
+		Transform transform;
 
 	private:
 		///Do not use this if you want to create new object. Use static method CreateObject for this!!!
@@ -36,6 +36,8 @@ namespace Core {
 		[[nodiscard]] size_t GetCountOfComponents() const;
 
 		bool DeleteModuleByIndex(int index);
+
+		glm::mat4x4 GetTransformMatrix();
 
 		//std::shared_ptr<Core::Component> GetModuleByType(ModulesList type);
 		//std::vector<std::shared_ptr<Core::Component>> GetModuleByTypes(std::vector<ModulesList> typesArray);

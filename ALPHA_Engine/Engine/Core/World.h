@@ -8,14 +8,16 @@
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-namespace AnomalyEngine {
+namespace Render {
   	namespace WindowsManager {
   		class Window;
   	}
-  	namespace Render {
+
+  	namespace AnomalyEngine::Components {
   		class Camera;
   		class Mesh;
   	}
+
   }
 #endif
 
@@ -46,9 +48,9 @@ namespace Core {
 #pragma endregion
 
 #if ANOMALY_ENGINE_INCLUDED
-		static std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* GetWindows();
-		static std::vector<std::unique_ptr<AnomalyEngine::Render::Camera>>* GetCameras();
-		static std::vector<std::unique_ptr<AnomalyEngine::Render::Mesh>>* GetMeshes();
+		static std::vector<std::unique_ptr<Render::WindowsManager::Window>>* GetWindows();
+		static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Camera>>* GetCameras();
+		static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* GetMeshes();
 #endif
 
 	private:

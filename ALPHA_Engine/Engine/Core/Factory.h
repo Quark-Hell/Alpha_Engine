@@ -1,16 +1,17 @@
 #pragma once
 #include <string>
-#include <Anomaly/WinManager/AnomalyEngine/Components/Mesh.h>
+#include <Render/WinManager/AnomalyEngine/Components/Mesh.h>
 
 namespace Register {
   class UserScript;
 }
 
-namespace AnomalyEngine {
+namespace Render {
   namespace WindowsManager {
     class Window;
   }
-  namespace Render {
+
+  namespace AnomalyEngine::Components {
     class Camera;
   }
 }
@@ -40,13 +41,13 @@ public:
 
 #if ANOMALY_ENGINE_INCLUDED
 public:
-  static AnomalyEngine::WindowsManager::Window* CreateWindow(int width, int height, const char* title);
+  static Render::WindowsManager::Window* CreateWindow(int width, int height, const char* title);
 
-  static AnomalyEngine::Render::Camera* CreateCamera(float fov = 90,float aspect = 1,float zNear = 0.1f,float zFar = 300);
-  static bool RemoveCamera(const AnomalyEngine::Render::Camera* camera);
+  static Render::AnomalyEngine::Components::Camera* CreateCamera(float fov = 90,float aspect = 1,float zNear = 0.1f,float zFar = 3000);
+  static bool RemoveCamera(const Render::AnomalyEngine::Components::Camera* camera);
 
-  static AnomalyEngine::Render::Mesh* CreateMesh();
-  static AnomalyEngine::Render::Mesh* CreateMesh(const std::string& path);
+  static Render::AnomalyEngine::Components::Mesh* CreateMesh();
+  static Render::AnomalyEngine::Components::Mesh* CreateMesh(const std::string& path);
 #endif
 };
 

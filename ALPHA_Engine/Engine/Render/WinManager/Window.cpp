@@ -8,7 +8,9 @@
 
 #include <iostream>
 
-namespace AnomalyEngine::WindowsManager {
+#include "AnomalyEngine/Components/Camera.h"
+
+namespace Render::WindowsManager {
     Window::Window(const int width, const int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share) {
         _window = glfwCreateWindow(width, height, title, monitor, share);
         _width = width;
@@ -43,6 +45,7 @@ namespace AnomalyEngine::WindowsManager {
             glfwTerminate();
             abort();
         }
+        //glfwMakeContextCurrent(nullptr);
     }
 
     void Window::Init()
@@ -51,8 +54,8 @@ namespace AnomalyEngine::WindowsManager {
             glfwWindowHint(GLFW_SAMPLES, 4);
             glEnable(GL_MULTISAMPLE);
 
-            std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-            std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+            std::cout << "Info: Renderer: " << glGetString(GL_RENDERER) << std::endl;
+            std::cout << "Info: OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
             _initialized = true;
         }
@@ -69,7 +72,7 @@ namespace AnomalyEngine::WindowsManager {
         else glfwSwapInterval(0);
     }
 
-    void Window::SetCamera(AnomalyEngine::Render::Components::Camera* camera) {
+    void Window::SetCamera(Render::AnomalyEngine::Components::Camera* camera) {
         _activeCamera = camera;
     }
 

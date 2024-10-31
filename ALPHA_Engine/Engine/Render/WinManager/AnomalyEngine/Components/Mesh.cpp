@@ -6,20 +6,20 @@
 
 #include "../Binder.h"
 
-namespace AnomalyEngine::Render::Components {
+namespace Render::AnomalyEngine::Components {
     Mesh::Mesh() = default;
     Mesh::~Mesh() {
 
     }
 
     bool Mesh::Create(const std::string &linkToFBX) {
-        std::cout << "Mesh load process started" << std::endl;
+        std::cout << "Info: Mesh load process started" << std::endl;
 
         Mesh::_vertex->clear();
         Mesh::_indices->clear();
         Mesh::_normals->clear();
         Mesh::_texCoords->clear();
-        std::cout << "Mesh data has been cleared" << std::endl;
+        std::cout << "Info: Mesh data has been cleared" << std::endl;
 
         Assimp::Importer importer;
         const std::string path = std::filesystem::current_path().string() + linkToFBX;
@@ -42,7 +42,7 @@ namespace AnomalyEngine::Render::Components {
                 (*Mesh::_indices)[(it * 3) + jt] = mesh->mFaces[it].mIndices[jt];
             }
         }
-        std::cout << "Indices step successfully" << std::endl;
+        std::cout << "Info: Indices step successfully" << std::endl;
 
         if (mesh->HasPositions()) {
             Geometry::_vertex->resize(mesh->mNumVertices * 3);
@@ -54,7 +54,7 @@ namespace AnomalyEngine::Render::Components {
                 (*Geometry::_vertex)[it + 2] = mesh->mVertices[it / 3].z;
             }
         }
-        std::cout << "Vertex step successfully" << std::endl;
+        std::cout << "Info: Vertex step successfully" << std::endl;
 
         if (mesh->HasNormals()) {
             Mesh::_normals->resize(Geometry::_vertex->size());
@@ -65,7 +65,7 @@ namespace AnomalyEngine::Render::Components {
                 (*Mesh::_normals)[it + 2] = mesh->mNormals[it / 3].z;
             }
         }
-        std::cout << "Normals step successfully" << std::endl;
+        std::cout << "Info: Normals step successfully" << std::endl;
 
         if (mesh->HasTextureCoords(0)) {
             Mesh::_texCoords->resize((Geometry::_vertex->size() / 3) * 2);
@@ -75,10 +75,10 @@ namespace AnomalyEngine::Render::Components {
                 (*Mesh::_texCoords)[it + 1] = mesh->mTextureCoords[0][it / 2].y;
             }
         }
-        std::cout << "Texture coords step successfully" << std::endl;
+        std::cout << "Info: Texture coords step successfully" << std::endl;
 
         Mesh::_isIndexed = true;
-        std::cout << "Mesh has been load" << std::endl;
+        std::cout << "Info: Mesh has been load" << std::endl;
 
         Binder::BindMesh(this);
         return true;
@@ -91,13 +91,13 @@ namespace AnomalyEngine::Render::Components {
         const bool initNormals,
         const bool initTexCoord,
         const bool initMaterial) {
-        std::cout << "Mesh load process started" << std::endl;
+        std::cout << "Info: Mesh load process started" << std::endl;
 
         Mesh::_vertex->clear();
         Mesh::_indices->clear();
         Mesh::_normals->clear();
         Mesh::_texCoords->clear();
-        std::cout << "Mesh data has been cleared" << std::endl;
+        std::cout << "Info: Mesh data has been cleared" << std::endl;
 
         Assimp::Importer importer;
         const std::string path = std::filesystem::current_path().string() + linkToFBX;
@@ -127,7 +127,7 @@ namespace AnomalyEngine::Render::Components {
             mesh = s->mMeshes[0];
             Geometry::_isIndexed = false;
         }
-        std::cout << "Indices step successfully" << std::endl;
+        std::cout << "Info: Indices step successfully" << std::endl;
 
         if (mesh->HasPositions() && initVertex) {
             Geometry::_vertex->resize(mesh->mNumVertices * 3);
@@ -138,7 +138,7 @@ namespace AnomalyEngine::Render::Components {
                 (*Geometry::_vertex)[it + 2] = mesh->mVertices[it / 3].z;
             }
         }
-        std::cout << "Vertex step successfully" << std::endl;
+        std::cout << "Info: Vertex step successfully" << std::endl;
 
         if (mesh->HasNormals() && initNormals) {
             Geometry::_normals->resize(Geometry::_vertex->size());
@@ -150,7 +150,7 @@ namespace AnomalyEngine::Render::Components {
                 (*Geometry::_normals)[it + 2] = mesh->mNormals[it / 3].z;
             }
         }
-        std::cout << "Normals step successfully" << std::endl;
+        std::cout << "Info: Normals step successfully" << std::endl;
 
         if (mesh->HasTextureCoords(0) && initTexCoord) {
             Mesh::_texCoords->resize((Geometry::_vertex->size() / 3) * 2);
@@ -160,10 +160,10 @@ namespace AnomalyEngine::Render::Components {
                 (*Mesh::_texCoords)[it + 1] = mesh->mTextureCoords[0][it / 2].y;
             }
         }
-        std::cout << "Texture coords step successfully" << std::endl;
+        std::cout << "Info: Texture coords step successfully" << std::endl;
 
         Mesh::_isIndexed = true;
-        std::cout << "Mesh has been load" << std::endl;
+        std::cout << "Info: Mesh has been load" << std::endl;
 
         Binder::BindMesh(this);
         return true;

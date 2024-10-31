@@ -1,11 +1,9 @@
 #include "World.h"
 #include <memory>
 #include "Host/Host.h"
-#include "Factory.h"
 #include "EngineConfig.h"
 #include "Core/Object.h"
-#include "Anomaly/WinManager/Window.h"
-#include <cassert>
+#include "Render/WinManager/Window.h"
 
 Core::World::World() = default;
 Core::World::~World() = default;
@@ -25,17 +23,17 @@ std::list<std::unique_ptr<Register::UserScript>>* Core::World::GetUserScripts() 
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* Core::World::GetWindows() {
-	static std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>> windows{};
+std::vector<std::unique_ptr<Render::WindowsManager::Window>>* Core::World::GetWindows() {
+	static std::vector<std::unique_ptr<Render::WindowsManager::Window>> windows{};
 	return &windows;
 }
 
-std::vector<std::unique_ptr<AnomalyEngine::Render::Camera>>* Core::World::GetCameras() {
-	static std::vector<std::unique_ptr<AnomalyEngine::Render::Camera>> cameras{};
+std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Camera>>* Core::World::GetCameras() {
+	static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Camera>> cameras{};
 	return &cameras;
 }
-std::vector<std::unique_ptr<AnomalyEngine::Render::Mesh>>* Core::World::GetMeshes() {
-	static std::vector<std::unique_ptr<AnomalyEngine::Render::Mesh>> meshes{};
+std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* Core::World::GetMeshes() {
+	static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>> meshes{};
 	return &meshes;
 }
 #endif
@@ -88,6 +86,7 @@ void Core::World::Simulation() {
 		Host::GetInstance()->Registry(GetUserScripts());
 #endif
 #if ANOMALY_ENGINE_INCLUDED
+		Host::GetInstance()->LoadMeshData(GetMeshes());
 		Host::GetInstance()->Graphics(GetWindows());
 #endif
 		//_host->Physics();

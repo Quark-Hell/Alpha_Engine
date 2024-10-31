@@ -12,9 +12,9 @@ bool Core::Factory::RemoveObject(const Core::Object* object) {
 
   for (size_t i = 0; i < World::GetObjects()->size(); ++i) {
     if (it->get() == &object[i]) {
-      std::cout << "Removing object " << std::endl;
+      std::cout << "Info: Removing object " << std::endl;
       World::GetObjects()->erase(it);
-      std::cout << "Removed object " << std::endl;
+      std::cout << "Info: Removed object " << std::endl;
       return true;
     }
     std::advance(it, 1);
@@ -26,7 +26,7 @@ bool Core::Factory::RemoveObject(const Core::Object* object) {
 
 Core::Object* Core::Factory::CreateObject() {
   World::GetObjects()->push_back(std::unique_ptr<Core::Object>(new Core::Object()));
-  std::cout << "Object created" << std::endl;
+  std::cout << "Info: Object created" << std::endl;
   return World::GetObjects()->back().get();
 }
 
@@ -35,14 +35,14 @@ bool Core::Factory::RemoveUserScript(const Register::UserScript* script) {
   auto it = std::begin(*list);
   for (size_t i = 0; i < World::GetObjects()->size(); ++i) {
     if (it->get() == &script[i]) {
-      std::cout << "Removing user script" << std::endl;
+      std::cout << "Info: Removing user script" << std::endl;
       World::GetUserScripts()->erase(it);
-      std::cout << "Removed user script" << std::endl;
+      std::cout << "Info: Removed user script" << std::endl;
       return true;
     }
     std::advance(it, 1);
   }
-  assert("User script cannot be removed");
+  std::cout << "Error: User script cannot be removed" << std::endl;
   return false;
 }
 
@@ -56,7 +56,7 @@ Register::UserScript* Core::Factory::CreateUserScript(Register::UserScript* scri
   auto it = std::begin(*list);
   for (size_t i = 0; i < World::GetUserScripts()->size(); ++i) {
     if (it->get() == &script[i]) {
-      assert("User script already exist");
+      std::cout << "Error: User script already exist" << std::endl;
     }
     std::advance(it, 1);
   }
@@ -71,36 +71,37 @@ Register::UserScript* Core::Factory::CreateUserScript(Register::UserScript* scri
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
-AnomalyEngine::WindowsManager::Window* Core::Factory::CreateWindow(const int width, const int height, const char* title) {
-  using namespace AnomalyEngine::WindowsManager;
+Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, const int height, const char* title) {
+  using namespace Render::WindowsManager;
 
   const auto windows = Core::World::GetWindows();
 
-  windows->push_back(std::unique_ptr<Window>
-    (new Window(width,height, title)));
+    windows->push_back(std::unique_ptr<Window>
+  (new Window(width,height, title)));
 
+  std::cout << "Info: Window created" << std::endl;
   return windows->back().get();
 }
 
-AnomalyEngine::Render::Camera* Core::Factory::CreateCamera(const float fov, const float aspect, const float zNear, const float zFar) {
+Render::AnomalyEngine::Components::Camera* Core::Factory::CreateCamera(const float fov, const float aspect, const float zNear, const float zFar) {
   const auto cameras = World::GetCameras();
 
-  cameras->push_back(std::unique_ptr<AnomalyEngine::Render::Camera>
-    (new AnomalyEngine::Render::Camera(fov, aspect, zNear, zFar)));
+  cameras->push_back(std::unique_ptr<Render::AnomalyEngine::Components::Camera>
+    (new Render::AnomalyEngine::Components::Camera(fov, aspect, zNear, zFar)));
 
-  std::cout << "Camera created" << std::endl;
+  std::cout << "Info: Camera created" << std::endl;
   return cameras->back().get();
 }
 
-bool Core::Factory::RemoveCamera(const AnomalyEngine::Render::Camera* camera) {
+bool Core::Factory::RemoveCamera(const Render::AnomalyEngine::Components::Camera* camera) {
   const auto list = World::GetCameras();
   auto it = std::begin(*list);
 
   for (size_t i = 0; i < World::GetCameras()->size(); ++i) {
     if (it->get() == &camera[i]) {
-      std::cout << "Removing camera" << std::endl;
+      std::cout << "Info: Removing camera" << std::endl;
       World::GetCameras()->erase(it);
-      std::cout << "Removed camera" << std::endl;
+      std::cout << "Info: Removed camera" << std::endl;
       return true;
     }
     std::advance(it, 1);
@@ -109,25 +110,25 @@ bool Core::Factory::RemoveCamera(const AnomalyEngine::Render::Camera* camera) {
   return false;
 }
 
-AnomalyEngine::Render::Mesh* Core::Factory::CreateMesh() {
+Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh() {
   const auto meshes = World::GetMeshes();
 
-  meshes->push_back(std::unique_ptr<AnomalyEngine::Render::Mesh>
-    (new AnomalyEngine::Render::Mesh()));
+  meshes->push_back(std::unique_ptr<Render::AnomalyEngine::Components::Mesh>
+    (new Render::AnomalyEngine::Components::Mesh()));
 
-  std::cout << "Mesh created" << std::endl;
+  std::cout << "Info: Mesh created" << std::endl;
 
   return meshes->back().get();
 }
 
-AnomalyEngine::Render::Mesh* Core::Factory::CreateMesh(const std::string& path) {
+Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh(const std::string& path) {
   const auto meshes = World::GetMeshes();
 
-  meshes->push_back(std::unique_ptr<AnomalyEngine::Render::Mesh>
-    (new AnomalyEngine::Render::Mesh()));
+  meshes->push_back(std::unique_ptr<Render::AnomalyEngine::Components::Mesh>
+    (new Render::AnomalyEngine::Components::Mesh()));
 
   meshes->back().get()->Create(path);
-  std::cout << "Mesh created" << std::endl;
+  std::cout << "Info: Mesh created" << std::endl;
 
   return meshes->back().get();
 }

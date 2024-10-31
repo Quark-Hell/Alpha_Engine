@@ -65,9 +65,9 @@ namespace Render::AnomalyEngine {
             glRotatef(0, 0.f, 0.f, 1.f);
 
             glTranslatef(
-                parent->_transform.GetPosition().X,
-                parent->_transform.GetPosition().Y,
-                parent->_transform.GetPosition().Z);
+                parent->transform.GetPosition().X,
+                parent->transform.GetPosition().Y,
+                parent->transform.GetPosition().Z);
         }
     }
 
@@ -86,8 +86,11 @@ namespace Render::AnomalyEngine {
 
     void RenderEngine::RenderScene(const Render::WindowsManager::Window* window)
     {
-        if (window->_activeCamera != nullptr)
-        {
+        if (window->_activeCamera == nullptr) {
+            std::cout << "Error: active camera was be null" << std::endl;
+            return;
+        }
+
             RenderEngine::SetWindowMatrix(window->_width, window->_height);
             RenderEngine::SetCameraProjection(window);
             RenderEngine::SetCameraTransform(window->_activeCamera);
@@ -95,55 +98,70 @@ namespace Render::AnomalyEngine {
             RenderEngine::SetModelMatrix();
 
             glBegin(GL_TRIANGLES);
-
+////
             glColor3f(0.5,0,0);
-
+////
             glVertex3f(1.0,1.0,-5);
             glVertex3f(-20.0,20.5,3);
             glVertex3f(1.0,1.0,3);
-
+////
             glEnd();
 
-            //RenderMeshes();
-        }
+            RenderMeshes(window->_activeCamera);
+
     }
 
     void RenderEngine::LoadMeshArray(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer) {
         _meshBuffer = meshBuffer;
     }
 
-    void RenderEngine::RenderMeshes() {
+    void RenderEngine::RenderMeshes(Render::AnomalyEngine::Components::Camera* camera) {
         if (_meshBuffer == nullptr) {
-            std::cout << "Mesh buffer was null" << std::endl;
+            std::cout << "Error: Mesh buffer was null" << std::endl;
+            return;
+        }
+        if (camera == nullptr) {
+            std::cout << "Error: Camera was null" << std::endl;
             return;
         }
 
         for (size_t i = 0; i < _meshBuffer->size(); i++) {
-            Components::Mesh* mesh = _meshBuffer->at(i).get();
+
+            const Components::Mesh* mesh = _meshBuffer->at(i).get();
             if (mesh == nullptr) {
-                std::cout << "Mesh was null" << std::endl;
+                std::cout << "Error: Mesh was null" << std::endl;
                 continue;
             }
 
-            //Render::SetModelMatrix();
+            if (mesh->_material.Shader == nullptr) {
+                std::cout << "Error: Shader was be null" << std::endl;
+                continue;
+            }
 
-            if (mesh->_material.Shader == nullptr)
-                return;
+            if (mesh->_material.Shader->GetCompiledStatus() == false) {
+                std::cout << "Error: Shader was not be compiled" << std::endl;
+                continue;
+            }
 
-            //if (mesh->_material.Shader->GetCompiledStatus() == false)
-            //    return;
+            if (mesh->_material.Shader->GetProgramId() == 0) {
+                std::cout << "Error: Shader program was not be created" << std::endl;
+                continue;
+            }
 
-            //glUseProgram(mesh->_material.Shader->GetProgramId());
+            //SetModelMatrix();
+            glDepthFunc(GL_LEQUAL);
+
+            glUseProgram(mesh->_material.Shader->GetProgramId());
             glBindVertexArray(mesh->_vao);
 
-            //mesh->_material.Shader->ApplyShadersSettings(camera);
+            mesh->_material.Shader->ApplyShadersSettings(camera);
             //int renderMode = Render::GetRenderMode(mesh._material->Shader->RenderMode);
 
             if (mesh->_isIndexed)
                 glDrawElements(GL_TRIANGLES, mesh->_indices->size(), GL_UNSIGNED_INT, mesh->_indices->data());
             else
                 glDrawArrays(GL_TRIANGLES, 0, mesh->_vertex->size() / 3);
-
+            glDepthFunc(GL_LESS);
             glBindVertexArray(0);
         }
     }
@@ -151,10 +169,10 @@ namespace Render::AnomalyEngine {
     void RenderEngine::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows) {
         for (auto& window : *windows)
         {
+            RenderEngine::SetActiveWindow(window.get());
+
             if (window->_initialized == false)
                 window->Init();
-
-            RenderEngine::SetActiveWindow(window.get());
 
             glfwPollEvents();
             RenderEngine::ClearFrameBuffer();
@@ -164,6 +182,7 @@ namespace Render::AnomalyEngine {
 
             glFinish();
             glfwSwapBuffers(window->_window);
+            //break;
         }
     }
 }

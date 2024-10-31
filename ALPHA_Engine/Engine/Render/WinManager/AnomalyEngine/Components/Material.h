@@ -2,15 +2,15 @@
 #include <memory>
 #include <Render/WinManager/AnomalyEngine/Shaders/ShaderProgram.h>
 
-namespace AnomalyEngine::Render::Shaders {
+namespace Render::AnomalyEngine::Shaders {
     class ShaderProgram;
 }
 
-namespace AnomalyEngine::Render::Components {
+namespace Render::AnomalyEngine::Components {
     class Mesh;
 }
 
-namespace AnomalyEngine::Render {
+namespace Render::AnomalyEngine {
     class Material {
     friend class Components::Mesh;
 
@@ -28,7 +28,7 @@ namespace AnomalyEngine::Render {
 
         template<
             typename T,typename = std::enable_if_t<
-            std::is_base_of_v<AnomalyEngine::Render::Shaders::ShaderProgram, T>
+            std::is_base_of_v<Render::AnomalyEngine::Shaders::ShaderProgram, T>
             >>
         bool InitShader() {
             Shader = std::make_unique<T>(this);

@@ -35,6 +35,7 @@ add_executable(Game
 )
 
 find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
 
 if(WIN32)
 	target_link_libraries(Game
@@ -44,21 +45,11 @@ if(WIN32)
 			PRIVATE ${Engine_Libs}/assimp-vc143-mt.lib
 			PRIVATE ${OPENGL_LIBRARIES}
 	)
-
-	add_custom_command(TARGET Game POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${Engine_Libs}/assimp-vc143-mt.dll"
-	"${PROJECT_BINARY_DIR}/assimp-vc143-mt.dll"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${Engine_Libs}/glfw3.dll"
-	"${PROJECT_BINARY_DIR}/glfw3.dll"
-	)
 else()
 	target_link_libraries(Game
 			PRIVATE ${Engine_Libs}/ALPHA_Engine.a
 			PRIVATE ${Engine_Libs}/glfw3.a
-			PRIVATE ${Engine_Libs}/libGLEW.a
+			PRIVATE GLEW::GLEW
 			PRIVATE ${Engine_Libs}/libassimp.so.5
 			PRIVATE ${OPENGL_LIBRARIES}
 	)

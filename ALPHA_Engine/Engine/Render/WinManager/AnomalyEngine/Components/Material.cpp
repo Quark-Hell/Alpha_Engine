@@ -1,6 +1,6 @@
 #include "Material.h"
 
-namespace AnomalyEngine::Render{
+namespace Render::AnomalyEngine {
 
     Material::Material(const Components::Mesh* parent) : _parentMesh(parent) {
 

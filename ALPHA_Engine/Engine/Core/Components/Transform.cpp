@@ -3,8 +3,6 @@
 
 #include "Core/Math/Vectors.h"
 
-
-
 Core::Transform::Transform() = default;
 Core::Transform::~Transform() = default;
 

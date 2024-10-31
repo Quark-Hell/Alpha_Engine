@@ -60,7 +60,7 @@ namespace Render::AnomalyEngine {
         ///Before use LoadMeshArray()
         void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows);
         void RenderScene(const Render::WindowsManager::Window* window);
-        void RenderMeshes();
+        void RenderMeshes(Render::AnomalyEngine::Components::Camera* camera);
     public:
         ~RenderEngine() = default;
 

@@ -5,7 +5,7 @@
 #include <cassert>
 #include <iostream>
 
-namespace AnomalyEngine::WindowsManager {
+namespace Render::WindowsManager {
     WindowsManager::WindowsManager() = default;
     WindowsManager::~WindowsManager() = default;
 

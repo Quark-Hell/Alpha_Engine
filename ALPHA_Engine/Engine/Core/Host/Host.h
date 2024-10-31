@@ -1,16 +1,21 @@
 #pragma once
-#include <Anomaly/WinManager/Window.h>
-
 #include "BaseConfig.h"
 
 namespace Core {
 	class World;
 }
 
-namespace AnomalyEngine {
+namespace Render {
+
 	namespace WindowsManager {
 		class WindowsManager;
+		class Window;
 	}
+
+	namespace AnomalyEngine::Components {
+		class Mesh;
+	}
+
 }
 namespace Register {
 	class Registry;
@@ -37,7 +42,8 @@ namespace Core {
 
 #if ANOMALY_ENGINE_INCLUDED
 		void InitRender();
-		void Graphics(std::vector<std::unique_ptr<AnomalyEngine::WindowsManager::Window>>* windows);
+		void LoadMeshData(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer);
+		void Graphics(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows);
 #endif
 		void Physics();
 	};

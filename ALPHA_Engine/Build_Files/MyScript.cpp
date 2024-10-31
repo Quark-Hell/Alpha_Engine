@@ -2,8 +2,11 @@
 #include "Core/Object.h"
 #include "Core/Factory.h"
 
-#include "Anomaly/WinManager/AnomalyEngine/Components/Camera.h"
-#include "Anomaly/WinManager/Window.h"
+#include "Render/WinManager/AnomalyEngine/Components/Mesh.h"
+#include "Render/WinManager/AnomalyEngine/Components/Camera.h"
+#include "Render/WinManager/Window.h"
+
+#include "Render/WinManager/AnomalyEngine/Shaders/CubeMapShader.h"
 
 #include <iostream>
 
@@ -25,10 +28,15 @@ void MyScript::Start() {
     auto obj1 = Core::Factory::CreateObject();
     obj1->SetName("TestObject");
     obj1->AddComponent(cam1);
+    obj1->AddComponent(cam2);
 
-    obj1->_transform.AddPosition(-2,2,-2);
+    obj1->transform.AddPosition(0,0,-2);
 
-    auto mesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/cube.fbx");
+    auto obj2 = Core::Factory::CreateObject();
+    obj2->SetName("Mesh");
+    auto mesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Cube.fbx");
+    obj2->AddComponent(mesh);
+    mesh->_material.InitShader<Render::AnomalyEngine::Shaders::CubeMapShader>();
 
 #endif
 }

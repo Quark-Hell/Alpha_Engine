@@ -131,7 +131,7 @@ if (ANOMALY_ENGINE_INCLUDED)
 	add_compile_definitions(ANOMALY_ENGINE_INCLUDED)
 
 	message("${Cyan}include .cpp engine_graphics_engine_list${ColourReset}")
-	libraries_source(${Engine_Source}/Anomaly engine_graphics_engine_list)
+	libraries_source(${Engine_Source}/Render engine_graphics_engine_list)
 
 	#message("${Cyan}include .cpp engine_binds_list${ColourReset}")
 	#libraries_source(${Engine_Source}/Binds engine_binds_list)
@@ -266,19 +266,8 @@ add_custom_command(TARGET ALPHA_Engine POST_BUILD
 else()
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
-	"${Game}/ALPHA_Engine.a"
-	"${Game_Engine_Dest}/lib/ALPHA_Engine.a"
-
-	COMMAND ${CMAKE_COMMAND} -E remove
-	"${Game}/ALPHA_Engine.a"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
 	"${GLFW}/glfw3.a"
 	"${Game_Engine_Dest}/lib/glfw3.a"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLEW}/lib/Linux/libGLEW.a"
-	"${Game_Engine_Dest}/lib/libGLEW.a"
 
 	COMMAND ${CMAKE_COMMAND} -E copy
 	"${assimp}/lib/libassimp.so.5.4.3"

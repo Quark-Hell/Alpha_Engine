@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-namespace AnomalyEngine::Render::Components {
+namespace Render::AnomalyEngine::Components {
     Camera::Camera(const float fov, const float aspect , const float zNear, const float zFar)
     {
         _fov = fov;

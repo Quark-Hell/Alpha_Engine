@@ -1,7 +1,8 @@
 #pragma once
+#include "Window.h"
 
-namespace AnomalyEngine::Render {
-    class Render;
+namespace Render::AnomalyEngine {
+    class RenderEngine;
 }
 
 namespace Core {
@@ -9,12 +10,10 @@ namespace Core {
     class Factory;
 }
 
-namespace AnomalyEngine::WindowsManager {
-
-class Window;
+namespace Render::WindowsManager {
 
 class WindowsManager {
-    friend class AnomalyEngine::Render::Render;
+    friend class AnomalyEngine::RenderEngine;
     friend class Core::Host;
     friend class Core::Factory;
 
