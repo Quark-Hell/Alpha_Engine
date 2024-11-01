@@ -35,7 +35,7 @@ Clone repository to your computer and switch to the "Architect2.0" branch
 <br><b>Step 2:</br></b>
 In Visual Studio build project as you need(Debug or Release)
 <br><b>Step 3:</br></b>
-Open .../<repositoryPath>/Sandbox/<yourBildType>/Game in visual studio and biuld project as you need(Debug or Release)
+Open .../"repositoryPath"/Sandbox/"yourBildType"/Game in visual studio and biuld project as you need(Debug or Release)
 <br><b>Step 4:</br></b>
 Enjoy
 
