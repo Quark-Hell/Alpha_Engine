@@ -28,26 +28,16 @@ This game engine is being developed to make it easier for developers to create s
 - MIT License
 
 ## Build
-### Windows with MSVC:
+### Windows with Visual Studio:
 
 <br><b>Step 1:</br></b>
-In CMake GUI select engine folder and target folder, after that click configure and generate it.
+Clone repository to your computer and switch to the "Architect2.0" branch
 <br><b>Step 2:</br></b>
-In Visual Studio rebuild projects as you need(Debug or Release)
+In Visual Studio build project as you need(Debug or Release)
 <br><b>Step 3:</br></b>
-Move .lib file from Debug or Release folder in ALPHA_Engine/lib folder (should actually happen automatically, so this will be fixed in next release)
+Open .../<repositoryPath>/Sandbox/<yourBildType>/Game in visual studio and biuld project as you need(Debug or Release)
 <br><b>Step 4:</br></b>
-Move ALPHA_Engine and Source into another folder and use project as CMake project. CMakeList.txt generate in Source folder automatically
-<br><b>Step 5:</br></b>
-Move CMakeList.txt from source to root directory of your project.
-You should get the following structure:
-<p align="center">
-      <img src="https://i.ibb.co/TWH4Rn2/image-2024-10-08-074747846.png" alt="image-2024-10-08-074747846" border="0">
-      <img src="https://i.ibb.co/b54Fhsg/image-2024-10-08-075251718.png" alt="image-2024-10-08-075251718" border="0">
-</p>
-
-<br><b>Step 6:</br></b>
-Run game project as CMake project and build it
+Enjoy
 
 <br></br>
 ### Linux(tested with: manjaro, arch and openSUSE):
