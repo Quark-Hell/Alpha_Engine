@@ -1,2 +1,0 @@
-add_compile_definitions(ANOMALY_ENGINE_INCLUDED)
-add_compile_definitions(USER_SCRIPTS_REGISTER_INCLUDED)

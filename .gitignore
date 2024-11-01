@@ -4,36 +4,8 @@ out
 
 ALPHA_Engine/cmake-build-debug
 
-Sandbox/Debug/Game/ALPHA_Engine
-Sandbox/Debug/Game/build
-Sandbox/Debug/.ninja_log
-Sandbox/Debug/build.ninja
-Sandbox/Debug/.ninja_deps
-Sandbox/Debug/cmake_install.cmake
-Sandbox/Debug/CMakeCache.txt
-Sandbox/Debug/.cmake
-Sandbox/Debug/CMakeFiles
-Sandbox/Debug/Testing
-
-
-Sandbox/Debug/Game/CMakeFiles
-Sandbox/Debug/Game/Testing
-
-
-Sandbox/Release/Game/ALPHA_Engine
-Sandbox/Release/Game/build
-Sandbox/Release/.ninja_log
-Sandbox/Release/build.ninja
-Sandbox/Release/.ninja_deps
-Sandbox/Release/cmake_install.cmake
-Sandbox/Release/CMakeCache.txt
-Sandbox/Release/.cmake
-Sandbox/Release/CMakeFiles
-Sandbox/Release/Testing
-
-Sandbox/Release/Game/CMakeFiles
-Sandbox/Release/Game/Testing
-
+Sandbox/Debug
+Sandbox/Release
 
 .ninja_log
 build.ninja
