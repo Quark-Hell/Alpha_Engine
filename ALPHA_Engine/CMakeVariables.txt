@@ -1,0 +1,57 @@
+
+#Engine source
+SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}")
+SET (Engine_Source "${ALPHA_Engine}/Engine")
+SET (Engine_Assets "${ALPHA_Engine}/Engine_Assets")
+SET (Build_Files "${ALPHA_Engine}/Build_Files")
+include_directories(${Engine_Source})
+
+#Engine libraries
+set (GLFW "${ALPHA_Engine}/GLFW")
+include_directories("${GLFW}/include")
+
+set (GLM "${ALPHA_Engine}/GLM")
+include_directories("${GLM}")
+
+set (GLEW "${ALPHA_Engine}/GLEW")
+include_directories("${GLEW}")
+
+SET (assimp "${ALPHA_Engine}/assimp")
+include_directories("${assimp}/include")
+
+SET(STB "${ALPHA_Engine}/STB")
+include_directories(${STB})
+#Engine libraries
+
+#Build Directory
+get_filename_component(SandBox "${PROJECT_SOURCE_DIR}/../Sandbox" ABSOLUTE)
+
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+set(BuildDir "${SandBox}/Debug")
+else() 
+set(BuildDir "${SandBox}/Release")
+endif()
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BuildDir})
+set(LIBRARY_OUTPUT_PATH ${BuildDir}/Game/ALPHA_Engine/lib)
+
+set(CMAKE_BINARY_DIR "${BuildDir}")
+
+message(SandBox${BuildDir})
+#Build Directory
+
+#Game source
+set (Game "${BuildDir}")
+set (Game_Files_Dest "${Game}/Game")
+set (Game_Engine_Dest "${Game_Files_Dest}/ALPHA_Engine")
+set (Game_Source_Dest "${Game_Files_Dest}/Source")
+
+#Engine headers
+set(engine_core_list)
+set(engine_binds_list)
+set(engine_graphics_engine_list)
+set(engine_shader_program_list)
+set(engine_user_scripts_list)
+
+set(ANOMALY_ENGINE_INCLUDED ON CACHE BOOL "")
+set(USER_SCRIPTS_REGISTER_INCLUDED ON CACHE BOOL "")

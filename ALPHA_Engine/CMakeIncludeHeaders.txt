@@ -1,0 +1,29 @@
+include("CMakeVariables.txt")
+
+function(libraries_source src return_list)
+file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.cpp")
+    foreach(file ${templateFiles})
+		set(copy_src "${src}/${file}")
+		list(APPEND return_list "${copy_src}")
+    endforeach()
+	message("${return_list}\n")
+	set(${return_list} "${${return_list}}" PARENT_SCOPE)
+endfunction()
+
+#Include render engine
+if (ANOMALY_ENGINE_INCLUDED)
+	add_compile_definitions(ANOMALY_ENGINE_INCLUDED)
+	message("${Cyan}include .cpp engine_graphics_engine_list${ColourReset}")
+	libraries_source(${Engine_Source}/Render engine_graphics_engine_list)
+endif ()
+
+#Include user script register
+if (USER_SCRIPTS_REGISTER_INCLUDED)
+	add_compile_definitions(USER_SCRIPTS_REGISTER_INCLUDED)
+	message("${Cyan}include .cpp engine_user_scripts_list${ColourReset}")
+	libraries_source(${Engine_Source}/UserScriptsRegister engine_user_scripts_list)
+endif ()
+
+#Include core
+message("${Cyan}include .cpp engine_core_list${ColourReset}")
+libraries_source(${Engine_Source}/Core engine_core_list)

@@ -1,0 +1,10 @@
+include("CMakeColorsOutput.txt")
+
+if(WIN32)
+	message("\n${BoldRed}Windows build${ColourReset}\n")
+	add_compile_definitions(PLATFORM=Windows)
+endif ()
+if (LINUX)
+	message("\n${BoldRed}Linux build${ColourReset}\n")
+	add_compile_definitions(PLATFORM=Linux)
+endif ()

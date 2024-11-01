@@ -85,4 +85,21 @@ function(copy_assets src dest)
 	endforeach(templateFile)
 endfunction()
 
-copy_assets(${Engine_Assets} "${PROJECT_BINARY_DIR}/ALPHA_Engine/Engine_Assets")
+
+copy_assets("${Engine_Assets}"	"${PROJECT_BINARY_DIR}/ALPHA_Engine/Engine_Assets")
+
+
+if(WIN32)
+	#I did'n know why command copy_asset does not work in this case
+	add_custom_command(TARGET Game POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"${Engine}/lib/glfw3.dll"
+	"${PROJECT_BINARY_DIR}/"
+	)
+	
+	add_custom_command(TARGET Game POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"${Engine}/lib/assimp-vc143-mt.dll"
+	"${PROJECT_BINARY_DIR}/"
+	)
+endif()
