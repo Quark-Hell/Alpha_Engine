@@ -7,16 +7,16 @@
 #include <filesystem>
 
 #include <string>
+#include <algorithm>
 
 namespace Render::AnomalyEngine::Textures {
     void BaseTexture::CreateTexture(std::string pathToTexture) {
         int width, height, channelsCount;
 
-#if PLATFORM == Windows
+#ifdef WINDOWS
         std::replace(pathToTexture.begin(), pathToTexture.end(), '/', '\\');
 #else
         std::replace(pathToTexture.begin(), pathToTexture.end(), '\\', '/');
-        std::cout << "Linux: " << pathToTexture << std::endl;
 #endif
 
 
