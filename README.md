@@ -54,23 +54,33 @@ cd Alpha_Engine
 git checkout Architect2.0   
 ```
 <b>Step 3:</b>
-Create build folder and generate cmake files(I use ninja as generator and clang as compiler, but make will work too):
+Go to the Engine source directory and create build folder.Then generate cmake files(I use ninja as generator and clang as compiler, but make will work too):
 ```
+cd ALPHA_Engine
 mkdir build
 cmake -G "Ninja" -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -B build
 ```
 <b>Step 4:</b>
 Build engine
 ```
-Ninja
+cd build
+ninja
 ```
+Now engine automatically generate sandbox by path .../Alpha_Engine/Sandbox/"BuildType"/Game. Go to this folder.
+
 <b>Step 5:</b>
-Create folder for game and repeat step 3:
+Create folder for game and build it:
 ```
 mkdir game_build 
 cmake -G "Ninja" -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -B game_build
 cd game_build
 ninja
+```
+<b>Step 6:</b>
+Go to the game build folder and run sandbox project
+```
+cd game_build
+./Game
 ```
 
 Done
