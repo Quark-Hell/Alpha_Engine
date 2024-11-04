@@ -65,8 +65,8 @@ Register::UserScript* Core::Factory::CreateUserScript(Register::UserScript* scri
 }
 #endif
 
-#if ANOMALY_ENGINE_INCLUDED
 
+#if RENDER_INCLUDED
 #include <GLEW/glew.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
@@ -75,9 +75,8 @@ Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, con
   using namespace Render::WindowsManager;
 
   const auto windows = Core::World::GetWindows();
-  size_t count = windows->size();
 
-  if (count >= 1) {
+  if (windows->size() >= 1) {
     windows->push_back(std::unique_ptr<Window>
 (new Window(width,height, title,nullptr,windows->at(0)->_window)));
 
@@ -92,6 +91,10 @@ Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, con
 
   return windows->back().get();
 }
+#endif
+
+#if ANOMALY_ENGINE_INCLUDED
+#include <Render/WinManager/AnomalyEngine/Components/Mesh.h>
 
 Render::AnomalyEngine::Components::Camera* Core::Factory::CreateCamera(const float fov, const float aspect, const float zNear, const float zFar) {
   const auto cameras = World::GetCameras();

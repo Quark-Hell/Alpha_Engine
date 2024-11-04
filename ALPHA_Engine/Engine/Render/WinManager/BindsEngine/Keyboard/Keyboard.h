@@ -1,20 +1,21 @@
 #pragma once
 #include "KeyboardSensors.h"
 
-class GLFWwindow;
+struct GLFWwindow;
 
-namespace BindsEngine {
+namespace Render::WindowsManager::BindsEngine {
 
 class Keyboard {
 private:
     friend class InputSystem;
 
 private:
+    Keyboard();
+
     EnumKeyStates GetKeyState(uint16_t key);
     void UpdateKeysState(GLFWwindow& window);
 
 public:
-    Keyboard();
     ~Keyboard();
 };
 

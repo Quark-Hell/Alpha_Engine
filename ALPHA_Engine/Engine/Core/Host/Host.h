@@ -40,10 +40,13 @@ namespace Core {
 		void Registry(const std::list<std::unique_ptr<Register::UserScript>>* scripts);
 #endif
 
-#if ANOMALY_ENGINE_INCLUDED
+#if RENDER_INCLUDED
 		void InitRender();
+		void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows);
+#endif
+
+#if ANOMALY_ENGINE_INCLUDED
 		void LoadMeshData(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer);
-		void Graphics(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows);
 #endif
 		void Physics();
 	};

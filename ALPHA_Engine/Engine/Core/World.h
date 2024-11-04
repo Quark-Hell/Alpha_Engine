@@ -7,7 +7,7 @@
   }
 #endif
 
-#if ANOMALY_ENGINE_INCLUDED
+#if RENDER_INCLUDED
 namespace Render {
   	namespace WindowsManager {
   		class Window;
@@ -17,8 +17,14 @@ namespace Render {
   		class Camera;
   		class Mesh;
   	}
-
   }
+#endif
+
+#if ANOMALY_ENGINE_INCLUDED
+namespace Render::AnomalyEngine::Components {
+	class Camera;
+	class Mesh;
+}
 #endif
 
 namespace Core {
@@ -37,18 +43,20 @@ namespace Core {
 
 		float SimulationSpeed = 1;
 
+	private:
+		static std::list<std::unique_ptr<Core::Object>>* GetObjects();
+
 #if USER_SCRIPTS_REGISTER_INCLUDED
 	private:
 		static std::list<std::unique_ptr<Register::UserScript>>* GetUserScripts();
 #endif
 
-#pragma region ObjectManager
+#if RENDER_INCLUDED
 	private:
-		static std::list<std::unique_ptr<Core::Object>>* GetObjects();
-#pragma endregion
+		static std::vector<std::unique_ptr<Render::WindowsManager::Window>>* GetWindows();
+#endif
 
 #if ANOMALY_ENGINE_INCLUDED
-		static std::vector<std::unique_ptr<Render::WindowsManager::Window>>* GetWindows();
 		static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Camera>>* GetCameras();
 		static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* GetMeshes();
 #endif

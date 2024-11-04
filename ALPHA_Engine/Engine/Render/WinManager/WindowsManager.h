@@ -1,5 +1,7 @@
 #pragma once
 #include "Window.h"
+#include <vector>
+#include <memory>
 
 namespace Render::AnomalyEngine {
     class RenderEngine;
@@ -21,6 +23,8 @@ class WindowsManager {
         WindowsManager();
         static WindowsManager* GetInstance();
         void Init();
+
+        void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows);
 
      public:
         ~WindowsManager();

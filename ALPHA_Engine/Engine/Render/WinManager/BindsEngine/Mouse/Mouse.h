@@ -1,14 +1,15 @@
 #pragma once
-#include "MousePos.h"
+#include <Core/Math/Vectors.h>
+#include <GLFW/glfw3.h>
 #include "MouseSensors.h"
 
-namespace BindsEngine {
+namespace Render::WindowsManager::BindsEngine {
 
 class Mouse {
 private:
-    MousePos _previousMousePos;
-    MousePos _currentMousePos;
-    MousePos _mouseDelta;
+    Core::Vector2 _previousMousePos;
+    Core::Vector2 _currentMousePos;
+    Core::Vector2 _mouseDelta;
 
 private:
     MouseKey _leftButton{ GLFW_MOUSE_BUTTON_LEFT };
@@ -18,7 +19,7 @@ private:
     MouseKey _firstExtraButton{ GLFW_MOUSE_BUTTON_4 };
     MouseKey _secondExtraButton{ GLFW_MOUSE_BUTTON_5 };
 
-    EnumMouseSensorStates MoveSensorState;
+    EnumMouseSensorStates MoveSensorState = UnknownState;
 
     MouseKey* Buttons[5] = {
         &_leftButton, &_rightButton,
@@ -30,14 +31,14 @@ private:
     friend class InputSystem;
 
 public:
-    MousePos GetMousePos();
-    MousePos GetMouseDelta();
-    bool IsMouseChangePosition();
+    Core::Vector2 GetMousePos();
+    Core::Vector2 GetMouseDelta();
+    [[nodiscard]] bool IsMouseChangePosition() const;
 
-    Mouse();
-    ~Mouse();
+    ~Mouse() = default;
 
 private:
+    Mouse() = default;
     void UpdateMouseState(GLFWwindow& window);
 };
 

@@ -1,9 +1,9 @@
 #pragma once
-#include "Binds/GeneralSensors.h"
+#include "Render/WinManager/BindsEngine/GeneralSensors.h"
 #include <cstdint>
 #include "GLFW/glfw3.h"
 
-namespace BindsEngine {
+namespace Render::WindowsManager::BindsEngine {
 
 class KeyboardKey
 {

@@ -1,21 +1,18 @@
 #include "Mouse.h"
-#include "Binds/GeneralSensors.h"
+#include "Render/WinManager/BindsEngine/GeneralSensors.h"
 
-namespace BindsEngine {
-
-Mouse::Mouse() = default;
-Mouse::~Mouse() = default;
+namespace Render::WindowsManager::BindsEngine {
 
 void Mouse::UpdateMouseState(GLFWwindow& window) {
-	double xpos, ypos;
-	glfwGetCursorPos(&window, &xpos, &ypos);
+	double xPos, yPos;
+	glfwGetCursorPos(&window, &xPos, &yPos);
 
 	Mouse::_previousMousePos = Mouse::_currentMousePos;
-	Mouse::_currentMousePos = { (float)xpos, (float)ypos };
+	Mouse::_currentMousePos = { static_cast<float>(xPos), static_cast<float>(yPos) };
 
-	Mouse::_mouseDelta = MousePos{ _currentMousePos - _previousMousePos };
+	Mouse::_mouseDelta = Core::Vector2{ _currentMousePos - _previousMousePos };
 
-	if (Mouse::_mouseDelta != MousePos{0,0}) {
+	if (Mouse::_mouseDelta != Core::Vector2{0,0}) {
 		if (Mouse::MoveSensorState & MouseNotMoved || Mouse::MoveSensorState & MouseEndMoved) {
 			Mouse::MoveSensorState = MouseStartMoved;
 		}
@@ -40,12 +37,10 @@ void Mouse::UpdateMouseState(GLFWwindow& window) {
 
 		if (glfwGetMouseButton(&window, Buttons[i]->KEY)) {
 			if (Buttons[i]->KeyState & EnumKeyStates::KeyNotPressed) {
-				Buttons[i]->KeyState = (EnumKeyStates)(KeyPressed | KeyHold);
-				continue;
+				Buttons[i]->KeyState = static_cast<EnumKeyStates>(KeyPressed | KeyHold);
 			}
 			else if (Buttons[i]->KeyState & EnumKeyStates::KeyPressed) {
 				Buttons[i]->KeyState = KeyHold;
-				continue;
 			}
 		}
 		else
@@ -55,19 +50,18 @@ void Mouse::UpdateMouseState(GLFWwindow& window) {
 				continue;
 			}
 			Buttons[i]->KeyState = KeyNotPressed;
-			continue;
 		}
 	}
 }
 
-MousePos BindsEngine::Mouse::GetMouseDelta() {
+Core::Vector2 BindsEngine::Mouse::GetMouseDelta() {
 	return _mouseDelta;
 }
-MousePos BindsEngine::Mouse::GetMousePos() {
+Core::Vector2 BindsEngine::Mouse::GetMousePos() {
 	return _currentMousePos;
 }
-bool Mouse::IsMouseChangePosition() {
-	if (Mouse::_mouseDelta == MousePos{ 0,0 }) {
+bool Mouse::IsMouseChangePosition() const {
+	if (Mouse::_mouseDelta == Core::Vector2{ 0,0 }) {
 		return false;
 	}
 	return true;

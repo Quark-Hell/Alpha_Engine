@@ -2,11 +2,11 @@
 #include "BaseConfig.h"
 #include "GLFW/glfw3.h"
 
-namespace BindsEngine {
+namespace Render::WindowsManager::BindsEngine {
 Keyboard::Keyboard() = default;
 Keyboard::~Keyboard() = default;
 
-EnumKeyStates Keyboard::GetKeyState(uint16_t key) {
+EnumKeyStates Keyboard::GetKeyState(const uint16_t key) {
   for (size_t i = 0; i < 99; i++)
   {
     if (KeyboardData::Keys[i]->KEY == key) { return KeyboardData::Keys[i]->KeyState; }
@@ -19,24 +19,21 @@ void Keyboard::UpdateKeysState(GLFWwindow& window) {
     if (glfwGetKey(&window, KeyboardData::Keys[i]->KEY)) {
       if (KeyboardData::Keys[i]->KeyState & EnumKeyStates::KeyNotPressed) {
         KeyboardData::Keys[i]->KeyState = KeyPressed;
-        std::printf("Pressed");
-        continue;
+        std::cout << "Pressed" << std::endl;
       }
       else if (KeyboardData::Keys[i]->KeyState & EnumKeyStates::KeyPressed) {
         KeyboardData::Keys[i]->KeyState = KeyHold;
-        std::printf("Hold");
-        continue;
+        std::cout << "Hold" << std::endl;
       }
     }
     else
     {
       if (KeyboardData::Keys[i]->KeyState & EnumKeyStates::KeyHold || KeyboardData::Keys[i]->KeyState & EnumKeyStates::KeyPressed) {
         KeyboardData::Keys[i]->KeyState = KeyReleased;
-        std::printf("Released");
+        std::cout << "Released" << std::endl;
         continue;
       }
       KeyboardData::Keys[i]->KeyState = KeyNotPressed;
-      continue;
     }
   }
 }

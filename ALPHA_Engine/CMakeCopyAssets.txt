@@ -107,7 +107,7 @@ add_custom_command(TARGET ALPHA_Engine POST_BUILD
 )
 
 #Export build config for sandbox
-function(ExportModulesConfig ModuleName Value)
+function(ExportModulesConfig ModuleName)
 	set(ExportModule
 			"add_compile_definitions(${ModuleName})\n"
 	)
@@ -118,5 +118,15 @@ function(ExportModulesConfig ModuleName Value)
 endfunction()
 
 file(WRITE "${Game_Source_Dest}/IncludedModules.cmake" "")
-ExportModulesConfig("ANOMALY_ENGINE_INCLUDED" ${ANOMALY_ENGINE_INCLUDED})
-ExportModulesConfig("USER_SCRIPTS_REGISTER_INCLUDED" ${USER_SCRIPTS_REGISTER_INCLUDED})
+
+if(RENDER_BASE)
+ExportModulesConfig("RENDER_INCLUDED")
+endif()
+
+if(RENDER_ANOMALY_ENGINE)
+ExportModulesConfig("ANOMALY_ENGINE_INCLUDED")
+endif()
+
+if(USER_SCRIPTS_REGISTER)
+ExportModulesConfig("USER_SCRIPTS_REGISTER_INCLUDED")
+endif()

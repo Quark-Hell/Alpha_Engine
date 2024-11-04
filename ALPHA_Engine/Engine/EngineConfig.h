@@ -1,7 +1,7 @@
 #pragma once
 
-#if ANOMALY_ENGINE_INCLUDED
-#include "Render/AnomalyConfig.h"
+#if RENDER_INCLUDED
+#include "Render/RenderConfig.h"
 #endif
 
 #if USER_SCRIPTS_REGISTER_INCLUDED

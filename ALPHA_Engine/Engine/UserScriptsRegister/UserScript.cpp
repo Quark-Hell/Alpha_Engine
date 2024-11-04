@@ -3,7 +3,7 @@
 #include "Registry.h"
 
 Register::UserScript::UserScript() {
-	std::cout << "Info: Creating new component" << std::endl;
+	std::cout << "Info: Creating new user script" << std::endl;
 	Register::Registry::RegisterActorWithComponent(this);
 }
 

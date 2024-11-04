@@ -19,7 +19,6 @@ namespace Render::AnomalyEngine::Textures {
         std::replace(pathToTexture.begin(), pathToTexture.end(), '\\', '/');
 #endif
 
-
         stbi_set_flip_vertically_on_load(false);
         unsigned char *data = stbi_load((std::filesystem::current_path().string() + pathToTexture).c_str(),
                                         &width, &height, &channelsCount, 0);

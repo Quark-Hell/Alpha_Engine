@@ -33,13 +33,13 @@ namespace Render::AnomalyEngine {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
     }
-    void RenderEngine::SetCameraProjection(const Render::WindowsManager::Window* window) {
+    void RenderEngine::SetCameraProjection(const Render::WindowsManager::Window& window) {
         float Fov;
         float Aspect;
         float ZNear;
         float ZFar;
 
-        window->_activeCamera->GetCameraInfo(&Fov, &Aspect, &ZNear, &ZFar);
+        window._activeCamera->GetCameraInfo(&Fov, &Aspect, &ZNear, &ZFar);
 
         gluPerspective(90, 1.333, ZNear, ZFar);
         //if (window->_activeCamera->GetProjection())
@@ -82,24 +82,20 @@ namespace Render::AnomalyEngine {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    void RenderEngine::SetActiveWindow(const Render::WindowsManager::Window* window) {
-        glfwMakeContextCurrent(window->_window);
-    }
-
-    void RenderEngine::RenderScene(const Render::WindowsManager::Window* window)
+    void RenderEngine::RenderScene(const Render::WindowsManager::Window& window)
     {
-        if (window->_activeCamera == nullptr) {
+        if (window._activeCamera == nullptr) {
             std::cout << "Error: active camera was be null" << std::endl;
             return;
         }
 
-            RenderEngine::SetWindowMatrix(window->_width, window->_height);
+            RenderEngine::SetWindowMatrix(window._width, window._height);
             RenderEngine::SetCameraProjection(window);
-            RenderEngine::SetCameraTransform(window->_activeCamera);
+            RenderEngine::SetCameraTransform(window._activeCamera);
 
             RenderEngine::SetModelMatrix();
 
-            RenderMeshes(window->_activeCamera);
+            RenderMeshes(window._activeCamera);
 
     }
 
@@ -182,22 +178,14 @@ namespace Render::AnomalyEngine {
         }
     }
 
-    void RenderEngine::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows) {
-        for (auto& window : *windows)
-        {
-            RenderEngine::SetActiveWindow(window.get());
+    void RenderEngine::RenderLoop(Render::WindowsManager::Window& windows) {
 
-            if (window->_initialized == false)
-                window->Init();
+       RenderEngine::ClearFrameBuffer();
+       RenderEngine::PrepareRender();
 
-            glfwPollEvents();
-            RenderEngine::ClearFrameBuffer();
-            RenderEngine::PrepareRender();
+       RenderEngine::RenderScene(windows);
 
-            RenderEngine::RenderScene(window.get());
+       glFinish();
 
-            glFinish();
-            glfwSwapBuffers(window->_window);
-        }
     }
 }

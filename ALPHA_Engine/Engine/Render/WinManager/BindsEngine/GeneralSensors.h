@@ -1,6 +1,6 @@
 #pragma once
 
-namespace BindsEngine {
+namespace Render::WindowsManager::BindsEngine {
 
 enum EnumKeyStates {
     Unknown = -1,

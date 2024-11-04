@@ -15,10 +15,12 @@ MyScript* script = new MyScript();
 //Call after created
 void MyScript::Start() {
     std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;
-#if ANOMALY_ENGINE_INCLUDED
+#if RENDER_INCLUDED
     auto win1 = Core::Factory::CreateWindow(800, 600, "Windows 1");
     auto win2 = Core::Factory::CreateWindow(800, 600, "Windows 2");
+#endif
 
+#if ANOMALY_ENGINE_INCLUDED
     auto cam1 = Core::Factory::CreateCamera();
     auto cam2 = Core::Factory::CreateCamera();
 
@@ -37,13 +39,16 @@ void MyScript::Start() {
     auto mesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Cube.fbx");
     obj2->AddComponent(mesh);
     mesh->_material.InitShader<Render::AnomalyEngine::Shaders::CubeMapShader>();
+#endif
 
+#if RENDER_INCLUDED
     auto win3 = Core::Factory::CreateWindow(800, 600, "Windows 3");
-    win3->SetCamera(cam1);
-
     auto win4 = Core::Factory::CreateWindow(800, 600, "Windows 4");
-    win4->SetCamera(cam1);
+#endif
 
+#if ANOMALY_ENGINE_INCLUDED
+    win3->SetCamera(cam1);
+    win4->SetCamera(cam1);
 #endif
 }
 //Call every frame

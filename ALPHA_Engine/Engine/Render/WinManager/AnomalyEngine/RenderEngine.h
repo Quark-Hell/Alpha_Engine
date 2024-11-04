@@ -5,14 +5,15 @@
 namespace Render {
     namespace WindowsManager {
         class Window;
+        class WindowsManager;
     }
 
     namespace AnomalyEngine::Components {
         class Camera;
         class Mesh;
     }
-
 }
+
 namespace Core {
     class Host;
 }
@@ -36,13 +37,13 @@ namespace Render::AnomalyEngine {
 
     class RenderEngine {
         friend class Core::Host;
+        friend class Render::WindowsManager::WindowsManager;
     private:
         RenderEngine() = default;
         static RenderEngine* GetInstance();
 
         void ClearFrameBuffer();
         void PrepareRender();
-        void SetActiveWindow(const Render::WindowsManager::Window* window);
 
         void SetWindowMatrix(int width, int height);
         void SetModelMatrix();
@@ -50,7 +51,7 @@ namespace Render::AnomalyEngine {
         ///Orto or perspective
         ///
         ///Before use SetWindowMatrix()
-        void SetCameraProjection(const Render::WindowsManager::Window* window);
+        void SetCameraProjection(const Render::WindowsManager::Window& window);
         void SetCameraTransform(Render::AnomalyEngine::Components::Camera* camera);
 
         ///Always set to null after end of cycle
@@ -58,8 +59,8 @@ namespace Render::AnomalyEngine {
         void LoadMeshArray(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer);
 
         ///Before use LoadMeshArray()
-        void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows);
-        void RenderScene(const Render::WindowsManager::Window* window);
+        void RenderLoop(Render::WindowsManager::Window& windows);
+        void RenderScene(const Render::WindowsManager::Window& window);
         void RenderMeshes(Render::AnomalyEngine::Components::Camera* camera);
     public:
         ~RenderEngine() = default;

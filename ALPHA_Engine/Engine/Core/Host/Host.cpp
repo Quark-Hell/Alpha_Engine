@@ -16,20 +16,22 @@ void Core::Host::Registry(const std::list<std::unique_ptr<Register::UserScript>>
 }
 #endif
 
-#if ANOMALY_ENGINE_INCLUDED
+#if RENDER_INCLUDED
 void Core::Host::InitRender() {
-	auto winManager = Render::WindowsManager::WindowsManager::GetInstance();
+	const auto winManager = Render::WindowsManager::WindowsManager::GetInstance();
 	winManager->Init();
 }
 
+void Core::Host::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows) {
+	const auto winManager = Render::WindowsManager::WindowsManager::GetInstance();
+	winManager->RenderLoop(windows);
+}
+#endif
+
+#if ANOMALY_ENGINE_INCLUDED
 void Core::Host::LoadMeshData(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer) {
 	auto rend = Render::AnomalyEngine::RenderEngine::GetInstance();
 	rend->LoadMeshArray(meshBuffer);
-}
-
-void Core::Host::Graphics(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows) {\
-	auto rend = Render::AnomalyEngine::RenderEngine::GetInstance();
-	rend->RenderLoop(windows);
 }
 #endif
 

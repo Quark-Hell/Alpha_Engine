@@ -1,3 +1,3 @@
 #pragma once
 #include "WinManager/WinManagerConfig.h"
-#include "WinManager/AnomalyEngine/RenderConfig.h"
+#include "WinManager/AnomalyEngine/AnomalyConfig.h"

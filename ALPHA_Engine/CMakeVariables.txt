@@ -1,4 +1,3 @@
-
 #Engine source
 SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}")
 SET (Engine_Source "${ALPHA_Engine}/Engine")
@@ -49,9 +48,17 @@ set (Game_Source_Dest "${Game_Files_Dest}/Source")
 #Engine headers
 set(engine_core_list)
 set(engine_binds_list)
-set(engine_graphics_engine_list)
-set(engine_shader_program_list)
-set(engine_user_scripts_list)
 
-set(ANOMALY_ENGINE_INCLUDED ON CACHE BOOL "")
-set(USER_SCRIPTS_REGISTER_INCLUDED ON CACHE BOOL "")
+set(engine_shader_program_list)
+
+#Render
+option(RENDER_BASE "Build base render" ON)
+option(RENDER_ANOMALY_ENGINE "Build graphics engine. Require RENDER_BASE option" ON)
+option(RENDER_BINDS_ENGINE "Build input system. Require RENDER_BASE option" ON)
+set(engine_render_list)
+set(engine_anomaly_list)
+set(engine_binds_list)
+
+#User scripts
+option(USER_SCRIPTS_REGISTER "Build user scripts register" ON)
+set(engine_user_scripts_list)

@@ -22,12 +22,14 @@ std::list<std::unique_ptr<Register::UserScript>>* Core::World::GetUserScripts() 
 }
 #endif
 
-#if ANOMALY_ENGINE_INCLUDED
+#if RENDER_INCLUDED
 std::vector<std::unique_ptr<Render::WindowsManager::Window>>* Core::World::GetWindows() {
 	static std::vector<std::unique_ptr<Render::WindowsManager::Window>> windows{};
 	return &windows;
 }
+#endif
 
+#if ANOMALY_ENGINE_INCLUDED
 std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Camera>>* Core::World::GetCameras() {
 	static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Camera>> cameras{};
 	return &cameras;
@@ -76,7 +78,7 @@ void Core::World::SetSimulationSpeed(float simSpeed) {
 }
 
 void Core::World::Simulation() {
-#if ANOMALY_ENGINE_INCLUDED
+#if RENDER_INCLUDED
 	Host::GetInstance()->InitRender();
 #endif
 
@@ -85,9 +87,13 @@ void Core::World::Simulation() {
 #if USER_SCRIPTS_REGISTER_INCLUDED
 		Host::GetInstance()->Registry(GetUserScripts());
 #endif
+
 #if ANOMALY_ENGINE_INCLUDED
 		Host::GetInstance()->LoadMeshData(GetMeshes());
-		Host::GetInstance()->Graphics(GetWindows());
+#endif
+
+#if RENDER_INCLUDED
+		Host::GetInstance()->RenderLoop(GetWindows());
 #endif
 		//_host->Physics();
 	}

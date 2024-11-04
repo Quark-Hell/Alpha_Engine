@@ -1,6 +1,8 @@
 #pragma once
+#include <cstdint>
+#include <Render/WinManager/BindsEngine/GeneralSensors.h>
 
-namespace BindsEngine {
+namespace Render::WindowsManager::BindsEngine {
 
 enum EnumMouseSensorStates {
     UnknownState = 1 << 0,
@@ -14,8 +16,9 @@ enum EnumMouseSensorStates {
     MouseLeft = 1 << 6,
 };
 
-struct MouseKey
+class MouseKey
 {
+public:
     /*
     * Definition of key by glfw3 representation
     */

@@ -42,6 +42,5 @@ bool Register::Registry::RegisterActorWithComponent(Register::UserScript* script
 	auto component = Core::Factory::CreateUserScript(script);
 	Core::Object* obj = Core::Factory::CreateObject();
 	obj->AddComponent(component);
-	std::cout << "Component created" << std::endl;
 	return true;
 }

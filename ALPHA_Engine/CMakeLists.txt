@@ -31,8 +31,10 @@ add_library (
 	"${engine_core_list}"
 
 	#Engine Modules
+	"${engine_render_list}"
+	"${engine_anomaly_list}"
 	"${engine_binds_list}"
-	"${engine_graphics_engine_list}"
+
 	"${engine_user_scripts_list}"
 )
 

@@ -1,6 +1,6 @@
-include("CMakeVariables.txt")
+#include("CMakeVariables.txt")
 
-function(libraries_source src return_list)
+function(recurse_source src return_list)
 file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.cpp")
     foreach(file ${templateFiles})
 		set(copy_src "${src}/${file}")
@@ -10,20 +10,50 @@ file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.cpp")
 	set(${return_list} "${${return_list}}" PARENT_SCOPE)
 endfunction()
 
+function(source src return_list)
+file(GLOB templateFiles RELATIVE ${src} "${src}/*.cpp")
+    foreach(file ${templateFiles})
+		set(copy_src "${src}/${file}")
+		list(APPEND return_list "${copy_src}")
+    endforeach()
+	message("${return_list}\n")
+	set(${return_list} "${${return_list}}" PARENT_SCOPE)
+endfunction()
+
 #Include render engine
-if (ANOMALY_ENGINE_INCLUDED)
-	add_compile_definitions(ANOMALY_ENGINE_INCLUDED)
-	message("${Cyan}include .cpp engine_graphics_engine_list${ColourReset}")
-	libraries_source(${Engine_Source}/Render engine_graphics_engine_list)
+if (RENDER_BASE)
+	add_compile_definitions(RENDER_INCLUDED)
+	message("${Cyan}include .cpp engine_render_list${ColourReset}")
+	source(${Engine_Source}/Render/WinManager engine_render_list)
+
+	if(RENDER_ANOMALY_ENGINE)
+	    add_compile_definitions(ANOMALY_ENGINE_INCLUDED)
+	    message("${Cyan}include .cpp engine_anomaly_list${ColourReset}")
+        recurse_source(${Engine_Source}/Render/WinManager/AnomalyEngine engine_anomaly_list)
+	endif ()
+
+	if(RENDER_BINDS_ENGINE)
+        add_compile_definitions(BINDS_ENGINE_INCLUDED)
+        message("${Cyan}include .cpp engine_binds_list${ColourReset}")
+        recurse_source(${Engine_Source}/Render/WinManager/BindsEngine engine_binds_list)
+    endif ()
+
 endif ()
 
 #Include user script register
-if (USER_SCRIPTS_REGISTER_INCLUDED)
+if (USER_SCRIPTS_REGISTER)
 	add_compile_definitions(USER_SCRIPTS_REGISTER_INCLUDED)
 	message("${Cyan}include .cpp engine_user_scripts_list${ColourReset}")
-	libraries_source(${Engine_Source}/UserScriptsRegister engine_user_scripts_list)
+	recurse_source(${Engine_Source}/UserScriptsRegister engine_user_scripts_list)
 endif ()
 
 #Include core
 message("${Cyan}include .cpp engine_core_list${ColourReset}")
-libraries_source(${Engine_Source}/Core engine_core_list)
+recurse_source(${Engine_Source}/Core engine_core_list)
+
+if(RENDER_ANOMALY_ENGINE AND NOT RENDER_BASE)
+    message( FATAL_ERROR "For use RENDER_ANOMALY_ENGINE you should turn on RENDER_BASE" )
+endif ()
+if(RENDER_BINDS_ENGINE AND NOT RENDER_BASE)
+    message( FATAL_ERROR "For use RENDER_BINDS_ENGINE you should turn on RENDER_BASE" )
+endif ()
