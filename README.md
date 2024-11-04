@@ -1,5 +1,5 @@
 # Alpha Engine
-Game Engine For Simulators
+Open source game engine
 
 <p align="center">
       <img src="https://i.ibb.co/LprNYRR/Alpha-Engine-2.png" alt="Alpha-Engine-2" border="0">
