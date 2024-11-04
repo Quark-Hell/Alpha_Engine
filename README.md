@@ -1,5 +1,7 @@
 # Alpha Engine
 
+NOTE: Active branch is "Architect2.0". Just use it
+
 <p align="center">
       <img src="https://i.ibb.co/LprNYRR/Alpha-Engine-2.png" alt="Alpha-Engine-2" border="0">
 </p>
