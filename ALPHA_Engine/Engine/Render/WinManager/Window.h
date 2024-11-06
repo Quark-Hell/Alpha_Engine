@@ -1,7 +1,13 @@
 #pragma once
+#include <memory>
 
-struct GLFWwindow;
-struct GLFWmonitor;
+namespace Render::WindowsManager {
+    class WindowsManager;
+}
+
+namespace Render::WindowsManager::BindsEngine {
+    class InputSystem;
+}
 
 namespace Render::AnomalyEngine {
     class RenderEngine;
@@ -10,15 +16,27 @@ namespace Render::AnomalyEngine {
     }
 }
 
+namespace Core {
+    class Factory;
+}
+
+struct GLFWwindow;
+struct GLFWmonitor;
+
+
 namespace Render::WindowsManager {
 
 class Window {
+    friend class Render::WindowsManager::WindowsManager;
     friend class Render::AnomalyEngine::RenderEngine;
+    friend class Render::WindowsManager::BindsEngine::InputSystem;
+    friend class Core::Factory;
 
-     public:
+    private:
         GLFWwindow* _window;
         Render::AnomalyEngine::Components::Camera* _activeCamera = nullptr;
 
+     public:
         int _width = 100;
         int _height = 100;
 
@@ -30,7 +48,7 @@ class Window {
      public:
         Window() = delete;
         Window(int width, int height, const char* title, GLFWmonitor* monitor = nullptr, GLFWwindow* share = nullptr);
-        ~Window() = default;
+        ~Window();
 
         void Resize(int width, int height);
         void SetSync(bool sync);

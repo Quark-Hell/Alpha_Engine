@@ -11,12 +11,16 @@
 #include "AnomalyEngine/Components/Camera.h"
 
 namespace Render::WindowsManager {
+    Window::~Window() {
+        if (_window != nullptr) {
+            free(_window);
+        }
+    }
+
     Window::Window(const int width, const int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share) {
         _window = glfwCreateWindow(width, height, title, monitor, share);
         _width = width;
         _height = height;
-
-
 
         if (_window == nullptr)
         {

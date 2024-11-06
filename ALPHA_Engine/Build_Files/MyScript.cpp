@@ -8,16 +8,36 @@
 
 #include "Render/WinManager/AnomalyEngine/Shaders/CubeMapShader.h"
 
+#include "Render/WinManager/BindsEngine/Binds.h"
+#include "Render/WinManager/BindsEngine/Keyboard/KeyboardSensors.h"
+
 #include <iostream>
 
 MyScript* script = new MyScript();
 
+void MyScript::Print() {
+    std::cout << "Hello Bind!" << std::endl;
+}
+
 //Call after created
 void MyScript::Start() {
     std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;
+
 #if RENDER_INCLUDED
     auto win1 = Core::Factory::CreateWindow(800, 600, "Windows 1");
     auto win2 = Core::Factory::CreateWindow(800, 600, "Windows 2");
+#endif
+
+#if BINDS_ENGINE_INCLUDED
+    {
+        using namespace Render::WindowsManager::BindsEngine;
+
+        auto bind = Core::Factory::CreateKeyboardBind(
+        {std::bind(&MyScript::Print, this),},
+        {EnumKeyStates::KeyHold},
+        {EnumKeyboardTable::A},
+        win1);
+    }
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED

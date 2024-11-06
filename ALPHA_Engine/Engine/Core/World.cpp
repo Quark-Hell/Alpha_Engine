@@ -40,6 +40,14 @@ std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* Core::Wor
 }
 #endif
 
+#if BINDS_ENGINE_INCLUDED
+std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* Core::World::GetBinds() {
+	static std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>> binds{};
+	return &binds;
+}
+#endif
+
+
 #pragma region WorldFunctions
 Core::World* Core::World::GetWorld() {
 	static World world;
@@ -90,6 +98,10 @@ void Core::World::Simulation() {
 
 #if ANOMALY_ENGINE_INCLUDED
 		Host::GetInstance()->LoadMeshData(GetMeshes());
+#endif
+
+#if BINDS_ENGINE_INCLUDED
+		//Host::GetInstance()->LoadBindsBuffer(GetBinds());
 #endif
 
 #if RENDER_INCLUDED

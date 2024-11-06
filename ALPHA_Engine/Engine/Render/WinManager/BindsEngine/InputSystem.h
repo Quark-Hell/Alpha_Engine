@@ -2,6 +2,11 @@
 #include <list>
 #include <memory>
 
+namespace Render::WindowsManager {
+    class Window;
+    class WindowsManager;
+}
+
 namespace Render::WindowsManager::BindsEngine {
     class Mouse;
     class Keyboard;
@@ -9,31 +14,28 @@ namespace Render::WindowsManager::BindsEngine {
 }
 
 namespace Core {
-    class World;
+    class Host;
 };
-
-struct GLFWwindow;
 
 namespace Render::WindowsManager::BindsEngine {
 
 class InputSystem {
-    friend class Core::World;
+    friend class Core::Host;
+    friend class Render::WindowsManager::WindowsManager;
 
 private:
-    std::list<Bind> _bindsBuff;
-
+    std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* bindsBuffer = nullptr;
     std::unique_ptr<Mouse> _mouseClass;
     std::unique_ptr<Keyboard> _keyboardClass;
 
 private:
     static InputSystem* GetInstance();
-    InputSystem() = default;
-    void IO_Events(GLFWwindow& window);
+    InputSystem();
+    void IO_Events(const Render::WindowsManager::Window* window) const;
+
 
 public:
-    void ClearBindsBuffer();
-    void InsertBind(const Bind& bind);
-
+    void LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* buffer);
     ~InputSystem() = default;
 };
 

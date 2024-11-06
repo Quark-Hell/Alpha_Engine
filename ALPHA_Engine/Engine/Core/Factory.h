@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <cstdint>
+#include <functional>
 
 namespace Register {
   class UserScript;
@@ -9,6 +12,12 @@ namespace Register {
 namespace Render {
   namespace WindowsManager {
     class Window;
+    namespace BindsEngine {
+      enum class EnumKeyboardTable : uint16_t;
+      class Bind;
+      enum EnumKeyStates : int16_t;
+      enum EnumMouseSensorStates : uint8_t;
+    }
   }
 
   namespace AnomalyEngine::Components {
@@ -51,6 +60,27 @@ public:
 
   static Render::AnomalyEngine::Components::Mesh* CreateMesh();
   static Render::AnomalyEngine::Components::Mesh* CreateMesh(const std::string& path);
+#endif
+
+#if BINDS_ENGINE_INCLUDED
+  static Render::WindowsManager::BindsEngine::Bind* CreateGeneralBind();
+
+  static Render::WindowsManager::BindsEngine::Bind* CreateMouseButtonsBind(
+    const std::vector<std::function<void(void)>>& Operations,
+    const std::vector<Render::WindowsManager::BindsEngine::EnumKeyStates>& MouseKeysState,
+    const std::vector<uint8_t>& MouseKeys,
+    Render::WindowsManager::Window* window);
+
+  static Render::WindowsManager::BindsEngine::Bind* CreateMouseSensorBind(
+    const std::vector<std::function<void(void)>>& Operations,
+    const Render::WindowsManager::BindsEngine::EnumMouseSensorStates MouseSensorState,
+    Render::WindowsManager::Window* window);
+
+  static Render::WindowsManager::BindsEngine::Bind* CreateKeyboardBind(
+    const std::vector<std::function<void(void)>>& Operations,
+    const std::vector<Render::WindowsManager::BindsEngine::EnumKeyStates>& KeysState,
+    const std::vector<Render::WindowsManager::BindsEngine::EnumKeyboardTable>& KeyboardKeys,
+    Render::WindowsManager::Window* window);
 #endif
 };
 

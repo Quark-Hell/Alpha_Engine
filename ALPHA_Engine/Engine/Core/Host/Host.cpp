@@ -1,4 +1,7 @@
 #include "Host.h"
+
+#include <Render/WinManager/BindsEngine/InputSystem.h>
+
 #include "EngineConfig.h"
 
 Core::Host* Core::Host::GetInstance() {
@@ -30,9 +33,16 @@ void Core::Host::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::
 
 #if ANOMALY_ENGINE_INCLUDED
 void Core::Host::LoadMeshData(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer) {
-	auto rend = Render::AnomalyEngine::RenderEngine::GetInstance();
+	const auto rend = Render::AnomalyEngine::RenderEngine::GetInstance();
 	rend->LoadMeshArray(meshBuffer);
 }
+#endif
+void Core::Host::LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds) {
+	const auto bind = Render::WindowsManager::BindsEngine::InputSystem::GetInstance();
+	bind->LoadBindsBuffer(binds);
+}
+#if BINDS_ENGINE_INCLUDED
+
 #endif
 
 void Core::Host::Physics() {

@@ -13,7 +13,7 @@ private:
     Keyboard();
 
     EnumKeyStates GetKeyState(uint16_t key);
-    void UpdateKeysState(GLFWwindow& window);
+    void UpdateKeysState();
 
 public:
     ~Keyboard();

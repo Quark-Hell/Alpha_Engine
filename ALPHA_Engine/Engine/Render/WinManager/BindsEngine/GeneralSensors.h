@@ -1,8 +1,9 @@
 #pragma once
+#include <cstdint>
 
 namespace Render::WindowsManager::BindsEngine {
 
-enum EnumKeyStates {
+enum EnumKeyStates : int16_t {
     Unknown = -1,
 
     KeyNotPressed = 1 << 0,

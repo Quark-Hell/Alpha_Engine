@@ -1,6 +1,10 @@
 #pragma once
 #include "BaseConfig.h"
 
+namespace Render::WindowsManager::BindsEngine {
+	class Bind;
+}
+
 namespace Core {
 	class World;
 }
@@ -47,6 +51,10 @@ namespace Core {
 
 #if ANOMALY_ENGINE_INCLUDED
 		void LoadMeshData(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer);
+#endif
+
+#if BINDS_ENGINE_INCLUDED
+		void LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds);
 #endif
 		void Physics();
 	};

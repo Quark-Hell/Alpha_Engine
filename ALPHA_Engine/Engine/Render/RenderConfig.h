@@ -1,3 +1,4 @@
 #pragma once
-#include "WinManager/WinManagerConfig.h"
-#include "WinManager/AnomalyEngine/AnomalyConfig.h"
+#include <Render/WinManager/WinManagerConfig.h>
+#include <Render/WinManager/AnomalyEngine/AnomalyConfig.h>
+#include <Render/WinManager/BindsEngine/BindsEngineConfig.h>

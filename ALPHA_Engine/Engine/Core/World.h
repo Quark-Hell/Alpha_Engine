@@ -11,6 +11,9 @@
 namespace Render {
   	namespace WindowsManager {
   		class Window;
+  		namespace BindsEngine {
+  			class Bind;
+  		}
   	}
 
   	namespace AnomalyEngine::Components {
@@ -58,7 +61,12 @@ namespace Core {
 
 #if ANOMALY_ENGINE_INCLUDED
 		static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Camera>>* GetCameras();
+		//TODO: change std::vector to std::list
 		static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* GetMeshes();
+#endif
+
+#if BINDS_ENGINE_INCLUDED
+		static std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* GetBinds();
 #endif
 
 	private:

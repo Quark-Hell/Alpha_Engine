@@ -94,8 +94,6 @@ Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, con
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-#include <Render/WinManager/AnomalyEngine/Components/Mesh.h>
-
 Render::AnomalyEngine::Components::Camera* Core::Factory::CreateCamera(const float fov, const float aspect, const float zNear, const float zFar) {
   const auto cameras = World::GetCameras();
 
@@ -144,6 +142,73 @@ Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh(const std::st
   std::cout << "Info: Mesh created" << std::endl;
 
   return meshes->back().get();
+}
+#endif
+
+#if BINDS_ENGINE_INCLUDED
+
+Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateMouseButtonsBind(
+  const std::vector<std::function<void(void)>>& Operations,
+  const std::vector<Render::WindowsManager::BindsEngine::EnumKeyStates>& MouseKeysState,
+  const std::vector<uint8_t>& MouseKeys,
+  Render::WindowsManager::Window* window) {
+
+  const auto binds = World::GetBinds();
+
+  binds->push_back(std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>
+  (new Render::WindowsManager::BindsEngine::Bind()));
+
+  binds->back().get()->Create(
+    Operations,
+    {},
+    {},
+    MouseKeysState,
+    MouseKeys,
+    static_cast<Render::WindowsManager::BindsEngine::EnumMouseSensorStates>(1),
+    window);
+  std::cout << "Info: Mouse button bind created" << std::endl;
+
+  return binds->back().get();
+}
+
+Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateMouseSensorBind(
+  const std::vector<std::function<void(void)>>& Operations,
+  const Render::WindowsManager::BindsEngine::EnumMouseSensorStates MouseSensorState,
+  Render::WindowsManager::Window* window) {
+
+  const auto binds = World::GetBinds();
+
+  binds->push_back(std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>
+  (new Render::WindowsManager::BindsEngine::Bind()));
+
+  binds->back().get()->Create(Operations, {}, {}, {}, {}, MouseSensorState, window);
+  std::cout << "Info: Mouse sensor bind created" << std::endl;
+
+  return binds->back().get();
+}
+
+Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateKeyboardBind(
+  const std::vector<std::function<void(void)>>& Operations,
+  const std::vector<Render::WindowsManager::BindsEngine::EnumKeyStates>& KeysState,
+  const std::vector<Render::WindowsManager::BindsEngine::EnumKeyboardTable>& KeyboardKeys,
+  Render::WindowsManager::Window* window) {
+
+  const auto binds = World::GetBinds();
+
+  binds->push_back(std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>
+(new Render::WindowsManager::BindsEngine::Bind()));
+
+  binds->back().get()->Create(
+    Operations,
+    KeysState,
+    KeyboardKeys,
+    {},
+    {},
+    static_cast<Render::WindowsManager::BindsEngine::EnumMouseSensorStates>(1),
+    window);
+  std::cout << "Info: Keyboard bind created" << std::endl;
+
+  return binds->back().get();
 }
 #endif
 

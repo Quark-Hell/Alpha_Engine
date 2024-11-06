@@ -1,13 +1,18 @@
 #include "Binds.h"
 
+#include <GLFW/glfw3.h>
+#include <Render/WinManager/Window.h>
+
 namespace Render::WindowsManager::BindsEngine {
 
-void Bind::Constructor(const std::vector<void(*)()> &Operations,
+void Bind::Create(
+	const std::vector<std::function<void(void)>> &Operations,
 	const std::vector<EnumKeyStates> &KeysState,
-	const std::vector<uint16_t> &KeyboardKeys,
+	const std::vector<EnumKeyboardTable> &KeyboardKeys,
 	const std::vector<EnumKeyStates> &MouseKeysState,
 	const std::vector<uint8_t> &MouseKeys,
-	const EnumMouseSensorStates MouseSensorState) {
+	const EnumMouseSensorStates MouseSensorState,
+	Window* window) {
 
 	_operations = Operations;
 
@@ -18,29 +23,15 @@ void Bind::Constructor(const std::vector<void(*)()> &Operations,
 	_mouseKeys = MouseKeys;
 
 	_mouseSensorState = MouseSensorState;
+
+	_bindedWindow = window;
 }
 
-void Bind::KeyboardBind(const std::vector<void(*)()>& Operations,
-	const std::vector<EnumKeyStates>& KeysState,
-	const std::vector<uint16_t>& KeyboardKeys) {
+void Bind::InvokeOperations(const Render::WindowsManager::Window* window) const {
+	if (_bindedWindow != nullptr && _bindedWindow == window) {
+		return;
+	}
 
-	Bind::Constructor(Operations, KeysState, KeyboardKeys, {}, {}, static_cast<EnumMouseSensorStates>(1));
-}
-
-void Bind::MouseButtonsBind(const std::vector<void(*)()>& Operations,
-	const std::vector<EnumKeyStates>& MouseKeysState,
-	const std::vector<uint8_t>& MouseKeys) {
-
-	Bind::Constructor(Operations, {}, {}, MouseKeysState, MouseKeys, static_cast<EnumMouseSensorStates>(1));
-}
-
-void Bind::MouseSensorBind(const std::vector<void(*)()>& Operations,
-	const EnumMouseSensorStates MouseSensorState) {
-
-	Bind::Constructor(Operations, {}, {}, {}, {}, MouseSensorState);
-}
-
-void Bind::InvokeOperations() const {
 	for (const auto & _operation : Bind::_operations)
 	{
 		_operation();

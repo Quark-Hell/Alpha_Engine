@@ -1,11 +1,13 @@
 #include "Mouse.h"
+#include <GLFW/glfw3.h>
 #include "Render/WinManager/BindsEngine/GeneralSensors.h"
 
 namespace Render::WindowsManager::BindsEngine {
 
-void Mouse::UpdateMouseState(GLFWwindow& window) {
+void Mouse::UpdateMouseState() {
 	double xPos, yPos;
-	glfwGetCursorPos(&window, &xPos, &yPos);
+	const auto window = glfwGetCurrentContext();
+	glfwGetCursorPos(window, &xPos, &yPos);
 
 	Mouse::_previousMousePos = Mouse::_currentMousePos;
 	Mouse::_currentMousePos = { static_cast<float>(xPos), static_cast<float>(yPos) };
@@ -35,7 +37,7 @@ void Mouse::UpdateMouseState(GLFWwindow& window) {
 	for (size_t i = 0; i < 5; i++)
 	{
 
-		if (glfwGetMouseButton(&window, Buttons[i]->KEY)) {
+		if (glfwGetMouseButton(window, Buttons[i]->KEY)) {
 			if (Buttons[i]->KeyState & EnumKeyStates::KeyNotPressed) {
 				Buttons[i]->KeyState = static_cast<EnumKeyStates>(KeyPressed | KeyHold);
 			}

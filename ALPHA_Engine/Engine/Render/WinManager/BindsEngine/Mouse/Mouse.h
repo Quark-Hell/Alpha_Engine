@@ -1,23 +1,31 @@
 #pragma once
 #include <Core/Math/Vectors.h>
-#include <GLFW/glfw3.h>
 #include "MouseSensors.h"
 
-namespace Render::WindowsManager::BindsEngine {
+struct GLFWwindow;
 
-class Mouse {
+namespace Render::WindowsManager::BindsEngine {
+    class InputSystem;
+
+    class Mouse {
 private:
     Core::Vector2 _previousMousePos;
     Core::Vector2 _currentMousePos;
     Core::Vector2 _mouseDelta;
 
 private:
-    MouseKey _leftButton{ GLFW_MOUSE_BUTTON_LEFT };
-    MouseKey _rightButton{ GLFW_MOUSE_BUTTON_RIGHT };
-    MouseKey _middleButton{ GLFW_MOUSE_BUTTON_MIDDLE };
+    //GLFW_MOUSE_BUTTON_LEFT = 0
+    //GLFW_MOUSE_BUTTON_RIGHT = 1
+    //GLFW_MOUSE_BUTTON_MIDDLE = 2
+    //GLFW_MOUSE_BUTTON_4 = 3
+    //GLFW_MOUSE_BUTTON_5 = 4
 
-    MouseKey _firstExtraButton{ GLFW_MOUSE_BUTTON_4 };
-    MouseKey _secondExtraButton{ GLFW_MOUSE_BUTTON_5 };
+    MouseKey _leftButton{ 0 };
+    MouseKey _rightButton{ 1 };
+    MouseKey _middleButton{ 2 };
+
+    MouseKey _firstExtraButton{ 3 };
+    MouseKey _secondExtraButton{ 4 };
 
     EnumMouseSensorStates MoveSensorState = UnknownState;
 
@@ -28,7 +36,7 @@ private:
     };
 
 private:
-    friend class InputSystem;
+    friend class Render::WindowsManager::BindsEngine::InputSystem;
 
 public:
     Core::Vector2 GetMousePos();
@@ -39,7 +47,7 @@ public:
 
 private:
     Mouse() = default;
-    void UpdateMouseState(GLFWwindow& window);
+    void UpdateMouseState();
 };
 
 }

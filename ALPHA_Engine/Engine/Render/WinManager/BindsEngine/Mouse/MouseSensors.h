@@ -4,7 +4,7 @@
 
 namespace Render::WindowsManager::BindsEngine {
 
-enum EnumMouseSensorStates {
+enum EnumMouseSensorStates : uint8_t {
     UnknownState = 1 << 0,
 
     MouseNotMoved = 1 << 1,
