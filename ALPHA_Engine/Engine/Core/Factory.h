@@ -81,6 +81,8 @@ public:
     const std::vector<Render::WindowsManager::BindsEngine::EnumKeyStates>& KeysState,
     const std::vector<Render::WindowsManager::BindsEngine::EnumKeyboardTable>& KeyboardKeys,
     Render::WindowsManager::Window* window);
+
+  static void RemoveBind(const Render::WindowsManager::BindsEngine::Bind* removedBind);
 #endif
 };
 

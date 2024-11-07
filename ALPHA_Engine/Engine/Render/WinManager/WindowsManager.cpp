@@ -35,26 +35,19 @@ namespace Render::WindowsManager {
 #if ANOMALY_ENGINE_INCLUDED
         const auto rend = Render::AnomalyEngine::RenderEngine::GetInstance();
 #endif
-#if BINDS_ENGINE_INCLUDED
-
-#endif
 
         for (auto& window : *windows) {
-            //if (!glfwGetWindowAttrib(window->_window, GLFW_MAXIMIZED)) {
-
+            if (glfwGetWindowAttrib(window->_window, GLFW_ICONIFIED) == GLFW_TRUE) {
+                continue;
+            }
 
             glfwMakeContextCurrent(window->_window);
 
-            if (window->_initialized == false)
-                window->Init();
-            glfwPollEvents();
-
-
 #if BINDS_ENGINE_INCLUDED
-            //if (glfwGetWindowAttrib(window->_window, GLFW_FOCUSED)) {
-            //    const auto bind = Render::WindowsManager::BindsEngine::InputSystem::GetInstance();
-            //    bind->IO_Events(window.get());
-            //}
+            if (glfwGetWindowAttrib(window->_window, GLFW_FOCUSED)) {
+                const auto bind = Render::WindowsManager::BindsEngine::InputSystem::GetInstance();
+                bind->IO_Events(window.get());
+            }
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
@@ -64,6 +57,6 @@ namespace Render::WindowsManager {
 
             glfwSwapBuffers(window->_window);
         }
-        //}
+        glfwPollEvents();
     }
 }

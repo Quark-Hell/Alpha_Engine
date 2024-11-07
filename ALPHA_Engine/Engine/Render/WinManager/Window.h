@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <string>
 
 namespace Render::WindowsManager {
     class WindowsManager;
@@ -11,6 +12,7 @@ namespace Render::WindowsManager::BindsEngine {
 
 namespace Render::AnomalyEngine {
     class RenderEngine;
+
     namespace Components {
         class Camera;
     }
@@ -25,35 +27,36 @@ struct GLFWmonitor;
 
 
 namespace Render::WindowsManager {
-
-class Window {
-    friend class Render::WindowsManager::WindowsManager;
-    friend class Render::AnomalyEngine::RenderEngine;
-    friend class Render::WindowsManager::BindsEngine::InputSystem;
-    friend class Core::Factory;
+    class Window {
+        friend class Render::WindowsManager::WindowsManager;
+        friend class Render::AnomalyEngine::RenderEngine;
+        friend class Render::WindowsManager::BindsEngine::InputSystem;
+        friend class Core::Factory;
 
     private:
-        GLFWwindow* _window;
-        Render::AnomalyEngine::Components::Camera* _activeCamera = nullptr;
+        GLFWwindow *_window;
+        Render::AnomalyEngine::Components::Camera *_activeCamera = nullptr;
 
-     public:
         int _width = 100;
         int _height = 100;
 
+        std::string _title;
+
         bool _isSync = true;
-        bool _initialized = false;
+        bool _isCursorVisible = true;
 
-        void Init();
 
-     public:
+    public:
         Window() = delete;
-        Window(int width, int height, const char* title, GLFWmonitor* monitor = nullptr, GLFWwindow* share = nullptr);
+        Window(int width, int height, const char *title, GLFWmonitor *monitor = nullptr, GLFWwindow *share = nullptr);
         ~Window();
 
         void Resize(int width, int height);
+
         void SetSync(bool sync);
+        void SetCamera(Render::AnomalyEngine::Components::Camera *camera);
 
-        void SetCamera(Render::AnomalyEngine::Components::Camera* camera);
-};
-
+        bool GetCursorVisible();
+        void SetCursorVisible(bool isVisible);
+    };
 }

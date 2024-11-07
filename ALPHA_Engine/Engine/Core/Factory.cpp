@@ -210,6 +210,24 @@ Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateKeyboardBind(
 
   return binds->back().get();
 }
+
+void Core::Factory::RemoveBind(const Render::WindowsManager::BindsEngine::Bind* removedBind) {
+  const auto binds = World::GetBinds();
+
+  auto it = binds->begin();
+
+  for (const auto& bind : *binds) {
+    if (removedBind == bind.get()) {
+      binds->erase(it);
+      std::cout << "Info: Bind removed" << std::endl;
+      return;
+    }
+    else
+      std::advance(it, 1);
+  }
+
+  std::cout << "Error: Bind does not exist" << std::endl;
+}
 #endif
 
 

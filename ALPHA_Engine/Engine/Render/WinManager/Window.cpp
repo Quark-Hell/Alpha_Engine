@@ -21,6 +21,7 @@ namespace Render::WindowsManager {
         _window = glfwCreateWindow(width, height, title, monitor, share);
         _width = width;
         _height = height;
+        _title = title;
 
         if (_window == nullptr)
         {
@@ -41,6 +42,13 @@ namespace Render::WindowsManager {
 
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+
+        glfwWindowHint(GLFW_SAMPLES, 4);
+        glEnable(GL_MULTISAMPLE);
+
+        if (glfwRawMouseMotionSupported())
+            glfwSetInputMode(_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
         glewExperimental = GL_TRUE;
         GLenum err = glewInit();
@@ -52,19 +60,6 @@ namespace Render::WindowsManager {
             abort();
         }
         //glfwMakeContextCurrent(nullptr);
-    }
-
-    void Window::Init()
-    {
-        if (_initialized == false) {
-            glfwWindowHint(GLFW_SAMPLES, 4);
-            glEnable(GL_MULTISAMPLE);
-
-            std::cout << "Info: Renderer: " << glGetString(GL_RENDERER) << std::endl;
-            std::cout << "Info: OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-
-            _initialized = true;
-        }
     }
 
     void Window::Resize(int width, int height) {
@@ -80,6 +75,19 @@ namespace Render::WindowsManager {
 
     void Window::SetCamera(Render::AnomalyEngine::Components::Camera* camera) {
         _activeCamera = camera;
+    }
+
+    bool Window::GetCursorVisible() {
+        return _isCursorVisible;
+    }
+
+    void Window::SetCursorVisible(bool isVisible) {
+        _isCursorVisible = isVisible;
+
+        if (_isCursorVisible)
+            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        else
+            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
 }

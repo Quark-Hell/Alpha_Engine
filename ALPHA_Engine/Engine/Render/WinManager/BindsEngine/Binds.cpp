@@ -4,38 +4,37 @@
 #include <Render/WinManager/Window.h>
 
 namespace Render::WindowsManager::BindsEngine {
+    void Bind::Create(
+        const std::vector<std::function<void(void)> > &Operations,
+        const std::vector<EnumKeyStates> &KeysState,
+        const std::vector<EnumKeyboardTable> &KeyboardKeys,
+        const std::vector<EnumKeyStates> &MouseKeysState,
+        const std::vector<uint8_t> &MouseKeys,
+        const EnumMouseSensorStates MouseSensorState,
+        Window *window) {
+        _operations = Operations;
 
-void Bind::Create(
-	const std::vector<std::function<void(void)>> &Operations,
-	const std::vector<EnumKeyStates> &KeysState,
-	const std::vector<EnumKeyboardTable> &KeyboardKeys,
-	const std::vector<EnumKeyStates> &MouseKeysState,
-	const std::vector<uint8_t> &MouseKeys,
-	const EnumMouseSensorStates MouseSensorState,
-	Window* window) {
+        _keyboardKeysState = KeysState;
+        _keyboardKeys = KeyboardKeys;
 
-	_operations = Operations;
+        _mouseKeysState = MouseKeysState;
+        _mouseKeys = MouseKeys;
 
-	_keyboardKeysState = KeysState;
-	_keyboardKeys = KeyboardKeys;
+        _mouseSensorState = MouseSensorState;
 
-	_mouseKeysState = MouseKeysState;
-	_mouseKeys = MouseKeys;
+        _bindedWindow = window;
+    }
 
-	_mouseSensorState = MouseSensorState;
+    void Bind::InvokeOperations(const Render::WindowsManager::Window *window) const {
+        if (_bindedWindow != nullptr && _bindedWindow != window) {
+            return;
+        }
+        if (IsActive == false) {
+            return;
+        }
 
-	_bindedWindow = window;
-}
-
-void Bind::InvokeOperations(const Render::WindowsManager::Window* window) const {
-	if (_bindedWindow != nullptr && _bindedWindow == window) {
-		return;
-	}
-
-	for (const auto & _operation : Bind::_operations)
-	{
-		_operation();
-	}
-}
-
+        for (const auto &_operation: Bind::_operations) {
+            _operation();
+        }
+    }
 }

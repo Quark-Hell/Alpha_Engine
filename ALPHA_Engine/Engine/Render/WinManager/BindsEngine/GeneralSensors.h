@@ -2,21 +2,19 @@
 #include <cstdint>
 
 namespace Render::WindowsManager::BindsEngine {
+    enum EnumKeyStates : int16_t {
+        Unknown = -1,
 
-enum EnumKeyStates : int16_t {
-    Unknown = -1,
+        KeyNotPressed = 1 << 0,
+        KeyPressed = 1 << 1,
+        KeyHold = 1 << 2,
+        KeyReleased = 1 << 3,
 
-    KeyNotPressed = 1 << 0,
-    KeyPressed = 1 << 1,
-    KeyHold = 1 << 2,
-    KeyReleased = 1 << 3,
+        MouseWheelStartMoved = 1 << 4,
+        MouseWheelKeepMoved = 1 << 5,
+        MouseWheelEndMoved = 1 << 6,
 
-    MouseWheelStartMoved = 1 << 4,
-    MouseWheelKeepMoved = 1 << 5,
-    MouseWheelEndMoved = 1 << 6,
-
-    MouseWheelMovedUp = 1 << 7,
-    MouseWheelMovedDown = 1 << 8
-};
-
+        MouseWheelMovedUp = 1 << 7,
+        MouseWheelMovedDown = 1 << 8
+    };
 }

@@ -13,30 +13,27 @@ namespace Render::WindowsManager::BindsEngine {
     class Bind;
 }
 
-namespace Core {
-    class Host;
-};
-
 namespace Render::WindowsManager::BindsEngine {
+    class InputSystem {
+        friend class Render::WindowsManager::WindowsManager;
 
-class InputSystem {
-    friend class Core::Host;
-    friend class Render::WindowsManager::WindowsManager;
+    private:
+        std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind> > *bindsBuffer = nullptr;
+        std::unique_ptr<Mouse> _mouseClass;
+        std::unique_ptr<Keyboard> _keyboardClass;
 
-private:
-    std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* bindsBuffer = nullptr;
-    std::unique_ptr<Mouse> _mouseClass;
-    std::unique_ptr<Keyboard> _keyboardClass;
+    private:
+        InputSystem();
+        void IO_Events(const Render::WindowsManager::Window *window) const;
 
-private:
-    static InputSystem* GetInstance();
-    InputSystem();
-    void IO_Events(const Render::WindowsManager::Window* window) const;
+    public:
+        static InputSystem *GetInstance();
 
+        void LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind> > *buffer);
 
-public:
-    void LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* buffer);
-    ~InputSystem() = default;
-};
+        ~InputSystem() = default;
 
+        Mouse *GetMouse();
+        Keyboard *GetKeyboard();
+    };
 }

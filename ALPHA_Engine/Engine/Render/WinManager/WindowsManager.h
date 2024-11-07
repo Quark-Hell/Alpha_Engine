@@ -3,31 +3,24 @@
 #include <vector>
 #include <memory>
 
-namespace Render::AnomalyEngine {
-    class RenderEngine;
-}
-
 namespace Core {
     class Host;
-    class Factory;
 }
 
 namespace Render::WindowsManager {
-
-class WindowsManager {
-    friend class AnomalyEngine::RenderEngine;
-    friend class Core::Host;
-    friend class Core::Factory;
+    class WindowsManager {
+        friend class Core::Host;
 
     private:
         WindowsManager();
-        static WindowsManager* GetInstance();
+
+        static WindowsManager *GetInstance();
+
         void Init();
 
-        void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows);
+        void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window> > *windows);
 
-     public:
+    public:
         ~WindowsManager();
-};
-
+    };
 }

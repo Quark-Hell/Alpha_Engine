@@ -4,9 +4,22 @@
 #pragma once
 #include "UserScriptsRegister/UserScriptConfig.h"
 
-class MyScript : public Register::UserScript {
+namespace Render::WindowsManager {
+	class Window;
+}
 
-public:
+class MyScript : public Register::UserScript {
+	private:
+	Core::Object* Player = nullptr;
+	float moveSensitive = 0.40f;
+
+	Render::WindowsManager::Window* win1 = nullptr;
+	Render::WindowsManager::Window* win2 = nullptr;
+
+	Render::WindowsManager::Window* win3 = nullptr;
+	Render::WindowsManager::Window* win4 = nullptr;
+
+	public:
 	MyScript() = default;
 
 	void Start() override;
@@ -14,4 +27,12 @@ public:
 	void End() override;
 
 	void Print();
+
+    void CameraRotate();
+
+	void LeftMoveCamera();
+	void RightMoveCamera();
+
+	void ShowCursor();
+	void HideCursor();
 };

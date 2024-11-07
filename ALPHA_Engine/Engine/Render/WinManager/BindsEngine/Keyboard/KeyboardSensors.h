@@ -44,12 +44,12 @@ enum class EnumKeyboardTable : uint16_t {
 		Pause = 284
 	};
 
-class KeyboardKey
-{
+class KeyboardKey {
 	friend Keyboard;
+
 public:
-    ///Definition of key by glfw3 representation
-    const EnumKeyboardTable KEY;
+	///Definition of key by glfw3 representation
+	const EnumKeyboardTable KEY;
 
 private:
 	///Key state enum
@@ -57,88 +57,22 @@ private:
 
 	//16 bits for key needed because I use glfw representation
 public:
-	KeyboardKey(const uint16_t key) : KEY(static_cast<EnumKeyboardTable>(key)) {}
+	KeyboardKey(const uint16_t key) : KEY(static_cast<EnumKeyboardTable>(key)) {
+	}
+
 	~KeyboardKey() = default;
 };
 
-class KeyboardData{
+class KeyboardData {
 	friend class Keyboard;
 
 private:
 	KeyboardData();
 
-public:
-	KeyboardKey A;						  KeyboardKey B;
-	KeyboardKey C;						  KeyboardKey D;
-	KeyboardKey E;						  KeyboardKey F;
-	KeyboardKey G;						  KeyboardKey H;
-	KeyboardKey I;						  KeyboardKey J;
-	KeyboardKey K;						  KeyboardKey L;
-	KeyboardKey M;						  KeyboardKey N;
-	KeyboardKey O;						  KeyboardKey P;
-	KeyboardKey Q;						  KeyboardKey R;
-	KeyboardKey S;						  KeyboardKey T;
-	KeyboardKey U;						  KeyboardKey V;
-	KeyboardKey W;						  KeyboardKey X;
-	KeyboardKey Y;						  KeyboardKey Z;
-
-	KeyboardKey Num0;					  KeyboardKey Num1;
-	KeyboardKey Num2;					  KeyboardKey Num3;
-	KeyboardKey Num4;					  KeyboardKey Num5;
-	KeyboardKey Num6;					  KeyboardKey Num7;
-	KeyboardKey Num8;					  KeyboardKey Num9;
-
-	KeyboardKey Escape;
-
-	KeyboardKey LControl;				  KeyboardKey LShift;
-	KeyboardKey LAlt;
-
-	KeyboardKey RControl;				  KeyboardKey RShift;
-	KeyboardKey RAlt;
-
-	KeyboardKey Menu;					  KeyboardKey LBracket;
-	KeyboardKey RBracket;				  KeyboardKey Semicolon;
-	KeyboardKey Comma;				      KeyboardKey Period;
-	KeyboardKey Quote;				      KeyboardKey Slash;
-	KeyboardKey Backslash;	              KeyboardKey Tilde;
-	KeyboardKey Equal;					  KeyboardKey Hyphen;
-
-	KeyboardKey Space;					  KeyboardKey Enter;
-	KeyboardKey Backspace;	              KeyboardKey Tab;
-
-	KeyboardKey PageUp;				      KeyboardKey PageDown;
-	KeyboardKey End;					  KeyboardKey Home;
-
-	KeyboardKey Insert;				      KeyboardKey Delete;
-
-	KeyboardKey Add;					  KeyboardKey Subtract;
-	KeyboardKey Multiply;			      KeyboardKey Divide;
-
-	KeyboardKey Left;					  KeyboardKey Right;
-	KeyboardKey Up;						  KeyboardKey Down;
-
-	KeyboardKey Numpad0;		          KeyboardKey Numpad1;
-	KeyboardKey Numpad2;		          KeyboardKey Numpad3;
-	KeyboardKey Numpad4;		          KeyboardKey Numpad5;
-	KeyboardKey Numpad6;		          KeyboardKey Numpad7;
-	KeyboardKey Numpad8;		          KeyboardKey Numpad9;
-
-	KeyboardKey F1;						  KeyboardKey F2;
-	KeyboardKey F3;						  KeyboardKey F4;
-	KeyboardKey F5;						  KeyboardKey F6;
-	KeyboardKey F7;						  KeyboardKey F8;
-	KeyboardKey F9;						  KeyboardKey F10;
-	KeyboardKey F11;					  KeyboardKey F12;
-	KeyboardKey F13;					  KeyboardKey F14;
-	KeyboardKey F15;
-
-	KeyboardKey Pause;
-
 private:
-	std::shared_ptr<std::array<KeyboardKey*,99>> Keys;
+	std::shared_ptr<std::array<KeyboardKey, 99> > Keys;
 
 public:
-	static KeyboardData* GetInstance();
+	static KeyboardData *GetInstance();
 };
-
 }

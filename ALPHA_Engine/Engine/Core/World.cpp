@@ -101,7 +101,7 @@ void Core::World::Simulation() {
 #endif
 
 #if BINDS_ENGINE_INCLUDED
-		//Host::GetInstance()->LoadBindsBuffer(GetBinds());
+		Host::GetInstance()->LoadBindsBuffer(GetBinds());
 #endif
 
 #if RENDER_INCLUDED
