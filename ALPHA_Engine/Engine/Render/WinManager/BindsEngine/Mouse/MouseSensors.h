@@ -1,8 +1,10 @@
 #pragma once
 #include <cstdint>
-#include <Render/WinManager/BindsEngine/GeneralSensors.h>
+
 
 namespace Render::WindowsManager::BindsEngine {
+    enum EnumKeyStates : int16_t;
+
     enum EnumMouseSensorStates : uint8_t {
         UnknownState = 1 << 0,
 

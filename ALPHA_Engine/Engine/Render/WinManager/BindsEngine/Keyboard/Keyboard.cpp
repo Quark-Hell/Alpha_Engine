@@ -1,6 +1,7 @@
 #include "Keyboard.h"
 #include "BaseConfig.h"
 #include "GLFW/glfw3.h"
+#include "Render/WinManager/BindsEngine/GeneralSensors.h"
 
 namespace Render::WindowsManager::BindsEngine {
     Keyboard::Keyboard() = default;

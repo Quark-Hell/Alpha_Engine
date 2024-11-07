@@ -1,6 +1,7 @@
 #include "Mouse.h"
 #include <GLFW/glfw3.h>
 #include "Render/WinManager/BindsEngine/GeneralSensors.h"
+#include "MouseSensors.h"
 
 namespace Render::WindowsManager::BindsEngine {
     void Mouse::UpdateMouseState() {
@@ -12,9 +13,9 @@ namespace Render::WindowsManager::BindsEngine {
         Mouse::_currentMousePos = {static_cast<float>(xPos), static_cast<float>(yPos)};
 
         Mouse::_mouseDelta = Core::Vector2{_currentMousePos - _previousMousePos};
-
+        
         if (Mouse::_mouseDelta != Core::Vector2{0, 0}) {
-            if (Mouse::MoveSensorState & MouseNotMoved || Mouse::MoveSensorState & MouseEndMoved) {
+            if (Mouse::MoveSensorState & MouseNotMoved || Mouse::MoveSensorState & EnumMouseSensorStates::MouseEndMoved) {
                 Mouse::MoveSensorState = MouseStartMoved;
             } else if (Mouse::MoveSensorState & MouseStartMoved) {
                 Mouse::MoveSensorState = MouseKeepMoved;

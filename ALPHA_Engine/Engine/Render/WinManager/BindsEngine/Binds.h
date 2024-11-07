@@ -1,7 +1,6 @@
 #pragma once
 
 #include <BaseConfig.h>
-#include <Render/WinManager/BindsEngine/Mouse/Mouse.h>
 #include <Render/WinManager/BindsEngine/GeneralSensors.h>
 #include <functional>
 
@@ -15,6 +14,7 @@ namespace Core {
 
 namespace Render::WindowsManager::BindsEngine {
     enum class EnumKeyboardTable : uint16_t;
+    enum EnumMouseSensorStates : uint8_t;
 
     class Bind {
     private:

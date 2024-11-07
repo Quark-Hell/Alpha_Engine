@@ -1,13 +1,10 @@
 #pragma once
-#include "Render/WinManager/BindsEngine/GeneralSensors.h"
 #include <cstdint>
 #include <memory>
 
 namespace Render::WindowsManager::BindsEngine {
 	class Keyboard;
-}
-
-namespace Render::WindowsManager::BindsEngine {
+	enum EnumKeyStates : int16_t;
 
 enum class EnumKeyboardTable : uint16_t {
 		//In reality, it's a GLFW keymap. Never mind

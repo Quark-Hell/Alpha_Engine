@@ -1,5 +1,6 @@
 #include <GLFW/glfw3.h>
 #include "KeyboardSensors.h"
+#include "Render/WinManager/BindsEngine/GeneralSensors.h"
 
 #include <array>
 
