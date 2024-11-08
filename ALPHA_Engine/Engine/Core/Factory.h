@@ -5,6 +5,14 @@
 #include <cstdint>
 #include <functional>
 
+namespace Render::WindowsManager::BindsEngine {
+  enum class EnumMouseTable : uint8_t;
+}
+
+namespace Render::WindowsManager::BindsEngine {
+  enum class EnumKeyboardKeysStates : uint8_t;
+}
+
 namespace Register {
   class UserScript;
 }
@@ -13,10 +21,10 @@ namespace Render {
   namespace WindowsManager {
     class Window;
     namespace BindsEngine {
+      enum class EnumMouseSensorStates : uint8_t;
+      enum class EnumMouseKeysStates : uint8_t;
       enum class EnumKeyboardTable : uint16_t;
       class Bind;
-      enum EnumKeyStates : int16_t;
-      enum EnumMouseSensorStates : uint8_t;
     }
   }
 
@@ -67,8 +75,8 @@ public:
 
   static Render::WindowsManager::BindsEngine::Bind* CreateMouseButtonsBind(
     const std::vector<std::function<void(void)>>& Operations,
-    const std::vector<Render::WindowsManager::BindsEngine::EnumKeyStates>& MouseKeysState,
-    const std::vector<uint8_t>& MouseKeys,
+    const std::vector<Render::WindowsManager::BindsEngine::EnumMouseKeysStates>& MouseKeysState,
+    const std::vector<Render::WindowsManager::BindsEngine::EnumMouseTable>& MouseKeys,
     Render::WindowsManager::Window* window);
 
   static Render::WindowsManager::BindsEngine::Bind* CreateMouseSensorBind(
@@ -78,7 +86,7 @@ public:
 
   static Render::WindowsManager::BindsEngine::Bind* CreateKeyboardBind(
     const std::vector<std::function<void(void)>>& Operations,
-    const std::vector<Render::WindowsManager::BindsEngine::EnumKeyStates>& KeysState,
+    const std::vector<Render::WindowsManager::BindsEngine::EnumKeyboardKeysStates>& KeysState,
     const std::vector<Render::WindowsManager::BindsEngine::EnumKeyboardTable>& KeyboardKeys,
     Render::WindowsManager::Window* window);
 

@@ -1,19 +1,20 @@
 #include "Keyboard.h"
-#include "BaseConfig.h"
+
+#include <array>
 #include "GLFW/glfw3.h"
-#include "Render/WinManager/BindsEngine/GeneralSensors.h"
+
+#include "iostream"
 
 namespace Render::WindowsManager::BindsEngine {
-    Keyboard::Keyboard() = default;
-    Keyboard::~Keyboard() = default;
 
-    EnumKeyStates Keyboard::GetKeyState(const uint16_t key) {
+    EnumKeyboardKeysStates Keyboard::GetKeyState(const EnumKeyboardTable key) {
         const auto keyboard = KeyboardData::GetInstance();
 
         for (size_t i = 0; i < 99; i++) {
-            if (static_cast<uint16_t>(keyboard->Keys->at(i).KEY) == key) { return keyboard->Keys->at(i).KeyState; }
+            if (keyboard->Keys->at(i).KEY == key) { return keyboard->Keys->at(i).KeyState; }
         }
-        return EnumKeyStates::Unknown;
+
+        return EnumKeyboardKeysStates::KeyNotPressed;
     }
 
     void Keyboard::UpdateKeysState() {
@@ -22,20 +23,20 @@ namespace Render::WindowsManager::BindsEngine {
 
         for (auto &key: *keyboard->Keys) {
             if (glfwGetKey(win, static_cast<uint16_t>(key.KEY))) {
-                if (key.KeyState & KeyNotPressed) {
-                    key.KeyState = KeyPressed;
+                if (key.KeyState == EnumKeyboardKeysStates::KeyNotPressed) {
+                    key.KeyState = EnumKeyboardKeysStates::KeyPressed;
                     //std::cout << "Pressed" << std::endl;
-                } else if (key.KeyState & KeyPressed) {
-                    key.KeyState = KeyHold;
+                } else if (key.KeyState == EnumKeyboardKeysStates::KeyPressed) {
+                    key.KeyState = EnumKeyboardKeysStates::KeyHold;
                     //std::cout << "Hold" << std::endl;
                 }
             } else {
-                if (key.KeyState & KeyHold || key.KeyState & KeyPressed) {
-                    key.KeyState = KeyReleased;
+                if (key.KeyState == EnumKeyboardKeysStates::KeyHold || key.KeyState == EnumKeyboardKeysStates::KeyPressed) {
+                    key.KeyState = EnumKeyboardKeysStates::KeyReleased;
                     //std::cout << "Released" << std::endl;
                     continue;
                 }
-                key.KeyState = KeyNotPressed;
+                key.KeyState = EnumKeyboardKeysStates::KeyNotPressed;
             }
         }
     }

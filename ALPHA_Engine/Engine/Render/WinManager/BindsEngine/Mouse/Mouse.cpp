@@ -1,62 +1,83 @@
 #include "Mouse.h"
+
+#include <array>
 #include <GLFW/glfw3.h>
-#include "Render/WinManager/BindsEngine/GeneralSensors.h"
-#include "MouseSensors.h"
 
 namespace Render::WindowsManager::BindsEngine {
+
+    EnumMouseKeysStates Mouse::GetKeyState(const EnumMouseTable key) {
+        const auto mouse = MouseData::GetInstance();
+
+        for (size_t i = 0; i < 99; i++) {
+            if (mouse->Keys->at(i).KEY == key) { return mouse->Keys->at(i).KeyState; }
+        }
+
+        return EnumMouseKeysStates::KeyNotPressed;
+    }
+
+    EnumMouseSensorStates Mouse::GetSensorState() {
+        const auto mouse = MouseData::GetInstance();
+        return mouse->_mouseSensorState;
+    }
+
     void Mouse::UpdateMouseState() {
         double xPos, yPos;
         const auto window = glfwGetCurrentContext();
         glfwGetCursorPos(window, &xPos, &yPos);
 
-        Mouse::_previousMousePos = Mouse::_currentMousePos;
-        Mouse::_currentMousePos = {static_cast<float>(xPos), static_cast<float>(yPos)};
+        const auto mouse = MouseData::GetInstance();
 
-        Mouse::_mouseDelta = Core::Vector2{_currentMousePos - _previousMousePos};
-        
-        if (Mouse::_mouseDelta != Core::Vector2{0, 0}) {
-            if (Mouse::MoveSensorState & MouseNotMoved || Mouse::MoveSensorState & EnumMouseSensorStates::MouseEndMoved) {
-                Mouse::MoveSensorState = MouseStartMoved;
-            } else if (Mouse::MoveSensorState & MouseStartMoved) {
-                Mouse::MoveSensorState = MouseKeepMoved;
+        mouse->_previousMousePos = mouse->_currentMousePos;
+        mouse->_currentMousePos = {static_cast<float>(xPos), static_cast<float>(yPos)};
+
+        mouse->_mouseDelta = Core::Vector2{mouse->_currentMousePos - mouse->_previousMousePos};
+
+        if (mouse->_mouseDelta != Core::Vector2{0, 0}) {
+            if (mouse->_mouseSensorState == EnumMouseSensorStates::MouseNotMoved || mouse->_mouseSensorState == EnumMouseSensorStates::MouseEndMoved) {
+                mouse->_mouseSensorState = EnumMouseSensorStates::MouseStartMoved;
+            } else if (mouse->_mouseSensorState == EnumMouseSensorStates::MouseStartMoved) {
+                mouse->_mouseSensorState = EnumMouseSensorStates::MouseKeepMoved;
             }
         } else {
-            if (Mouse::MoveSensorState & MouseKeepMoved || Mouse::MoveSensorState & MouseStartMoved) {
-                Mouse::MoveSensorState = MouseEndMoved;
+            if (mouse->_mouseSensorState == EnumMouseSensorStates::MouseKeepMoved || mouse->_mouseSensorState == EnumMouseSensorStates::MouseStartMoved) {
+                mouse->_mouseSensorState = EnumMouseSensorStates::MouseEndMoved;
             } else {
-                Mouse::MoveSensorState = MouseNotMoved;
+                mouse->_mouseSensorState = EnumMouseSensorStates::MouseNotMoved;
             }
         }
 
-        //Update mouse buttons state
-        for (size_t i = 0; i < 5; i++) {
-            if (glfwGetMouseButton(window, Buttons[i]->KEY)) {
-                if (Buttons[i]->KeyState & EnumKeyStates::KeyNotPressed) {
-                    Buttons[i]->KeyState = static_cast<EnumKeyStates>(KeyPressed | KeyHold);
-                } else if (Buttons[i]->KeyState & EnumKeyStates::KeyPressed) {
-                    Buttons[i]->KeyState = KeyHold;
+        for (auto& key : *mouse->Keys) {
+            if (glfwGetMouseButton(window, static_cast<int>(key.KEY))) {
+                if (key.KeyState == EnumMouseKeysStates::KeyNotPressed) {
+                    key.KeyState = EnumMouseKeysStates::KeyPressed;
                 }
-            } else {
-                if (Buttons[i]->KeyState & EnumKeyStates::KeyHold || Buttons[i]->KeyState & EnumKeyStates::KeyPressed ||
-                    Buttons[i]->KeyState & (EnumKeyStates) (KeyPressed | KeyHold)) {
-                    Buttons[i]->KeyState = KeyReleased;
+                else if (key.KeyState == EnumMouseKeysStates::KeyPressed) {
+                    key.KeyState = EnumMouseKeysStates::KeyHold;
+                }
+            }
+            else {
+                if (key.KeyState == EnumMouseKeysStates::KeyHold || key.KeyState == EnumMouseKeysStates::KeyPressed) {
+                    key.KeyState = EnumMouseKeysStates::KeyReleased;
                     continue;
                 }
-                Buttons[i]->KeyState = KeyNotPressed;
+                key.KeyState = EnumMouseKeysStates::KeyNotPressed;
             }
         }
     }
 
     Core::Vector2 Mouse::GetMouseDelta() {
-        return _mouseDelta;
+        const auto mouse = MouseData::GetInstance();
+        return mouse->_mouseDelta;
     }
 
     Core::Vector2 Mouse::GetMousePos() {
-        return _currentMousePos;
+        const auto mouse = MouseData::GetInstance();
+        return mouse->_currentMousePos;
     }
 
     bool Mouse::IsMouseChangePosition() const {
-        if (Mouse::_mouseDelta == Core::Vector2{0, 0}) {
+        const auto mouse = MouseData::GetInstance();
+        if (mouse->_mouseDelta == Core::Vector2{0, 0}) {
             return false;
         }
         return true;

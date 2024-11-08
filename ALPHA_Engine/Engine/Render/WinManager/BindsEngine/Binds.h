@@ -1,7 +1,6 @@
 #pragma once
 
 #include <BaseConfig.h>
-#include <Render/WinManager/BindsEngine/GeneralSensors.h>
 #include <functional>
 
 namespace Render::WindowsManager {
@@ -13,17 +12,21 @@ namespace Core {
 }
 
 namespace Render::WindowsManager::BindsEngine {
+    enum class EnumMouseKeysStates : uint8_t;
+    enum class EnumKeyboardKeysStates : uint8_t;
     enum class EnumKeyboardTable : uint16_t;
-    enum EnumMouseSensorStates : uint8_t;
+
+    enum class EnumMouseSensorStates : uint8_t;
+    enum class EnumMouseTable : uint8_t;
 
     class Bind {
     private:
         std::vector<std::function<void(void)> > _operations;
 
-        std::vector<EnumKeyStates> _keyboardKeysState;
+        std::vector<EnumKeyboardKeysStates> _keyboardKeysState;
         std::vector<EnumKeyboardTable> _keyboardKeys;
-        std::vector<EnumKeyStates> _mouseKeysState;
-        std::vector<uint8_t> _mouseKeys;
+        std::vector<EnumMouseKeysStates> _mouseKeysState;
+        std::vector<EnumMouseTable> _mouseKeys;
         EnumMouseSensorStates _mouseSensorState;
 
         Window *_bindedWindow = nullptr;
@@ -41,10 +44,10 @@ namespace Render::WindowsManager::BindsEngine {
         void InvokeOperations(const Render::WindowsManager::Window *window) const;
 
         void Create(const std::vector<std::function<void(void)> > &Operations = {},
-                    const std::vector<EnumKeyStates> &KeysState = {},
+                    const std::vector<EnumKeyboardKeysStates> &KeyboardKeysState = {},
                     const std::vector<EnumKeyboardTable> &KeyboardKeys = {},
-                    const std::vector<EnumKeyStates> &MouseKeysState = {},
-                    const std::vector<uint8_t> &MouseKeys = {},
+                    const std::vector<EnumMouseKeysStates> &MouseKeysState = {},
+                    const std::vector<EnumMouseTable> &MouseKeys = {},
                     EnumMouseSensorStates MouseSensorState = static_cast<EnumMouseSensorStates>(1),
                     Window *window = nullptr);
 

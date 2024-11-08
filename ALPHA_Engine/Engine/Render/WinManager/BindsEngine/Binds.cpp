@@ -1,20 +1,17 @@
 #include "Binds.h"
 
-#include <GLFW/glfw3.h>
-#include <Render/WinManager/Window.h>
-
 namespace Render::WindowsManager::BindsEngine {
     void Bind::Create(
         const std::vector<std::function<void(void)> > &Operations,
-        const std::vector<EnumKeyStates> &KeysState,
+        const std::vector<EnumKeyboardKeysStates> &KeyboardKeysState,
         const std::vector<EnumKeyboardTable> &KeyboardKeys,
-        const std::vector<EnumKeyStates> &MouseKeysState,
-        const std::vector<uint8_t> &MouseKeys,
+        const std::vector<EnumMouseKeysStates> &MouseKeysState,
+        const std::vector<EnumMouseTable> &MouseKeys,
         const EnumMouseSensorStates MouseSensorState,
         Window *window) {
         _operations = Operations;
 
-        _keyboardKeysState = KeysState;
+        _keyboardKeysState = KeyboardKeysState;
         _keyboardKeys = KeyboardKeys;
 
         _mouseKeysState = MouseKeysState;

@@ -4,19 +4,15 @@
 struct GLFWwindow;
 
 namespace Render::WindowsManager::BindsEngine {
+    class Keyboard {
+        friend class InputSystem;
 
-class Keyboard {
-private:
-    friend class InputSystem;
+    private:
+        Keyboard() = default;
+        void UpdateKeysState();
 
-private:
-    Keyboard();
-
-    EnumKeyStates GetKeyState(uint16_t key);
-    void UpdateKeysState();
-
-public:
-    ~Keyboard();
-};
-
+    public:
+        ~Keyboard() = default;
+        EnumKeyboardKeysStates GetKeyState(EnumKeyboardTable key);
+    };
 }

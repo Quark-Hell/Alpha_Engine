@@ -1,13 +1,12 @@
-#include <GLFW/glfw3.h>
 #include "KeyboardSensors.h"
-#include "Render/WinManager/BindsEngine/GeneralSensors.h"
 
+#include <GLFW/glfw3.h>
 #include <array>
 
 namespace Render::WindowsManager::BindsEngine {
 
     KeyboardData::KeyboardData(){
-	    Keys = std::make_unique<std::array<KeyboardKey, 99> >(std::array<KeyboardKey, 99>{
+	    Keys = std::make_unique<std::array<KeyboardKey, 99>>(std::array<KeyboardKey, 99>{
 		    KeyboardKey(GLFW_KEY_A), KeyboardKey(GLFW_KEY_B), KeyboardKey(GLFW_KEY_C), KeyboardKey(GLFW_KEY_D),
 		    KeyboardKey(GLFW_KEY_E), KeyboardKey(GLFW_KEY_F), KeyboardKey(GLFW_KEY_G), KeyboardKey(GLFW_KEY_H),
 		    KeyboardKey(GLFW_KEY_I), KeyboardKey(GLFW_KEY_J), KeyboardKey(GLFW_KEY_K), KeyboardKey(GLFW_KEY_L),

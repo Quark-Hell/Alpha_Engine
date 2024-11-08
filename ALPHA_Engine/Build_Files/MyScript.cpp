@@ -8,9 +8,8 @@
 
 #include "Render/WinManager/AnomalyEngine/Shaders/CubeMapShader.h"
 
+#include "Render/WinManager/BindsEngine/BindsEngineConfig.h"
 #include "Render/WinManager/BindsEngine/InputSystem.h"
-#include "Render/WinManager/BindsEngine/Binds.h"
-#include "Render/WinManager/BindsEngine/Keyboard/KeyboardSensors.h"
 
 #include <iostream>
 
@@ -43,6 +42,7 @@ void MyScript::CameraRotate() {
 }
 
 void MyScript::ShowCursor() {
+    std::cout << "Show";
     win1->SetCursorVisible(true);
 }
 
@@ -94,29 +94,29 @@ void MyScript::Start() {
 
         auto showCursor = Core::Factory::CreateKeyboardBind(
             {std::bind(&MyScript::ShowCursor, this)},
-            {EnumKeyStates::KeyPressed},
-            {EnumKeyboardTable::LAlt},
-            win1
-        );
-
-        auto leftMove = Core::Factory::CreateKeyboardBind(
-            {std::bind(&MyScript::LeftMoveCamera, this)},
-            {EnumKeyStates::KeyPressed},
-            {EnumKeyboardTable::LAlt},
-            win1
-        );
-
-        auto rightMove = Core::Factory::CreateKeyboardBind(
-            {std::bind(&MyScript::RightMoveCamera, this)},
-            {EnumKeyStates::KeyPressed},
+            {EnumKeyboardKeysStates::KeyPressed},
             {EnumKeyboardTable::LAlt},
             win1
         );
 
         auto hideCursor = Core::Factory::CreateKeyboardBind(
             {std::bind(&MyScript::HideCursor, this)},
-            {EnumKeyStates::KeyReleased},
+            {EnumKeyboardKeysStates::KeyReleased},
             {EnumKeyboardTable::LAlt},
+            win1
+        );
+
+        auto leftMove = Core::Factory::CreateKeyboardBind(
+            {std::bind(&MyScript::LeftMoveCamera, this)},
+            {EnumKeyboardKeysStates::KeyPressed},
+            {EnumKeyboardTable::A},
+            win1
+        );
+
+        auto rightMove = Core::Factory::CreateKeyboardBind(
+            {std::bind(&MyScript::RightMoveCamera, this)},
+            {EnumKeyboardKeysStates::KeyPressed},
+            {EnumKeyboardTable::D},
             win1
         );
 

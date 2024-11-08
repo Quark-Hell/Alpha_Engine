@@ -18,7 +18,7 @@ namespace Render::WindowsManager::BindsEngine {
         friend class Render::WindowsManager::WindowsManager;
 
     private:
-        std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind> > *bindsBuffer = nullptr;
+        std::list<std::unique_ptr<Bind>>* _bindsBuffer = nullptr;
         std::unique_ptr<Mouse> _mouseClass;
         std::unique_ptr<Keyboard> _keyboardClass;
 
@@ -29,11 +29,11 @@ namespace Render::WindowsManager::BindsEngine {
     public:
         static InputSystem *GetInstance();
 
-        void LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind> > *buffer);
+        void LoadBindsBuffer(std::list<std::unique_ptr<Bind> > *buffer);
 
         ~InputSystem() = default;
 
-        Mouse *GetMouse();
-        Keyboard *GetKeyboard();
+        Mouse *GetMouse() const;
+        Keyboard *GetKeyboard() const;
     };
 }

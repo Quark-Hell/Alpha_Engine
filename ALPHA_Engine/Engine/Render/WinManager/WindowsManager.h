@@ -1,5 +1,4 @@
 #pragma once
-#include "Window.h"
 #include <vector>
 #include <memory>
 
@@ -8,6 +7,8 @@ namespace Core {
 }
 
 namespace Render::WindowsManager {
+    class Window;
+
     class WindowsManager {
         friend class Core::Host;
 
@@ -18,7 +19,7 @@ namespace Render::WindowsManager {
 
         void Init();
 
-        void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window> > *windows);
+        void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>> *windows);
 
     public:
         ~WindowsManager();
