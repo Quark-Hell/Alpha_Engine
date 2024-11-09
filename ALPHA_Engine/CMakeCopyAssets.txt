@@ -57,7 +57,6 @@ endfunction()
 copy_assets(${Engine_Assets} "${Game_Engine_Dest}/Engine_Assets")
 copy_assets(${Build_Files} "${Game_Source_Dest}")
 copy_assets(${GLM} "${Game_Engine_Dest}/GLM")
-copy_assets(${GLEW} "${Game_Engine_Dest}/GLEW")
 copy_assets("${Game_Source_Dest}/IncludedModules.cmake" "${Game_Source_Dest}")
 
 message("\n")

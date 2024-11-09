@@ -1,6 +1,7 @@
 #include "CubeMapShader.h"
 
 #include <Core/Object.h>
+#include <GLEW/glew.h>
 #include <Render/WinManager/AnomalyEngine/Components/Camera.h>
 
 #include "Render/WinManager/AnomalyEngine/Textures/BaseTexture.h"
@@ -82,11 +83,11 @@ namespace Render::AnomalyEngine::Shaders {
             return;
         }
 
-       auto view = glm::mat4(glm::mat3(camera->GetParentObject()->GetTransformMatrix()));
-       SetValue("view_matrix", view);
+        auto view = glm::mat4(glm::mat3(camera->GetParentObject()->GetTransformMatrix()));
+        SetValue(UniformType::mat4x4,"view_matrix", &view);
 
         auto projMatrix = camera->GetProjectionMatrix();
-        SetValue("projection_matrix", projMatrix);
+        SetValue(UniformType::mat4x4, "projection_matrix", &projMatrix);
 
         glBindTexture(GL_TEXTURE_CUBE_MAP, _textureId);
         glPolygonMode(GL_FRONT, GL_FILL);

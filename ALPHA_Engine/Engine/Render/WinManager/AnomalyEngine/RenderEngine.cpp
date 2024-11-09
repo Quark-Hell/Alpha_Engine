@@ -11,8 +11,6 @@
 #include "Components/Mesh.h"
 #include "Shaders/ShaderProgram.h"
 
-#include "Binder.h"
-
 namespace Render::AnomalyEngine {
     RenderEngine* RenderEngine::GetInstance() {
         static RenderEngine render;
@@ -73,7 +71,6 @@ namespace Render::AnomalyEngine {
         }
     }
 
-
     void RenderEngine::PrepareRender() {
         glClearColor(0.3f, 0.3f, 0.3f, 0.f);
 
@@ -89,18 +86,60 @@ namespace Render::AnomalyEngine {
             return;
         }
 
-            RenderEngine::SetWindowMatrix(window._width, window._height);
-            RenderEngine::SetCameraProjection(window);
-            RenderEngine::SetCameraTransform(window._activeCamera);
+        RenderEngine::SetWindowMatrix(window._width, window._height);
+        RenderEngine::SetCameraProjection(window);
+        RenderEngine::SetCameraTransform(window._activeCamera);
 
-            RenderEngine::SetModelMatrix();
+        RenderEngine::SetModelMatrix();
 
-            RenderMeshes(window._activeCamera);
-
+        RenderMeshes(window._activeCamera);
     }
 
-    void RenderEngine::LoadMeshArray(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer) {
-        _meshBuffer = meshBuffer;
+    int RenderEngine::GetRenderMode(Render::AnomalyEngine::Shaders::ShaderProgram& shader) {
+        Shaders::RenderMode renderMode = shader.GetRenderMode();
+        int glRenderMode = 0;
+
+        switch (static_cast<int>(renderMode)) {
+            case static_cast<int>(Shaders::RenderMode::Points):
+                glRenderMode = GL_POINTS;
+            break;
+            case static_cast<int>(Shaders::RenderMode::Lines):
+                glRenderMode = GL_LINES;
+            break;
+            case static_cast<int>(Shaders::RenderMode::LineStrip):
+                glRenderMode = GL_LINE_STRIP;
+            break;
+            case static_cast<int>(Shaders::RenderMode::Triangles):
+                glRenderMode = GL_TRIANGLES;
+            break;
+            default:
+                std::cout << "Critical: Unknown render mode" << std::endl;
+            abort();
+            break;
+        }
+
+        return glRenderMode;
+    }
+
+    bool RenderEngine::MeshChecker(const Render::AnomalyEngine::Components::Mesh *mesh) {
+        if (mesh == nullptr) {
+            std::cout << "Error: Mesh was null" << std::endl;
+            return false;
+        }
+        if (mesh->_material.Shader == nullptr) {
+            std::cout << "Error: Shader was be null" << std::endl;
+            return false;
+        }
+        if (mesh->_material.Shader->GetCompiledStatus() == false) {
+            std::cout << "Error: Shader was not be compiled" << std::endl;
+            return false;
+        }
+        if (mesh->_material.Shader->GetProgramId() == 0) {
+            std::cout << "Error: Shader program was not be created" << std::endl;
+            return false;
+        }
+
+        return true;
     }
 
     void RenderEngine::RenderMeshes(Render::AnomalyEngine::Components::Camera* camera) {
@@ -116,25 +155,8 @@ namespace Render::AnomalyEngine {
         for (size_t i = 0; i < _meshBuffer->size(); i++) {
 
             Components::Mesh* mesh = _meshBuffer->at(i).get();
-            if (mesh == nullptr) {
-                std::cout << "Error: Mesh was null" << std::endl;
+            if (!MeshChecker(mesh))
                 continue;
-            }
-
-            if (mesh->_material.Shader == nullptr) {
-                std::cout << "Error: Shader was be null" << std::endl;
-                continue;
-            }
-
-            if (mesh->_material.Shader->GetCompiledStatus() == false) {
-                std::cout << "Error: Shader was not be compiled" << std::endl;
-                continue;
-            }
-
-            if (mesh->_material.Shader->GetProgramId() == 0) {
-                std::cout << "Error: Shader program was not be created" << std::endl;
-                continue;
-            }
 
             glGenVertexArrays(1, &mesh->_vao);
             glBindVertexArray(mesh->_vao);
@@ -166,16 +188,21 @@ namespace Render::AnomalyEngine {
             glBindVertexArray(mesh->_vao);
 
             mesh->_material.Shader->ApplyShadersSettings(camera);
-            //int renderMode = Render::GetRenderMode(mesh._material->Shader->RenderMode);
+            const int renderMode = GetRenderMode(*mesh->_material.Shader);
 
             if (mesh->_isIndexed)
-                glDrawElements(GL_TRIANGLES, mesh->_indices->size(), GL_UNSIGNED_INT, mesh->_indices->data());
+                glDrawElements(renderMode, mesh->_indices->size(), GL_UNSIGNED_INT, mesh->_indices->data());
             else
-                glDrawArrays(GL_TRIANGLES, 0, mesh->_vertex->size() / 3);
+                glDrawArrays(renderMode, 0, mesh->_vertex->size() / 3);
+
             glDepthFunc(GL_LESS);
             glBindVertexArray(0);
             glDeleteVertexArrays(1, &mesh->_vao);
         }
+    }
+
+    void RenderEngine::LoadMeshArray(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer) {
+        _meshBuffer = meshBuffer;
     }
 
     void RenderEngine::RenderLoop(Render::WindowsManager::Window& windows) {

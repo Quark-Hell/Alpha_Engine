@@ -4,6 +4,16 @@
 #include <filesystem>
 #include <iostream>
 
+#include <GLEW/glew.h>
+
+#include "Core/Math/Vectors.h"
+
+#include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/transform.hpp"
+#include "glm/gtx/string_cast.hpp"
+
 namespace Render::AnomalyEngine::Shaders {
 
     ShaderProgram::ShaderProgram(Material* parentMat) {
@@ -69,6 +79,10 @@ namespace Render::AnomalyEngine::Shaders {
     Material* ShaderProgram::GetParentMaterial() const {
         return _parentMaterial;
     }
+
+	RenderMode ShaderProgram::GetRenderMode() const {
+	    return _renderMode;
+    }
 #pragma endregion
 
     bool ShaderProgram::BindShader() const {
@@ -82,7 +96,6 @@ namespace Render::AnomalyEngine::Shaders {
         	std::cout << "Error: Shader program was not be created on GPU" << std::endl;
         	return false;
         }
-
 
         glUseProgram(_programId);
         return true;
@@ -297,5 +310,41 @@ namespace Render::AnomalyEngine::Shaders {
 
 	void ShaderProgram::ApplyShadersSettings(Render::AnomalyEngine::Components::Camera* camera) {
 
+    }
+
+	void ShaderProgram::SetRenderMode(const RenderMode mode) {
+	    _renderMode = mode;
+    }
+
+	void ShaderProgram::SetValue(const UniformType type, const std::string& fieldName, void* value) const {
+    	if (ShaderProgram::_programId == 0) {
+    		std::cout << "Shader does not exist" << std::endl;
+    		return;
+    	}
+
+    	if (type == UniformType::mat4x4) {
+    		const auto* v = static_cast<glm::mat4x4*>(value);
+    		glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), 1, GL_FALSE, glm::value_ptr(*v));
+    	}
+    	else if (type == UniformType::mat3x3) {
+    		const auto* v = static_cast<glm::mat3x3*>(value);
+    		glUniformMatrix3fv(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), 1, GL_FALSE, glm::value_ptr(*v));
+    	}
+    	else if (type == UniformType::integer) {
+    		const auto v = static_cast<int*>(value);
+    		glUniform1i(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *v);
+    	}
+    	else if (type == UniformType::unsigned_int) {
+    		const auto* v = static_cast<unsigned int*>(value);
+    		glUniform1ui(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *v);
+    	}
+    	else if (type == UniformType::floatType) {
+    		const auto* v = static_cast<float*>(value);
+    		glUniform1f(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *v);
+    	}
+    	else if (type == UniformType::vec3) {
+    		const auto* v = static_cast<Core::Vector3*>(value);
+    		glUniform3f(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), v->X, v->Y, v->Z);
+    	}
     }
 }

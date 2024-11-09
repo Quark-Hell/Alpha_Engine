@@ -2,18 +2,6 @@
 #include <memory>
 #include <string>
 
-#include <GLEW/glew.h>
-
-#include "Core/Math/Vectors.h"
-
-#include "glm/glm.hpp"
-#include "glm/gtc/type_ptr.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtx/transform.hpp"
-#include "glm/gtx/string_cast.hpp"
-
-#include <iostream>
-
 namespace Render::AnomalyEngine::Components {
 	class Camera;
 }
@@ -34,6 +22,13 @@ namespace Render::AnomalyEngine::Shaders {
         ComputeShader = 5,
     };
 
+	enum class RenderMode : uint8_t {
+		Points = 0,
+		Lines = 1,
+		LineStrip = 2,
+		Triangles = 3,
+	};
+
 class ShaderProgram {
 	friend class Material;
 	friend class Render::AnomalyEngine::RenderEngine;
@@ -51,6 +46,7 @@ private:
 
     Render::AnomalyEngine::Material* _parentMaterial;
 
+	RenderMode _renderMode = RenderMode::Triangles;
 public:
 	ShaderProgram() = delete;
     virtual ~ShaderProgram();
@@ -73,45 +69,19 @@ public:
 
 	[[nodiscard]] Material* GetParentMaterial() const;
 
-	template <typename T, typename = std::enable_if_t<
-		std::is_same_v<glm::mat4x4, T> ||
-		std::is_same_v<glm::mat3x3, T> ||
-		std::is_same_v<int, T> ||
-		std::is_same_v<unsigned int, T> ||
-		std::is_same_v<float, T> ||
-		std::is_same_v<Core::Vector3, T>
-	>>
-	void SetValue(const std::string& fieldName, T& value) {
-		if (ShaderProgram::_programId == 0) {
-			std::cout << "Shader does not exist" << std::endl;
-			return;
-		}
+	[[nodiscard]] RenderMode GetRenderMode() const;
 
-		if (std::is_same_v<glm::mat4x4, T>) {
-			const auto* v = reinterpret_cast<glm::mat4x4*>(&value);
-			glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), 1, GL_FALSE, glm::value_ptr(*v));
-		}
-		else if (std::is_same_v<glm::mat3x3, T>) {
-			const auto* v = reinterpret_cast<glm::mat3x3*>(&value);
-			glUniformMatrix3fv(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), 1, GL_FALSE, glm::value_ptr(*v));
-		}
-		else if (std::is_same_v<int, T>) {
-			const auto v = reinterpret_cast<int*>(&value);
-			glUniform1i(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *v);
-		}
-		else if (std::is_same_v<unsigned int, T>) {
-			const auto* v = reinterpret_cast<unsigned int*>(&value);
-			glUniform1ui(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *v);
-		}
-		else if (std::is_same_v<float, T>) {
-			const auto* v = reinterpret_cast<float*>(&value);
-			glUniform1f(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *v);
-		}
-		else if (std::is_same_v<Core::Vector3, T>) {
-			const auto* v = reinterpret_cast<Core::Vector3*>(&value);
-			glUniform3f(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), v->X, v->Y, v->Z);
-		}
-	}
+	enum class UniformType : uint8_t {
+		mat4x4 = 0,
+		mat3x3 = 1,
+		integer = 2,
+		unsigned_int = 3,
+		floatType = 4,
+		vec3 = 5,
+	};
+	void SetValue(UniformType type, const std::string& fieldName, void* value) const;
+
+	void SetRenderMode(RenderMode mode);
 
 #pragma endregion
 

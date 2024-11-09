@@ -8,6 +8,10 @@ namespace Render {
         class WindowsManager;
     }
 
+    namespace AnomalyEngine::Shaders {
+        class ShaderProgram;
+    }
+
     namespace AnomalyEngine::Components {
         class Camera;
         class Mesh;
@@ -19,21 +23,6 @@ namespace Core {
 }
 
 namespace Render::AnomalyEngine {
-
-    enum RenderModes : unsigned short {
-        Points = 0,
-        LineStrip = 1,
-        LineLoop = 2,
-        Lines = 3,
-        LineStripAdjacency = 4,
-        LinesAdjacency = 5,
-        TriangleStrip = 6,
-        TriangleFan = 7,
-        Triangles = 8,
-        TriangleStripAdjacency = 9,
-        TrianglesAdjacency = 10,
-        Patches = 11,
-    };
 
     class RenderEngine {
         friend class Core::Host;
@@ -62,6 +51,11 @@ namespace Render::AnomalyEngine {
         void RenderLoop(Render::WindowsManager::Window& windows);
         void RenderScene(const Render::WindowsManager::Window& window);
         void RenderMeshes(Render::AnomalyEngine::Components::Camera* camera);
+
+        ///Check mesh valid
+        [[nodiscard]] bool MeshChecker(const Render::AnomalyEngine::Components::Mesh* mesh);
+
+        [[nodiscard]] int GetRenderMode(Render::AnomalyEngine::Shaders::ShaderProgram& shader);
     public:
         ~RenderEngine() = default;
 
