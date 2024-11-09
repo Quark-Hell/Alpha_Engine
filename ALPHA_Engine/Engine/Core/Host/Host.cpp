@@ -37,12 +37,12 @@ void Core::Host::LoadMeshData(std::vector<std::unique_ptr<Render::AnomalyEngine:
 	rend->LoadMeshArray(meshBuffer);
 }
 #endif
+
+#if BINDS_ENGINE_INCLUDED
 void Core::Host::LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds) {
 	const auto bind = Render::WindowsManager::BindsEngine::InputSystem::GetInstance();
 	bind->LoadBindsBuffer(binds);
 }
-#if BINDS_ENGINE_INCLUDED
-
 #endif
 
 void Core::Host::Physics() {
