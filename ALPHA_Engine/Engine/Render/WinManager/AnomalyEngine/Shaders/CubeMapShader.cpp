@@ -6,6 +6,12 @@
 
 #include "Render/WinManager/AnomalyEngine/Textures/BaseTexture.h"
 
+#include "Render/WinManager/AnomalyEngine/Textures/TextureLoader.h"
+
+
+
+#include "Core/Timer.h"
+
 namespace Render::AnomalyEngine::Textures {
     enum EnumTypeOfTexture : unsigned short;
 }
@@ -13,16 +19,6 @@ namespace Render::AnomalyEngine::Textures {
 namespace Render::AnomalyEngine::Shaders {
 
     CubeMapShader::CubeMapShader(Material* parentMat): ShaderProgram(parentMat) {
-        _rightSide.CreateTexture(R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Right_Tex.tga)");
-        _leftSide.CreateTexture(R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Left_Tex.tga)");
-        _topSide.CreateTexture(R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Top_Tex.tga)");
-        _bottomSide.CreateTexture(R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Bottom_Tex.tga)");
-        _frontSide.CreateTexture(R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Front_Tex.tga)");
-        _backSide.CreateTexture(R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Back_Tex.tga)");
-
-        LoadTexture();
-
-
         AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/CubeMapShader/VertexShader.txt)", ShadersType::VertexShader);
         AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/CubeMapShader/FragmentShader.txt)", ShadersType::FragmentShader);
 
@@ -38,27 +34,56 @@ namespace Render::AnomalyEngine::Shaders {
         std::cout << "Info: Cube map shader was be created" << std::endl;
     }
 
-    bool CubeMapShader::LoadTexture() {
+    void CubeMapShader::LoadTextures(
+        const std::string& leftSide,
+        const std::string& rightSide,
+        const std::string& topSide,
+        const std::string& bottomSide,
+        const std::string& frontSide,
+        const std::string& backSide) {
+
+        {
+            Core::ScopedTimer timer("Info: Load time");
+
+            const auto loader = Textures::TextureLoader::GetInstance();
+            loader->AddTask(_cubemapTextures[0], leftSide);
+            loader->AddTask(_cubemapTextures[1], rightSide);
+            loader->AddTask(_cubemapTextures[2], topSide);
+            loader->AddTask(_cubemapTextures[3], bottomSide);
+            loader->AddTask(_cubemapTextures[4], frontSide);
+            loader->AddTask(_cubemapTextures[5], backSide);
+            loader->DoWork();
+
+            const auto loader1 = Textures::TextureLoader::GetInstance();
+            loader1->AddTask(_cubemapTextures[0], leftSide);
+            loader1->AddTask(_cubemapTextures[1], rightSide);
+            loader1->AddTask(_cubemapTextures[2], topSide);
+            loader1->AddTask(_cubemapTextures[3], bottomSide);
+            loader1->AddTask(_cubemapTextures[4], frontSide);
+            loader1->AddTask(_cubemapTextures[5], backSide);
+            loader1->DoWork();
+        }
+
+        //for (size_t i = 0; i < 100; i++) {
+        //
+        //}
+        TransferTexturesToGPU();
+    }
+
+    bool CubeMapShader::TransferTexturesToGPU() {
+        if (_textureId != 0) {
+            glDeleteTextures(1, &_textureId);
+            _textureId = 0;
+            std::cout << "Info: Old texture was deleted from VRAM" << std::endl;
+        }
+
         glGenTextures(1, &_textureId);
         glBindTexture(GL_TEXTURE_CUBE_MAP, CubeMapShader::_textureId);
 
-        if (!CubeMapShader::_leftSide.TransferToGPU(false, false, static_cast<Textures::EnumTypeOfTexture>(Textures::EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 0)))
-            return false;
-
-        if (!CubeMapShader::_rightSide.TransferToGPU(false, false, static_cast<Textures::EnumTypeOfTexture>(Textures::EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 1)))
-            return false;
-
-        if (!CubeMapShader::_topSide.TransferToGPU(false, false, static_cast<Textures::EnumTypeOfTexture>(Textures::EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 2)))
-            return false;
-
-        if (!CubeMapShader::_bottomSide.TransferToGPU(false, false, static_cast<Textures::EnumTypeOfTexture>(Textures::EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 3)))
-            return false;
-
-        if (!CubeMapShader::_frontSide.TransferToGPU(false, false, static_cast<Textures::EnumTypeOfTexture>(Textures::EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 4)))
-            return false;
-
-        if (!CubeMapShader::_backSide.TransferToGPU(false, false, static_cast<Textures::EnumTypeOfTexture>(Textures::EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + 5)))
-            return false;
+        for (size_t i = 0; i < _cubemapTextures.size(); i++) {
+            if (!_cubemapTextures[i].TransferToGPU(false, static_cast<Textures::EnumTypeOfTexture>(Textures::EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + i)))
+                return false;
+        }
 
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -66,14 +91,11 @@ namespace Render::AnomalyEngine::Shaders {
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-        CubeMapShader::_rightSide.DeleteTexture();
-        CubeMapShader::_leftSide.DeleteTexture();
-        CubeMapShader::_topSide.DeleteTexture();
-        CubeMapShader::_bottomSide.DeleteTexture();
-        CubeMapShader::_frontSide.DeleteTexture();
-        CubeMapShader::_backSide.DeleteTexture();
+        for (size_t i = 0; i < _cubemapTextures.size(); i++) {
+            _cubemapTextures[i].DeleteTexture();
+        }
 
-        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
         return true;
     }
 
@@ -89,6 +111,7 @@ namespace Render::AnomalyEngine::Shaders {
         auto projMatrix = camera->GetProjectionMatrix();
         SetValue(UniformType::mat4x4, "projection_matrix", &projMatrix);
 
+        glDepthFunc(GL_LEQUAL);
         glBindTexture(GL_TEXTURE_CUBE_MAP, _textureId);
         glPolygonMode(GL_FRONT, GL_FILL);
         glDisable(GL_CULL_FACE);

@@ -43,7 +43,7 @@ namespace Render::AnomalyEngine::Textures {
 
     unsigned int BaseTexture::GetTextureId() const
     {
-        return textureId;
+        return _textureId;
     }
 
     unsigned int BaseTexture::GetTextureLocation() const

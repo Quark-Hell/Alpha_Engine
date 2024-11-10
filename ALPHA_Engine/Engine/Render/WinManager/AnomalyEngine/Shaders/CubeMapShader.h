@@ -3,16 +3,13 @@
 #include "ShaderProgram.h"
 #include "Render/WinManager/AnomalyEngine/Textures/OpenGLTexture.h"
 
+#include <array>
+
 namespace Render::AnomalyEngine::Shaders {
 
     class CubeMapShader final : public ShaderProgram {
     private:
-        Textures::OpenGLTexture _rightSide;
-        Textures::OpenGLTexture _leftSide;
-        Textures::OpenGLTexture _topSide;
-        Textures::OpenGLTexture _bottomSide;
-        Textures::OpenGLTexture _frontSide;
-        Textures::OpenGLTexture _backSide;
+        std::array<Textures::OpenGLTexture, 6> _cubemapTextures;
 
         unsigned int _textureId = 0;
 
@@ -20,7 +17,15 @@ namespace Render::AnomalyEngine::Shaders {
         CubeMapShader(Material* parentMat);
         ~CubeMapShader() override = default;
 
-        bool LoadTexture();
+        void LoadTextures(
+            const std::string& leftSide,
+            const std::string& rightSide,
+            const std::string& topSide,
+            const std::string& bottomSide,
+            const std::string& frontSide,
+            const std::string& backSide);
+
+        bool TransferTexturesToGPU();
 
         void ApplyShadersSettings(Render::AnomalyEngine::Components::Camera* camera) override;
     };

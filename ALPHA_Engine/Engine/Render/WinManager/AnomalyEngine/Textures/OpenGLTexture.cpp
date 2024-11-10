@@ -13,7 +13,7 @@ namespace Render::AnomalyEngine::Textures {
     }
 
 
-    bool OpenGLTexture::TransferToGPU(const bool genTextureAuto, const bool unbindTextureAuto, const EnumTypeOfTexture typeOfTexture) {
+    bool OpenGLTexture::TransferToGPU(const bool genTextureAuto, const EnumTypeOfTexture typeOfTexture) {
         if (_textureData == nullptr) {
             std::cout << "Error: texture has no data" << std::endl;
             return false;
@@ -48,9 +48,15 @@ namespace Render::AnomalyEngine::Textures {
                 break;
         }
 
+        if (_textureId != 0) {
+            glDeleteTextures(1, &_textureId);
+            _textureId = 0;
+            std::cout << "Info: Old texture was deleted from VRAM" << std::endl;
+        }
+
         if (genTextureAuto) {
-            glGenTextures(1, &textureId);
-            glBindTexture(textureType, textureId);
+            glGenTextures(1, &_textureId);
+            glBindTexture(textureType, _textureId);
             std::cout << "Info: Texture was binded" << std::endl;
         }
 
@@ -59,48 +65,40 @@ namespace Render::AnomalyEngine::Textures {
             return false;
         }
 
+        int glInternalFormat = 0;
         if (BaseTexture::_channelsCount == 3) {
-            glTexImage2D(textureType,
-                         0,
-                         GL_RGB,
-                         BaseTexture::_width,
-                         BaseTexture::_height,
-                         0,
-                         GL_RGB,
-                         GL_UNSIGNED_BYTE,
-                         BaseTexture::_textureData.get());
-
-            std::cout << "Created texture with 3 channels count" << std::endl;
+            glInternalFormat = GL_RGB;
         }
-        else if (BaseTexture::_channelsCount == 4) {
-            glTexImage2D(textureType,
-                         0,
-                         GL_RGBA,
-                         BaseTexture::_width,
-                         BaseTexture::_height,
-                         0,
-                         GL_RGBA,
-                         GL_UNSIGNED_BYTE,
-                         BaseTexture::_textureData.get());
-
-            std::cout << "Info: Created texture with 4 channels count" << std::endl;
+        else {
+            glInternalFormat = GL_RGBA;
         }
 
-        //BaseTexture::DeleteTexture();
+        glTexImage2D(textureType,
+             0,
+             glInternalFormat,
+             _width,
+             _height,
+             0,
+             glInternalFormat,
+             GL_UNSIGNED_BYTE,
+             _textureData.get());
 
-        //if (unbindTextureAuto) {
+        std::cout << "Info: Created texture with " << _channelsCount << " channels count" << std::endl;
+
+        if (genTextureAuto) {
             glBindTexture(textureType, 0);
             std::cout << "Info: Texture was unbinded" << std::endl;
-        //}
+            DeleteTexture();
+        }
 
         return true;
     }
 
 
     bool OpenGLTexture::BindTexture(const unsigned int index, const unsigned int programId, const std::string samplerName) {
-        if (BaseTexture::textureId != 0) {
+        if (BaseTexture::_textureId != 0) {
             glActiveTexture(GL_TEXTURE0 + index);
-            glBindTexture(GL_TEXTURE_2D, BaseTexture::textureId);
+            glBindTexture(GL_TEXTURE_2D, BaseTexture::_textureId);
 
             BaseTexture::textureLocation = glGetUniformLocation(programId, samplerName.c_str());
             glUniform1i(BaseTexture::textureLocation, index);

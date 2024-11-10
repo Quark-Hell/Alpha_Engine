@@ -150,7 +150,16 @@ void MyScript::Start() {
     obj2->SetName("Mesh");
     auto mesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Cube.fbx");
     obj2->AddComponent(mesh);
+
     mesh->_material.InitShader<Render::AnomalyEngine::Shaders::CubeMapShader>();
+    static_cast<Render::AnomalyEngine::Shaders::CubeMapShader*>(mesh->_material.Shader.get())->LoadTextures(
+    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Left_Tex.tga)",
+    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Right_Tex.tga)",
+    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Top_Tex.tga)",
+    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Bottom_Tex.tga)",
+    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Front_Tex.tga)",
+    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Back_Tex.tga)"
+    );
 #endif
 }
 //Call every frame

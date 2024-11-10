@@ -52,6 +52,8 @@ namespace Render::AnomalyEngine {
         void RenderScene(const Render::WindowsManager::Window& window);
         void RenderMeshes(Render::AnomalyEngine::Components::Camera* camera);
 
+        void GenerateVao(Render::AnomalyEngine::Components::Mesh *mesh);
+
         ///Check mesh valid
         [[nodiscard]] bool MeshChecker(const Render::AnomalyEngine::Components::Mesh* mesh);
 

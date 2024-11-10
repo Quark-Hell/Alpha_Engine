@@ -45,7 +45,7 @@ namespace Render::AnomalyEngine::Textures {
         unsigned int _height = 0;
         unsigned int _channelsCount = 0;
 
-        unsigned int textureId = 0;
+        unsigned int _textureId = 0;
         unsigned int textureLocation = 0;
 
         //Other representation(DirectX, Vulkan...)
@@ -63,7 +63,6 @@ namespace Render::AnomalyEngine::Textures {
 
         virtual bool TransferToGPU(
             bool genTextureAuto,
-            bool unbindTextureAuto,
             EnumTypeOfTexture typeOfTexture) = 0;
 
         void SetTypeOfWrapping(EnumTypeOfWrapping xType, EnumTypeOfWrapping yType);

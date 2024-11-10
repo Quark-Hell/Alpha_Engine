@@ -142,6 +142,31 @@ namespace Render::AnomalyEngine {
         return true;
     }
 
+    void RenderEngine::GenerateVao(Render::AnomalyEngine::Components::Mesh *mesh) {
+        glGenVertexArrays(1, &mesh->_vao);
+        glBindVertexArray(mesh->_vao);
+        if (mesh->_vertexVbo != 0) {
+            glEnableVertexAttribArray(0);
+            glBindBuffer(GL_ARRAY_BUFFER, mesh->_vertexVbo);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+        }
+        if (mesh->_normalsVbo != 0) {
+            glEnableVertexAttribArray(1);
+            glBindBuffer(GL_ARRAY_BUFFER, mesh->_normalsVbo);
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+        }
+        if (mesh->_colorsVbo != 0) {
+            glEnableVertexAttribArray(2);
+            glBindBuffer(GL_ARRAY_BUFFER, mesh->_colorsVbo);
+            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+        }
+        if (mesh->_texCoordsVbo != 0) {
+            glEnableVertexAttribArray(3);
+            glBindBuffer(GL_ARRAY_BUFFER, mesh->_texCoordsVbo);
+            glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+        }
+    }
+
     void RenderEngine::RenderMeshes(Render::AnomalyEngine::Components::Camera* camera) {
         if (_meshBuffer == nullptr) {
             std::cout << "Error: Mesh buffer was null" << std::endl;
@@ -158,31 +183,9 @@ namespace Render::AnomalyEngine {
             if (!MeshChecker(mesh))
                 continue;
 
-            glGenVertexArrays(1, &mesh->_vao);
-            glBindVertexArray(mesh->_vao);
-            if (mesh->_vertexVbo != 0) {
-                glEnableVertexAttribArray(0);
-                glBindBuffer(GL_ARRAY_BUFFER, mesh->_vertexVbo);
-                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-            }
-            if (mesh->_normalsVbo != 0) {
-                glEnableVertexAttribArray(1);
-                glBindBuffer(GL_ARRAY_BUFFER, mesh->_normalsVbo);
-                glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-            }
-            if (mesh->_colorsVbo != 0) {
-                glEnableVertexAttribArray(2);
-                glBindBuffer(GL_ARRAY_BUFFER, mesh->_colorsVbo);
-                glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-            }
-            if (mesh->_texCoordsVbo != 0) {
-                glEnableVertexAttribArray(3);
-                glBindBuffer(GL_ARRAY_BUFFER, mesh->_texCoordsVbo);
-                glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-            }
+            GenerateVao(mesh);
 
             //SetModelMatrix();
-            glDepthFunc(GL_LEQUAL);
 
             glUseProgram(mesh->_material.Shader->GetProgramId());
             glBindVertexArray(mesh->_vao);
@@ -195,8 +198,10 @@ namespace Render::AnomalyEngine {
             else
                 glDrawArrays(renderMode, 0, mesh->_vertex->size() / 3);
 
-            glDepthFunc(GL_LESS);
+            glDepthFunc(GL_NEVER);
             glBindVertexArray(0);
+
+            //Delete vao that was created by GenerateVao() function
             glDeleteVertexArrays(1, &mesh->_vao);
         }
     }

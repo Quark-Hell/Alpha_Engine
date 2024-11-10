@@ -20,7 +20,6 @@ namespace Render::AnomalyEngine::Textures {
 
         bool TransferToGPU(
         bool genTextureAuto,
-        bool unbindTextureAuto,
         EnumTypeOfTexture typeOfTexture) override;
 
         bool BindTexture(unsigned int index, unsigned int programId, std::string samplerName) override;
