@@ -177,9 +177,9 @@ namespace Render::AnomalyEngine {
             return;
         }
 
-        for (size_t i = 0; i < _meshBuffer->size(); i++) {
+        for (auto& it : *_meshBuffer) {
+            auto* mesh = static_cast<Components::Mesh*>(it.get());
 
-            Components::Mesh* mesh = _meshBuffer->at(i).get();
             if (!MeshChecker(mesh))
                 continue;
 
@@ -206,7 +206,7 @@ namespace Render::AnomalyEngine {
         }
     }
 
-    void RenderEngine::LoadMeshArray(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer) {
+    void RenderEngine::LoadMeshArray(std::list<std::unique_ptr<Core::Geometry>>* meshBuffer) {
         _meshBuffer = meshBuffer;
     }
 

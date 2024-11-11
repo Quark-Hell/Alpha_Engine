@@ -2,6 +2,7 @@
 #include "BaseConfig.h"
 
 namespace Core {
+	class Component;
 	class Host;
 }
 
@@ -13,15 +14,17 @@ namespace Register {
 		friend class Core::Host;
 
 	public:
-		~Registry();
+		~Registry() = default;
 
 		static bool RegisterActorWithComponent(Register::UserScript* script, const std::string &objectName = "Undefined");
 		
 	private:
 		static Register::Registry* GetInstance();
-		Registry();
+		Registry() = default;
 
-		//void RegistryStart();
-		void RegistryLoop(const std::list<std::unique_ptr<Register::UserScript>>* scripts);
+		std::list<std::unique_ptr<Core::Component>>* _scripts;
+
+		void LoadRegistryBuffer(std::list<std::unique_ptr<Core::Component>>* scripts);
+		void RegistryLoop() const;
 	};
 }

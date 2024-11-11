@@ -82,6 +82,9 @@ void MyScript::RightMoveCamera() {
 void MyScript::Start() {
     std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;
 
+    Player = Core::Factory::CreateObject();
+    Player->SetName("TestObject");
+
 #if RENDER_INCLUDED
     win1 = Core::Factory::CreateWindow(800, 600, "Windows 1");
     win2 = Core::Factory::CreateWindow(800, 600, "Windows 2");
@@ -138,10 +141,7 @@ void MyScript::Start() {
     win1->SetCamera(cam1);
     win2->SetCamera(cam2);
 
-    Player = Core::Factory::CreateObject();
-    Player->SetName("TestObject");
     Player->AddComponent(cam1);
-
 
     auto obj3 = Core::Factory::CreateObject();
     obj3->AddComponent(cam2);

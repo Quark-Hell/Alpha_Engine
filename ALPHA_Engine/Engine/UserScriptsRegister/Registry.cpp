@@ -11,32 +11,28 @@ Register::Registry* Register::Registry::GetInstance() {
 	return &reg;
 }
 
-Register::Registry::Registry() = default;
-Register::Registry::~Registry() = default;
+void Register::Registry::LoadRegistryBuffer(std::list<std::unique_ptr<Core::Component>>* scripts) {
+	_scripts = scripts;
+}
 
-void Register::Registry::RegistryLoop(const std::list<std::unique_ptr<Register::UserScript>>* scripts)
-{
-	const auto list = scripts;
-	auto it = std::begin(*list);
+void Register::Registry::RegistryLoop() const {
+	for (auto& it : *_scripts) {
+		auto* userScript = static_cast<UserScript*>(it.get());
 
-	for (size_t i = 0; i < scripts->size(); i++) {
-		if (*it != nullptr) {
-			if (it->get()->_isStarted == false) {
-				it->get()->Start();
-				it->get()->_isStarted = true;
-			}
-
-			it->get()->Update();
+		if (userScript->_isStarted == false) {
+			userScript->Start();
+			userScript->_isStarted = true;
 		}
 
-		std::advance(it, 1);
+		userScript->Update();
 	}
 }
 
 bool Register::Registry::RegisterActorWithComponent(Register::UserScript* script, const std::string& objectName) {
-	//Check if script cannot be converted
-	if (script == nullptr)
+	if (script == nullptr) {
 		return false;
+	}
+
 	
 	//Later Host will call all UserScript functions
 	auto component = Core::Factory::CreateUserScript(script);

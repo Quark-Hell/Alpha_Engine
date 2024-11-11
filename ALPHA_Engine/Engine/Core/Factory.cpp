@@ -1,10 +1,10 @@
 #include "Factory.h"
-#include <cassert>
 
 #include "EngineConfig.h"
 
 #include "World.h"
 #include "Object.h"
+#include "Components/Component.h"
 
 bool Core::Factory::RemoveObject(const Core::Object* object) {
   const auto list = World::GetObjects();
@@ -30,7 +30,13 @@ Core::Object* Core::Factory::CreateObject() {
   return World::GetObjects()->back().get();
 }
 
-bool Core::Factory::RemoveUserScript(const Register::UserScript* script) {
+#if USER_SCRIPTS_REGISTER_INCLUDED
+Register::UserScript* Core::Factory::CreateUserScript() {
+  World::GetUserScripts()->push_back(std::unique_ptr<Register::UserScript>(new Register::UserScript()));
+  return static_cast<Register::UserScript*>(World::GetUserScripts()->back().get());
+}
+
+bool Core::Factory::RemoveUserScript(const Core::Component* script) {
   const auto list = World::GetUserScripts();
   auto it = std::begin(*list);
   for (size_t i = 0; i < World::GetObjects()->size(); ++i) {
@@ -46,22 +52,23 @@ bool Core::Factory::RemoveUserScript(const Register::UserScript* script) {
   return false;
 }
 
-#if USER_SCRIPTS_REGISTER_INCLUDED
-Register::UserScript* Core::Factory::CreateUserScript() {
-  World::GetUserScripts()->push_back(std::unique_ptr<Register::UserScript>(new Register::UserScript()));
-  return World::GetUserScripts()->back().get();
-}
-Register::UserScript* Core::Factory::CreateUserScript(Register::UserScript* script) {
-  const auto list = World::GetUserScripts();
-  auto it = std::begin(*list);
-  for (size_t i = 0; i < World::GetUserScripts()->size(); ++i) {
-    if (it->get() == &script[i]) {
-      std::cout << "Error: User script already exist" << std::endl;
-    }
-    std::advance(it, 1);
+Register::UserScript* Core::Factory::CreateUserScript(Core::Component* script) {
+  const auto src = dynamic_cast<Register::UserScript*>(script);
+  if (src == nullptr) {
+    std::cout << "Error: Argument is not a User Script type" << std::endl;
+    return nullptr;
   }
-  World::GetUserScripts()->push_back(std::unique_ptr<Register::UserScript>(script));
-  return World::GetUserScripts()->back().get();
+
+  const auto userScripts = World::GetUserScripts();
+  for (auto& it : *userScripts) {
+    if (src == it.get()) {
+      std::cout << "Error: User script already exist" << std::endl;
+      return nullptr;
+    }
+  }
+
+  userScripts->push_back(std::unique_ptr<Register::UserScript>(src));
+  return static_cast<Register::UserScript*>(World::GetUserScripts()->back().get());
 }
 #endif
 
@@ -101,7 +108,7 @@ Render::AnomalyEngine::Components::Camera* Core::Factory::CreateCamera(const flo
     (new Render::AnomalyEngine::Components::Camera(fov, aspect, zNear, zFar)));
 
   std::cout << "Info: Camera created" << std::endl;
-  return cameras->back().get();
+  return static_cast<Render::AnomalyEngine::Components::Camera*>(cameras->back().get());
 }
 
 bool Core::Factory::RemoveCamera(const Render::AnomalyEngine::Components::Camera* camera) {
@@ -117,7 +124,7 @@ bool Core::Factory::RemoveCamera(const Render::AnomalyEngine::Components::Camera
     }
     std::advance(it, 1);
   }
-  assert("Camera cannot be removed");
+  std::cout << "Error: Camera cannot be removed";
   return false;
 }
 
@@ -129,7 +136,7 @@ Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh() {
 
   std::cout << "Info: Mesh created" << std::endl;
 
-  return meshes->back().get();
+  return static_cast<Render::AnomalyEngine::Components::Mesh*>(meshes->back().get());
 }
 
 Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh(const std::string& path) {
@@ -138,10 +145,10 @@ Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh(const std::st
   meshes->push_back(std::unique_ptr<Render::AnomalyEngine::Components::Mesh>
     (new Render::AnomalyEngine::Components::Mesh()));
 
-  meshes->back().get()->Create(path);
+  static_cast<Render::AnomalyEngine::Components::Mesh*>(meshes->back().get())->Create(path);
   std::cout << "Info: Mesh created" << std::endl;
 
-  return meshes->back().get();
+  return static_cast<Render::AnomalyEngine::Components::Mesh*>(meshes->back().get());
 }
 #endif
 

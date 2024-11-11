@@ -1,9 +1,10 @@
 #include "World.h"
 #include <memory>
-#include "Host/Host.h"
 #include "EngineConfig.h"
+
+#include "Core/Components/Geometry.h"
 #include "Core/Object.h"
-#include "Render/WinManager/Window.h"
+#include "Host/Host.h"
 
 Core::World::World() = default;
 Core::World::~World() = default;
@@ -15,12 +16,10 @@ std::list<std::unique_ptr<Core::Object>>* Core::World::GetObjects() {
 }
 #pragma endregion
 
-#if USER_SCRIPTS_REGISTER_INCLUDED
-std::list<std::unique_ptr<Register::UserScript>>* Core::World::GetUserScripts() {
-	static std::list<std::unique_ptr<Register::UserScript>> userScripts{};
+std::list<std::unique_ptr<Core::Component>>* Core::World::GetUserScripts() {
+	static std::list<std::unique_ptr<Core::Component>> userScripts{};
 	return &userScripts;
 }
-#endif
 
 #if RENDER_INCLUDED
 std::vector<std::unique_ptr<Render::WindowsManager::Window>>* Core::World::GetWindows() {
@@ -29,16 +28,14 @@ std::vector<std::unique_ptr<Render::WindowsManager::Window>>* Core::World::GetWi
 }
 #endif
 
-#if ANOMALY_ENGINE_INCLUDED
-std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Camera>>* Core::World::GetCameras() {
-	static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Camera>> cameras{};
+std::vector<std::unique_ptr<Core::Component>>* Core::World::GetCameras() {
+	static std::vector<std::unique_ptr<Core::Component>> cameras{};
 	return &cameras;
 }
-std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* Core::World::GetMeshes() {
-	static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>> meshes{};
+std::list<std::unique_ptr<Core::Geometry>>* Core::World::GetMeshes() {
+	static std::list<std::unique_ptr<Core::Geometry>> meshes{};
 	return &meshes;
 }
-#endif
 
 #if BINDS_ENGINE_INCLUDED
 std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* Core::World::GetBinds() {
@@ -79,7 +76,7 @@ void Core::World::EndFrame() {
 	//World::_timeLong += World::_deltaTime;
 }
 
-void Core::World::SetSimulationSpeed(float simSpeed) {
+void Core::World::SetSimulationSpeed(const float simSpeed) {
 	if (simSpeed < 0) {
 		World::SimulationSpeed = simSpeed;
 	}
@@ -92,13 +89,10 @@ void Core::World::Simulation() {
 
 	while (IsCloseGame)
 	{
-#if USER_SCRIPTS_REGISTER_INCLUDED
-		Host::GetInstance()->Registry(GetUserScripts());
-#endif
+		Host::GetInstance()->LoadRegistryBuffer(GetUserScripts());
+		Host::GetInstance()->RegistryLoop();
 
-#if ANOMALY_ENGINE_INCLUDED
-		Host::GetInstance()->LoadMeshData(GetMeshes());
-#endif
+		Host::GetInstance()->LoadMeshBuffer(GetMeshes());
 
 #if BINDS_ENGINE_INCLUDED
 		Host::GetInstance()->LoadBindsBuffer(GetBinds());

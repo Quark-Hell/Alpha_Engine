@@ -1,38 +1,19 @@
 #pragma once
 #include "BaseConfig.h"
 
-#if USER_SCRIPTS_REGISTER_INCLUDED
-  namespace Register {
-  	class UserScript;
-  }
-#endif
-
 #if RENDER_INCLUDED
-namespace Render {
-  	namespace WindowsManager {
-  		class Window;
-  		namespace BindsEngine {
-  			class Bind;
-  		}
-  	}
-
-  	namespace AnomalyEngine::Components {
-  		class Camera;
-  		class Mesh;
-  	}
-  }
-#endif
-
-#if ANOMALY_ENGINE_INCLUDED
-namespace Render::AnomalyEngine::Components {
-	class Camera;
-	class Mesh;
+namespace Render::WindowsManager {
+	class Window;
+	namespace BindsEngine {
+		class Bind;
+	}
 }
 #endif
 
 namespace Core {
 	class Object;
-	class Host;
+  	class Geometry;
+	class Component;
 
 	class World {
 		friend class Factory;
@@ -49,23 +30,18 @@ namespace Core {
 	private:
 		static std::list<std::unique_ptr<Core::Object>>* GetObjects();
 
-#if USER_SCRIPTS_REGISTER_INCLUDED
-	private:
-		static std::list<std::unique_ptr<Register::UserScript>>* GetUserScripts();
-#endif
+		static std::list<std::unique_ptr<Core::Component>>* GetUserScripts();
 
 #if RENDER_INCLUDED
-	private:
+		//TODO: change to native sata type
 		static std::vector<std::unique_ptr<Render::WindowsManager::Window>>* GetWindows();
 #endif
 
-#if ANOMALY_ENGINE_INCLUDED
-		static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Camera>>* GetCameras();
-		//TODO: change std::vector to std::list
-		static std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* GetMeshes();
-#endif
+		static std::vector<std::unique_ptr<Core::Component>>* GetCameras();
+		static std::list<std::unique_ptr<Core::Geometry>>* GetMeshes();
 
 #if BINDS_ENGINE_INCLUDED
+		//TODO: change to native sata type
 		static std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* GetBinds();
 #endif
 

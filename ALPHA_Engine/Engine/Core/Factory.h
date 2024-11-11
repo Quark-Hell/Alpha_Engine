@@ -50,11 +50,12 @@ public:
   static bool RemoveObject(const Core::Object* object);
   static Core::Object* CreateObject();
 
+  static Register::UserScript* CreateUserScript(Core::Component* script);
 #if USER_SCRIPTS_REGISTER_INCLUDED
 public:
-  static bool RemoveUserScript(const Register::UserScript* object);
+  static bool RemoveUserScript(const Core::Component* object);
   static Register::UserScript* CreateUserScript();
-  static Register::UserScript* CreateUserScript(Register::UserScript* script);
+
 #endif
 
 #if RENDER_INCLUDED

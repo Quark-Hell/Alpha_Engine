@@ -1,7 +1,4 @@
 #include "Host.h"
-
-#include <Render/WinManager/BindsEngine/InputSystem.h>
-
 #include "EngineConfig.h"
 
 Core::Host* Core::Host::GetInstance() {
@@ -13,10 +10,17 @@ Core::Host::Host() = default;
 Core::Host::~Host() = default;
 
 #if USER_SCRIPTS_REGISTER_INCLUDED
-void Core::Host::Registry(const std::list<std::unique_ptr<Register::UserScript>>* scripts) {
-	auto registry = Register::Registry::GetInstance();
-	registry->RegistryLoop(scripts);
+void Core::Host::LoadRegistryBuffer(std::list<std::unique_ptr<Core::Component>> *scripts) {
+	const auto registry = Register::Registry::GetInstance();
+	registry->LoadRegistryBuffer(scripts);
 }
+void Core::Host::RegistryLoop() {
+	const auto registry = Register::Registry::GetInstance();
+	registry->RegistryLoop();
+}
+#else
+void Core::Host::LoadRegistryBuffer(std::list<std::unique_ptr<Core::Component>> *scripts) {}
+void Core::Host::RegistryLoop() {}
 #endif
 
 #if RENDER_INCLUDED
@@ -29,13 +33,18 @@ void Core::Host::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::
 	const auto winManager = Render::WindowsManager::WindowsManager::GetInstance();
 	winManager->RenderLoop(windows);
 }
+#else
+void Core::Host::InitRender() {}
+void Core::Host::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows) {}
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-void Core::Host::LoadMeshData(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer) {
+void Core::Host::LoadMeshBuffer(std::list<std::unique_ptr<Core::Geometry>>* meshBuffer) {
 	const auto rend = Render::AnomalyEngine::RenderEngine::GetInstance();
 	rend->LoadMeshArray(meshBuffer);
 }
+#else
+void Core::Host::LoadMeshBuffer(std::list<std::unique_ptr<Core::Geometry>>* meshBuffer) {}
 #endif
 
 #if BINDS_ENGINE_INCLUDED
@@ -43,6 +52,8 @@ void Core::Host::LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManage
 	const auto bind = Render::WindowsManager::BindsEngine::InputSystem::GetInstance();
 	bind->LoadBindsBuffer(binds);
 }
+#else
+void Core::Host::LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds) {}
 #endif
 
 void Core::Host::Physics() {

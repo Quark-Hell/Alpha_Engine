@@ -1,4 +1,5 @@
 #pragma once
+#include <list>
 #include <vector>
 #include <memory>
 
@@ -19,6 +20,7 @@ namespace Render {
 }
 
 namespace Core {
+    class Geometry;
     class Host;
 }
 
@@ -44,8 +46,8 @@ namespace Render::AnomalyEngine {
         void SetCameraTransform(Render::AnomalyEngine::Components::Camera* camera);
 
         ///Always set to null after end of cycle
-        std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* _meshBuffer;
-        void LoadMeshArray(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer);
+        std::list<std::unique_ptr<Core::Geometry>>* _meshBuffer;
+        void LoadMeshArray(std::list<std::unique_ptr<Core::Geometry>>* meshBuffer);
 
         ///Before use LoadMeshArray()
         void RenderLoop(Render::WindowsManager::Window& windows);

@@ -6,27 +6,17 @@ namespace Render::WindowsManager::BindsEngine {
 }
 
 namespace Core {
+	class Component;
 	class World;
 }
 
-namespace Render {
-
-	namespace WindowsManager {
-		class WindowsManager;
-		class Window;
-	}
-
-	namespace AnomalyEngine::Components {
-		class Mesh;
-	}
-
-}
-namespace Register {
-	class Registry;
-	class UserScript;
+namespace Render::WindowsManager {
+	class WindowsManager;
+	class Window;
 }
 
 namespace Core {
+	class Geometry;
 
 	class Host
 	{
@@ -40,22 +30,15 @@ namespace Core {
 		~Host();
 
 	private:
-#if USER_SCRIPTS_REGISTER_INCLUDED
-		void Registry(const std::list<std::unique_ptr<Register::UserScript>>* scripts);
-#endif
+		void LoadRegistryBuffer(std::list<std::unique_ptr<Core::Component>> *scripts);
+		void RegistryLoop();
 
-#if RENDER_INCLUDED
 		void InitRender();
 		void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows);
-#endif
 
-#if ANOMALY_ENGINE_INCLUDED
-		void LoadMeshData(std::vector<std::unique_ptr<Render::AnomalyEngine::Components::Mesh>>* meshBuffer);
-#endif
+		void LoadMeshBuffer(std::list<std::unique_ptr<Core::Geometry>>* meshBuffer);
 
-#if BINDS_ENGINE_INCLUDED
 		void LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds);
-#endif
 		void Physics();
 	};
 
