@@ -1,5 +1,8 @@
 #include "Logger.h"
-#include "Core/Tag.h"
+
+#include <chrono>
+#include <sstream>
+#include <filesystem>
 
 Core::Logger::Logger::Logger() {
 	logFile.open(getLogFileName(), std::ios::app);
