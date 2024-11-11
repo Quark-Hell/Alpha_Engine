@@ -65,11 +65,16 @@ namespace Render::AnomalyEngine::Textures {
             _threads.push_back(std::unique_ptr<ThreadObject>(new ThreadObject));
         }
 
-        while (_taskList.size() != 0) {
+        while (_taskList.size() > 0) {
             for (const auto& it : _threads) {
                 if (it->_isActive == false) {
+
                     it->Start(_taskList.back());
                     _taskList.pop_back();
+
+                    if (_taskList.size() == 0) {
+                        break;
+                    }
                 }
             }
         }
