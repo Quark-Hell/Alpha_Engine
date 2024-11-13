@@ -48,15 +48,15 @@ namespace Render::AnomalyEngine::Textures {
                 break;
         }
 
-        if (_textureId != 0) {
-            glDeleteTextures(1, &_textureId);
-            _textureId = 0;
+        if (_textureID != 0) {
+            glDeleteTextures(1, &_textureID);
+            _textureID = 0;
             std::cout << "Info: Old texture was deleted from VRAM" << std::endl;
         }
 
         if (genTextureAuto) {
-            glGenTextures(1, &_textureId);
-            glBindTexture(textureType, _textureId);
+            glGenTextures(1, &_textureID);
+            glBindTexture(textureType, _textureID);
             std::cout << "Info: Texture was binded" << std::endl;
         }
 
@@ -88,7 +88,7 @@ namespace Render::AnomalyEngine::Textures {
         if (genTextureAuto) {
             glBindTexture(textureType, 0);
             std::cout << "Info: Texture was unbinded" << std::endl;
-            DeleteTexture();
+            DeleteTextureFromRAM();
         }
 
         return true;
@@ -96,9 +96,9 @@ namespace Render::AnomalyEngine::Textures {
 
 
     bool OpenGLTexture::BindTexture(const unsigned int index, const unsigned int programId, const std::string samplerName) {
-        if (BaseTexture::_textureId != 0) {
+        if (BaseTexture::_textureID != 0) {
             glActiveTexture(GL_TEXTURE0 + index);
-            glBindTexture(GL_TEXTURE_2D, BaseTexture::_textureId);
+            glBindTexture(GL_TEXTURE_2D, BaseTexture::_textureID);
 
             BaseTexture::textureLocation = glGetUniformLocation(programId, samplerName.c_str());
             glUniform1i(BaseTexture::textureLocation, index);

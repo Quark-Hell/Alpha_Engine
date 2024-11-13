@@ -1,5 +1,7 @@
 #include "Factory.h"
 
+#include <Render/WinManager/AnomalyEngine/Components/DirectLight.h>
+
 #include "EngineConfig.h"
 
 #include "World.h"
@@ -20,7 +22,7 @@ bool Core::Factory::RemoveObject(const Core::Object* object) {
     std::advance(it, 1);
   }
 
-  assert("Object cannot be removed");
+  std::cout << "Error: Object do not exist" << std::endl;
   return false;
 }
 
@@ -74,10 +76,6 @@ Register::UserScript* Core::Factory::CreateUserScript(Core::Component* script) {
 
 
 #if RENDER_INCLUDED
-#include <GLEW/glew.h>
-#include <GL/gl.h>
-#include <GLFW/glfw3.h>
-
 Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, const int height, const char* title) {
   using namespace Render::WindowsManager;
 
@@ -149,6 +147,16 @@ Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh(const std::st
   std::cout << "Info: Mesh created" << std::endl;
 
   return static_cast<Render::AnomalyEngine::Components::Mesh*>(meshes->back().get());
+}
+
+Render::AnomalyEngine::Components::DirectLight *Core::Factory::CreateDirectLight(const Core::Vector3& direction) {
+  const auto lights = World::GetDirectLights();
+
+  lights->push_back(std::unique_ptr<Render::AnomalyEngine::Components::DirectLight>(new Render::AnomalyEngine::Components::DirectLight(direction)));
+
+  std::cout << "Info: Direct light created" << std::endl;
+
+  return static_cast<Render::AnomalyEngine::Components::DirectLight*>(lights->back().get());
 }
 #endif
 
@@ -229,8 +237,7 @@ void Core::Factory::RemoveBind(const Render::WindowsManager::BindsEngine::Bind* 
       std::cout << "Info: Bind removed" << std::endl;
       return;
     }
-    else
-      std::advance(it, 1);
+    std::advance(it, 1);
   }
 
   std::cout << "Error: Bind does not exist" << std::endl;

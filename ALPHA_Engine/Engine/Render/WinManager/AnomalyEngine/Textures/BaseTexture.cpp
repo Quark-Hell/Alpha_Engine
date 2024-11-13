@@ -8,6 +8,7 @@
 
 #include <string>
 #include <algorithm>
+#include <GLEW/glew.h>
 
 namespace Render::AnomalyEngine::Textures {
     void BaseTexture::CreateTexture(std::string pathToTexture) {
@@ -28,22 +29,36 @@ namespace Render::AnomalyEngine::Textures {
             return;
         }
 
-        BaseTexture::_textureData = std::unique_ptr<unsigned char>(data);
+        _textureData = std::unique_ptr<unsigned char>(data);
 
-        BaseTexture::_width = width;
-        BaseTexture::_height = height;
-        BaseTexture::_channelsCount = channelsCount;
+        _width = width;
+        _height = height;
+        _channelsCount = channelsCount;
         std::cout << "Info: Texture was created from: " << std::filesystem::current_path().string() + pathToTexture << std::endl;
     }
 
-    void BaseTexture::DeleteTexture() {
-        BaseTexture::_textureData.reset();
+    void BaseTexture::DeleteTextureFromRAM() {
+        _textureData.reset();
+
         std::cout << "Info: Texture was deleted from RAM" << std::endl;
+    }
+    void BaseTexture::DeleteTextureFromVRAM() {
+        if (_textureID == 0)
+            return;
+
+        glDeleteTextures(1, &_textureID);
+
+        _width = 0;
+        _height = 0;
+        _channelsCount = 0;
+        _textureID = 0;
+
+        std::cout << "Info: Texture was deleted from VRAM" << std::endl;
     }
 
     unsigned int BaseTexture::GetTextureId() const
     {
-        return _textureId;
+        return _textureID;
     }
 
     unsigned int BaseTexture::GetTextureLocation() const

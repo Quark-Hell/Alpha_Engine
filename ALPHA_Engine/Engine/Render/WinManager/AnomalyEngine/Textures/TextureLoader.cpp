@@ -61,6 +61,11 @@ namespace Render::AnomalyEngine::Textures {
 
     void TextureLoader::DoWork()
     {
+        if (_taskList.empty()) {
+            std::cout << "Error: no task" << std::endl;
+            return;
+        }
+
         for (unsigned int i = 0; i < _threadsCount; i++) {
             _threads.push_back(std::unique_ptr<ThreadObject>(new ThreadObject));
         }

@@ -198,7 +198,7 @@ namespace Render::AnomalyEngine {
             else
                 glDrawArrays(renderMode, 0, mesh->_vertex->size() / 3);
 
-            glDepthFunc(GL_NEVER);
+            //glDepthFunc(GL_NEVER);
             glBindVertexArray(0);
 
             //Delete vao that was created by GenerateVao() function

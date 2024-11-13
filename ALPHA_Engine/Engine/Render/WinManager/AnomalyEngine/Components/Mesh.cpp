@@ -31,6 +31,7 @@ namespace Render::AnomalyEngine::Components {
             return  false;
         }
 
+        std::cout << "Info: Read .fbx by " << path << std::endl;
         const aiMesh* mesh = s->mMeshes[0];
 
         Mesh::_indices->resize(mesh->mNumFaces * 3);

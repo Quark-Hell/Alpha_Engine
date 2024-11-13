@@ -37,6 +37,24 @@ std::list<std::unique_ptr<Core::Geometry>>* Core::World::GetMeshes() {
 	return &meshes;
 }
 
+std::vector<std::unique_ptr<Core::Component>>* Core::World::GetDirectLights() {
+	static std::vector<std::unique_ptr<Core::Component>> directLights{};
+	return &directLights;
+}
+const std::vector<std::unique_ptr<Core::Component>> *Core::World::GetDirLights() {
+	return Core::World::GetDirectLights();
+}
+
+
+std::vector<std::unique_ptr<Core::Component>>* Core::World::GetSpotLights() {
+	static std::vector<std::unique_ptr<Core::Component>> spotLights{};
+	return &spotLights;
+}
+std::vector<std::unique_ptr<Core::Component>>* Core::World::GetAreaLights() {
+	static std::vector<std::unique_ptr<Core::Component>> areaLights{};
+	return &areaLights;
+}
+
 #if BINDS_ENGINE_INCLUDED
 std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* Core::World::GetBinds() {
 	static std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>> binds{};

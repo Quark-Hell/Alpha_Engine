@@ -40,6 +40,14 @@ namespace Core {
 		static std::vector<std::unique_ptr<Core::Component>>* GetCameras();
 		static std::list<std::unique_ptr<Core::Geometry>>* GetMeshes();
 
+		static std::vector<std::unique_ptr<Core::Component>>* GetDirectLights();
+		static std::vector<std::unique_ptr<Core::Component>>* GetSpotLights();
+		static std::vector<std::unique_ptr<Core::Component>>* GetAreaLights();
+
+	public:
+		static const std::vector<std::unique_ptr<Core::Component>> *GetDirLights();
+
+	private:
 #if BINDS_ENGINE_INCLUDED
 		//TODO: change to native sata type
 		static std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* GetBinds();

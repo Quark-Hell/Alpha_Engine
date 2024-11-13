@@ -10,8 +10,7 @@ namespace Render::AnomalyEngine::Shaders {
     class CubeMapShader final : public ShaderProgram {
     private:
         std::array<Textures::OpenGLTexture, 6> _cubemapTextures;
-
-        unsigned int _textureId = 0;
+        uint32_t _textureId = 0;
 
     public:
         CubeMapShader(Material* parentMat);

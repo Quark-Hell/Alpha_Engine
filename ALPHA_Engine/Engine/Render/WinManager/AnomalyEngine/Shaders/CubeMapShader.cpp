@@ -2,10 +2,9 @@
 
 #include <Core/Object.h>
 #include <GLEW/glew.h>
+
 #include <Render/WinManager/AnomalyEngine/Components/Camera.h>
-
 #include "Render/WinManager/AnomalyEngine/Textures/BaseTexture.h"
-
 #include "Render/WinManager/AnomalyEngine/Textures/TextureLoader.h"
 
 
@@ -53,20 +52,8 @@ namespace Render::AnomalyEngine::Shaders {
             loader->AddTask(_cubemapTextures[4], frontSide);
             loader->AddTask(_cubemapTextures[5], backSide);
             loader->DoWork();
-
-            const auto loader1 = Textures::TextureLoader::GetInstance();
-            loader1->AddTask(_cubemapTextures[0], leftSide);
-            loader1->AddTask(_cubemapTextures[1], rightSide);
-            loader1->AddTask(_cubemapTextures[2], topSide);
-            loader1->AddTask(_cubemapTextures[3], bottomSide);
-            loader1->AddTask(_cubemapTextures[4], frontSide);
-            loader1->AddTask(_cubemapTextures[5], backSide);
-            loader1->DoWork();
         }
 
-        //for (size_t i = 0; i < 100; i++) {
-        //
-        //}
         TransferTexturesToGPU();
     }
 
@@ -91,8 +78,8 @@ namespace Render::AnomalyEngine::Shaders {
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-        for (size_t i = 0; i < _cubemapTextures.size(); i++) {
-            _cubemapTextures[i].DeleteTexture();
+        for (auto& _cubemapTexture : _cubemapTextures) {
+            _cubemapTexture.DeleteTextureFromRAM();
         }
 
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);

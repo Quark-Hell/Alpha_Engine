@@ -15,14 +15,14 @@ namespace Render::AnomalyEngine {
     friend class Components::Mesh;
 
     private:
-        const Components::Mesh* _parentMesh;
+        Components::Mesh* _parentMesh;
 
     public:
         std::unique_ptr<Shaders::ShaderProgram> Shader = nullptr;
 
 
     private:
-        Material(const Components::Mesh* parent);
+        Material(Components::Mesh* parent);
     public:
         ~Material() = default;
 
@@ -34,7 +34,6 @@ namespace Render::AnomalyEngine {
             Shader = std::make_unique<T>(this);
             return true;
         }
-
-    const Components::Mesh *GetParentMesh() const;
+        [[nodiscard]] Components::Mesh *GetParentMesh() const;
     };
 }

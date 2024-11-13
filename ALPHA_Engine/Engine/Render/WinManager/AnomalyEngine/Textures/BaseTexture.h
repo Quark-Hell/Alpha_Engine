@@ -45,7 +45,7 @@ namespace Render::AnomalyEngine::Textures {
         unsigned int _height = 0;
         unsigned int _channelsCount = 0;
 
-        unsigned int _textureId = 0;
+        unsigned int _textureID = 0;
         unsigned int textureLocation = 0;
 
         //Other representation(DirectX, Vulkan...)
@@ -59,7 +59,8 @@ namespace Render::AnomalyEngine::Textures {
         virtual ~BaseTexture() = default;
 
         void CreateTexture(std::string pathToTexture);
-        void DeleteTexture();
+        void DeleteTextureFromRAM();
+        void DeleteTextureFromVRAM();
 
         virtual bool TransferToGPU(
             bool genTextureAuto,

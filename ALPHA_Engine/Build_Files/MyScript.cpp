@@ -7,6 +7,7 @@
 #include "Render/WinManager/Window.h"
 
 #include "Render/WinManager/AnomalyEngine/Shaders/CubeMapShader.h"
+#include "Render/WinManager/AnomalyEngine/Shaders/OpaqueShader.h"
 
 #include "Render/WinManager/BindsEngine/BindsEngineConfig.h"
 #include "Render/WinManager/BindsEngine/InputSystem.h"
@@ -160,6 +161,13 @@ void MyScript::Start() {
     R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Front_Tex.tga)",
     R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Back_Tex.tga)"
     );
+
+    auto cube = Core::Factory::CreateObject();
+    cube->transform.AddPosition(0,0,5);
+    cube->SetName("Cube");
+    auto cubeMesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Cube.fbx");
+    cube->AddComponent(cubeMesh);
+    cubeMesh->_material.InitShader<Render::AnomalyEngine::Shaders::OpaqueShader>();
 #endif
 }
 //Call every frame
