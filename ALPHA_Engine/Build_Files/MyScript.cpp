@@ -112,14 +112,14 @@ void MyScript::Start() {
 
         auto leftMove = Core::Factory::CreateKeyboardBind(
             {std::bind(&MyScript::LeftMoveCamera, this)},
-            {EnumKeyboardKeysStates::KeyPressed},
+            {EnumKeyboardKeysStates::KeyHold},
             {EnumKeyboardTable::A},
             win1
         );
 
         auto rightMove = Core::Factory::CreateKeyboardBind(
             {std::bind(&MyScript::RightMoveCamera, this)},
-            {EnumKeyboardKeysStates::KeyPressed},
+            {EnumKeyboardKeysStates::KeyHold},
             {EnumKeyboardTable::D},
             win1
         );
@@ -163,7 +163,7 @@ void MyScript::Start() {
     );
 
     auto cube = Core::Factory::CreateObject();
-    cube->transform.AddPosition(0,0,5);
+    cube->transform.AddPosition(0,0,-5);
     cube->SetName("Cube");
     auto cubeMesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Cube.fbx");
     cube->AddComponent(cubeMesh);

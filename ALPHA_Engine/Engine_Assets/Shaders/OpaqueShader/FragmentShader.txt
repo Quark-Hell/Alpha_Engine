@@ -10,7 +10,7 @@
 //uniform float ambientStrength;
 //
 //uniform sampler2D diffuseMap;
-//uniform sampler2D emissionMap;
+////uniform sampler2D emissionMap;
 //
 //vec3 calcAmbientLights(float strength, vec3 lColor);
 //vec3 calcDiffuseLight(vec3 ambient, vec3 norm, vec3 lightDir, float strength);
@@ -181,17 +181,28 @@
 ////	  spotResult += calcSpotLight(spotLights[i]);
 ////   }
 //
-//   lightColor = ambient + spotResult + directResult + pointResult;
-//   result = vec3(texture(diffuseMap, texCoords)) * (vec3(texture(emissionMap, texCoords)) * 2 + lightColor);
+//   //lightColor = ambient + spotResult + directResult + pointResult;
+//   lightColor = ambient;
+//   //result = vec3(texture(diffuseMap, texCoords)) * (vec3(texture(emissionMap, texCoords)) * 2 + lightColor);
+//    result = vec3(texture(diffuseMap, texCoords));
+//    //result = vec3(0.6f, 0.0f, 0.0f);
 //
 //   frag_color = vec4(result, 1.0);
 //}
 
 #version 460
+in vec3 color;
+in vec3 normal;
+in vec3 frag_Pos;
+in vec2 texCoords;
+
 out vec4 FragColor;
-in vec3 ourColor;
+
+uniform sampler2D diffuseMap;
 
 void main()
 {
-    FragColor = vec4(ourColor, 1.0);
+    //FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    vec3 result = vec3(texture(diffuseMap, texCoords));
+    FragColor = vec4(result, 1.0);
 }

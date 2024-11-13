@@ -10,6 +10,51 @@
 
 #include "AnomalyEngine/Components/Camera.h"
 
+void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+    std::cout << "---------------------opengl-callback-start------------" << std::endl;
+    std::cout << "message: "<< message << std::endl;
+    std::cout << "type: ";
+    switch (type) {
+        case GL_DEBUG_TYPE_ERROR:
+            std::cout << "ERROR";
+        break;
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+            std::cout << "DEPRECATED_BEHAVIOR";
+        break;
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+            std::cout << "UNDEFINED_BEHAVIOR";
+        break;
+        case GL_DEBUG_TYPE_PORTABILITY:
+            std::cout << "PORTABILITY";
+        break;
+        case GL_DEBUG_TYPE_PERFORMANCE:
+            std::cout << "PERFORMANCE";
+        break;
+        case GL_DEBUG_TYPE_OTHER:
+            std::cout << "OTHER";
+        break;
+    }
+    std::cout << std::endl;
+
+    std::cout << "id: " << id << std::endl;
+    std::cout << "severity: ";
+    switch (severity){
+        case GL_DEBUG_SEVERITY_LOW:
+            std::cout << "LOW";
+        break;
+        case GL_DEBUG_SEVERITY_MEDIUM:
+            std::cout << "MEDIUM";
+        break;
+        case GL_DEBUG_SEVERITY_HIGH:
+            std::cout << "HIGH";
+        break;
+    }
+    std::cout << std::endl;
+    std::cout << "---------------------opengl-callback-end--------------" << std::endl;
+}
+
+
 namespace Render::WindowsManager {
     Window::~Window() {
         if (_window != nullptr) {
@@ -18,6 +63,16 @@ namespace Render::WindowsManager {
     }
 
     Window::Window(const int width, const int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share) {
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+
+        glfwWindowHint(GLFW_SAMPLES, 4);
+
         _window = glfwCreateWindow(width, height, title, monitor, share);
         _width = width;
         _height = height;
@@ -37,14 +92,6 @@ namespace Render::WindowsManager {
         glfwMakeContextCurrent(_window);
         glfwSwapInterval(1);
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-
-        glfwWindowHint(GLFW_SAMPLES, 4);
         glEnable(GL_MULTISAMPLE);
 
         if (glfwRawMouseMotionSupported())
@@ -59,7 +106,9 @@ namespace Render::WindowsManager {
             glfwTerminate();
             abort();
         }
-        //glfwMakeContextCurrent(nullptr);
+
+        glEnable(GL_DEBUG_OUTPUT );
+        glDebugMessageCallback( openglCallbackFunction, 0);
     }
 
     void Window::Resize(int width, int height) {

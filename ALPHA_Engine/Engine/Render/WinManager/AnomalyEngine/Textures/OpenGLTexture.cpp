@@ -103,7 +103,7 @@ namespace Render::AnomalyEngine::Textures {
             BaseTexture::textureLocation = glGetUniformLocation(programId, samplerName.c_str());
             glUniform1i(BaseTexture::textureLocation, index);
 
-            std::cout << "Info: Texture was be binded" << std::endl;
+            //std::cout << "Info: Texture was be binded" << std::endl;
             return true;
         }
 

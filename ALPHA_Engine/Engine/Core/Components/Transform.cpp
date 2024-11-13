@@ -16,11 +16,15 @@ void Core::Transform::AddPosition(const float X, const float Y, const float Z) {
     Transform::_position.X += X;
     Transform::_position.Y += Y;
     Transform::_position.Z += Z;
+
+    Transform::_transformMatrix = glm::translate(Transform::_transformMatrix, glm::vec3(X,Y,Z));
 }
 void Core::Transform::AddPosition(const Vector3& position) {
     Transform::_position.X += position.X;
     Transform::_position.Y += position.Y;
     Transform::_position.Z += position.Z;
+
+    Transform::_transformMatrix = glm::translate(Transform::_transformMatrix, glm::vec3(position.X,position.Y,position.Z));
 }
 void Core::Transform::SetPosition(const float X, const float Y, const float Z) {
     const Vector3 direction = Vector3(X, Y, Z) - Transform::_position;

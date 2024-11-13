@@ -37,13 +37,6 @@ namespace Render::AnomalyEngine {
         void PrepareRender();
 
         void SetWindowMatrix(int width, int height);
-        void SetModelMatrix();
-
-        ///Orto or perspective
-        ///
-        ///Before use SetWindowMatrix()
-        void SetCameraProjection(const Render::WindowsManager::Window& window);
-        void SetCameraTransform(Render::AnomalyEngine::Components::Camera* camera);
 
         ///Always set to null after end of cycle
         std::list<std::unique_ptr<Core::Geometry>>* _meshBuffer;

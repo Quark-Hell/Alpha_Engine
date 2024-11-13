@@ -18,17 +18,22 @@ namespace Render::AnomalyEngine {
             return false;
         }
 
-        if (mesh->_vertexVbo != 0)
+        if (mesh->_vertexVbo != 0) {
             glDeleteBuffers(1, &mesh->_vertexVbo);
+            mesh->_vertexVbo = 0;
 
-        if (mesh->_colorsVbo != 0)
+        }
+        if (mesh->_colorsVbo != 0) {
             glDeleteBuffers(1, &mesh->_colorsVbo);
-
-        if (mesh->_normalsVbo != 0)
+            mesh->_colorsVbo = 0;
+        }
+        if (mesh->_normalsVbo != 0) {
             glDeleteBuffers(1, &mesh->_normalsVbo);
-
+            mesh->_normalsVbo = 0;
+        }
         if (mesh->_texCoordsVbo != 0) {
             glDeleteBuffers(1, &mesh->_texCoordsVbo);
+            mesh->_texCoordsVbo = 0;
         }
 
         if (mesh->_vao != 0)
@@ -61,7 +66,6 @@ namespace Render::AnomalyEngine {
         }
 
         if (mesh->_texCoords->data() != nullptr) {
-
             glGenBuffers(1, &mesh->_texCoordsVbo);
             glBindBuffer(GL_ARRAY_BUFFER, mesh->_texCoordsVbo);
             glBufferData(GL_ARRAY_BUFFER, mesh->_texCoords->size() * sizeof(float), mesh->_texCoords->data(), GL_STATIC_DRAW);

@@ -100,7 +100,6 @@ namespace Render::AnomalyEngine::Shaders {
 
         glDepthFunc(GL_LEQUAL);
         glBindTexture(GL_TEXTURE_CUBE_MAP, _textureId);
-        glPolygonMode(GL_FRONT, GL_FILL);
         glDisable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
     }

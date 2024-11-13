@@ -22,53 +22,7 @@ namespace Render::AnomalyEngine {
     }
 
     void RenderEngine::SetWindowMatrix(const int width, const int height) {
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
         glViewport(0, 0, width, height);
-    }
-
-    void RenderEngine::SetModelMatrix() {
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-    }
-    void RenderEngine::SetCameraProjection(const Render::WindowsManager::Window& window) {
-        float Fov;
-        float Aspect;
-        float ZNear;
-        float ZFar;
-
-        window._activeCamera->GetCameraInfo(&Fov, &Aspect, &ZNear, &ZFar);
-
-        gluPerspective(90, 1.333, ZNear, ZFar);
-        //if (window->_activeCamera->GetProjection())
-        //{
-            //glOrtho(0, window->_width, window->_height, 0, ZNear, ZFar);
-        //}
-        //else
-        //{
-        //    gluPerspective(Fov, Aspect, ZNear, ZFar);
-        //}
-    }
-
-    void RenderEngine::SetCameraTransform(Render::AnomalyEngine::Components::Camera* camera) {
-        Core::Object* parent = camera->GetParentObject();
-
-        //glMatrixMode(GL_PROJECTION);
-        //glLoadIdentity();
-
-        if (parent == nullptr) {
-            glTranslatef(0, 0, 0);
-        }
-        else {
-            glRotatef(0, 1.f, 0.f, 0.f);
-            glRotatef(0, 0.f, 1.f, 0.f);
-            glRotatef(0, 0.f, 0.f, 1.f);
-
-            glTranslatef(
-                parent->transform.GetPosition().X,
-                parent->transform.GetPosition().Y,
-                parent->transform.GetPosition().Z);
-        }
     }
 
     void RenderEngine::PrepareRender() {
@@ -87,10 +41,6 @@ namespace Render::AnomalyEngine {
         }
 
         RenderEngine::SetWindowMatrix(window._width, window._height);
-        RenderEngine::SetCameraProjection(window);
-        RenderEngine::SetCameraTransform(window._activeCamera);
-
-        RenderEngine::SetModelMatrix();
 
         RenderMeshes(window._activeCamera);
     }
@@ -185,8 +135,6 @@ namespace Render::AnomalyEngine {
 
             GenerateVao(mesh);
 
-            //SetModelMatrix();
-
             glUseProgram(mesh->_material.Shader->GetProgramId());
             glBindVertexArray(mesh->_vao);
 
@@ -200,6 +148,7 @@ namespace Render::AnomalyEngine {
 
             //glDepthFunc(GL_NEVER);
             glBindVertexArray(0);
+            glBindTexture(GL_TEXTURE_2D, 0);
 
             //Delete vao that was created by GenerateVao() function
             glDeleteVertexArrays(1, &mesh->_vao);

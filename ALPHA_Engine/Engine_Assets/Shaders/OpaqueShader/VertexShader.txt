@@ -1,15 +1,38 @@
+//#version 460
+//layout (location = 0) in vec3 aPos;
+////layout (location = 3) in vec2 aTexCoord;
+//
+////out vec2 TexCoord;
+//
+//uniform mat4 MVP;
+//
+//void main()
+//{
+//    gl_Position = MVP * vec4(aPos, 1.0f);
+//    //TexCoord = vec2(aTexCoord.x, aTexCoord.y);
+//}
+
+
 #version 460
-layout (location = 0) in vec3 aPos;
-//layout (location = 3) in vec2 aTexCoord;
+layout(location = 0) in vec3 vertex_position;
+layout(location = 1) in vec3 vertex_normal;
+layout(location = 2) in vec3 vertex_color;
+layout(location = 3) in vec2 vertex_tex_coords;
 
-//out vec2 TexCoord;
-out vec3 ourColor;
+out vec3 color;
+out vec3 normal;
+out vec3 frag_Pos;
+out vec2 texCoords;
 
-uniform mat4 transform;
+uniform mat4 MVP;
+uniform mat4 model_matrix;
+uniform mat3 trans_model_mat;
 
-void main()
-{
-    gl_Position = transform * vec4(aPos, 1.0f);
-    //TexCoord = vec2(aTexCoord.x, aTexCoord.y);
-    ourColor = vec3(0.5,0.5,0.5);
+void main() {
+   color = vertex_color;
+   texCoords = vertex_tex_coords;
+
+   gl_Position = MVP * vec4(vertex_position, 1.0f);
+   frag_Pos = vec3(model_matrix * vec4(vertex_position, 1.0f));
+   normal = trans_model_mat * vertex_normal;
 }

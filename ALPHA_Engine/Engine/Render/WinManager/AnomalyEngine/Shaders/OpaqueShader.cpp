@@ -26,7 +26,7 @@ namespace Render::AnomalyEngine::Shaders {
         AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/OpaqueShader/FragmentShader.txt)", ShadersType::FragmentShader);
 
         OpaqueShader::LoadTextures(
-            R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)",
+            R"(/ALPHA_Engine/Engine_Assets/Textures/Planets/planet_continental_Base_Color.tga)",
             R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)",
             R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)",
             R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)",
@@ -96,7 +96,8 @@ namespace Render::AnomalyEngine::Shaders {
             it.DeleteTextureFromVRAM();
         }
 
-        auto genPar = []() {
+        auto genPar = [](const unsigned int id) {
+            glBindTexture(GL_TEXTURE_2D, id);
             glGenerateMipmap(GL_TEXTURE_2D);
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -107,12 +108,12 @@ namespace Render::AnomalyEngine::Shaders {
             glBindTexture(GL_TEXTURE_2D, 0);
         };
 
-        for (auto & _texture : _textures) {
-            if (_texture.GetHeight() == 0)
+        for (auto & texture : _textures) {
+            if (texture.GetHeight() == 0)
                 continue;
 
-            if (_texture.TransferToGPU(true, Textures::EnumTypeOfTexture::Texture2D)) {
-                genPar();
+            if (texture.TransferToGPU(true, Textures::EnumTypeOfTexture::Texture2D)) {
+                genPar(texture.GetTextureId());
                 continue;
             }
 
@@ -131,27 +132,19 @@ namespace Render::AnomalyEngine::Shaders {
     }
 
     void OpaqueShader::ApplyShadersSettings(Render::AnomalyEngine::Components::Camera *camera) {
+        auto modelMat = glm::mat4(glm::mat3(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
+        SetValue(UniformType::mat4x4,"model_matrix", &modelMat);
 
-        unsigned int id = OpaqueShader::GetProgramId();
-        unsigned int transformLoc = glGetUniformLocation(id, "transform");
+        auto transMat = glm::transpose(glm::inverse(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
+        SetValue(UniformType::mat4x4,"trans_model_mat", &transMat);
 
-        glm::mat4 trans = glm::mat4(1.0f);
-        //trans = GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
+        auto MVP = camera->GetProjectionMatrix() * camera->GetParentObject()->GetTransformMatrix() * GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
+        SetValue(UniformType::mat4x4,"MVP", &MVP);
 
-        trans = glm::translate(trans, glm::vec3(0,0,5));
-        trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-        trans = glm::scale(trans, glm::vec3(2, 2, 2));
+        size_t directLightsCount = Core::World::GetDirLights()->size();
+        size_t pointLightsCount = 0;
+        size_t spotLightsCount = 0;
 
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-
-        glPolygonMode(GL_FRONT, GL_FILL);
-        glEnable(GL_CULL_FACE);
-        glDepthFunc(GL_LEQUAL);
-
-//        size_t directLightsCount = Core::World::GetDirLights()->size();
-//        size_t pointLightsCount = 0;
-//        size_t spotLightsCount = 0;
-//
 //        for (const auto& it : *Core::World::GetDirLights()) {
 //            auto* dirLight = static_cast<Components::DirectLight*>(it.get());
 //
@@ -161,45 +154,29 @@ namespace Render::AnomalyEngine::Shaders {
 //            SetValue(UniformType::vec3,std::string("directLights[").append(std::to_string(directLightsCount)).append("].color"), &dirLight->color);
 //            SetValue(UniformType::floatType,std::string("directLights[").append(std::to_string(directLightsCount)).append("].strength"), &dirLight->intensity);
 //        }
-//
-//        float ambStrength = 0.2f;
-//        SetValue(UniformType::floatType,"ambientStrength", &ambStrength);
-//
+
+        //float ambStrength = 0.2f;
+        //SetValue(UniformType::floatType,"ambientStrength", &ambStrength);
+
 //        SetValue(UniformType::integer,"DirectLightsCount", &directLightsCount);
 //        SetValue(UniformType::integer,"PointLightsCount", &pointLightsCount);
 //        SetValue(UniformType::integer,"SpotLightsCount", &spotLightsCount);
-//
-//        Core::Vector3 pos = camera->GetParentObject()->transform.GetPosition();
-//        SetValue(UniformType::vec3,"viewPos", &pos);
-//
-//        glBindTexture(GL_TEXTURE0, _textures[0].GetTextureId());
-//        glBindTexture(GL_TEXTURE5, _textures[0].GetTextureId());
-//
-//        //_textures[0].BindTexture(0, OpaqueShader::GetProgramId(), "diffuseMap");
+
+        //Core::Vector3 pos = camera->GetParentObject()->transform.GetPosition();
+        //SetValue(UniformType::vec3,"viewPos", &pos);
+
+        _textures[0].BindTexture(0, OpaqueShader::GetProgramId(), "diffuseMap");
 //        //_textures[1].BindTexture(1, OpaqueShader::GetProgramId(), "metallicMap");
 //        //_textures[2].BindTexture(2, OpaqueShader::GetProgramId(), "specularMap");
 //        //_textures[3].BindTexture(3, OpaqueShader::GetProgramId(), "roughnessMap");
 //        //_textures[4].BindTexture(4, OpaqueShader::GetProgramId(), "anisotropicMap");
-//        //_textures[5].BindTexture(5, OpaqueShader::GetProgramId(), "emissionMap");
+//        _textures[5].BindTexture(5, OpaqueShader::GetProgramId(), "emissionMap");
 //        //_textures[6].BindTexture(6, OpaqueShader::GetProgramId(), "normalMap");
 //        //_textures[7].BindTexture(7, OpaqueShader::GetProgramId(), "opacityMap");
 //        //_textures[8].BindTexture(8, OpaqueShader::GetProgramId(), "occlusionMap");
-//
-//        auto modelMat = glm::mat4(glm::mat3(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
-//        SetValue(UniformType::mat4x4,"model_matrix", &modelMat);
-//
-//        auto transMat = glm::transpose(glm::inverse(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
-//        SetValue(UniformType::mat4x4,"trans_model_mat", &transMat);
-//
-//        auto t = GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
-//        glm::translate(t, glm::vec3(0,0,5));
-//
-//        auto MVP = camera->GetProjectionMatrix() * camera->GetParentObject()->GetTransformMatrix() * t;
-//        SetValue(UniformType::mat4x4,"MVP", &MVP);
-//
-//        //glPolygonMode(GL_FRONT, GL_FILL);
-//        //glEnable(GL_CULL_FACE);
-//        //glEnable(GL_DEPTH_TEST);
-//        //glDepthFunc(GL_LEQUAL);
+
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
     }
 }
