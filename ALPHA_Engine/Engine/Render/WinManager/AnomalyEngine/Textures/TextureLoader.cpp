@@ -9,7 +9,7 @@ namespace Render::AnomalyEngine::Textures {
 
     void TextureWork::CompleteTask() const {
         if (_parent != nullptr) {
-            _texture->CreateTexture(_path.c_str());
+            _texture->CreateTexture(_path);
             std::cout << "Info: Work completed" << std::endl;
             _parent->_isActive = false;
         }
@@ -50,13 +50,15 @@ namespace Render::AnomalyEngine::Textures {
     TextureLoader::~TextureLoader()
     {
         for (const auto& it : _threads) {
-            it->_thread.join();
+            if (it->_thread.joinable()) {
+                it->_thread.join();
+            }
         }
     }
 
     void TextureLoader::AddTask(BaseTexture &texture, const std::string &path)
     {
-        _taskList.push_back(std::make_shared<TextureWork>(texture, path));
+        _taskList.emplace_back(std::make_shared<TextureWork>(texture, path));
     }
 
     void TextureLoader::DoWork()
@@ -67,7 +69,7 @@ namespace Render::AnomalyEngine::Textures {
         }
 
         for (unsigned int i = 0; i < _threadsCount; i++) {
-            _threads.push_back(std::unique_ptr<ThreadObject>(new ThreadObject));
+            _threads.emplace_back(std::unique_ptr<ThreadObject>(new ThreadObject));
         }
 
         while (_taskList.size() > 0) {
@@ -86,7 +88,9 @@ namespace Render::AnomalyEngine::Textures {
 
         //Waits until all threads finish working
         for (const auto& it : _threads) {
-            it->_thread.join();
+            if (it->_thread.joinable()) {
+                it->_thread.join();
+            }
         }
 
         _threads.clear();

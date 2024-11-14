@@ -238,6 +238,8 @@ void MyScript::Start() {
     auto cubeMesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Cube.fbx");
     cube->AddComponent(cubeMesh);
     cubeMesh->_material.InitShader<Render::AnomalyEngine::Shaders::OpaqueShader>();
+    static_cast<Render::AnomalyEngine::Shaders::OpaqueShader*>(cubeMesh->_material.Shader.get())->LoadTextures(
+        "/ALPHA_Engine/Engine_Assets/Textures/Planets/planet_continental_Base_Color.tga");
 #endif
 }
 //Call every frame

@@ -25,17 +25,7 @@ namespace Render::AnomalyEngine::Shaders {
         AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/OpaqueShader/VertexShader.txt)", ShadersType::VertexShader);
         AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/OpaqueShader/FragmentShader.txt)", ShadersType::FragmentShader);
 
-        OpaqueShader::LoadTextures(
-            R"(/ALPHA_Engine/Engine_Assets/Textures/Planets/planet_continental_Base_Color.tga)",
-            R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)",
-            R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)",
-            R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)",
-            R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)",
-            R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyEmission.png)",
-            R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)",
-            R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)",
-            R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)"
-            );
+        OpaqueShader::LoadTextures();
 
         if (ShaderProgram::CompileShader()) {
             ShaderProgram::AttachShader();
@@ -60,30 +50,72 @@ namespace Render::AnomalyEngine::Shaders {
         const std::string& opacityMapPath,
         const std::string& occlusionMapPath) {
 
-
         {
             Core::ScopedTimer timer("Info: Load time");
 
             const auto loader = Textures::TextureLoader::GetInstance();
-            if (!diffusePath.empty())
+            if (!diffusePath.empty()) {
                 loader->AddTask(_textures[0], diffusePath);
-            if (!metallicPath.empty())
-                loader->AddTask(_textures[1], metallicPath);
-            if (!specularPath.empty())
-                loader->AddTask(_textures[2], specularPath);
-            if (!roughnessPath.empty())
-                loader->AddTask(_textures[3], roughnessPath);
-            if (!anisotropicPath.empty())
-                loader->AddTask(_textures[4], anisotropicPath);
-            if (!emissionPath.empty())
-                loader->AddTask(_textures[5], emissionPath);
-            if (!normalMapPath.empty())
-                loader->AddTask(_textures[6], normalMapPath);
-            if (!opacityMapPath.empty())
-                loader->AddTask(_textures[7], opacityMapPath);
-            if (!occlusionMapPath.empty())
-                loader->AddTask(_textures[8], occlusionMapPath);
+            }
+            else {
+                loader->AddTask(_textures[0], R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)");
+            }
 
+            if (!metallicPath.empty()) {
+                loader->AddTask(_textures[1], metallicPath);
+            }
+            else {
+                loader->AddTask(_textures[1], R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)");
+            }
+
+            if (!specularPath.empty()) {
+                loader->AddTask(_textures[2], specularPath);
+            }
+            else {
+                loader->AddTask(_textures[2], R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)");
+            }
+
+            if (!roughnessPath.empty()) {
+                loader->AddTask(_textures[3], roughnessPath);
+            }
+            else {
+                loader->AddTask(_textures[3], R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)");
+            }
+
+            if (!anisotropicPath.empty()) {
+                loader->AddTask(_textures[4], anisotropicPath);
+            }
+            else {
+                loader->AddTask(_textures[4], R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)");
+            }
+
+            if (!emissionPath.empty()) {
+                loader->AddTask(_textures[5], emissionPath);
+            }
+            else {
+                loader->AddTask(_textures[5], R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyEmission.png)");
+            }
+
+            if (!normalMapPath.empty()) {
+                loader->AddTask(_textures[6], normalMapPath);
+            }
+            else {
+                loader->AddTask(_textures[6], R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)");
+            }
+
+            if (!opacityMapPath.empty()) {
+                loader->AddTask(_textures[7], opacityMapPath);
+            }
+            else {
+                loader->AddTask(_textures[7], R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)");
+            }
+
+            if (!occlusionMapPath.empty()) {
+                loader->AddTask(_textures[8], occlusionMapPath);
+            }
+            else {
+                loader->AddTask(_textures[8], R"(/ALPHA_Engine/Engine_Assets/Textures/EmptyTexture.png)");
+            }
 
             loader->DoWork();
         }

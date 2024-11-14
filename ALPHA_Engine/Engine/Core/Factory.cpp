@@ -27,14 +27,14 @@ bool Core::Factory::RemoveObject(const Core::Object* object) {
 }
 
 Core::Object* Core::Factory::CreateObject() {
-  World::GetObjects()->push_back(std::unique_ptr<Core::Object>(new Core::Object()));
+  World::GetObjects()->emplace_back(std::unique_ptr<Core::Object>(new Core::Object()));
   std::cout << "Info: Object created" << std::endl;
   return World::GetObjects()->back().get();
 }
 
 #if USER_SCRIPTS_REGISTER_INCLUDED
 Register::UserScript* Core::Factory::CreateUserScript() {
-  World::GetUserScripts()->push_back(std::unique_ptr<Register::UserScript>(new Register::UserScript()));
+  World::GetUserScripts()->emplace_back(std::unique_ptr<Register::UserScript>(new Register::UserScript()));
   return static_cast<Register::UserScript*>(World::GetUserScripts()->back().get());
 }
 
@@ -69,7 +69,7 @@ Register::UserScript* Core::Factory::CreateUserScript(Core::Component* script) {
     }
   }
 
-  userScripts->push_back(std::unique_ptr<Register::UserScript>(src));
+  userScripts->emplace_back(std::unique_ptr<Register::UserScript>(src));
   return static_cast<Register::UserScript*>(World::GetUserScripts()->back().get());
 }
 #endif
@@ -82,13 +82,13 @@ Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, con
   const auto windows = Core::World::GetWindows();
 
   if (windows->size() >= 1) {
-    windows->push_back(std::unique_ptr<Window>
+    windows->emplace_back(std::unique_ptr<Window>
 (new Window(width,height, title,nullptr,windows->at(0)->_window)));
 
     std::cout << "Info: Created shared window" << std::endl;
   }
   else {
-    windows->push_back(std::unique_ptr<Window>
+    windows->emplace_back(std::unique_ptr<Window>
 (new Window(width,height, title,nullptr,nullptr)));
 
     std::cout << "Info: Window created" << std::endl;
@@ -102,7 +102,7 @@ Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, con
 Render::AnomalyEngine::Components::Camera* Core::Factory::CreateCamera(const float fov, const float aspect, const float zNear, const float zFar) {
   const auto cameras = World::GetCameras();
 
-  cameras->push_back(std::unique_ptr<Render::AnomalyEngine::Components::Camera>
+  cameras->emplace_back(std::unique_ptr<Render::AnomalyEngine::Components::Camera>
     (new Render::AnomalyEngine::Components::Camera(fov, aspect, zNear, zFar)));
 
   std::cout << "Info: Camera created" << std::endl;
@@ -129,7 +129,7 @@ bool Core::Factory::RemoveCamera(const Render::AnomalyEngine::Components::Camera
 Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh() {
   const auto meshes = World::GetMeshes();
 
-  meshes->push_back(std::unique_ptr<Render::AnomalyEngine::Components::Mesh>
+  meshes->emplace_back(std::unique_ptr<Render::AnomalyEngine::Components::Mesh>
     (new Render::AnomalyEngine::Components::Mesh()));
 
   std::cout << "Info: Mesh created" << std::endl;
@@ -140,7 +140,7 @@ Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh() {
 Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh(const std::string& path) {
   const auto meshes = World::GetMeshes();
 
-  meshes->push_back(std::unique_ptr<Render::AnomalyEngine::Components::Mesh>
+  meshes->emplace_back(std::unique_ptr<Render::AnomalyEngine::Components::Mesh>
     (new Render::AnomalyEngine::Components::Mesh()));
 
   static_cast<Render::AnomalyEngine::Components::Mesh*>(meshes->back().get())->Create(path);
@@ -152,7 +152,7 @@ Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh(const std::st
 Render::AnomalyEngine::Components::DirectLight *Core::Factory::CreateDirectLight(const Core::Vector3& direction) {
   const auto lights = World::GetDirectLights();
 
-  lights->push_back(std::unique_ptr<Render::AnomalyEngine::Components::DirectLight>(new Render::AnomalyEngine::Components::DirectLight(direction)));
+  lights->emplace_back(std::unique_ptr<Render::AnomalyEngine::Components::DirectLight>(new Render::AnomalyEngine::Components::DirectLight(direction)));
 
   std::cout << "Info: Direct light created" << std::endl;
 
@@ -170,7 +170,7 @@ Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateMouseButtonsBind
 
   const auto binds = World::GetBinds();
 
-  binds->push_back(std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>
+  binds->emplace_back(std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>
   (new Render::WindowsManager::BindsEngine::Bind()));
 
   binds->back().get()->Create(
@@ -193,7 +193,7 @@ Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateMouseSensorBind(
 
   const auto binds = World::GetBinds();
 
-  binds->push_back(std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>
+  binds->emplace_back(std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>
   (new Render::WindowsManager::BindsEngine::Bind()));
 
   binds->back().get()->Create(Operations, {}, {}, {}, {}, MouseSensorState, window);
@@ -210,7 +210,7 @@ Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateKeyboardBind(
 
   const auto binds = World::GetBinds();
 
-  binds->push_back(std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>
+  binds->emplace_back(std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>
 (new Render::WindowsManager::BindsEngine::Bind()));
 
   binds->back().get()->Create(

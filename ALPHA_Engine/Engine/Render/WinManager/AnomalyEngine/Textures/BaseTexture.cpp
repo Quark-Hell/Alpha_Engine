@@ -47,10 +47,6 @@ namespace Render::AnomalyEngine::Textures {
             return;
 
         glDeleteTextures(1, &_textureID);
-
-        _width = 0;
-        _height = 0;
-        _channelsCount = 0;
         _textureID = 0;
 
         std::cout << "Info: Texture was deleted from VRAM" << std::endl;
