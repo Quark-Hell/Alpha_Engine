@@ -15,7 +15,7 @@ namespace Render::AnomalyEngine::Components {
     friend class Core::Factory;
 
     private:
-        explicit Camera(float fov = 90,float aspect = 1,float zNear = 0.01,float zFar = 10000);
+        explicit Camera(float fov = 60,float aspect = 1.3333333,float zNear = 0.01,float zFar = 10000);
         Render::WindowsManager::Window* _window = nullptr;
 
         float _fov;
@@ -34,6 +34,12 @@ namespace Render::AnomalyEngine::Components {
         [[nodiscard]] bool GetProjection() const;
         glm::mat4x4 GetProjectionMatrix();
 
+        void SetFov(float fov);
+        void SetAspect(float aspect);
+        void SetZNear(float zNear);
+        void SetZFar(float zFar);
+
+        void SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar);
         void GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float* ZFar);
     };
 }

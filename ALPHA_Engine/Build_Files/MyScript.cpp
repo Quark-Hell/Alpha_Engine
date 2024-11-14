@@ -128,8 +128,8 @@ void MyScript::Start() {
     Player->SetName("TestObject");
 
 #if RENDER_INCLUDED
-    win1 = Core::Factory::CreateWindow(800, 600, "Windows 1");
-    win2 = Core::Factory::CreateWindow(800, 600, "Windows 2");
+    win1 = Core::Factory::CreateWindow(1280, 720, "Windows 1");
+    win2 = Core::Factory::CreateWindow(400, 400, "Windows 2");
     win1->SetCursorVisible(false);
 #endif
 
@@ -235,7 +235,7 @@ void MyScript::Start() {
     auto cube = Core::Factory::CreateObject();
     cube->transform.AddPosition(0,0,-5);
     cube->SetName("Cube");
-    auto cubeMesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Cube.fbx");
+    auto cubeMesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Sphere.fbx");
     cube->AddComponent(cubeMesh);
     cubeMesh->_material.InitShader<Render::AnomalyEngine::Shaders::OpaqueShader>();
     static_cast<Render::AnomalyEngine::Shaders::OpaqueShader*>(cubeMesh->_material.Shader.get())->LoadTextures(

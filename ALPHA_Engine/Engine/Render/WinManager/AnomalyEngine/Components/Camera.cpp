@@ -33,6 +33,19 @@ namespace Render::AnomalyEngine::Components {
         }
     }
 
+    void Camera::SetFov(const float fov) {
+        _fov = fov;
+    }
+    void Camera::SetAspect(const float aspect) {
+        _aspect = aspect;
+    }
+    void Camera::SetZNear(const float zNear) {
+        _zNear = zNear;
+    }
+    void Camera::SetZFar(const float zFar) {
+        _zFar = zFar;
+    }
+
     void Camera::GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float* ZFar) {
         *Fov = Camera::_fov;
         *Aspect = Camera::_aspect;

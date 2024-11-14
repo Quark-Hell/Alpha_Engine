@@ -62,8 +62,8 @@ namespace Core {
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-        static Render::AnomalyEngine::Components::Camera *CreateCamera(float fov = 90, float aspect = 1,
-                                                                       float zNear = 0.1f, float zFar = 3000);
+        static Render::AnomalyEngine::Components::Camera *CreateCamera(float fov = 60, float aspect = 1,
+                                                                       float zNear = 0.1f, float zFar = 10000);
         static bool RemoveCamera(const Render::AnomalyEngine::Components::Camera *camera);
 
         static Render::AnomalyEngine::Components::Mesh *CreateMesh();

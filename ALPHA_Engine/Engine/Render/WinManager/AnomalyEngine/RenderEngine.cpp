@@ -160,13 +160,11 @@ namespace Render::AnomalyEngine {
     }
 
     void RenderEngine::RenderLoop(Render::WindowsManager::Window& windows) {
-
        RenderEngine::ClearFrameBuffer();
        RenderEngine::PrepareRender();
 
        RenderEngine::RenderScene(windows);
 
        glFinish();
-
     }
 }

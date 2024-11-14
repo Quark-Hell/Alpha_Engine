@@ -87,7 +87,15 @@ namespace Render::WindowsManager {
 
         int bufferWidth, bufferHeight;
         glfwGetFramebufferSize(_window, &bufferWidth, &bufferHeight);
-        glViewport(0, 0, bufferWidth, bufferHeight);
+        //glViewport(0, 0, bufferWidth, bufferHeight);
+        if (_width > _height) {
+            glViewport(0, (_height - _width) / 2, bufferWidth, bufferHeight);
+        }
+        else {
+            glViewport((_width - _height) / 2, 0, bufferWidth, bufferHeight);
+        }
+
+
 
         glfwMakeContextCurrent(_window);
         glfwSwapInterval(1);
@@ -108,7 +116,7 @@ namespace Render::WindowsManager {
         }
 
         glEnable(GL_DEBUG_OUTPUT );
-        glDebugMessageCallback( openglCallbackFunction, 0);
+        glDebugMessageCallback(openglCallbackFunction, 0);
     }
 
     void Window::Resize(int width, int height) {
@@ -124,6 +132,7 @@ namespace Render::WindowsManager {
 
     void Window::SetCamera(Render::AnomalyEngine::Components::Camera* camera) {
         _activeCamera = camera;
+        _activeCamera->SetAspect(static_cast<float>(_width) / static_cast<float>(_height));
     }
 
     bool Window::GetCursorVisible() {
