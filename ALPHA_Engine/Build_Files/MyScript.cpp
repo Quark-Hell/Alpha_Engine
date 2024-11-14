@@ -78,6 +78,47 @@ void MyScript::RightMoveCamera() {
 
     Player->transform.SetPosition(newPos);
 }
+void MyScript::ForwardMoveCamera() {
+    Core::Vector3 newPos = Player->transform.GetPosition();
+
+    Core::Vector3 ForwardVector{ 0,0,0 };
+
+    ForwardVector.X = sin((Player->transform.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
+    ForwardVector.Y = cos((Player->transform.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
+    ForwardVector.Z = sin((Player->transform.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
+
+    newPos += ForwardVector * moveSensitive;
+
+    Player->transform.SetPosition(newPos);
+}
+void MyScript::BackwardMoveCamera() {
+    Core::Vector3 newPos = Player->transform.GetPosition();
+
+    Core::Vector3 BackwardVector{ 0,0,0 };
+
+    BackwardVector.X = sin((Player->transform.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
+    BackwardVector.Y = cos((Player->transform.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
+    BackwardVector.Z = sin((Player->transform.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
+
+    newPos += BackwardVector * (-moveSensitive);
+
+    Player->transform.SetPosition(newPos);
+}
+
+void MyScript::UpMoveCamera() {
+    Core::Vector3 newPos = Player->transform.GetPosition();
+
+    newPos.Y += moveSensitive;
+
+    Player->transform.SetPosition(newPos);
+}
+void MyScript::DownMoveCamera() {
+    Core::Vector3 newPos = Player->transform.GetPosition();
+
+    newPos.Y -= moveSensitive;
+
+    Player->transform.SetPosition(newPos);
+}
 
 //Call after created
 void MyScript::Start() {
@@ -123,6 +164,35 @@ void MyScript::Start() {
             {EnumKeyboardTable::D},
             win1
         );
+
+        auto forwardMove = Core::Factory::CreateKeyboardBind(
+            {std::bind(&MyScript::ForwardMoveCamera, this)},
+            {EnumKeyboardKeysStates::KeyHold},
+            {EnumKeyboardTable::W},
+            win1
+        );
+
+        auto backwardMove = Core::Factory::CreateKeyboardBind(
+            {std::bind(&MyScript::BackwardMoveCamera, this)},
+            {EnumKeyboardKeysStates::KeyHold},
+            {EnumKeyboardTable::S},
+            win1
+        );
+
+        auto upMove = Core::Factory::CreateKeyboardBind(
+            {std::bind(&MyScript::UpMoveCamera, this)},
+            {EnumKeyboardKeysStates::KeyHold},
+            {EnumKeyboardTable::Q},
+            win1
+        );
+
+        auto downMove = Core::Factory::CreateKeyboardBind(
+            {std::bind(&MyScript::DownMoveCamera, this)},
+            {EnumKeyboardKeysStates::KeyHold},
+            {EnumKeyboardTable::E},
+            win1
+        );
+
 
         auto rotateBind = Core::Factory::CreateMouseSensorBind(
             {std::bind(&MyScript::CameraRotate, this)},

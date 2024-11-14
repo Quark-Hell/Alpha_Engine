@@ -1,6 +1,3 @@
-// Game.h : Include file for standard system include files,
-// or project specific include files.
-
 #pragma once
 #include "UserScriptsRegister/UserScriptConfig.h"
 
@@ -32,6 +29,10 @@ class MyScript : public Register::UserScript {
 
 	void LeftMoveCamera();
 	void RightMoveCamera();
+	void ForwardMoveCamera();
+	void BackwardMoveCamera();
+    void UpMoveCamera();
+    void DownMoveCamera();
 
 	void ShowCursor();
 	void HideCursor();
