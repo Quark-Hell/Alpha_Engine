@@ -198,10 +198,23 @@ in vec2 texCoords;
 
 out vec4 FragColor;
 
+uniform float ambientStrength;
+
 uniform sampler2D diffuseMap;
+uniform sampler2D emissionMap;
 
 void main()
 {
-    vec3 result = vec3(texture(diffuseMap, texCoords));
+    //vec3 result = vec3(0,0,0);
+    //vec3 directResult;
+    //vec3 pointResult;
+    //vec3 spotResult;
+    vec3 lightColor;
+
+    vec3 ambient = ambientStrength * vec3(1,1,1);
+
+    lightColor = ambient;
+
+    vec3 result = vec3(texture(diffuseMap, texCoords)) * (vec3(texture(emissionMap, texCoords)) * 2 + lightColor);
     FragColor = vec4(result, 1.0);
 }

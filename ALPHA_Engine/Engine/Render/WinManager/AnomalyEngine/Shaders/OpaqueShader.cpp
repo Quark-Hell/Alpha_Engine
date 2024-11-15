@@ -187,8 +187,8 @@ namespace Render::AnomalyEngine::Shaders {
 //            SetValue(UniformType::floatType,std::string("directLights[").append(std::to_string(directLightsCount)).append("].strength"), &dirLight->intensity);
 //        }
 
-        //float ambStrength = 0.2f;
-        //SetValue(UniformType::floatType,"ambientStrength", &ambStrength);
+        float ambStrength = 0.2f;
+        SetValue(UniformType::floatType,"ambientStrength", &ambStrength);
 
 //        SetValue(UniformType::integer,"DirectLightsCount", &directLightsCount);
 //        SetValue(UniformType::integer,"PointLightsCount", &pointLightsCount);
@@ -202,7 +202,7 @@ namespace Render::AnomalyEngine::Shaders {
 //        //_textures[2].BindTexture(2, OpaqueShader::GetProgramId(), "specularMap");
 //        //_textures[3].BindTexture(3, OpaqueShader::GetProgramId(), "roughnessMap");
 //        //_textures[4].BindTexture(4, OpaqueShader::GetProgramId(), "anisotropicMap");
-//        _textures[5].BindTexture(5, OpaqueShader::GetProgramId(), "emissionMap");
+        _textures[5].BindTexture(1, OpaqueShader::GetProgramId(), "emissionMap");
 //        //_textures[6].BindTexture(6, OpaqueShader::GetProgramId(), "normalMap");
 //        //_textures[7].BindTexture(7, OpaqueShader::GetProgramId(), "opacityMap");
 //        //_textures[8].BindTexture(8, OpaqueShader::GetProgramId(), "occlusionMap");
