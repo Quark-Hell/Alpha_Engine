@@ -124,7 +124,10 @@ void MyScript::DownMoveCamera() {
 //Call after created
 void MyScript::Start() {
     auto logger = Core::Logger::Logger::GetInstance();
-    logger->LoggerError("NIGGER ALARM");
+    logger->LoggerEvent("TestLoggerEvent");
+    logger->LoggerWarning("TestLoggerWarning");
+    logger->LoggerError("TestLoggerError");
+
 
 
     std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;
