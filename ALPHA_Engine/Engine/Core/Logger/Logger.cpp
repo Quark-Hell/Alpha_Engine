@@ -39,7 +39,7 @@ std::string Core::Logger::Logger::getLogFileName() {
 	#ifdef WINDOWS
 		return std::filesystem::current_path().string()+"\\Logs\\" + getCurrentDate() + ".log";
 	#else
-		return std::filesystem::current_path().string() + "/Logs/" + getCurrentTime() + ".log";
+		return std::filesystem::current_path().string() + "/Logs/" + getCurrentDate() + ".log";
 	#endif
 }
 
