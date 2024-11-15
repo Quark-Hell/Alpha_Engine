@@ -34,7 +34,7 @@ namespace Core::Logger {
 
 				writeToFile(messageStream.str());
 				writeToBuffer(messageStream.str());
-				std::cout << message;
+				std::cout << messageStream.str();
 				logFile.close();
 			}
 
