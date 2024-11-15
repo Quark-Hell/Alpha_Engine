@@ -1,6 +1,7 @@
 #include "MyScript.h"
 #include "Core/Object.h"
 #include "Core/Factory.h"
+#include "Core/Logger/Logger.h"
 
 #include "Render/WinManager/AnomalyEngine/Components/Mesh.h"
 #include "Render/WinManager/AnomalyEngine/Components/Camera.h"
@@ -122,6 +123,10 @@ void MyScript::DownMoveCamera() {
 
 //Call after created
 void MyScript::Start() {
+    auto logger = Core::Logger::Logger::GetInstance();
+    logger->LoggerError("NIGGER ALARM");
+
+
     std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;
 
     Player = Core::Factory::CreateObject();
@@ -138,64 +143,64 @@ void MyScript::Start() {
         using namespace Render::WindowsManager::BindsEngine;
 
         auto showCursor = Core::Factory::CreateKeyboardBind(
-            {std::bind(&MyScript::ShowCursor, this)},
-            {EnumKeyboardKeysStates::KeyPressed},
-            {EnumKeyboardTable::LAlt},
+            { std::bind(&MyScript::ShowCursor, this) },
+            { EnumKeyboardKeysStates::KeyPressed },
+            { EnumKeyboardTable::LAlt },
             win1
         );
 
         auto hideCursor = Core::Factory::CreateKeyboardBind(
-            {std::bind(&MyScript::HideCursor, this)},
-            {EnumKeyboardKeysStates::KeyReleased},
-            {EnumKeyboardTable::LAlt},
+            { std::bind(&MyScript::HideCursor, this) },
+            { EnumKeyboardKeysStates::KeyReleased },
+            { EnumKeyboardTable::LAlt },
             win1
         );
 
         auto leftMove = Core::Factory::CreateKeyboardBind(
-            {std::bind(&MyScript::LeftMoveCamera, this)},
-            {EnumKeyboardKeysStates::KeyHold},
-            {EnumKeyboardTable::A},
+            { std::bind(&MyScript::LeftMoveCamera, this) },
+            { EnumKeyboardKeysStates::KeyHold },
+            { EnumKeyboardTable::A },
             win1
         );
 
         auto rightMove = Core::Factory::CreateKeyboardBind(
-            {std::bind(&MyScript::RightMoveCamera, this)},
-            {EnumKeyboardKeysStates::KeyHold},
-            {EnumKeyboardTable::D},
+            { std::bind(&MyScript::RightMoveCamera, this) },
+            { EnumKeyboardKeysStates::KeyHold },
+            { EnumKeyboardTable::D },
             win1
         );
 
         auto forwardMove = Core::Factory::CreateKeyboardBind(
-            {std::bind(&MyScript::ForwardMoveCamera, this)},
-            {EnumKeyboardKeysStates::KeyHold},
-            {EnumKeyboardTable::W},
+            { std::bind(&MyScript::ForwardMoveCamera, this) },
+            { EnumKeyboardKeysStates::KeyHold },
+            { EnumKeyboardTable::W },
             win1
         );
 
         auto backwardMove = Core::Factory::CreateKeyboardBind(
-            {std::bind(&MyScript::BackwardMoveCamera, this)},
-            {EnumKeyboardKeysStates::KeyHold},
-            {EnumKeyboardTable::S},
+            { std::bind(&MyScript::BackwardMoveCamera, this) },
+            { EnumKeyboardKeysStates::KeyHold },
+            { EnumKeyboardTable::S },
             win1
         );
 
         auto upMove = Core::Factory::CreateKeyboardBind(
-            {std::bind(&MyScript::UpMoveCamera, this)},
-            {EnumKeyboardKeysStates::KeyHold},
-            {EnumKeyboardTable::Q},
+            { std::bind(&MyScript::UpMoveCamera, this) },
+            { EnumKeyboardKeysStates::KeyHold },
+            { EnumKeyboardTable::Q },
             win1
         );
 
         auto downMove = Core::Factory::CreateKeyboardBind(
-            {std::bind(&MyScript::DownMoveCamera, this)},
-            {EnumKeyboardKeysStates::KeyHold},
-            {EnumKeyboardTable::E},
+            { std::bind(&MyScript::DownMoveCamera, this) },
+            { EnumKeyboardKeysStates::KeyHold },
+            { EnumKeyboardTable::E },
             win1
         );
 
 
         auto rotateBind = Core::Factory::CreateMouseSensorBind(
-            {std::bind(&MyScript::CameraRotate, this)},
+            { std::bind(&MyScript::CameraRotate, this) },
             static_cast<Render::WindowsManager::BindsEngine::EnumMouseSensorStates>
             (EnumMouseSensorStates::MouseKeepMoved),
             win1
@@ -224,16 +229,16 @@ void MyScript::Start() {
 
     mesh->_material.InitShader<Render::AnomalyEngine::Shaders::CubeMapShader>();
     static_cast<Render::AnomalyEngine::Shaders::CubeMapShader*>(mesh->_material.Shader.get())->LoadTextures(
-    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Left_Tex.tga)",
-    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Right_Tex.tga)",
-    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Top_Tex.tga)",
-    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Bottom_Tex.tga)",
-    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Front_Tex.tga)",
-    R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Back_Tex.tga)"
+        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Left_Tex.tga)",
+        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Right_Tex.tga)",
+        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Top_Tex.tga)",
+        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Bottom_Tex.tga)",
+        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Front_Tex.tga)",
+        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Back_Tex.tga)"
     );
 
     auto cube = Core::Factory::CreateObject();
-    cube->transform.AddPosition(0,0,-5);
+    cube->transform.AddPosition(0, 0, -5);
     cube->SetName("Cube");
     auto cubeMesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Sphere.fbx");
     cube->AddComponent(cubeMesh);

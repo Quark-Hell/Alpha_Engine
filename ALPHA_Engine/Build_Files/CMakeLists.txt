@@ -45,7 +45,7 @@ include("${Game_Source}/IncludedModules.cmake")
 add_executable(Game
 		${Game_Source}/MyScript.cpp
 )
-
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Logs")
 find_package(OpenGL REQUIRED)
 
 if(WIN32)
