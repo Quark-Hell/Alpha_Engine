@@ -51,10 +51,6 @@ if(INSTALL_DEPENDENCIES)
                 "${Engine}/lib/glew32s.lib"
 
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${CMAKE_BINARY_DIR}/external/glfw3.dll"
-                "${Engine}/lib/glfw3.dll"
-
-                COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 "${CMAKE_BINARY_DIR}/external/glfw3.lib"
                 "${Engine}/lib/glfw3.lib"
             )

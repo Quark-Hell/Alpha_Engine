@@ -95,10 +95,6 @@ if(WIN32)
 	if(MSVC)
 		execute_process(
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different
-				"${Engine}/lib/glfw3.dll"
-				"${PROJECT_BINARY_DIR}/glfw3.dll"
-
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different
 				"${Engine}/lib/assimp.dll"
 				"${PROJECT_BINARY_DIR}/assimp-vc143-mt.dll"
 		)
