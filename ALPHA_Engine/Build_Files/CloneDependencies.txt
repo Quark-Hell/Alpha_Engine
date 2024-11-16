@@ -37,6 +37,28 @@ if(INSTALL_DEPENDENCIES)
             )
             FetchContent_MakeAvailable(Dependencies)
 
+            execute_process (
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/external/assimp.dll"
+                "${Engine}/lib/assimp.dll"
+
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/external/assimp.lib"
+                "${Engine}/lib/assimp.lib"
+
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/external/glew32s.lib"
+                "${Engine}/lib/glew32s.lib"
+
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/external/glfw3.dll"
+                "${Engine}/lib/glfw3.dll"
+
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/external/glfw3.lib"
+                "${Engine}/lib/glfw3.lib"
+            )
+
         elseif(MINGW)
 
             FetchContent_Declare(Dependencies
@@ -49,6 +71,11 @@ if(INSTALL_DEPENDENCIES)
             FetchContent_MakeAvailable(Dependencies)
         endif()
 
+    else()
+        message( FATAL_ERROR "Unsupported system. Now supported: \ 
+        Linux; \
+        Windows with MSVC Compiler; \
+        Windows with MinGW Compiler" )
     endif()
 
 endif()
