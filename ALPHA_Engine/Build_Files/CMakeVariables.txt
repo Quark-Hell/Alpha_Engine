@@ -1,0 +1,17 @@
+set (Game_Source "${PROJECT_SOURCE_DIR}/Source")
+include_directories("${Game_Source}")
+
+set (Engine "${PROJECT_SOURCE_DIR}/ALPHA_Engine")
+set (Engine_Assets "${Engine}/Engine_Assets")
+set (Engine_Libs "${Engine}/lib")
+
+set (Engine_Headers "${Engine}/headers")
+include_directories("${Engine_Headers}")
+
+set (GLM "${Engine}/GLM")
+include_directories("${GLM}")
+
+set (GLEW "${Engine}/GLEW")
+include_directories("${GLEW}")
+
+include("${Game_Source}/IncludedModules.cmake")

@@ -1,0 +1,54 @@
+include(FetchContent)
+include(CMakeVariables.txt)
+
+if(INSTALL_DEPENDENCIES)
+
+    if(UNIX AND NOT APPLE)
+
+        FetchContent_Declare(Dependencies
+          GIT_REPOSITORY "https://github.com/Quark-Hell/Alpha_Engine_Dependencies.git"
+          GIT_TAG "origin/Linux"
+          GIT_PROGRESS   TRUE
+          GIT_SHALLOW    TRUE
+          SOURCE_DIR "${CMAKE_BINARY_DIR}/external"
+        )
+        FetchContent_MakeAvailable(Dependencies)
+
+        execute_process (
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_BINARY_DIR}/external/libassimp.so.5"
+            "${Engine}/lib/libassimp.so.5"
+
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_BINARY_DIR}/external/glfw3.a"
+            "${Engine}/lib/glfw3.a"
+        )
+
+    elseif(WIN32)
+
+        if(MSVC)
+
+            FetchContent_Declare(Dependencies
+              GIT_REPOSITORY "https://github.com/Quark-Hell/Alpha_Engine_Dependencies.git"
+              GIT_TAG "origin/Windows10_MSVC"
+              GIT_PROGRESS   TRUE
+              GIT_SHALLOW    TRUE
+              SOURCE_DIR "${CMAKE_BINARY_DIR}/external"
+            )
+            FetchContent_MakeAvailable(Dependencies)
+
+        elseif(MINGW)
+
+            FetchContent_Declare(Dependencies
+              GIT_REPOSITORY "https://github.com/Quark-Hell/Alpha_Engine_Dependencies.git"
+              GIT_TAG "origin/Windows10_MINGW"
+              GIT_PROGRESS   TRUE
+              GIT_SHALLOW    TRUE
+              SOURCE_DIR "${CMAKE_BINARY_DIR}/external"
+            )
+            FetchContent_MakeAvailable(Dependencies)
+        endif()
+
+    endif()
+
+endif()

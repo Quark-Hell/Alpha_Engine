@@ -61,48 +61,27 @@ copy_assets("${Game_Source_Dest}/IncludedModules.cmake" "${Game_Source_Dest}")
 
 message("\n")
 
-if(WIN32)
-#Stupid method, but it's working
-add_custom_command(TARGET ALPHA_Engine POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLFW}/glfw3dll.lib"
-	"${Game_Engine_Dest}/lib/glfw3dll.lib"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLFW}/glfw3.dll"
-	"${Game_Engine_Dest}/lib/glfw3.dll"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLEW}/lib/Windows/glew32s.lib"
-	"${Game_Engine_Dest}/lib/glew32s.lib"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${assimp}/lib/assimp-vc143-mt.dll"
-	"${Game_Engine_Dest}/lib/assimp-vc143-mt.dll"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${assimp}/lib/assimp-vc143-mt.lib"
-	"${Game_Engine_Dest}/lib/assimp-vc143-mt.lib"
-)
-else()
-add_custom_command(TARGET ALPHA_Engine POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLFW}/glfw3.a"
-	"${Game_Engine_Dest}/lib/glfw3.a"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${assimp}/lib/libassimp.so.5.4.3"
-	"${Game_Engine_Dest}/lib/libassimp.so.5"
-)
-endif()
-
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
 	${Game_Source_Dest}/CMakeLists.txt
 	${Game_Files_Dest}/CMakeLists.txt
 
+	COMMAND ${CMAKE_COMMAND} -E copy
+    ${Game_Source_Dest}/CMakeVariables.txt
+    ${Game_Files_Dest}/CMakeVariables.txt
+
+    COMMAND ${CMAKE_COMMAND} -E copy
+    ${Game_Source_Dest}/CloneDependencies.txt
+    ${Game_Files_Dest}/CloneDependencies.txt
+
 	COMMAND ${CMAKE_COMMAND} -E remove
 	${Game_Source_Dest}/CMakeLists.txt
+
+	COMMAND ${CMAKE_COMMAND} -E remove
+    ${Game_Source_Dest}/CMakeVariables.txt
+
+    COMMAND ${CMAKE_COMMAND} -E remove
+    ${Game_Source_Dest}/CloneDependencies.txt
 )
 
 #Export build config for sandbox
