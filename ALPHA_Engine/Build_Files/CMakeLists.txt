@@ -32,17 +32,21 @@ include(CloneDependencies.txt)
 add_executable(Game
 		${Game_Source}/MyScript.cpp
 )
-file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Logs")
+
 find_package(OpenGL REQUIRED)
 
 if(WIN32)
-	target_link_libraries(Game
-			PRIVATE ${Engine_Libs}/ALPHA_Engine.lib
-			PRIVATE ${Engine_Libs}/glfw3dll.lib
-			PRIVATE ${Engine_Libs}/glew32s.lib
-			PRIVATE ${Engine_Libs}/assimp-vc143-mt.lib
-			PRIVATE ${OPENGL_LIBRARIES}
-	)
+
+	if(MSVC)
+		target_link_libraries(Game
+				PRIVATE ${Engine_Libs}/ALPHA_Engine.lib
+				PRIVATE ${Engine_Libs}/glfw3.lib
+				PRIVATE ${Engine_Libs}/glew32s.lib
+				PRIVATE ${Engine_Libs}/assimp.lib
+				PRIVATE ${OPENGL_LIBRARIES}
+		)
+	endif()
+
 else()
 	find_package(GLEW REQUIRED)
 
@@ -75,18 +79,24 @@ endfunction()
 
 copy_assets("${Engine_Assets}"	"${PROJECT_BINARY_DIR}/ALPHA_Engine/Engine_Assets")
 
+add_custom_command(TARGET Game POST_BUILD        
+	COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Logs"
+)
 
 if(WIN32)
+	if(MSVC)
+	message("${Engine}/lib/glfw3.dll")
+	message("${PROJECT_BINARY_DIR}/glfw3dll.dll")
+
 	#I did'n know why command copy_asset does not work in this case
-	add_custom_command(TARGET Game POST_BUILD
+	execute_process(
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${Engine}/lib/glfw3.dll"
-			"${PROJECT_BINARY_DIR}/"
-	)
+			"${PROJECT_BINARY_DIR}/glfw3.dll"
 
-	add_custom_command(TARGET Game POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			"${Engine}/lib/assimp-vc143-mt.dll"
-			"${PROJECT_BINARY_DIR}/"
+			"${Engine}/lib/assimp.dll"
+			"${PROJECT_BINARY_DIR}/assimp-vc143-mt.dll"
 	)
+	endif()
 endif()
