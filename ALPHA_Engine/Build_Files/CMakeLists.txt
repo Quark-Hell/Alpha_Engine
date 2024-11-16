@@ -45,6 +45,14 @@ if(WIN32)
 				PRIVATE ${Engine_Libs}/assimp.lib
 				PRIVATE ${OPENGL_LIBRARIES}
 		)
+	elseif(MINGW)
+		target_link_libraries(Game
+				PRIVATE ${Engine_Libs}/ALPHA_Engine.a
+				PRIVATE ${Engine_Libs}/glfw3.a
+				PRIVATE ${Engine_Libs}/glew32.dll.a
+				PRIVATE ${Engine_Libs}/assimp.dll.a
+				PRIVATE ${OPENGL_LIBRARIES}
+		)
 	endif()
 
 else()
@@ -79,24 +87,30 @@ endfunction()
 
 copy_assets("${Engine_Assets}"	"${PROJECT_BINARY_DIR}/ALPHA_Engine/Engine_Assets")
 
-add_custom_command(TARGET Game POST_BUILD        
-	COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Logs"
+add_custom_command(TARGET Game POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Logs"
 )
 
 if(WIN32)
 	if(MSVC)
-	message("${Engine}/lib/glfw3.dll")
-	message("${PROJECT_BINARY_DIR}/glfw3dll.dll")
+		execute_process(
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different
+				"${Engine}/lib/glfw3.dll"
+				"${PROJECT_BINARY_DIR}/glfw3.dll"
 
-	#I did'n know why command copy_asset does not work in this case
-	execute_process(
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			"${Engine}/lib/glfw3.dll"
-			"${PROJECT_BINARY_DIR}/glfw3.dll"
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different
+				"${Engine}/lib/assimp.dll"
+				"${PROJECT_BINARY_DIR}/assimp-vc143-mt.dll"
+		)
+	elseif(MINGW)
+		execute_process(
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different
+				"${Engine}/lib/glew32.dll"
+				"${PROJECT_BINARY_DIR}/glew32.dll"
 
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			"${Engine}/lib/assimp.dll"
-			"${PROJECT_BINARY_DIR}/assimp-vc143-mt.dll"
-	)
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different
+				"${Engine}/lib/libassimp-5.dll"
+				"${PROJECT_BINARY_DIR}/libassimp-5.dll"
+		)
 	endif()
 endif()

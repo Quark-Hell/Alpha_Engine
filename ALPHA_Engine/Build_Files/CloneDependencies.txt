@@ -69,6 +69,29 @@ if(INSTALL_DEPENDENCIES)
               SOURCE_DIR "${CMAKE_BINARY_DIR}/external"
             )
             FetchContent_MakeAvailable(Dependencies)
+
+            execute_process (
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/external/assimp.dll.a"
+                "${Engine}/lib/assimp.dll.a"
+
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/external/libassimp-5.dll"
+                "${Engine}/lib/libassimp-5.dll"
+
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/external/glew32.dll.a"
+                "${Engine}/lib/glew32.dll.a"
+
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/external/glew32.dll"
+                "${Engine}/lib/glew32.dll"
+
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/external/glfw3.a"
+                "${Engine}/lib/glfw3.a"
+            )
+
         endif()
 
     else()
