@@ -133,3 +133,7 @@ endif()
 if(USER_SCRIPTS_REGISTER)
 ExportModulesConfig("USER_SCRIPTS_REGISTER_INCLUDED")
 endif()
+
+if(LOGGER)
+ExportModulesConfig("LOGGER_INCLUDED")
+endif()

@@ -1,7 +1,8 @@
 #include "MyScript.h"
 #include "Core/Object.h"
 #include "Core/Factory.h"
-#include "Core/Logger/Logger.h"
+
+#include "Logger/Logger.h"
 
 #include "Render/WinManager/AnomalyEngine/Components/Mesh.h"
 #include "Render/WinManager/AnomalyEngine/Components/Camera.h"
@@ -123,12 +124,9 @@ void MyScript::DownMoveCamera() {
 
 //Call after created
 void MyScript::Start() {
-    auto logger = Core::Logger::Logger::GetInstance();
-    logger->LoggerEvent("TestLoggerEvent");
-    logger->LoggerWarning("TestLoggerWarning");
-    logger->LoggerError("TestLoggerError");
-
-
+    Logger::Logger::LoggerEvent("TestLoggerEvent");
+    Logger::Logger::LoggerWarning("TestLoggerWarning");
+    Logger::Logger::LoggerError("TestLoggerError");
 
     std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;
 

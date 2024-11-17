@@ -57,3 +57,10 @@ endif ()
 if(RENDER_BINDS_ENGINE AND NOT RENDER_BASE)
     message( FATAL_ERROR "For use RENDER_BINDS_ENGINE you should turn on RENDER_BASE" )
 endif ()
+
+#Include logger
+if(LOGGER)
+	add_compile_definitions(LOGGER_INCLUDED)
+	message("${Cyan}include .cpp engine_logger_list${ColourReset}")
+	recurse_source(${Engine_Source}/Logger engine_logger_list)
+endif()

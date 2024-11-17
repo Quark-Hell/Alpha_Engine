@@ -62,3 +62,7 @@ set(engine_binds_list)
 #User scripts
 option(USER_SCRIPTS_REGISTER "Build user scripts register" ON)
 set(engine_user_scripts_list)
+
+#Logger
+option(LOGGER "Build logger" ON)
+set(engine_logger_list)
