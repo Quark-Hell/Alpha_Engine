@@ -124,9 +124,12 @@ void MyScript::DownMoveCamera() {
 
 //Call after created
 void MyScript::Start() {
-    Logger::Logger::LoggerEvent("TestLoggerEvent");
-    Logger::Logger::LoggerWarning("TestLoggerWarning");
-    Logger::Logger::LoggerError("TestLoggerError");
+#if LOGGER_INCLUDED
+    Logger::Logger::LogInfo("TestLoggerEvent");
+    Logger::Logger::LogWarning("TestLoggerWarning");
+    Logger::Logger::LogError("TestLoggerError");
+    //Logger::Logger::LogCritical("TestLoggerCritical");
+#endif
 
     std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;
 

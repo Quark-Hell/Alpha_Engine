@@ -2,7 +2,7 @@
 
 #include "Window.h"
 #include "GLFW/glfw3.h"
-#include <iostream>
+#include "Logger/Logger.h"
 
 #if ANOMALY_ENGINE_INCLUDED
 #include <Render/WinManager/AnomalyEngine/RenderEngine.h>
@@ -23,13 +23,9 @@ namespace Render::WindowsManager {
 
     void WindowsManager::Init() {
         if (!glfwInit()) {
-            std::cout << "glfw does not inited" << std::endl;
+            Logger::Logger::LogCritical("Glfw does not inited");
             abort();
         }
-
-        int major, minor, revision;
-        glfwGetVersion(&major, &minor, &revision);
-        printf("Info: Running against GLFW %i.%i.%i\n", major, minor, revision);
     }
 
     void WindowsManager::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows) {

@@ -7,6 +7,7 @@
 #include "GLFW/glfw3.h"
 
 #include <iostream>
+#include <Logger/Logger.h>
 
 #include "AnomalyEngine/Components/Camera.h"
 
@@ -80,7 +81,7 @@ namespace Render::WindowsManager {
 
         if (_window == nullptr)
         {
-            assert("Critical: Failed to create GLFW window");
+            Logger::Logger::LogCritical("Failed to create GLFW window");
             glfwTerminate();
             abort();
         }
@@ -95,8 +96,6 @@ namespace Render::WindowsManager {
             glViewport((_width - _height) / 2, 0, bufferWidth, bufferHeight);
         }
 
-
-
         glfwMakeContextCurrent(_window);
         glfwSwapInterval(1);
 
@@ -109,8 +108,8 @@ namespace Render::WindowsManager {
         GLenum err = glewInit();
         if (GLEW_OK != err)
         {
-            std::cout << "Critical: glew does not inited" << std::endl;
-            fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+            Logger::Logger::LogCritical("Critical: glew does not inited");
+            fprintf(stderr, "%s\n", glewGetErrorString(err));
             glfwTerminate();
             abort();
         }

@@ -7,7 +7,7 @@
 #include "Render/WinManager/AnomalyEngine/Textures/BaseTexture.h"
 #include "Render/WinManager/AnomalyEngine/Textures/TextureLoader.h"
 
-
+#include "Logger/Logger.h"
 
 #include "Core/Timer.h"
 
@@ -27,10 +27,10 @@ namespace Render::AnomalyEngine::Shaders {
         }
         else {
             ShaderProgram::DeleteShader();
-            std::cout << "Error: Cube map shader was not be created" << std::endl;
+            Logger::Logger::LogError("Cube map shader was not be created");
         }
 
-        std::cout << "Info: Cube map shader was be created" << std::endl;
+        Logger::Logger::LogInfo("Cube map shader was be created");
     }
 
     void CubeMapShader::LoadTextures(
@@ -42,7 +42,7 @@ namespace Render::AnomalyEngine::Shaders {
         const std::string& backSide) {
 
         {
-            Core::ScopedTimer timer("Info: Load time");
+            Core::ScopedTimer timer("Load time");
 
             const auto loader = Textures::TextureLoader::GetInstance();
             loader->AddTask(_cubemapTextures[0], leftSide);
@@ -61,7 +61,7 @@ namespace Render::AnomalyEngine::Shaders {
         if (_textureId != 0) {
             glDeleteTextures(1, &_textureId);
             _textureId = 0;
-            std::cout << "Info: Old texture was deleted from VRAM" << std::endl;
+            Logger::Logger::LogInfo("Old texture was deleted from VRAM");
         }
 
         glGenTextures(1, &_textureId);
@@ -88,7 +88,7 @@ namespace Render::AnomalyEngine::Shaders {
 
     void CubeMapShader::ApplyShadersSettings(Render::AnomalyEngine::Components::Camera* camera) {
         if (camera->GetParentObject() == nullptr) {
-            std::cout << "Error: camera parent was null" << std::endl;
+            Logger::Logger::LogError("camera parent was null");
             return;
         }
 

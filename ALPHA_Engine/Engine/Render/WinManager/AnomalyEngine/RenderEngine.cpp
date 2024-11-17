@@ -4,8 +4,8 @@
 #include "GLFW/glfw3.h"
 
 #include "Render/WinManager/Window.h"
-#include <iostream>
-#include <Core/Object.h>
+#include "Logger/Logger.h"
+#include "Core/Object.h"
 
 #include "Components/Camera.h"
 #include "Components/Mesh.h"
@@ -36,7 +36,7 @@ namespace Render::AnomalyEngine {
     void RenderEngine::RenderScene(const Render::WindowsManager::Window& window)
     {
         if (window._activeCamera == nullptr) {
-            std::cout << "Error: active camera was be null" << std::endl;
+            Logger::Logger::LogError("active camera was be null");
             return;
         }
 
@@ -63,7 +63,7 @@ namespace Render::AnomalyEngine {
                 glRenderMode = GL_TRIANGLES;
             break;
             default:
-                std::cout << "Critical: Unknown render mode" << std::endl;
+                Logger::Logger::LogCritical("Unknown render mode");
             abort();
             break;
         }
@@ -73,19 +73,19 @@ namespace Render::AnomalyEngine {
 
     bool RenderEngine::MeshChecker(const Render::AnomalyEngine::Components::Mesh *mesh) {
         if (mesh == nullptr) {
-            std::cout << "Error: Mesh was null" << std::endl;
+            Logger::Logger::LogError("Mesh was null");
             return false;
         }
         if (mesh->_material.Shader == nullptr) {
-            std::cout << "Error: Shader was be null" << std::endl;
+            Logger::Logger::LogError("Shader was be null");
             return false;
         }
         if (mesh->_material.Shader->GetCompiledStatus() == false) {
-            std::cout << "Error: Shader was not be compiled" << std::endl;
+            Logger::Logger::LogError("Shader was not be compiled");
             return false;
         }
         if (mesh->_material.Shader->GetProgramId() == 0) {
-            std::cout << "Error: Shader program was not be created" << std::endl;
+            Logger::Logger::LogError("Shader program was not be created");
             return false;
         }
 
@@ -119,11 +119,11 @@ namespace Render::AnomalyEngine {
 
     void RenderEngine::RenderMeshes(Render::AnomalyEngine::Components::Camera* camera) {
         if (_meshBuffer == nullptr) {
-            std::cout << "Error: Mesh buffer was null" << std::endl;
+            Logger::Logger::LogError("Mesh buffer was null");
             return;
         }
         if (camera == nullptr) {
-            std::cout << "Error: Camera was null" << std::endl;
+            Logger::Logger::LogError("Camera was null");
             return;
         }
 

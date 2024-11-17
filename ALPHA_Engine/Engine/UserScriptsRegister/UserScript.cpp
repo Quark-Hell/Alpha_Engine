@@ -2,22 +2,24 @@
 #include "BaseConfig.h"
 #include "Registry.h"
 
+#include "Logger/Logger.h"
+
 Register::UserScript::UserScript() {
-	std::cout << "Info: Creating new user script" << std::endl;
+	Logger::Logger::LogInfo("Creating new user script");
 	Register::Registry::RegisterActorWithComponent(this);
 }
 
 Register::UserScript::~UserScript() {
-	std::cout << "Info: Script deleted successfully" << std::endl;
+	Logger::Logger::LogInfo("Script deleted successfully");
 }
 
 
 void Register::UserScript::Start()  {
-	std::cout << "Info: Base start, function can be redefined" << std::endl;
+
 }
 void Register::UserScript::Update() {
-	std::cout << "Info: Base update, function can be redefined" << std::endl;
+
 }
 void Register::UserScript::End() {
-	std::cout << "Info: Base end, function can be redefined" << std::endl;
+
 }

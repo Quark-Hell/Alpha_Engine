@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-#include <iostream>
+#include "Logger/Logger.h"
 
 namespace Core {
     Timer::Timer() {
@@ -20,11 +20,11 @@ namespace Core {
     }
 
 
-    ScopedTimer::ScopedTimer(std::string_view name) : _name(name) {}
+    ScopedTimer::ScopedTimer(const std::string_view name) : _name(name) {}
 
     ScopedTimer::~ScopedTimer()
     {
-      float time = _timer.ElapsedMillis();
-      std::cout << _name << " - " << time << "ms" << std::endl;
+      const float time = _timer.ElapsedMillis();
+      Logger::Logger::LogInfo(_name, " - ", time, "ms");
     }
 }

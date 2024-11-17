@@ -14,16 +14,18 @@
 #include "glm/gtx/transform.hpp"
 #include "glm/gtx/string_cast.hpp"
 
+#include "Logger/Logger.h"
+
 namespace Render::AnomalyEngine::Shaders {
 
     ShaderProgram::ShaderProgram(Material* parentMat) {
     	if (parentMat == nullptr) {
-    		std::cout << "Critical: parent material was null" << std::endl;
+    		Logger::Logger::LogCritical("Parent material was null");
     		abort();
     	}
 
         _parentMaterial = parentMat;
-    	std::cout << "Info: Base shader program created" << std::endl;
+    	Logger::Logger::LogInfo("Base shader program created");
     }
 
     ShaderProgram::~ShaderProgram() {
@@ -32,7 +34,7 @@ namespace Render::AnomalyEngine::Shaders {
         if (_programId != 0)
             glDeleteProgram(_programId);
 
-    	std::cout << "Info: Shader was be deleted" << std::endl;
+    	Logger::Logger::LogInfo("Shader was be deleted");
     }
 
 #pragma region Getter
@@ -87,13 +89,12 @@ namespace Render::AnomalyEngine::Shaders {
 
     bool ShaderProgram::BindShader() const {
         if (_isCompiled == false) {
-        	std::cout << "Error: Shader was not be compiled" << std::endl;
+        	Logger::Logger::LogError("Shader was not be compiled");
         	return false;
         }
 
-
         if (_programId == 0) {
-        	std::cout << "Error: Shader program was not be created on GPU" << std::endl;
+        	Logger::Logger::LogError("Shader program was not be created on GPU");
         	return false;
         }
 
@@ -112,7 +113,7 @@ namespace Render::AnomalyEngine::Shaders {
 		auto readShaderSource = [](const std::string& path, std::string& str) {
 
 			const std::string genPath = std::filesystem::current_path().string() + path;
-			std::cout << "Info: Read shader source by " << genPath << std::endl;
+			Logger::Logger::LogInfo("Read shader source by ", genPath);
 			std::ifstream sourceStream(genPath);
 			if (sourceStream.is_open()) {
 				str.clear();
@@ -124,7 +125,7 @@ namespace Render::AnomalyEngine::Shaders {
 				sourceStream.close();
 				return true;
 			}
-			std::cout << "Error: Could not read shader source by " << genPath << std::endl;
+			Logger::Logger::LogError("Could not read shader source by ", genPath);
 			return false;
 
 		};
@@ -197,7 +198,7 @@ namespace Render::AnomalyEngine::Shaders {
 		}
 
 		_isCompiled = false;
-    	std::cout << "Info: Shader source was be moved to VRAM" << std::endl;
+    	Logger::Logger::LogInfo("Shader source was be moved to VRAM");
 		return true;
     }
 
@@ -214,17 +215,17 @@ namespace Render::AnomalyEngine::Shaders {
     			char info_log[1024];
     			glGetShaderInfoLog(shaderId, 1024, nullptr, info_log);
 
-    			std::cout << "Error: Shader compilation error: " << info_log;
+    			Logger::Logger::LogError("Shader compilation error: ", info_log);
 
     			compiledStatus = false;
     			return false;
     		}
-    		std::cout << "Info: Shader was be compiled" << std::endl;
+    		Logger::Logger::LogInfo("Shader was be compiled");
     		compiledStatus = true;
     		return true;
     	};
 
-    	std::cout << "Info: Starting compiling shader" << std::endl;
+    	Logger::Logger::LogInfo("Starting compiling shader");
     	if (_vertexShaderId != 0)
     		if (!(TryCompile(ShaderProgram::_vertexShaderId, ShaderProgram::_isCompiled)))
     			return false;
@@ -254,13 +255,13 @@ namespace Render::AnomalyEngine::Shaders {
 
 	bool ShaderProgram::AttachShader() {
     	if (ShaderProgram::_isCompiled == false) {
-    		std::cout << "Error: Shader could not be attached because there was not be compiled. You need to use CompileShader() previously" << std::endl;
+    		Logger::Logger::LogError("Shader could not be attached because there was not be compiled. You need to use CompileShader() previously");
     		return false;
     	}
 
     	if (ShaderProgram::_programId == 0) {
     		ShaderProgram::_programId = glCreateProgram();
-    		std::cout << "Info: New shader program was be created" << std::endl;
+    		Logger::Logger::LogInfo("New shader program was be created");
     	}
 
     	if (_vertexShaderId != 0)
@@ -305,7 +306,7 @@ namespace Render::AnomalyEngine::Shaders {
     	if (ShaderProgram::_computeShaderId != 0)
     		glDeleteShader(_computeShaderId);
 
-    	std::cout << "Info: Shader was be deleted from VRAM" << std::endl;
+    	Logger::Logger::LogInfo("Shader was be deleted from VRAM");
     }
 
 	void ShaderProgram::ApplyShadersSettings(Render::AnomalyEngine::Components::Camera* camera) {
@@ -318,7 +319,7 @@ namespace Render::AnomalyEngine::Shaders {
 
 	void ShaderProgram::SetValue(const UniformType type, const std::string& fieldName, void* value) const {
     	if (ShaderProgram::_programId == 0) {
-    		std::cout << "Shader does not exist" << std::endl;
+    		Logger::Logger::LogInfo("Shader does not exist");
     		return;
     	}
 

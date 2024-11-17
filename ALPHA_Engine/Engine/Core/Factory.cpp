@@ -8,27 +8,29 @@
 #include "Object.h"
 #include "Components/Component.h"
 
+#include "Logger/Logger.h"
+
 bool Core::Factory::RemoveObject(const Core::Object* object) {
   const auto list = World::GetObjects();
   auto it = std::begin(*list);
 
   for (size_t i = 0; i < World::GetObjects()->size(); ++i) {
     if (it->get() == &object[i]) {
-      std::cout << "Info: Removing object " << std::endl;
+      Logger::Logger::LogInfo("Removing object");
       World::GetObjects()->erase(it);
-      std::cout << "Info: Removed object " << std::endl;
+      Logger::Logger::LogInfo("Object removed");
       return true;
     }
     std::advance(it, 1);
   }
 
-  std::cout << "Error: Object do not exist" << std::endl;
+  Logger::Logger::LogInfo("Object do not exist");
   return false;
 }
 
 Core::Object* Core::Factory::CreateObject() {
   World::GetObjects()->emplace_back(std::unique_ptr<Core::Object>(new Core::Object()));
-  std::cout << "Info: Object created" << std::endl;
+  Logger::Logger::LogInfo("Object created");
   return World::GetObjects()->back().get();
 }
 
@@ -43,28 +45,29 @@ bool Core::Factory::RemoveUserScript(const Core::Component* script) {
   auto it = std::begin(*list);
   for (size_t i = 0; i < World::GetObjects()->size(); ++i) {
     if (it->get() == &script[i]) {
-      std::cout << "Info: Removing user script" << std::endl;
+      Logger::Logger::LogInfo("Removing user script");
       World::GetUserScripts()->erase(it);
-      std::cout << "Info: Removed user script" << std::endl;
+      Logger::Logger::LogInfo("User script removed");
       return true;
     }
     std::advance(it, 1);
   }
-  std::cout << "Error: User script cannot be removed" << std::endl;
+
+  Logger::Logger::LogError("User script do not exist");
   return false;
 }
 
 Register::UserScript* Core::Factory::CreateUserScript(Core::Component* script) {
   const auto src = dynamic_cast<Register::UserScript*>(script);
   if (src == nullptr) {
-    std::cout << "Error: Argument is not a User Script type" << std::endl;
+    Logger::Logger::LogError("Argument is not a User Script type");
     return nullptr;
   }
 
   const auto userScripts = World::GetUserScripts();
   for (auto& it : *userScripts) {
     if (src == it.get()) {
-      std::cout << "Error: User script already exist" << std::endl;
+      Logger::Logger::LogError("User script already exist");
       return nullptr;
     }
   }
@@ -85,13 +88,13 @@ Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, con
     windows->emplace_back(std::unique_ptr<Window>
 (new Window(width,height, title,nullptr,windows->at(0)->_window)));
 
-    std::cout << "Info: Created shared window" << std::endl;
+    Logger::Logger::LogInfo("Created shared window");
   }
   else {
     windows->emplace_back(std::unique_ptr<Window>
 (new Window(width,height, title,nullptr,nullptr)));
 
-    std::cout << "Info: Window created" << std::endl;
+    Logger::Logger::LogInfo("Window created");
   }
 
   return windows->back().get();
@@ -105,7 +108,7 @@ Render::AnomalyEngine::Components::Camera* Core::Factory::CreateCamera(const flo
   cameras->emplace_back(std::unique_ptr<Render::AnomalyEngine::Components::Camera>
     (new Render::AnomalyEngine::Components::Camera(fov, aspect, zNear, zFar)));
 
-  std::cout << "Info: Camera created" << std::endl;
+  Logger::Logger::LogInfo("Camera created");
   return static_cast<Render::AnomalyEngine::Components::Camera*>(cameras->back().get());
 }
 
@@ -115,14 +118,15 @@ bool Core::Factory::RemoveCamera(const Render::AnomalyEngine::Components::Camera
 
   for (size_t i = 0; i < World::GetCameras()->size(); ++i) {
     if (it->get() == &camera[i]) {
-      std::cout << "Info: Removing camera" << std::endl;
+      Logger::Logger::LogInfo("Removing camera");
       World::GetCameras()->erase(it);
-      std::cout << "Info: Removed camera" << std::endl;
+      Logger::Logger::LogInfo("Camera removed");
       return true;
     }
     std::advance(it, 1);
   }
-  std::cout << "Error: Camera cannot be removed";
+
+  Logger::Logger::LogError("Camera cannot be removed");
   return false;
 }
 
@@ -132,7 +136,7 @@ Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh() {
   meshes->emplace_back(std::unique_ptr<Render::AnomalyEngine::Components::Mesh>
     (new Render::AnomalyEngine::Components::Mesh()));
 
-  std::cout << "Info: Mesh created" << std::endl;
+  Logger::Logger::LogInfo("Mesh created");
 
   return static_cast<Render::AnomalyEngine::Components::Mesh*>(meshes->back().get());
 }
@@ -144,7 +148,8 @@ Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh(const std::st
     (new Render::AnomalyEngine::Components::Mesh()));
 
   static_cast<Render::AnomalyEngine::Components::Mesh*>(meshes->back().get())->Create(path);
-  std::cout << "Info: Mesh created" << std::endl;
+
+  Logger::Logger::LogInfo("Mesh created");
 
   return static_cast<Render::AnomalyEngine::Components::Mesh*>(meshes->back().get());
 }
@@ -154,7 +159,7 @@ Render::AnomalyEngine::Components::DirectLight *Core::Factory::CreateDirectLight
 
   lights->emplace_back(std::unique_ptr<Render::AnomalyEngine::Components::DirectLight>(new Render::AnomalyEngine::Components::DirectLight(direction)));
 
-  std::cout << "Info: Direct light created" << std::endl;
+  Logger::Logger::LogInfo("Direct light created");
 
   return static_cast<Render::AnomalyEngine::Components::DirectLight*>(lights->back().get());
 }
@@ -181,7 +186,7 @@ Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateMouseButtonsBind
     MouseKeys,
     static_cast<Render::WindowsManager::BindsEngine::EnumMouseSensorStates>(1),
     window);
-  std::cout << "Info: Mouse button bind created" << std::endl;
+  Logger::Logger::LogInfo("Mouse button bind created");
 
   return binds->back().get();
 }
@@ -197,7 +202,8 @@ Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateMouseSensorBind(
   (new Render::WindowsManager::BindsEngine::Bind()));
 
   binds->back().get()->Create(Operations, {}, {}, {}, {}, MouseSensorState, window);
-  std::cout << "Info: Mouse sensor bind created" << std::endl;
+
+  Logger::Logger::LogInfo("Mouse sensor bind created");
 
   return binds->back().get();
 }
@@ -221,7 +227,8 @@ Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateKeyboardBind(
     {},
     static_cast<Render::WindowsManager::BindsEngine::EnumMouseSensorStates>(0),
     window);
-  std::cout << "Info: Keyboard bind created" << std::endl;
+
+  Logger::Logger::LogInfo("Keyboard bind created");
 
   return binds->back().get();
 }
@@ -234,13 +241,13 @@ void Core::Factory::RemoveBind(const Render::WindowsManager::BindsEngine::Bind* 
   for (const auto& bind : *binds) {
     if (removedBind == bind.get()) {
       binds->erase(it);
-      std::cout << "Info: Bind removed" << std::endl;
+      Logger::Logger::LogInfo("Bind removed");
       return;
     }
     std::advance(it, 1);
   }
 
-  std::cout << "Error: Bind does not exist" << std::endl;
+  Logger::Logger::LogError("Bind does not exist");
 }
 #endif
 

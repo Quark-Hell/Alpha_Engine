@@ -135,4 +135,7 @@ endif()
 if(LOGGER)
 ExportModulesConfig("LOGGER_INCLUDED")
 copy_headers("${Engine_Source}/Logger" "${Game_Engine_Dest}/headers/Logger")
+else()
+#This may be weird, but I needed empty definition of API function if module does not included into build
+copy_file("${Engine_Source}/Logger/Logger.h" "${Game_Engine_Dest}/headers/Logger/Logger.h")
 endif()

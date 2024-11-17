@@ -1,7 +1,8 @@
 #include "TextureLoader.h"
 
-#include <iostream>
 #include "BaseTexture.h"
+
+#include "Logger/Logger.h"
 
 namespace Render::AnomalyEngine::Textures {
 
@@ -10,11 +11,11 @@ namespace Render::AnomalyEngine::Textures {
     void TextureWork::CompleteTask() const {
         if (_parent != nullptr) {
             _texture->CreateTexture(_path);
-            std::cout << "Info: Work completed" << std::endl;
+            Logger::Logger::LogInfo("Work completed");
             _parent->_isActive = false;
         }
         else {
-            std::cout << "Error: parent is null" << std::endl;
+            Logger::Logger::LogError("Parent is null");
         }
     }
 
@@ -24,7 +25,7 @@ namespace Render::AnomalyEngine::Textures {
     void ThreadObject::Start(const std::shared_ptr<TextureWork> &work)
     {
         if (work.get() == nullptr) {
-            std::cout << "Error: Work is null" << std::endl;
+            Logger::Logger::LogError("Work is null");
             return;
         }
 
@@ -35,7 +36,7 @@ namespace Render::AnomalyEngine::Textures {
         work->_parent = this;
         _isActive = true;
         _thread = std::thread(&TextureWork::CompleteTask, work);
-        std::cout << "Info: thread activated" << std::endl;
+        Logger::Logger::LogInfo("Thread activated");
     }
 
     //-------------------------------------------------------------------------//
@@ -64,7 +65,7 @@ namespace Render::AnomalyEngine::Textures {
     void TextureLoader::DoWork()
     {
         if (_taskList.empty()) {
-            std::cout << "Error: no task" << std::endl;
+            Logger::Logger::LogError("No task");
             return;
         }
 
