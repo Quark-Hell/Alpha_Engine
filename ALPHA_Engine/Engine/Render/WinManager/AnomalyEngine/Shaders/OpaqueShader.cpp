@@ -1,6 +1,6 @@
 #include "OpaqueShader.h"
 
-#include <iostream>
+#include "Logger/Logger.h"
 
 #include <Core/Object.h>
 #include <Core/World.h>
@@ -33,10 +33,10 @@ namespace Render::AnomalyEngine::Shaders {
         }
         else {
             ShaderProgram::DeleteShader();
-            std::cout << "Error: Opaque shader was not be created" << std::endl;
+            Logger::Logger::LogError("Opaque shader was not be created");
         }
 
-        std::cout << "Info: Opaque shader was be created" << std::endl;
+        Logger::Logger::LogInfo("Opaque shader was be created");
     }
 
     void OpaqueShader::LoadTextures(
@@ -51,7 +51,7 @@ namespace Render::AnomalyEngine::Shaders {
         const std::string& occlusionMapPath) {
 
         {
-            Core::ScopedTimer timer("Info: Load time");
+            Core::ScopedTimer timer("Load time");
 
             const auto loader = Textures::TextureLoader::GetInstance();
             if (!diffusePath.empty()) {

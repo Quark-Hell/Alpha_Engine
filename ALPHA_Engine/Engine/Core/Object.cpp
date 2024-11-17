@@ -4,6 +4,8 @@
 #include "Factory.h"
 #include "Components/Component.h"
 
+#include "Logger/Logger.h"
+
 #define M_PI 3.14159265358979323846
 
 Core::Object::Object() = default;
@@ -22,12 +24,12 @@ std::string Core::Object::GetName() {
 
 bool Core::Object::AddComponent(Core::Component* component) {
 	if (component == nullptr) {
-		std::cout << "Error: Component did not attached because there was null" << std::endl;
+		Logger::Logger::LogError("Component did not attached because there was null");
 		return  false;
 	}
 	_components.push_back(component);
 	component->ParentObject = this;
-	std::cout << "Info: Component attached successfully" << std::endl;
+	Logger::Logger::LogInfo("Component attached successfully");
 
 	return true;
 }

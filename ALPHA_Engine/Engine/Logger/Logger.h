@@ -6,6 +6,7 @@
 #include <iostream>
 #include <filesystem>
 #include <list>
+#include <mutex>
 
 namespace Logger {
     class Logger {
@@ -13,6 +14,8 @@ namespace Logger {
         std::ofstream _logFile;
         std::list<std::string> _logBuffer;
         int _daysToDeleteLogFile = 7;
+
+        std::mutex _mutex;
 
     private:
         Logger();
@@ -35,31 +38,37 @@ namespace Logger {
         //Not work now
         void SetDaysToDeleteLogFile(int days);
 
+#if LOGGER_INCLUDED
         template<typename... Data>
-        static void LoggerEvent(const Data &... data) {
+        static void LogInfo(const Data &... data) {
             const auto logger = Logger::GetInstance();
 
-            logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
             std::ostringstream messageStream;
-            messageStream << "INFO:\t [" << logger->GetCurrentTime() << "] ";
+            messageStream << "[" << logger->GetCurrentTime() << "] INFO:";
             ((messageStream << " " << data), ...);
+            const std::string message = "\033[36m" + messageStream.str() + "\033[0m";
+
+            const std::lock_guard<std::mutex> guard(logger->_mutex);
+            logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
 
             logger->WriteToFile(messageStream.str());
-            logger->WriteToBuffer(messageStream.str());
-            std::cout << messageStream.str() << std::endl;
+            logger->WriteToBuffer(message);
+            std::cout << message << std::endl;
             logger->_logFile.close();
         }
 
         template<typename... Data>
-        static void LoggerWarning(const Data &... data) {
+        static void LogWarning(const Data &... data) {
             const auto logger = Logger::GetInstance();
 
-            logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
             std::ostringstream messageStream;
-            messageStream << "WARNING: [" << logger->GetCurrentTime() << "] ";
+            messageStream << "[" << logger->GetCurrentTime() << "] WARNING:";
             ((messageStream << " " << data), ...);
             const std::string message = "\033[33m" + messageStream.str() + "\033[0m";
 
+            const std::lock_guard<std::mutex> guard(logger->_mutex);
+            logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
+
             logger->WriteToFile(messageStream.str());
             logger->WriteToBuffer(message);
             std::cout << message << std::endl;
@@ -67,19 +76,54 @@ namespace Logger {
         }
 
         template<typename... Data>
-        static void LoggerError(const Data &... data) {
+        static void LogError(const Data &... data) {
             const auto logger = Logger::GetInstance();
 
-            logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
             std::ostringstream messageStream;
-            messageStream << "ERROR:\t [" << logger->GetCurrentTime() << "] ";
+            messageStream << "[" << logger->GetCurrentTime() << "] ERROR:";
             ((messageStream << " " << data), ...);
             const std::string message = "\033[31m" + messageStream.str() + "\033[0m";
+
+            const std::lock_guard<std::mutex> guard(logger->_mutex);
+            logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
 
             logger->WriteToFile(messageStream.str());
             logger->WriteToBuffer(message);
             std::cout << message << std::endl;
             logger->_logFile.close();
         }
+
+        template<typename... Data>
+        static void LogCritical(const Data &... data) {
+            const auto logger = Logger::GetInstance();
+
+            std::ostringstream messageStream;
+            messageStream << "[" << logger->GetCurrentTime() << "] CRITICAL:";
+            ((messageStream << " " << data), ...);
+            const std::string message = "\033[1;31m" + messageStream.str() + "\033[0m";
+
+            const std::lock_guard<std::mutex> guard(logger->_mutex);
+            logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
+
+            logger->WriteToFile(messageStream.str());
+            logger->WriteToBuffer(message);
+            std::cout << message << std::endl;
+            logger->_logFile.close();
+
+            abort();
+        }
+#else
+        template<typename... Data>
+        static void LogInfo(const Data &... data) {}
+
+        template<typename... Data>
+        static void LogWarning(const Data &... data) {}
+
+        template<typename... Data>
+        static void LogError(const Data &... data) {}
+
+        template<typename... Data>
+        static void LogCritical(const Data &... data) {}
+#endif
     };
 }

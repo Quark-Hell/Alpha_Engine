@@ -275,7 +275,7 @@ char *stb_include_file(char *filename, char *inject, char *path_to_includes, cha
    char *result;
    char *text = stb_include_load_file(filename, &len);
    if (text == NULL) {
-      strcpy(error, "Error: couldn't load '");
+      strcpy(error, "couldn't load '");
       strcat(error, filename);
       strcat(error, "'");
       return 0;

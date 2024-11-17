@@ -1,7 +1,8 @@
 #include "OpenGLTexture.h"
 
 #include <GLEW/glew.h>
-#include <iostream>
+
+#include "Logger/Logger.h"
 
 namespace Render::AnomalyEngine::Textures {
 
@@ -15,7 +16,7 @@ namespace Render::AnomalyEngine::Textures {
 
     bool OpenGLTexture::TransferToGPU(const bool genTextureAuto, const EnumTypeOfTexture typeOfTexture) {
         if (_textureData == nullptr) {
-            std::cout << "Error: texture has no data" << std::endl;
+            Logger::Logger::LogError("Texture has no data");
             return false;
         }
 
@@ -43,7 +44,7 @@ namespace Render::AnomalyEngine::Textures {
                 textureType = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
                 break;
             default:
-                std::cout << "Error: Not allowed type of texture" << std::endl;
+                Logger::Logger::LogError("Not allowed type of texture");
                 return false;
                 break;
         }
@@ -51,17 +52,17 @@ namespace Render::AnomalyEngine::Textures {
         if (_textureID != 0) {
             glDeleteTextures(1, &_textureID);
             _textureID = 0;
-            std::cout << "Info: Old texture was deleted from VRAM" << std::endl;
+            Logger::Logger::LogInfo("Old texture was deleted from VRAM");
         }
 
         if (genTextureAuto) {
             glGenTextures(1, &_textureID);
             glBindTexture(textureType, _textureID);
-            std::cout << "Info: Texture was binded" << std::endl;
+            Logger::Logger::LogInfo("Texture was binded");
         }
 
         if (BaseTexture::_width == 0 || BaseTexture::_height == 0 || BaseTexture::_channelsCount == 0) {
-            std::cout << "Error: width, height or channels count of texture equal is zero" << std::endl;
+            Logger::Logger::LogError("width, height or channels count of texture equal is zero");
             return false;
         }
 
@@ -83,11 +84,11 @@ namespace Render::AnomalyEngine::Textures {
              GL_UNSIGNED_BYTE,
              _textureData.get());
 
-        std::cout << "Info: Created texture with " << _channelsCount << " channels count" << std::endl;
+        Logger::Logger::LogInfo("Created texture with ", _channelsCount, " channels count");
 
         if (genTextureAuto) {
             glBindTexture(textureType, 0);
-            std::cout << "Info: Texture was unbinded" << std::endl;
+            Logger::Logger::LogInfo("Texture was unbinded");
             DeleteTextureFromRAM();
         }
 
@@ -103,11 +104,11 @@ namespace Render::AnomalyEngine::Textures {
             BaseTexture::textureLocation = glGetUniformLocation(programId, samplerName.c_str());
             glUniform1i(BaseTexture::textureLocation, index);
 
-            //std::cout << "Info: Texture was be binded" << std::endl;
+            //std::cout << "Texture was be binded" << std::endl;
             return true;
         }
 
-        std::cout << "Error: Texture data does not exist" << std::endl;
+        Logger::Logger::LogError("Texture data does not exist");
         return false;
     }
 }

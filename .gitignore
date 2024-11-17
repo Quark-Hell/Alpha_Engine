@@ -2,7 +2,7 @@ out
 .vs
 .idea
 
-ALPHA_Engine/cmake-build-debug
+cmake-build-debug
 
 Sandbox/Debug
 Sandbox/Release
@@ -13,3 +13,9 @@ build.ninja
 cmake_install.cmake
 .cmake
 .ninja_deps
+
+CMakeFiles
+
+ALPHA_Engine/Dependency/build/code
+ALPHA_Engine/Dependency/build/generated
+ALPHA_Engine/Dependency/build/include

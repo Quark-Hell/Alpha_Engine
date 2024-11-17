@@ -34,8 +34,16 @@ function(copy_headers src dest)
 	endforeach(templateFile)
 endfunction()
 
-copy_headers(${Engine_Source} ${Game_Engine_Dest}/headers)
-copy_headers(${assimp} "${Game_Engine_Dest}/assimp")
+function(copy_file src dest)
+	message("${Red}copy headers${ColourReset}")
+	message("${Cyan}copy header${ColourReset} ${copy_src} to\n ${copy_dest}")
+
+	add_custom_command(TARGET ALPHA_Engine POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	${src}
+	${dest}
+	)
+endfunction()
 
 function(copy_assets src dest)
 	message("\n${Red}copy assets${ColourReset}")
@@ -61,48 +69,27 @@ copy_assets("${Game_Source_Dest}/IncludedModules.cmake" "${Game_Source_Dest}")
 
 message("\n")
 
-if(WIN32)
-#Stupid method, but it's working
-add_custom_command(TARGET ALPHA_Engine POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLFW}/glfw3dll.lib"
-	"${Game_Engine_Dest}/lib/glfw3dll.lib"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLFW}/glfw3.dll"
-	"${Game_Engine_Dest}/lib/glfw3.dll"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLEW}/lib/Windows/glew32s.lib"
-	"${Game_Engine_Dest}/lib/glew32s.lib"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${assimp}/lib/assimp-vc143-mt.dll"
-	"${Game_Engine_Dest}/lib/assimp-vc143-mt.dll"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${assimp}/lib/assimp-vc143-mt.lib"
-	"${Game_Engine_Dest}/lib/assimp-vc143-mt.lib"
-)
-else()
-add_custom_command(TARGET ALPHA_Engine POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${GLFW}/glfw3.a"
-	"${Game_Engine_Dest}/lib/glfw3.a"
-
-	COMMAND ${CMAKE_COMMAND} -E copy
-	"${assimp}/lib/libassimp.so.5.4.3"
-	"${Game_Engine_Dest}/lib/libassimp.so.5"
-)
-endif()
-
 add_custom_command(TARGET ALPHA_Engine POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
 	${Game_Source_Dest}/CMakeLists.txt
 	${Game_Files_Dest}/CMakeLists.txt
 
+	COMMAND ${CMAKE_COMMAND} -E copy
+    ${Game_Source_Dest}/CMakeVariables.txt
+    ${Game_Files_Dest}/CMakeVariables.txt
+
+    COMMAND ${CMAKE_COMMAND} -E copy
+    ${Game_Source_Dest}/CloneDependencies.txt
+    ${Game_Files_Dest}/CloneDependencies.txt
+
 	COMMAND ${CMAKE_COMMAND} -E remove
 	${Game_Source_Dest}/CMakeLists.txt
+
+	COMMAND ${CMAKE_COMMAND} -E remove
+    ${Game_Source_Dest}/CMakeVariables.txt
+
+    COMMAND ${CMAKE_COMMAND} -E remove
+    ${Game_Source_Dest}/CloneDependencies.txt
 )
 
 #Export build config for sandbox
@@ -118,22 +105,37 @@ endfunction()
 
 file(WRITE "${Game_Source_Dest}/IncludedModules.cmake" "")
 
+copy_headers("${Engine_Source}/Core" "${Game_Engine_Dest}/headers/Core")
+copy_file("${Engine_Source}/BaseConfig.h" "${Game_Engine_Dest}/headers/BaseConfig.h")
+copy_file("${Engine_Source}/EngineConfig.h" "${Game_Engine_Dest}/headers/EngineConfig.h")
+
 if(RENDER_BASE)
 ExportModulesConfig("RENDER_INCLUDED")
+copy_file("${Engine_Source}/Render/RenderConfig.h" "${Game_Engine_Dest}/headers/Render/RenderConfig.h")
+copy_file("${Engine_Source}/Render/WinManager/Window.h" "${Game_Engine_Dest}/headers/Render/WinManager/Window.h")
+copy_file("${Engine_Source}/Render/WinManager/WindowsManager.h" "${Game_Engine_Dest}/headers/Render/WinManager/WindowsManager.h")
+copy_file("${Engine_Source}/Render/WinManager/WinManagerConfig.h" "${Game_Engine_Dest}/headers/Render/WinManager/WinManagerConfig.h")
 endif()
 
 if(RENDER_ANOMALY_ENGINE)
 ExportModulesConfig("ANOMALY_ENGINE_INCLUDED")
+copy_headers("${Engine_Source}/Render/WinManager/AnomalyEngine" "${Game_Engine_Dest}/headers/Render/WinManager/AnomalyEngine")
 endif()
 
 if(RENDER_BINDS_ENGINE)
 ExportModulesConfig("BINDS_ENGINE_INCLUDED")
+copy_headers("${Engine_Source}/Render/WinManager/BindsEngine" "${Game_Engine_Dest}/headers/Render/WinManager/BindsEngine")
 endif()
 
 if(USER_SCRIPTS_REGISTER)
 ExportModulesConfig("USER_SCRIPTS_REGISTER_INCLUDED")
+copy_headers("${Engine_Source}/UserScriptsRegister" "${Game_Engine_Dest}/headers/UserScriptsRegister")
 endif()
 
 if(LOGGER)
 ExportModulesConfig("LOGGER_INCLUDED")
+copy_headers("${Engine_Source}/Logger" "${Game_Engine_Dest}/headers/Logger")
+else()
+#This may be weird, but I needed empty definition of API function if module does not included into build
+copy_file("${Engine_Source}/Logger/Logger.h" "${Game_Engine_Dest}/headers/Logger/Logger.h")
 endif()
