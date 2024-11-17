@@ -36,6 +36,8 @@ add_library (
 	"${engine_binds_list}"
 
 	"${engine_user_scripts_list}"
+
+	"${engine_logger_list}"
 )
 
 set_target_properties(ALPHA_Engine PROPERTIES PREFIX "")

@@ -131,3 +131,8 @@ if(USER_SCRIPTS_REGISTER)
 ExportModulesConfig("USER_SCRIPTS_REGISTER_INCLUDED")
 copy_headers("${Engine_Source}/UserScriptsRegister" "${Game_Engine_Dest}/headers/UserScriptsRegister")
 endif()
+
+if(LOGGER)
+ExportModulesConfig("LOGGER_INCLUDED")
+copy_headers("${Engine_Source}/Logger" "${Game_Engine_Dest}/headers/Logger")
+endif()
