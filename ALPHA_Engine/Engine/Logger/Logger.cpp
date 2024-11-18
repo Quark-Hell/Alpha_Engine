@@ -37,7 +37,7 @@ std::string Logger::Logger::GetCurrentTime() {
 
 std::string Logger::Logger::GetLogFileName() {
 	#ifdef WINDOWS
-		return std::filesystem::current_path().string()+"\\Logs\\" + getCurrentDate() + ".log";
+		return std::filesystem::current_path().string()+"\\Logs\\" + GetCurrentDate() + ".log";
 	#else
 		return std::filesystem::current_path().string() + "/Logs/" + GetCurrentDate() + ".log";
 	#endif
