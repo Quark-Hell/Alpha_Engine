@@ -1,12 +1,12 @@
 #include "Material.h"
 
-namespace Render::AnomalyEngine {
+namespace Render::WindowsManager::AnomalyEngine {
 
-    Material::Material(Components::Mesh* parent) : _parentMesh(parent) {
+    Material::Material(Mesh* parent) : _parentMesh(parent) {
 
     }
 
-    Components::Mesh* Material::GetParentMesh() const {
+    Mesh* Material::GetParentMesh() const {
         return _parentMesh;
     }
 

@@ -3,7 +3,7 @@
 #include <Core/Math/Vectors.h>
 #include "Core/Components/Component.h"
 
-namespace Render::AnomalyEngine::Components {
+namespace Render::WindowsManager::AnomalyEngine {
     class BaseLight : public Core::Component {
         public:
             Core::Vector3 color{1,1,1};

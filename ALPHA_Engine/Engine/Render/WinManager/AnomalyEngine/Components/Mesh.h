@@ -7,16 +7,16 @@ namespace Core {
     class Factory;
 }
 
-namespace Render::AnomalyEngine {
+namespace Render::WindowsManager::AnomalyEngine {
     class RenderEngine;
     class Binder;
 }
 
-namespace Render::AnomalyEngine::Components {
+namespace Render::WindowsManager::AnomalyEngine {
     class Mesh : public Core::Geometry {
         friend class Core::Factory;
-        friend class Render::AnomalyEngine::RenderEngine;
-        friend class Render::AnomalyEngine::Binder;
+        friend class Render::WindowsManager::AnomalyEngine::RenderEngine;
+        friend class Render::WindowsManager::AnomalyEngine::Binder;
 
     private:
         Mesh();

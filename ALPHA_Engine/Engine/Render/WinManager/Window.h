@@ -10,12 +10,9 @@ namespace Render::WindowsManager::BindsEngine {
     class InputSystem;
 }
 
-namespace Render::AnomalyEngine {
+namespace Render::WindowsManager::AnomalyEngine {
     class RenderEngine;
-
-    namespace Components {
-        class Camera;
-    }
+    class Camera;
 }
 
 namespace Core {
@@ -28,14 +25,14 @@ struct GLFWmonitor;
 
 namespace Render::WindowsManager {
     class Window {
-        friend class Render::WindowsManager::WindowsManager;
-        friend class Render::AnomalyEngine::RenderEngine;
-        friend class Render::WindowsManager::BindsEngine::InputSystem;
+        friend class WindowsManager;
+        friend class AnomalyEngine::RenderEngine;
+        friend class BindsEngine::InputSystem;
         friend class Core::Factory;
 
     private:
         GLFWwindow *_window;
-        Render::AnomalyEngine::Components::Camera *_activeCamera = nullptr;
+        AnomalyEngine::Camera *_activeCamera = nullptr;
 
         int _width = 100;
         int _height = 100;
@@ -54,7 +51,7 @@ namespace Render::WindowsManager {
         void Resize(int width, int height);
 
         void SetSync(bool sync);
-        void SetCamera(Render::AnomalyEngine::Components::Camera *camera);
+        void SetCamera(AnomalyEngine::Camera *camera);
 
         bool GetCursorVisible();
         void SetCursorVisible(bool isVisible);

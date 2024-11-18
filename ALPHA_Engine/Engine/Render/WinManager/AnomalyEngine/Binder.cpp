@@ -7,8 +7,8 @@
 
 #include "Components/Mesh.h"
 
-namespace Render::AnomalyEngine {
-     bool Binder::BindMesh(Components::Mesh* mesh) {
+namespace Render::WindowsManager::AnomalyEngine {
+     bool Binder::BindMesh(Mesh* mesh) {
 
         if (mesh == nullptr) {
             Logger::Logger::LogError("Mesh pointer is null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));

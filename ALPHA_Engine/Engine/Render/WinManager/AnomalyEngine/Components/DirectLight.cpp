@@ -2,7 +2,7 @@
 
 #include "Logger/Logger.h"
 
-namespace Render::AnomalyEngine::Components {
+namespace Render::WindowsManager::AnomalyEngine {
     DirectLight::DirectLight(const Core::Vector3& direction) {
         SetDirection(direction);
     }

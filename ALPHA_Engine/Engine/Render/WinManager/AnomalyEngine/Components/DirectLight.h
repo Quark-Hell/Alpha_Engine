@@ -6,7 +6,7 @@ namespace Core {
     class Factory;
 }
 
-namespace Render::AnomalyEngine::Components {
+namespace Render::WindowsManager::AnomalyEngine {
     class DirectLight final : public BaseLight {
         friend class Core::Factory;
 

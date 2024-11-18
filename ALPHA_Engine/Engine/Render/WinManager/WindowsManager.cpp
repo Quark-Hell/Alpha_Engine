@@ -30,7 +30,7 @@ namespace Render::WindowsManager {
 
     void WindowsManager::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows) {
 #if ANOMALY_ENGINE_INCLUDED
-        const auto rend = Render::AnomalyEngine::RenderEngine::GetInstance();
+        const auto rend = Render::WindowsManager::AnomalyEngine::RenderEngine::GetInstance();
 #endif
 
         for (auto& window : *windows) {

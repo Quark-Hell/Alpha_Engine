@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "Logger/Logger.h"
 
-namespace Render::AnomalyEngine::Components {
+namespace Render::WindowsManager::AnomalyEngine {
     Camera::Camera(const float fov, const float aspect , const float zNear, const float zFar)
     {
         _fov = fov;

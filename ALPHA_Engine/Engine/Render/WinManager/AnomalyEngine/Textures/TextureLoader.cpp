@@ -4,7 +4,7 @@
 
 #include "Logger/Logger.h"
 
-namespace Render::AnomalyEngine::Textures {
+namespace Render::WindowsManager::AnomalyEngine {
 
     TextureWork::TextureWork(BaseTexture& texture, const std::string& path) : _texture(&texture), _path(path) {}
 

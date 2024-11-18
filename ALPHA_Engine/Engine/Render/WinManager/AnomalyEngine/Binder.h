@@ -2,13 +2,12 @@
 
 namespace Render::WindowsManager {
     class Window;
+    namespace AnomalyEngine {
+        class Mesh;
+    }
 }
 
-namespace Render::AnomalyEngine::Components {
-    class Mesh;
-}
-
-namespace Render::AnomalyEngine {
+namespace Render::WindowsManager::AnomalyEngine {
 
 class Binder {
     private:
@@ -17,7 +16,7 @@ class Binder {
     public:
       ~Binder() = default;
 
-      static bool BindMesh(Components::Mesh* mesh);
+      static bool BindMesh(Mesh* mesh);
       static bool BindImage();
       //static bool SharedBindMesh(Components::Mesh* mesh);
       //static bool Bind...

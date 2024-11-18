@@ -19,7 +19,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-namespace Render::AnomalyEngine::Shaders {
+namespace Render::WindowsManager::AnomalyEngine {
 
     OpaqueShader::OpaqueShader(Material *parentMat) : ShaderProgram(parentMat) {
         AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/OpaqueShader/VertexShader.txt)", ShadersType::VertexShader);
@@ -53,7 +53,7 @@ namespace Render::AnomalyEngine::Shaders {
         {
             Core::ScopedTimer timer("Load time");
 
-            const auto loader = Textures::TextureLoader::GetInstance();
+            const auto loader = TextureLoader::GetInstance();
             if (!diffusePath.empty()) {
                 loader->AddTask(_textures[0], diffusePath);
             }
@@ -144,7 +144,7 @@ namespace Render::AnomalyEngine::Shaders {
             if (texture.GetHeight() == 0)
                 continue;
 
-            if (texture.TransferToGPU(true, Textures::EnumTypeOfTexture::Texture2D)) {
+            if (texture.TransferToGPU(true, EnumTypeOfTexture::Texture2D)) {
                 genPar(texture.GetTextureId());
                 continue;
             }
@@ -163,7 +163,7 @@ namespace Render::AnomalyEngine::Shaders {
         return true;
     }
 
-    void OpaqueShader::ApplyShadersSettings(Render::AnomalyEngine::Components::Camera *camera) {
+    void OpaqueShader::ApplyShadersSettings(Render::WindowsManager::AnomalyEngine::Camera *camera) {
         auto modelMat = glm::mat4(glm::mat3(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
         SetValue(UniformType::mat4x4,"model_matrix", &modelMat);
 

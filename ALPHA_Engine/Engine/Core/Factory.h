@@ -13,29 +13,25 @@
 namespace Render::WindowsManager::BindsEngine {
     enum class EnumMouseTable : uint8_t;
     enum class EnumKeyboardKeysStates : uint8_t;
+    enum class EnumMouseSensorStates : uint8_t;
+    enum class EnumMouseKeysStates : uint8_t;
+    enum class EnumKeyboardTable : uint16_t;
+    class Bind;
 }
 
-namespace Register {
-    class UserScript;
-}
 
-namespace Render {
-    namespace WindowsManager {
-        class Window;
-
-        namespace BindsEngine {
-            enum class EnumMouseSensorStates : uint8_t;
-            enum class EnumMouseKeysStates : uint8_t;
-            enum class EnumKeyboardTable : uint16_t;
-            class Bind;
-        }
-    }
-
-    namespace AnomalyEngine::Components {
+namespace Render::WindowsManager {
+    class Window;
+    namespace AnomalyEngine {
         class Mesh;
         class Camera;
         class DirectLight;
     }
+}
+
+
+namespace Register {
+    class UserScript;
 }
 
 namespace Core {
@@ -62,14 +58,14 @@ namespace Core {
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-        static Render::AnomalyEngine::Components::Camera *CreateCamera(float fov = 60, float aspect = 1,
+        static Render::WindowsManager::AnomalyEngine::Camera *CreateCamera(float fov = 60, float aspect = 1,
                                                                        float zNear = 0.1f, float zFar = 10000);
-        static bool RemoveCamera(const Render::AnomalyEngine::Components::Camera *camera);
+        static bool RemoveCamera(const Render::WindowsManager::AnomalyEngine::Camera *camera);
 
-        static Render::AnomalyEngine::Components::Mesh *CreateMesh();
-        static Render::AnomalyEngine::Components::Mesh *CreateMesh(const std::string &path);
+        static Render::WindowsManager::AnomalyEngine::Mesh *CreateMesh();
+        static Render::WindowsManager::AnomalyEngine::Mesh *CreateMesh(const std::string &path);
 
-        static Render::AnomalyEngine::Components::DirectLight *CreateDirectLight(const Core::Vector3& direction = Core::Vector3(0, 0.7, 0.3));
+        static Render::WindowsManager::AnomalyEngine::DirectLight *CreateDirectLight(const Core::Vector3& direction = Core::Vector3(0, 0.7, 0.3));
 #endif
 
 #if BINDS_ENGINE_INCLUDED

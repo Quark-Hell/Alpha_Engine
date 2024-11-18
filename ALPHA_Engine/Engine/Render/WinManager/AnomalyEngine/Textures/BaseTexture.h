@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 
-namespace Render::AnomalyEngine::Textures {
+namespace Render::WindowsManager::AnomalyEngine {
     enum EnumTypeOfWrapping {
         Repeat = 0,
         MirroredRepeat = 1,

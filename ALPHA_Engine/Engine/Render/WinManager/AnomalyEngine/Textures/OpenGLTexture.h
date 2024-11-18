@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseTexture.h"
 
-namespace Render::AnomalyEngine::Textures {
+namespace Render::WindowsManager::AnomalyEngine {
 
     enum EnumTypeOfTexture : unsigned short {
         Texture2D = 0,

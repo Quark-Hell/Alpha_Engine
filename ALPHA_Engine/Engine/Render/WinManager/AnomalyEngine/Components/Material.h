@@ -2,38 +2,35 @@
 #include <memory>
 #include <Render/WinManager/AnomalyEngine/Shaders/ShaderProgram.h>
 
-namespace Render::AnomalyEngine::Shaders {
+namespace Render::WindowsManager::AnomalyEngine {
     class ShaderProgram;
-}
-
-namespace Render::AnomalyEngine::Components {
     class Mesh;
 }
 
-namespace Render::AnomalyEngine {
+namespace Render::WindowsManager::AnomalyEngine {
     class Material {
-    friend class Components::Mesh;
+    friend class Mesh;
 
     private:
-        Components::Mesh* _parentMesh;
+        Mesh* _parentMesh;
 
     public:
-        std::unique_ptr<Shaders::ShaderProgram> Shader = nullptr;
+        std::unique_ptr<ShaderProgram> Shader = nullptr;
 
 
     private:
-        Material(Components::Mesh* parent);
+        Material(Mesh* parent);
     public:
         ~Material() = default;
 
         template<
             typename T,typename = std::enable_if_t<
-            std::is_base_of_v<Render::AnomalyEngine::Shaders::ShaderProgram, T>
+            std::is_base_of_v<Render::WindowsManager::AnomalyEngine::ShaderProgram, T>
             >>
         bool InitShader() {
             Shader = std::make_unique<T>(this);
             return true;
         }
-        [[nodiscard]] Components::Mesh *GetParentMesh() const;
+        [[nodiscard]] Mesh *GetParentMesh() const;
     };
 }

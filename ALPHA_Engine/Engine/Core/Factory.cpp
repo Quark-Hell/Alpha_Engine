@@ -102,17 +102,17 @@ Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, con
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-Render::AnomalyEngine::Components::Camera* Core::Factory::CreateCamera(const float fov, const float aspect, const float zNear, const float zFar) {
+Render::WindowsManager::AnomalyEngine::Camera* Core::Factory::CreateCamera(const float fov, const float aspect, const float zNear, const float zFar) {
   const auto cameras = World::GetCameras();
 
-  cameras->emplace_back(std::unique_ptr<Render::AnomalyEngine::Components::Camera>
-    (new Render::AnomalyEngine::Components::Camera(fov, aspect, zNear, zFar)));
+  cameras->emplace_back(std::unique_ptr<Render::WindowsManager::AnomalyEngine::Camera>
+    (new Render::WindowsManager::AnomalyEngine::Camera(fov, aspect, zNear, zFar)));
 
   Logger::Logger::LogInfo("Camera created");
-  return static_cast<Render::AnomalyEngine::Components::Camera*>(cameras->back().get());
+  return static_cast<Render::WindowsManager::AnomalyEngine::Camera*>(cameras->back().get());
 }
 
-bool Core::Factory::RemoveCamera(const Render::AnomalyEngine::Components::Camera* camera) {
+bool Core::Factory::RemoveCamera(const Render::WindowsManager::AnomalyEngine::Camera* camera) {
   const auto list = World::GetCameras();
   auto it = std::begin(*list);
 
@@ -130,38 +130,38 @@ bool Core::Factory::RemoveCamera(const Render::AnomalyEngine::Components::Camera
   return false;
 }
 
-Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh() {
+Render::WindowsManager::AnomalyEngine::Mesh* Core::Factory::CreateMesh() {
   const auto meshes = World::GetMeshes();
 
-  meshes->emplace_back(std::unique_ptr<Render::AnomalyEngine::Components::Mesh>
-    (new Render::AnomalyEngine::Components::Mesh()));
+  meshes->emplace_back(std::unique_ptr<Render::WindowsManager::AnomalyEngine::Mesh>
+    (new Render::WindowsManager::AnomalyEngine::Mesh()));
 
   Logger::Logger::LogInfo("Mesh created");
 
-  return static_cast<Render::AnomalyEngine::Components::Mesh*>(meshes->back().get());
+  return static_cast<Render::WindowsManager::AnomalyEngine::Mesh*>(meshes->back().get());
 }
 
-Render::AnomalyEngine::Components::Mesh* Core::Factory::CreateMesh(const std::string& path) {
+Render::WindowsManager::AnomalyEngine::Mesh* Core::Factory::CreateMesh(const std::string& path) {
   const auto meshes = World::GetMeshes();
 
-  meshes->emplace_back(std::unique_ptr<Render::AnomalyEngine::Components::Mesh>
-    (new Render::AnomalyEngine::Components::Mesh()));
+  meshes->emplace_back(std::unique_ptr<Render::WindowsManager::AnomalyEngine::Mesh>
+    (new Render::WindowsManager::AnomalyEngine::Mesh()));
 
-  static_cast<Render::AnomalyEngine::Components::Mesh*>(meshes->back().get())->Create(path);
+  static_cast<Render::WindowsManager::AnomalyEngine::Mesh*>(meshes->back().get())->Create(path);
 
   Logger::Logger::LogInfo("Mesh created");
 
-  return static_cast<Render::AnomalyEngine::Components::Mesh*>(meshes->back().get());
+  return static_cast<Render::WindowsManager::AnomalyEngine::Mesh*>(meshes->back().get());
 }
 
-Render::AnomalyEngine::Components::DirectLight *Core::Factory::CreateDirectLight(const Core::Vector3& direction) {
+Render::WindowsManager::AnomalyEngine::DirectLight *Core::Factory::CreateDirectLight(const Core::Vector3& direction) {
   const auto lights = World::GetDirectLights();
 
-  lights->emplace_back(std::unique_ptr<Render::AnomalyEngine::Components::DirectLight>(new Render::AnomalyEngine::Components::DirectLight(direction)));
+  lights->emplace_back(std::unique_ptr<Render::WindowsManager::AnomalyEngine::DirectLight>(new Render::WindowsManager::AnomalyEngine::DirectLight(direction)));
 
   Logger::Logger::LogInfo("Direct light created");
 
-  return static_cast<Render::AnomalyEngine::Components::DirectLight*>(lights->back().get());
+  return static_cast<Render::WindowsManager::AnomalyEngine::DirectLight*>(lights->back().get());
 }
 #endif
 

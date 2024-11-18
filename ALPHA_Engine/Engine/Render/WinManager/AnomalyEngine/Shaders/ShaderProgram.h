@@ -2,16 +2,13 @@
 #include <memory>
 #include <string>
 
-namespace Render::AnomalyEngine::Components {
+namespace Render::WindowsManager::AnomalyEngine {
 	class Camera;
-}
-
-namespace Render::AnomalyEngine {
 	class Material;
 	class RenderEngine;
 }
 
-namespace Render::AnomalyEngine::Shaders {
+namespace Render::WindowsManager::AnomalyEngine {
 
     enum ShadersType  : unsigned short {
         VertexShader = 0,
@@ -31,7 +28,7 @@ namespace Render::AnomalyEngine::Shaders {
 
 class ShaderProgram {
 	friend class Material;
-	friend class Render::AnomalyEngine::RenderEngine;
+	friend class RenderEngine;
 
 private:
     unsigned int _vertexShaderId = 0;
@@ -44,7 +41,7 @@ private:
     unsigned int _programId = 0;
     bool _isCompiled = false;
 
-    Render::AnomalyEngine::Material* _parentMaterial;
+    Material* _parentMaterial;
 
 	RenderMode _renderMode = RenderMode::Triangles;
 public:
@@ -126,7 +123,7 @@ protected:
 	/*
 	 *Overload this function to transfer your values from RAM to VRAM for shader
 	*/
-	virtual void ApplyShadersSettings(Render::AnomalyEngine::Components::Camera* camera) = 0;
+	virtual void ApplyShadersSettings(Camera* camera) = 0;
 };
 
 }

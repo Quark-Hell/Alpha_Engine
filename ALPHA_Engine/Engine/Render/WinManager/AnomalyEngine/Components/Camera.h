@@ -10,7 +10,7 @@ namespace Core {
     class Factory;
 }
 
-namespace Render::AnomalyEngine::Components {
+namespace Render::WindowsManager::AnomalyEngine {
     class Camera : public Core::Component {
     friend class Core::Factory;
 

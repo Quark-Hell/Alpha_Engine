@@ -5,11 +5,11 @@
 
 #include <array>
 
-namespace Render::AnomalyEngine::Shaders {
+namespace Render::WindowsManager::AnomalyEngine {
 
     class CubeMapShader final : public ShaderProgram {
     private:
-        std::array<Textures::OpenGLTexture, 6> _cubemapTextures;
+        std::array<OpenGLTexture, 6> _cubemapTextures;
         uint32_t _textureId = 0;
 
     public:
@@ -26,7 +26,7 @@ namespace Render::AnomalyEngine::Shaders {
 
         bool TransferTexturesToGPU();
 
-        void ApplyShadersSettings(Render::AnomalyEngine::Components::Camera* camera) override;
+        void ApplyShadersSettings(Camera* camera) override;
     };
 
 }

@@ -11,11 +11,11 @@
 
 #include "Core/Timer.h"
 
-namespace Render::AnomalyEngine::Textures {
+namespace Render::WindowsManager::AnomalyEngine {
     enum EnumTypeOfTexture : unsigned short;
 }
 
-namespace Render::AnomalyEngine::Shaders {
+namespace Render::WindowsManager::AnomalyEngine {
 
     CubeMapShader::CubeMapShader(Material* parentMat): ShaderProgram(parentMat) {
         AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/CubeMapShader/VertexShader.txt)", ShadersType::VertexShader);
@@ -44,7 +44,7 @@ namespace Render::AnomalyEngine::Shaders {
         {
             Core::ScopedTimer timer("Load time");
 
-            const auto loader = Textures::TextureLoader::GetInstance();
+            const auto loader = TextureLoader::GetInstance();
             loader->AddTask(_cubemapTextures[0], leftSide);
             loader->AddTask(_cubemapTextures[1], rightSide);
             loader->AddTask(_cubemapTextures[2], topSide);
@@ -68,7 +68,7 @@ namespace Render::AnomalyEngine::Shaders {
         glBindTexture(GL_TEXTURE_CUBE_MAP, CubeMapShader::_textureId);
 
         for (size_t i = 0; i < _cubemapTextures.size(); i++) {
-            if (!_cubemapTextures[i].TransferToGPU(false, static_cast<Textures::EnumTypeOfTexture>(Textures::EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + i)))
+            if (!_cubemapTextures[i].TransferToGPU(false, static_cast<EnumTypeOfTexture>(EnumTypeOfTexture::TEXTURE_CUBE_MAP_POSITIVE_X + i)))
                 return false;
         }
 
@@ -86,7 +86,7 @@ namespace Render::AnomalyEngine::Shaders {
         return true;
     }
 
-    void CubeMapShader::ApplyShadersSettings(Render::AnomalyEngine::Components::Camera* camera) {
+    void CubeMapShader::ApplyShadersSettings(Camera* camera) {
         if (camera->GetParentObject() == nullptr) {
             Logger::Logger::LogError("camera parent was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return;

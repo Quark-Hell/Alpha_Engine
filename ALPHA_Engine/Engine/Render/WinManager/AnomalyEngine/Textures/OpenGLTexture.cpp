@@ -4,7 +4,7 @@
 
 #include "Logger/Logger.h"
 
-namespace Render::AnomalyEngine::Textures {
+namespace Render::WindowsManager::AnomalyEngine {
 
     OpenGLTexture::OpenGLTexture() {
 

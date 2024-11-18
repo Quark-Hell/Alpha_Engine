@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <GLEW/glew.h>
 
-namespace Render::AnomalyEngine::Textures {
+namespace Render::WindowsManager::AnomalyEngine {
     void BaseTexture::CreateTexture(std::string pathToTexture) {
         int width, height, channelsCount;
 

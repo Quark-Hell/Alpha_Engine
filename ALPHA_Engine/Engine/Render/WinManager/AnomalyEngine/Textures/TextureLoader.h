@@ -4,7 +4,7 @@
 #include <string>
 #include <thread>
 
-namespace Render::AnomalyEngine::Textures {
+namespace Render::WindowsManager::AnomalyEngine {
 
     class TextureWork;
     class ThreadObject;

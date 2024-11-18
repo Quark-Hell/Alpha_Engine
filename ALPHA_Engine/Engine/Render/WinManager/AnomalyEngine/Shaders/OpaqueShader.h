@@ -5,7 +5,7 @@
 #include "ShaderProgram.h"
 #include "Render/WinManager/AnomalyEngine/Textures/OpenGLTexture.h"
 
-namespace Render::AnomalyEngine::Shaders {
+namespace Render::WindowsManager::AnomalyEngine {
     class OpaqueShader final : public ShaderProgram {
     private:
         /*
@@ -19,7 +19,7 @@ namespace Render::AnomalyEngine::Shaders {
         8 - opacity
         9 - occlusion
         */
-        std::array<Textures::OpenGLTexture, 9> _textures;
+        std::array<OpenGLTexture, 9> _textures;
 
     public:
         OpaqueShader(Material *parentMat);
@@ -43,6 +43,6 @@ namespace Render::AnomalyEngine::Shaders {
 
         bool TransferTexturesToGPU();
 
-        void ApplyShadersSettings(Render::AnomalyEngine::Components::Camera *camera) override;
+        void ApplyShadersSettings(Camera *camera) override;
     };
 }

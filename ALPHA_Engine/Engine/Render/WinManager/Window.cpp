@@ -129,7 +129,7 @@ namespace Render::WindowsManager {
         else glfwSwapInterval(0);
     }
 
-    void Window::SetCamera(Render::AnomalyEngine::Components::Camera* camera) {
+    void Window::SetCamera(AnomalyEngine::Camera* camera) {
         _activeCamera = camera;
         _activeCamera->SetAspect(static_cast<float>(_width) / static_cast<float>(_height));
     }
@@ -138,7 +138,7 @@ namespace Render::WindowsManager {
         return _isCursorVisible;
     }
 
-    void Window::SetCursorVisible(bool isVisible) {
+    void Window::SetCursorVisible(const bool isVisible) {
         _isCursorVisible = isVisible;
 
         if (_isCursorVisible)

@@ -10,13 +10,11 @@
 
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtx/transform.hpp"
 #include "glm/gtx/string_cast.hpp"
 
 #include "Logger/Logger.h"
 
-namespace Render::AnomalyEngine::Shaders {
+namespace Render::WindowsManager::AnomalyEngine {
 
     ShaderProgram::ShaderProgram(Material* parentMat) {
     	if (parentMat == nullptr) {
@@ -309,7 +307,7 @@ namespace Render::AnomalyEngine::Shaders {
     	Logger::Logger::LogInfo("Shader was be deleted from VRAM");
     }
 
-	void ShaderProgram::ApplyShadersSettings(Render::AnomalyEngine::Components::Camera* camera) {
+	void ShaderProgram::ApplyShadersSettings(Camera* camera) {
 
     }
 

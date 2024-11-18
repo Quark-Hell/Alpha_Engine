@@ -40,7 +40,7 @@ void Core::Host::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::
 
 #if ANOMALY_ENGINE_INCLUDED
 void Core::Host::LoadMeshBuffer(std::list<std::unique_ptr<Core::Geometry>>* meshBuffer) {
-	const auto rend = Render::AnomalyEngine::RenderEngine::GetInstance();
+	const auto rend = Render::WindowsManager::AnomalyEngine::RenderEngine::GetInstance();
 	rend->LoadMeshArray(meshBuffer);
 }
 #else

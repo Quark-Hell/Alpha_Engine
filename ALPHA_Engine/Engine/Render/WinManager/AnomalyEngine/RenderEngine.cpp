@@ -11,7 +11,7 @@
 #include "Components/Mesh.h"
 #include "Shaders/ShaderProgram.h"
 
-namespace Render::AnomalyEngine {
+namespace Render::WindowsManager::AnomalyEngine {
     RenderEngine* RenderEngine::GetInstance() {
         static RenderEngine render;
         return &render;
@@ -45,21 +45,21 @@ namespace Render::AnomalyEngine {
         RenderMeshes(window._activeCamera);
     }
 
-    int RenderEngine::GetRenderMode(Render::AnomalyEngine::Shaders::ShaderProgram& shader) {
-        Shaders::RenderMode renderMode = shader.GetRenderMode();
+    int RenderEngine::GetRenderMode(Render::WindowsManager::AnomalyEngine::ShaderProgram& shader) {
+        RenderMode renderMode = shader.GetRenderMode();
         int glRenderMode = 0;
 
         switch (static_cast<int>(renderMode)) {
-            case static_cast<int>(Shaders::RenderMode::Points):
+            case static_cast<int>(RenderMode::Points):
                 glRenderMode = GL_POINTS;
             break;
-            case static_cast<int>(Shaders::RenderMode::Lines):
+            case static_cast<int>(RenderMode::Lines):
                 glRenderMode = GL_LINES;
             break;
-            case static_cast<int>(Shaders::RenderMode::LineStrip):
+            case static_cast<int>(RenderMode::LineStrip):
                 glRenderMode = GL_LINE_STRIP;
             break;
-            case static_cast<int>(Shaders::RenderMode::Triangles):
+            case static_cast<int>(RenderMode::Triangles):
                 glRenderMode = GL_TRIANGLES;
             break;
             default:
@@ -71,7 +71,7 @@ namespace Render::AnomalyEngine {
         return glRenderMode;
     }
 
-    bool RenderEngine::MeshChecker(const Render::AnomalyEngine::Components::Mesh *mesh) {
+    bool RenderEngine::MeshChecker(const Render::WindowsManager::AnomalyEngine::Mesh *mesh) {
         if (mesh == nullptr) {
             Logger::Logger::LogError("Mesh was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return false;
@@ -92,7 +92,7 @@ namespace Render::AnomalyEngine {
         return true;
     }
 
-    void RenderEngine::GenerateVao(Render::AnomalyEngine::Components::Mesh *mesh) {
+    void RenderEngine::GenerateVao(Render::WindowsManager::AnomalyEngine::Mesh *mesh) {
         glGenVertexArrays(1, &mesh->_vao);
         glBindVertexArray(mesh->_vao);
         if (mesh->_vertexVbo != 0) {
@@ -117,7 +117,7 @@ namespace Render::AnomalyEngine {
         }
     }
 
-    void RenderEngine::RenderMeshes(Render::AnomalyEngine::Components::Camera* camera) {
+    void RenderEngine::RenderMeshes(Render::WindowsManager::AnomalyEngine::Camera* camera) {
         if (_meshBuffer == nullptr) {
             Logger::Logger::LogError("Mesh buffer was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return;
@@ -128,7 +128,7 @@ namespace Render::AnomalyEngine {
         }
 
         for (auto& it : *_meshBuffer) {
-            auto* mesh = static_cast<Components::Mesh*>(it.get());
+            auto* mesh = static_cast<Mesh*>(it.get());
 
             if (!MeshChecker(mesh))
                 continue;

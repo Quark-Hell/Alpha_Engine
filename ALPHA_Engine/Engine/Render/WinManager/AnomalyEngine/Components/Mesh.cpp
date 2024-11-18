@@ -8,7 +8,7 @@
 
 #include "Logger/Logger.h"
 
-namespace Render::AnomalyEngine::Components {
+namespace Render::WindowsManager::AnomalyEngine {
     Mesh::Mesh() = default;
     Mesh::~Mesh() {
 

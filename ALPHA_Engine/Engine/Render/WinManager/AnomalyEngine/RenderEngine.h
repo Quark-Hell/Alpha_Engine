@@ -3,28 +3,28 @@
 #include <vector>
 #include <memory>
 
-namespace Render {
-    namespace WindowsManager {
-        class Window;
-        class WindowsManager;
-    }
 
-    namespace AnomalyEngine::Shaders {
+namespace Render::WindowsManager {
+    class Window;
+    class WindowsManager;
+
+    namespace AnomalyEngine {
         class ShaderProgram;
     }
 
-    namespace AnomalyEngine::Components {
+    namespace AnomalyEngine {
         class Camera;
         class Mesh;
     }
 }
+
 
 namespace Core {
     class Geometry;
     class Host;
 }
 
-namespace Render::AnomalyEngine {
+namespace Render::WindowsManager::AnomalyEngine {
 
     class RenderEngine {
         friend class Core::Host;
@@ -45,14 +45,14 @@ namespace Render::AnomalyEngine {
         ///Before use LoadMeshArray()
         void RenderLoop(Render::WindowsManager::Window& windows);
         void RenderScene(const Render::WindowsManager::Window& window);
-        void RenderMeshes(Render::AnomalyEngine::Components::Camera* camera);
+        void RenderMeshes(Render::WindowsManager::AnomalyEngine::Camera* camera);
 
-        void GenerateVao(Render::AnomalyEngine::Components::Mesh *mesh);
+        void GenerateVao(Render::WindowsManager::AnomalyEngine::Mesh *mesh);
 
         ///Check mesh valid
-        [[nodiscard]] bool MeshChecker(const Render::AnomalyEngine::Components::Mesh* mesh);
+        [[nodiscard]] bool MeshChecker(const Render::WindowsManager::AnomalyEngine::Mesh* mesh);
 
-        [[nodiscard]] int GetRenderMode(Render::AnomalyEngine::Shaders::ShaderProgram& shader);
+        [[nodiscard]] int GetRenderMode(Render::WindowsManager::AnomalyEngine::ShaderProgram& shader);
     public:
         ~RenderEngine() = default;
 
