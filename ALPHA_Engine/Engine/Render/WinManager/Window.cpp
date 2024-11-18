@@ -81,7 +81,7 @@ namespace Render::WindowsManager {
 
         if (_window == nullptr)
         {
-            Logger::Logger::LogCritical("Failed to create GLFW window");
+            Logger::Logger::LogCritical("Failed to create GLFW window: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             glfwTerminate();
             abort();
         }
@@ -108,7 +108,7 @@ namespace Render::WindowsManager {
         GLenum err = glewInit();
         if (GLEW_OK != err)
         {
-            Logger::Logger::LogCritical("Critical: glew does not inited");
+            Logger::Logger::LogCritical("Critical: glew does not inited: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             fprintf(stderr, "%s\n", glewGetErrorString(err));
             glfwTerminate();
             abort();

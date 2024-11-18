@@ -28,7 +28,7 @@ namespace Render::AnomalyEngine::Components {
         else {
             //TODO: add support for ortho matrix
             //const glm::mat4 projectionMatrix = glm::ortho( 0, 400, 0, 400, _zNear, _zFar );
-            Logger::Logger::LogError("Now support only perspective matrix, returned identity matrix");
+            Logger::Logger::LogError("Now support only perspective matrix, returned identity matrix: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             const glm::mat4x4 projectionMatrix(1);
             return projectionMatrix;
         }

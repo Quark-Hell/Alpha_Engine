@@ -33,7 +33,7 @@ namespace Render::AnomalyEngine::Shaders {
         }
         else {
             ShaderProgram::DeleteShader();
-            Logger::Logger::LogError("Opaque shader was not be created");
+            Logger::Logger::LogError("Opaque shader was not be created: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         }
 
         Logger::Logger::LogInfo("Opaque shader was be created");

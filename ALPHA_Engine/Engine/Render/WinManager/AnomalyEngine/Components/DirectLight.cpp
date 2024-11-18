@@ -13,7 +13,7 @@ namespace Render::AnomalyEngine::Components {
 
     void DirectLight::SetDirection(const Core::Vector3& newDirection) {
         if (newDirection == Core::Vector3(0,0,0)) {
-            Logger::Logger::LogError("Direction cannot be zero vector");
+            Logger::Logger::LogError("Direction cannot be zero vector: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return;
         }
 

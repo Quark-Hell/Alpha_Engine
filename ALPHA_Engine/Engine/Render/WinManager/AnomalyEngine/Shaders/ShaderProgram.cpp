@@ -20,7 +20,7 @@ namespace Render::AnomalyEngine::Shaders {
 
     ShaderProgram::ShaderProgram(Material* parentMat) {
     	if (parentMat == nullptr) {
-    		Logger::Logger::LogCritical("Parent material was null");
+    		Logger::Logger::LogCritical("Parent material was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
     		abort();
     	}
 
@@ -89,12 +89,12 @@ namespace Render::AnomalyEngine::Shaders {
 
     bool ShaderProgram::BindShader() const {
         if (_isCompiled == false) {
-        	Logger::Logger::LogError("Shader was not be compiled");
+        	Logger::Logger::LogError("Shader was not be compiled: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         	return false;
         }
 
         if (_programId == 0) {
-        	Logger::Logger::LogError("Shader program was not be created on GPU");
+        	Logger::Logger::LogError("Shader program was not be created on GPU: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         	return false;
         }
 
@@ -255,7 +255,7 @@ namespace Render::AnomalyEngine::Shaders {
 
 	bool ShaderProgram::AttachShader() {
     	if (ShaderProgram::_isCompiled == false) {
-    		Logger::Logger::LogError("Shader could not be attached because there was not be compiled. You need to use CompileShader() previously");
+    		Logger::Logger::LogError("Shader could not be attached because there was not be compiled. You need to use CompileShader() previously: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
     		return false;
     	}
 

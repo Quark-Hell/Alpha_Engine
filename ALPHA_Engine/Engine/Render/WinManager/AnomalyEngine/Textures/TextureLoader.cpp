@@ -15,7 +15,7 @@ namespace Render::AnomalyEngine::Textures {
             _parent->_isActive = false;
         }
         else {
-            Logger::Logger::LogError("Parent is null");
+            Logger::Logger::LogError("Parent is null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         }
     }
 
@@ -25,7 +25,7 @@ namespace Render::AnomalyEngine::Textures {
     void ThreadObject::Start(const std::shared_ptr<TextureWork> &work)
     {
         if (work.get() == nullptr) {
-            Logger::Logger::LogError("Work is null");
+            Logger::Logger::LogError("Work is null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return;
         }
 
@@ -65,7 +65,7 @@ namespace Render::AnomalyEngine::Textures {
     void TextureLoader::DoWork()
     {
         if (_taskList.empty()) {
-            Logger::Logger::LogError("No task");
+            Logger::Logger::LogError("No task: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return;
         }
 

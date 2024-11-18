@@ -29,7 +29,7 @@ namespace Render::AnomalyEngine::Components {
         //TODO: Check if fbx
         const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
         if (s == nullptr) {
-            Logger::Logger::LogError("Cannot read the file by path: ");
+            Logger::Logger::LogError("Cannot read the file by path: : " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return false;
         }
 

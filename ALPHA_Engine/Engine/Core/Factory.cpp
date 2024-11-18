@@ -53,21 +53,21 @@ bool Core::Factory::RemoveUserScript(const Core::Component* script) {
     std::advance(it, 1);
   }
 
-  Logger::Logger::LogError("User script do not exist");
+  Logger::Logger::LogError("User script do not exist: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
   return false;
 }
 
 Register::UserScript* Core::Factory::CreateUserScript(Core::Component* script) {
   const auto src = dynamic_cast<Register::UserScript*>(script);
   if (src == nullptr) {
-    Logger::Logger::LogError("Argument is not a User Script type");
+    Logger::Logger::LogError("Argument is not a User Script type: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
     return nullptr;
   }
 
   const auto userScripts = World::GetUserScripts();
   for (auto& it : *userScripts) {
     if (src == it.get()) {
-      Logger::Logger::LogError("User script already exist");
+      Logger::Logger::LogError("User script already exist: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
       return nullptr;
     }
   }
@@ -126,7 +126,7 @@ bool Core::Factory::RemoveCamera(const Render::AnomalyEngine::Components::Camera
     std::advance(it, 1);
   }
 
-  Logger::Logger::LogError("Camera cannot be removed");
+  Logger::Logger::LogError("Camera cannot be removed: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
   return false;
 }
 
@@ -247,7 +247,7 @@ void Core::Factory::RemoveBind(const Render::WindowsManager::BindsEngine::Bind* 
     std::advance(it, 1);
   }
 
-  Logger::Logger::LogError("Bind does not exist");
+  Logger::Logger::LogError("Bind does not exist: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
 }
 #endif
 

@@ -23,7 +23,7 @@ namespace Render::WindowsManager {
 
     void WindowsManager::Init() {
         if (!glfwInit()) {
-            Logger::Logger::LogCritical("Glfw does not inited");
+            Logger::Logger::LogCritical("Glfw does not inited: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             abort();
         }
     }

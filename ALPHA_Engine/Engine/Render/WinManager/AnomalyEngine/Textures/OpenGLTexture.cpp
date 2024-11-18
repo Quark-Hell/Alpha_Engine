@@ -16,7 +16,7 @@ namespace Render::AnomalyEngine::Textures {
 
     bool OpenGLTexture::TransferToGPU(const bool genTextureAuto, const EnumTypeOfTexture typeOfTexture) {
         if (_textureData == nullptr) {
-            Logger::Logger::LogError("Texture has no data");
+            Logger::Logger::LogError("Texture has no data: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return false;
         }
 
@@ -44,7 +44,7 @@ namespace Render::AnomalyEngine::Textures {
                 textureType = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
                 break;
             default:
-                Logger::Logger::LogError("Not allowed type of texture");
+                Logger::Logger::LogError("Not allowed type of texture: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
                 return false;
                 break;
         }
@@ -62,7 +62,7 @@ namespace Render::AnomalyEngine::Textures {
         }
 
         if (BaseTexture::_width == 0 || BaseTexture::_height == 0 || BaseTexture::_channelsCount == 0) {
-            Logger::Logger::LogError("width, height or channels count of texture equal is zero");
+            Logger::Logger::LogError("width, height or channels count of texture equal is zero: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return false;
         }
 
@@ -108,7 +108,7 @@ namespace Render::AnomalyEngine::Textures {
             return true;
         }
 
-        Logger::Logger::LogError("Texture data does not exist");
+        Logger::Logger::LogError("Texture data does not exist: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         return false;
     }
 }

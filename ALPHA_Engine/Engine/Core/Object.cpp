@@ -24,7 +24,7 @@ std::string Core::Object::GetName() {
 
 bool Core::Object::AddComponent(Core::Component* component) {
 	if (component == nullptr) {
-		Logger::Logger::LogError("Component did not attached because there was null");
+		Logger::Logger::LogError("Component did not attached because there was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
 		return  false;
 	}
 	_components.push_back(component);

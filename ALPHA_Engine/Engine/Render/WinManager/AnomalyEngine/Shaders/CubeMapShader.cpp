@@ -27,7 +27,7 @@ namespace Render::AnomalyEngine::Shaders {
         }
         else {
             ShaderProgram::DeleteShader();
-            Logger::Logger::LogError("Cube map shader was not be created");
+            Logger::Logger::LogError("Cube map shader was not be created: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         }
 
         Logger::Logger::LogInfo("Cube map shader was be created");
@@ -88,7 +88,7 @@ namespace Render::AnomalyEngine::Shaders {
 
     void CubeMapShader::ApplyShadersSettings(Render::AnomalyEngine::Components::Camera* camera) {
         if (camera->GetParentObject() == nullptr) {
-            Logger::Logger::LogError("camera parent was null");
+            Logger::Logger::LogError("camera parent was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return;
         }
 
