@@ -18,26 +18,23 @@ This game engine is being developed to make it easier for developers to create s
 
 ## Documentation
 
-- In developing
+- In developing, but you can check [examples](https://github.com/Quark-Hell/Alpha_Engine/tree/Architect2.0/ALPHA_Engine/Build_Files)
 
 ## Developers
-
 - [Quark](https://github.com/Quark-Hell)
+- [Kleshovdd](https://github.com/kleshovdd)
 
 ## License
 - MIT License
 
 ## Build
-### Windows with Visual Studio:
-
-<br><b>Step 1:</br></b>
-Clone repository to your computer and switch to the "Architect2.0" branch
-<br><b>Step 2:</br></b>
-In Visual Studio build project as you need(Debug or Release)
-<br><b>Step 3:</br></b>
-Open .../"repositoryPath"/Sandbox/"yourBuildType"/Game in visual studio and biuld project as you need(Debug or Release)
-<br><b>Step 4:</br></b>
-Enjoy
+### Windows with Visual Studio or CLion(MinGW compiler):
+<pre>
+<b>Step 1:</b> Clone repository to your computer and switch to the "Architect2.0" branch
+<b>Step 2:</b> In Visual Studio build project as you need(Debug or Release)
+<b>Step 3:</b> Open .../Alpha_Engine/Sandbox/"BuildType"/Game in visual studio and biuld project as you need(Debug or Release)
+<b>Step 4:</b> Enjoy
+</pre>
 
 <br></br>
 ### Linux(tested with: manjaro, arch and openSUSE):
