@@ -18,7 +18,6 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-
 namespace Render::WindowsManager::AnomalyEngine {
 
     OpaqueShader::OpaqueShader(Material *parentMat) : ShaderProgram(parentMat) {

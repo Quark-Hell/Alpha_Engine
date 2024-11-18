@@ -10,8 +10,8 @@ namespace Core {
     public:
         Timer();
         void Reset();
-        [[nodiscard]] float Elapsed() const;
-        [[nodiscard]] float ElapsedMillis() const;
+        [[nodiscard]] double Elapsed() const;
+        [[nodiscard]] double ElapsedMillis() const;
     private:
         std::chrono::time_point<std::chrono::high_resolution_clock> _start;
     };

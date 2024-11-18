@@ -70,33 +70,28 @@ Core::World* Core::World::GetWorld() {
 }
 
 void Core::World::CloseGame() {
-	IsCloseGame = true;
+	const auto world = GetWorld();
+	world->_isCloseGame = true;
 }
 
-bool Core::World::GetStateOfGame() const {
-	return IsCloseGame;
+bool Core::World::GetStateOfGame() {
+	const auto world = GetWorld();
+	return world->_isCloseGame;
 }
 
-double Core::World::GetTimeLong() const {
-	return World::_timeLong;
+double Core::World::GetElapsedTime() {
+	const auto world = GetWorld();
+	return world->_timeElapsed;
 }
-float Core::World::GetDeltaTime() const {
-	return World::_deltaTime;
-}
-
-void Core::World::StartFrame() {
-	//World::_startTime = std::chrono::high_resolution_clock::now();
-}
-void Core::World::EndFrame() {
-	//World::_endTime = std::chrono::high_resolution_clock::now();
-	//What? Why i should mult this by 0.000001f?
-	//World::_deltaTime = std::chrono::duration_cast	<std::chrono::microseconds>(World::_endTime - World::_startTime).count() * 0.000001f;
-	//World::_timeLong += World::_deltaTime;
+double Core::World::GetDeltaTime() {
+	const auto world = GetWorld();
+	return world->_deltaTime;
 }
 
 void Core::World::SetSimulationSpeed(const float simSpeed) {
 	if (simSpeed < 0) {
-		World::SimulationSpeed = simSpeed;
+		const auto world = GetWorld();
+		world->_simulationSpeed = simSpeed;
 	}
 }
 
@@ -105,8 +100,10 @@ void Core::World::Simulation() {
 	Host::GetInstance()->InitRender();
 #endif
 
-	while (IsCloseGame)
+	while (_isCloseGame)
 	{
+		_timer.Reset();
+
 		Host::GetInstance()->LoadRegistryBuffer(GetUserScripts());
 		Host::GetInstance()->RegistryLoop();
 
@@ -120,6 +117,10 @@ void Core::World::Simulation() {
 		Host::GetInstance()->RenderLoop(GetWindows());
 #endif
 		//_host->Physics();
+
+		_deltaTime = _timer.Elapsed();
+		_timeElapsed += _timer.Elapsed();
+		_timer.Reset();
 	}
 }
 #pragma endregion

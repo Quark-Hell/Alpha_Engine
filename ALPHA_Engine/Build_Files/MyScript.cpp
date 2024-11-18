@@ -14,7 +14,7 @@
 #include "Render/WinManager/BindsEngine/BindsEngineConfig.h"
 #include "Render/WinManager/BindsEngine/InputSystem.h"
 
-#include <iostream>
+#include "Core/World.h"
 
 MyScript* script = new MyScript();
 
@@ -22,7 +22,8 @@ void MyScript::CameraRotate() {
     if (win1->GetCursorVisible() == true)
         return;
 
-    float sensitive = 0.15;
+    double sensitive = 0.0015;
+    sensitive /= Core::World::GetDeltaTime();
     const auto bind = Render::WindowsManager::BindsEngine::InputSystem::GetInstance();
     std::cout << "X: " << bind->GetMouse()->GetMouseDelta().X << " Y: " << bind->GetMouse()->GetMouseDelta().Y << std::endl;
 
@@ -32,15 +33,13 @@ void MyScript::CameraRotate() {
         delta.X = bind->GetMouse()->GetMouseDelta().X;
         delta.Y = bind->GetMouse()->GetMouseDelta().Y;
 
-        if (delta.GetMagnitude() > 1) {
+        auto newRot = static_cast<Core::Vector3>(Player->transform.GetRotation());
 
-            auto newRot = static_cast<Core::Vector3>(Player->transform.GetRotation());
+        newRot.X += delta.Y * sensitive;
+        newRot.Y += delta.X * sensitive;
 
-            newRot.X += delta.Y * sensitive;
-            newRot.Y += delta.X * sensitive;
+        Player->transform.SetRotation(newRot);
 
-            Player->transform.SetRotation(newRot);
-        }
     }
 }
 
@@ -231,8 +230,8 @@ void MyScript::Start() {
     auto mesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Cube.fbx");
     obj2->AddComponent(mesh);
 
-    mesh->_material.InitShader<Render::AnomalyEngine::Shaders::CubeMapShader>();
-    static_cast<Render::AnomalyEngine::Shaders::CubeMapShader*>(mesh->_material.Shader.get())->LoadTextures(
+    mesh->_material.InitShader<Render::WindowsManager::AnomalyEngine::CubeMapShader>();
+    static_cast<Render::WindowsManager::AnomalyEngine::CubeMapShader*>(mesh->_material.Shader.get())->LoadTextures(
         R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Left_Tex.tga)",
         R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Right_Tex.tga)",
         R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Top_Tex.tga)",
@@ -246,14 +245,14 @@ void MyScript::Start() {
     cube->SetName("Cube");
     auto cubeMesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Sphere.fbx");
     cube->AddComponent(cubeMesh);
-    cubeMesh->_material.InitShader<Render::AnomalyEngine::Shaders::OpaqueShader>();
-    static_cast<Render::AnomalyEngine::Shaders::OpaqueShader*>(cubeMesh->_material.Shader.get())->LoadTextures(
+    cubeMesh->_material.InitShader<Render::WindowsManager::AnomalyEngine::OpaqueShader>();
+    static_cast<Render::WindowsManager::AnomalyEngine::OpaqueShader*>(cubeMesh->_material.Shader.get())->LoadTextures(
         "/ALPHA_Engine/Engine_Assets/Textures/Planets/planet_continental_Base_Color.tga");
 #endif
 }
 //Call every frame
 void MyScript::Update() {
-    //std::cout << "Test" <<std::endl;
+    Logger::Logger::LogInfo(Core::World::GetDeltaTime());
 }
 //Call before deleted
 void MyScript::End() {

@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseConfig.h"
+#include "Timer.h"
 
 #if RENDER_INCLUDED
 namespace Render::WindowsManager {
@@ -19,13 +20,13 @@ namespace Core {
 		friend class Factory;
 
 	private:
-		bool IsCloseGame = true;
-		double _timeLong = 0;
-		float _deltaTime = 0;
-		std::chrono::steady_clock::time_point _startTime;
-		std::chrono::steady_clock::time_point _endTime;
+		bool _isCloseGame = true;
+		double _timeElapsed = 0;
+		double _deltaTime = 0;
 
-		float SimulationSpeed = 1;
+		float _simulationSpeed = 1;
+
+		Core::Timer _timer;
 
 	private:
 		static std::list<std::unique_ptr<Core::Object>>* GetObjects();
@@ -56,22 +57,19 @@ namespace Core {
 	private:
 		World();
 
-		void StartFrame();
-		void EndFrame();
-
 	public:
 		World(const World& obj) = delete;
 		~World();
 
 		static Core::World* GetWorld();
 
-		void CloseGame();
-		[[nodiscard]] bool GetStateOfGame() const;
+		[[nodiscard]] static double GetDeltaTime();
+		[[nodiscard]] static double GetElapsedTime();
 
-		[[nodiscard]] double GetTimeLong() const;
-		[[nodiscard]] float GetDeltaTime() const;
+		[[nodiscard]] static bool GetStateOfGame();
 
-		void SetSimulationSpeed(float simSpeed);
+		static void CloseGame();
+		static void SetSimulationSpeed(float simSpeed);
 
 		//TODO: Make it private
 		void Simulation();

@@ -11,11 +11,11 @@ namespace Core {
       _start = std::chrono::high_resolution_clock::now();
     }
 
-    float Timer::Elapsed() const {
+    double Timer::Elapsed() const {
       return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - _start).count() * 0.001f * 0.001f;
     }
 
-    float Timer::ElapsedMillis() const {
+    double Timer::ElapsedMillis() const {
       return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - _start).count() * 0.001f;
     }
 
