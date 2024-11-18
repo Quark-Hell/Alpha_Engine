@@ -7,7 +7,7 @@ namespace Render::WindowsManager::BindsEngine {
         const std::vector<EnumKeyboardTable> &KeyboardKeys,
         const std::vector<EnumMouseKeysStates> &MouseKeysState,
         const std::vector<EnumMouseTable> &MouseKeys,
-        const EnumMouseSensorStates MouseSensorState,
+        const std::vector<EnumMouseSensorStates>& MouseSensorState,
         Window *window) {
         _operations = Operations;
 

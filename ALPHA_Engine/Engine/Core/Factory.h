@@ -78,8 +78,8 @@ namespace Core {
             Render::WindowsManager::Window *window);
 
         static Render::WindowsManager::BindsEngine::Bind *CreateMouseSensorBind(
-            const std::vector<std::function<void(void)> > &Operations,
-            const Render::WindowsManager::BindsEngine::EnumMouseSensorStates MouseSensorState,
+            const std::vector<std::function<void(void)>> &Operations,
+            const std::vector<Render::WindowsManager::BindsEngine::EnumMouseSensorStates>& MouseSensorState,
             Render::WindowsManager::Window *window);
 
         static Render::WindowsManager::BindsEngine::Bind *CreateKeyboardBind(

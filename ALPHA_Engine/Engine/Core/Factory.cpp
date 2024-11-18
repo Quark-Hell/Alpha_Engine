@@ -184,7 +184,7 @@ Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateMouseButtonsBind
     {},
     MouseKeysState,
     MouseKeys,
-    static_cast<Render::WindowsManager::BindsEngine::EnumMouseSensorStates>(1),
+    {},
     window);
   Logger::Logger::LogInfo("Mouse button bind created");
 
@@ -193,7 +193,7 @@ Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateMouseButtonsBind
 
 Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateMouseSensorBind(
   const std::vector<std::function<void(void)>>& Operations,
-  const Render::WindowsManager::BindsEngine::EnumMouseSensorStates MouseSensorState,
+  const std::vector<Render::WindowsManager::BindsEngine::EnumMouseSensorStates>& MouseSensorState,
   Render::WindowsManager::Window* window) {
 
   const auto binds = World::GetBinds();
@@ -225,7 +225,7 @@ Render::WindowsManager::BindsEngine::Bind* Core::Factory::CreateKeyboardBind(
     KeyboardKeys,
     {},
     {},
-    static_cast<Render::WindowsManager::BindsEngine::EnumMouseSensorStates>(0),
+    {},
     window);
 
   Logger::Logger::LogInfo("Keyboard bind created");

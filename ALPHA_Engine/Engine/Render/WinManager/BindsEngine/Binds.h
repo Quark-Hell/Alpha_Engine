@@ -27,7 +27,7 @@ namespace Render::WindowsManager::BindsEngine {
         std::vector<EnumKeyboardTable> _keyboardKeys;
         std::vector<EnumMouseKeysStates> _mouseKeysState;
         std::vector<EnumMouseTable> _mouseKeys;
-        EnumMouseSensorStates _mouseSensorState;
+        std::vector<EnumMouseSensorStates> _mouseSensorState;
 
         Window *_bindedWindow = nullptr;
 
@@ -48,7 +48,7 @@ namespace Render::WindowsManager::BindsEngine {
                     const std::vector<EnumKeyboardTable> &KeyboardKeys = {},
                     const std::vector<EnumMouseKeysStates> &MouseKeysState = {},
                     const std::vector<EnumMouseTable> &MouseKeys = {},
-                    EnumMouseSensorStates MouseSensorState = static_cast<EnumMouseSensorStates>(1),
+                    const std::vector<EnumMouseSensorStates>& MouseSensorState = {},
                     Window *window = nullptr);
 
     public:

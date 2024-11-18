@@ -8,7 +8,7 @@ namespace Render::WindowsManager {
 class MyScript : public Register::UserScript {
 	private:
 	Core::Object* Player = nullptr;
-	float moveSensitive = 0.20f;
+	float moveSensitive = 10;
 
 	Render::WindowsManager::Window* win1 = nullptr;
 	Render::WindowsManager::Window* win2 = nullptr;

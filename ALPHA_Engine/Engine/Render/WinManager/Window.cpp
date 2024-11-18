@@ -97,7 +97,7 @@ namespace Render::WindowsManager {
         }
 
         glfwMakeContextCurrent(_window);
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
 
         glEnable(GL_MULTISAMPLE);
 

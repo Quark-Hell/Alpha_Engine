@@ -22,10 +22,9 @@ void MyScript::CameraRotate() {
     if (win1->GetCursorVisible() == true)
         return;
 
-    double sensitive = 0.0015;
-    sensitive /= Core::World::GetDeltaTime();
+    double sensitive = 7;
+    sensitive *= Core::World::GetDeltaTime();
     const auto bind = Render::WindowsManager::BindsEngine::InputSystem::GetInstance();
-    std::cout << "X: " << bind->GetMouse()->GetMouseDelta().X << " Y: " << bind->GetMouse()->GetMouseDelta().Y << std::endl;
 
     if (bind->GetMouse()->IsMouseChangePosition()) {
 
@@ -61,7 +60,9 @@ void MyScript::LeftMoveCamera() {
     UpVector.Y = 0;
     UpVector.Z = sinf((Player->transform.GetRotation().Y) * 3.14159 / 180);
 
-    newPos += UpVector * moveSensitive;
+    float sensitive = moveSensitive;
+    sensitive *= Core::World::GetDeltaTime();
+    newPos += UpVector * sensitive;
 
     Player->transform.SetPosition(newPos);
 }
@@ -75,7 +76,9 @@ void MyScript::RightMoveCamera() {
     UpVector.Y = 0;
     UpVector.Z = sin((Player->transform.GetRotation().Y) * 3.14159 / 180);
 
-    newPos += UpVector * (-moveSensitive);
+    float sensitive = moveSensitive;
+    sensitive *= Core::World::GetDeltaTime();
+    newPos += UpVector * (-sensitive);
 
     Player->transform.SetPosition(newPos);
 }
@@ -88,7 +91,9 @@ void MyScript::ForwardMoveCamera() {
     ForwardVector.Y = cos((Player->transform.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
     ForwardVector.Z = sin((Player->transform.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
 
-    newPos += ForwardVector * moveSensitive;
+    float sensitive = moveSensitive;
+    sensitive *= Core::World::GetDeltaTime();
+    newPos += ForwardVector * sensitive;
 
     Player->transform.SetPosition(newPos);
 }
@@ -101,7 +106,9 @@ void MyScript::BackwardMoveCamera() {
     BackwardVector.Y = cos((Player->transform.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
     BackwardVector.Z = sin((Player->transform.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
 
-    newPos += BackwardVector * (-moveSensitive);
+    float sensitive = moveSensitive;
+    sensitive *= Core::World::GetDeltaTime();
+    newPos += BackwardVector * (-sensitive);
 
     Player->transform.SetPosition(newPos);
 }
@@ -109,14 +116,18 @@ void MyScript::BackwardMoveCamera() {
 void MyScript::UpMoveCamera() {
     Core::Vector3 newPos = Player->transform.GetPosition();
 
-    newPos.Y += moveSensitive;
+    float sensitive = moveSensitive;
+    sensitive *= Core::World::GetDeltaTime();
+    newPos.Y += sensitive;
 
     Player->transform.SetPosition(newPos);
 }
 void MyScript::DownMoveCamera() {
     Core::Vector3 newPos = Player->transform.GetPosition();
 
-    newPos.Y -= moveSensitive;
+    float sensitive = moveSensitive;
+    sensitive *= Core::World::GetDeltaTime();
+    newPos.Y -= sensitive;
 
     Player->transform.SetPosition(newPos);
 }
@@ -204,8 +215,7 @@ void MyScript::Start() {
 
         auto rotateBind = Core::Factory::CreateMouseSensorBind(
             { std::bind(&MyScript::CameraRotate, this) },
-            static_cast<Render::WindowsManager::BindsEngine::EnumMouseSensorStates>
-            (EnumMouseSensorStates::MouseKeepMoved),
+            { EnumMouseSensorStates::MouseKeepMoved, EnumMouseSensorStates::MouseStartMoved },
             win1
         );
 

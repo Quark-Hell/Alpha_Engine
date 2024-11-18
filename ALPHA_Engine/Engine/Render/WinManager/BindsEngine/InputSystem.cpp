@@ -53,8 +53,18 @@ namespace Render::WindowsManager::BindsEngine {
             }
 
             const EnumMouseSensorStates state = InputSystem::_mouseClass->GetSensorState();
+
             //Check mouse sensor statement
-            if (bind->_mouseSensorState != EnumMouseSensorStates::Unknown && bind->_mouseSensorState != state) { mark = false; }
+            for (const auto& it : bind->_mouseSensorState) {
+                if (it == EnumMouseSensorStates::Unknown && it != state) {
+                    mark = false;
+                    break;
+                }
+                else {
+                    mark = true;
+                    break;
+                }
+            }
 
             if (mark) { bind->InvokeOperations(window); }
         }
