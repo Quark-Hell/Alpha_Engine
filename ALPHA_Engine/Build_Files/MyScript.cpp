@@ -266,7 +266,12 @@ void MyScript::Start() {
 
     cubeMesh->_material.InitShader<Render::WindowsManager::AnomalyEngine::OpaqueShader>();
     static_cast<Render::WindowsManager::AnomalyEngine::OpaqueShader*>(cubeMesh->_material.Shader.get())->LoadTextures(
-        "/ALPHA_Engine/Engine_Assets/Textures/Planets/8k_earth_daymap.jpeg");
+        "/ALPHA_Engine/Engine_Assets/Textures/Planets/8k_earth_daymap.jpeg",
+        "",
+        "",
+        "",
+        "",
+        "/ALPHA_Engine/Engine_Assets/Textures/Planets/8k_earth_nightmap.jpg");
 
     auto LightsSource = Core::Factory::CreateObject();
     LightsSource->transform.AddPosition(0,5,0);
