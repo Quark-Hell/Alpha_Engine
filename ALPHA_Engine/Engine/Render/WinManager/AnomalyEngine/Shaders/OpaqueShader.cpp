@@ -13,16 +13,16 @@
 #include "Render/WinManager/AnomalyEngine/Textures/TextureLoader.h"
 
 #include "Render/WinManager/AnomalyEngine/Components/DirectLight.h"
-
-#include "Core/Timer.h"
+#include <Render/WinManager/AnomalyEngine/Components/PointLight.h>
 
 #include <glm/gtc/type_ptr.hpp>
+
 
 namespace Render::WindowsManager::AnomalyEngine {
 
     OpaqueShader::OpaqueShader(Material *parentMat) : ShaderProgram(parentMat) {
-        AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/OpaqueShader/VertexShader.txt)", ShadersType::VertexShader);
-        AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/OpaqueShader/FragmentShader.txt)", ShadersType::FragmentShader);
+        AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/OpaqueShader/VertexShader.glsl)", ShadersType::VertexShader);
+        AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/OpaqueShader/FragmentShader.glsl)", ShadersType::FragmentShader);
 
         OpaqueShader::LoadTextures();
 
@@ -163,39 +163,90 @@ namespace Render::WindowsManager::AnomalyEngine {
     }
 
     void OpaqueShader::ApplyShadersSettings(Render::WindowsManager::AnomalyEngine::Camera *camera) {
+        if (camera == nullptr) {
+            Logger::Logger::LogError("Camera was null: "  + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            return;
+        }
+        if (camera->GetParentObject() == nullptr) {
+            Logger::Logger::LogError("Camera parent object was null: "  + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            return;
+        }
+
+        //=============================================Object Matrices=============================================//
         auto modelMat = glm::mat4(glm::mat3(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
         SetValue(UniformType::mat4x4,"model_matrix", &modelMat);
 
-        auto transMat = glm::transpose(glm::inverse(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
-        SetValue(UniformType::mat4x4,"trans_model_mat", &transMat);
+        auto transMat = glm::mat3(glm::transpose(glm::inverse(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix())));
+        SetValue(UniformType::mat3x3,"trans_model_mat", &transMat);
 
         auto MVP = camera->GetProjectionMatrix() * camera->GetParentObject()->GetTransformMatrix() * GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
         SetValue(UniformType::mat4x4,"MVP", &MVP);
+        //=============================================Object Matrices=============================================//
 
-        size_t directLightsCount = Core::World::GetDirLights()->size();
+
+
+        //=============================================Ambient Light=============================================//
+        float ambStrength = Core::World::GetWorldAmbient();
+        SetValue(UniformType::floatType,"ambientStrength", &ambStrength);
+        //=============================================Ambient Light=============================================//
+
+
+
+        //=============================================Direct Light=============================================//
+        size_t directLightsCount = 0;
+        for (const auto& it : *Core::World::GetDirectLightsVec()) {
+            auto* dirLight = static_cast<DirectLight*>(it.get());
+
+            Core::Vector3 direction = dirLight->GetDirection();
+
+            SetValue(UniformType::vec3,std::string("directLights[").append(std::to_string(directLightsCount)).append("].direction"), &direction);
+            SetValue(UniformType::vec3,std::string("directLights[").append(std::to_string(directLightsCount)).append("].color"), &dirLight->Color);
+            SetValue(UniformType::floatType,std::string("directLights[").append(std::to_string(directLightsCount)).append("].strength"), &dirLight->Intensity);
+
+            directLightsCount++;
+        }
+        SetValue(UniformType::integer,"DirectLightsCount", &directLightsCount);
+        //=============================================Direct Light=============================================//
+
+
+
+        //=============================================Point Light=============================================//
         size_t pointLightsCount = 0;
+        for (const auto& it : *Core::World::GetPointLightsVec()) {
+            auto* pLight = static_cast<PointLight*>(it.get());
+
+            Core::Vector3 pos = pLight->GetParentObject()->transform.GetPosition();
+            Core::Vector3 color = pLight->Color;
+
+            float radius = pLight->Radius;
+            float intensity = pLight->Intensity;
+
+            float constant = pLight->Constant;
+            float linear = pLight->Linear;
+            float quadratic = pLight->Quadratic;
+
+            ShaderProgram::SetValue(UniformType::vec3, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].position"), &pos);
+            ShaderProgram::SetValue(UniformType::vec3, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].color"), &color);
+            ShaderProgram::SetValue(UniformType::floatType, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].radius"), &radius);
+            ShaderProgram::SetValue(UniformType::floatType, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].strength"), &intensity);
+
+            ShaderProgram::SetValue(UniformType::floatType, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].constant"), &constant);
+            ShaderProgram::SetValue(UniformType::floatType, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].linear"), &linear);
+            ShaderProgram::SetValue(UniformType::floatType, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].quadratic"), &quadratic);
+
+            pointLightsCount++;
+        }
+        SetValue(UniformType::integer,"PointLightsCount", &pointLightsCount);
+        //=============================================Point Light=============================================//
+
         size_t spotLightsCount = 0;
 
-//        for (const auto& it : *Core::World::GetDirLights()) {
-//            auto* dirLight = static_cast<Components::DirectLight*>(it.get());
-//
-//            Core::Vector3 direction = dirLight->GetDirection();
-//
-//            SetValue(UniformType::vec3,std::string("directLights[").append(std::to_string(directLightsCount)).append("].direction"), &direction);
-//            SetValue(UniformType::vec3,std::string("directLights[").append(std::to_string(directLightsCount)).append("].color"), &dirLight->color);
-//            SetValue(UniformType::floatType,std::string("directLights[").append(std::to_string(directLightsCount)).append("].strength"), &dirLight->intensity);
-//        }
-
-        float ambStrength = 0.2f;
-        SetValue(UniformType::floatType,"ambientStrength", &ambStrength);
-
-//        SetValue(UniformType::integer,"DirectLightsCount", &directLightsCount);
-//        SetValue(UniformType::integer,"PointLightsCount", &pointLightsCount);
 //        SetValue(UniformType::integer,"SpotLightsCount", &spotLightsCount);
 
-        //Core::Vector3 pos = camera->GetParentObject()->transform.GetPosition();
-        //SetValue(UniformType::vec3,"viewPos", &pos);
+        Core::Vector3 pos = camera->GetParentObject()->transform.GetPosition();
+        SetValue(UniformType::vec3,"viewPos", &pos);
 
+        //=============================================Bind Textures=============================================//
         _textures[0].BindTexture(0, OpaqueShader::GetProgramId(), "diffuseMap");
 //        //_textures[1].BindTexture(1, OpaqueShader::GetProgramId(), "metallicMap");
 //        //_textures[2].BindTexture(2, OpaqueShader::GetProgramId(), "specularMap");
@@ -205,6 +256,7 @@ namespace Render::WindowsManager::AnomalyEngine {
 //        //_textures[6].BindTexture(6, OpaqueShader::GetProgramId(), "normalMap");
 //        //_textures[7].BindTexture(7, OpaqueShader::GetProgramId(), "opacityMap");
 //        //_textures[8].BindTexture(8, OpaqueShader::GetProgramId(), "occlusionMap");
+        //=============================================Bind Textures=============================================//
 
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);

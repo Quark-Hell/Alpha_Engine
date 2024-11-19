@@ -22,6 +22,7 @@ namespace Render::WindowsManager {
 namespace Core {
     class Geometry;
     class Host;
+    class Component;
 }
 
 namespace Render::WindowsManager::AnomalyEngine {
@@ -39,8 +40,8 @@ namespace Render::WindowsManager::AnomalyEngine {
         void SetWindowMatrix(int width, int height);
 
         ///Always set to null after end of cycle
-        std::list<std::unique_ptr<Core::Geometry>>* _meshBuffer;
-        void LoadMeshArray(std::list<std::unique_ptr<Core::Geometry>>* meshBuffer);
+        std::vector<std::unique_ptr<Core::Component>>* _meshBuffer;
+        void LoadMeshArray(std::vector<std::unique_ptr<Core::Component>>* meshBuffer);
 
         ///Before use LoadMeshArray()
         void RenderLoop(Render::WindowsManager::Window& windows);

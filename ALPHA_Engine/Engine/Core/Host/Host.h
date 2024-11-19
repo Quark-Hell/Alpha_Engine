@@ -30,15 +30,15 @@ namespace Core {
 		~Host();
 
 	private:
-		void LoadRegistryBuffer(std::list<std::unique_ptr<Core::Component>> *scripts);
+		void LoadRegistryBuffer(std::vector<std::unique_ptr<Core::Component>> *scripts);
 		void RegistryLoop();
 
 		void InitRender();
 		void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows);
 
-		void LoadMeshBuffer(std::list<std::unique_ptr<Core::Geometry>>* meshBuffer);
+		void LoadMeshBuffer(std::vector<std::unique_ptr<Core::Component>>* meshBuffer);
 
-		void LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds);
+		void LoadBindsBuffer(std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds);
 		void Physics();
 	};
 

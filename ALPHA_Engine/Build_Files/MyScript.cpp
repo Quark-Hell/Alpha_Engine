@@ -4,6 +4,9 @@
 
 #include "Logger/Logger.h"
 
+#include "Render/WinManager/AnomalyEngine/Components/DirectLight.h"
+#include "Render/WinManager/AnomalyEngine/Components/PointLight.h"
+
 #include "Render/WinManager/AnomalyEngine/Components/Mesh.h"
 #include "Render/WinManager/AnomalyEngine/Components/Camera.h"
 #include "Render/WinManager/Window.h"
@@ -251,13 +254,31 @@ void MyScript::Start() {
     );
 
     auto cube = Core::Factory::CreateObject();
-    cube->transform.AddPosition(0, 0, -5);
+
+    cube->transform.AddPosition(0, -5, -25);
+    cube->transform.AddRotation(0, 0, 0);
+    cube->transform.SetScale(50, 0.5, 50);
+
     cube->SetName("Cube");
-    auto cubeMesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Sphere.fbx");
+
+    auto cubeMesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Cube.fbx");
     cube->AddComponent(cubeMesh);
+
     cubeMesh->_material.InitShader<Render::WindowsManager::AnomalyEngine::OpaqueShader>();
     static_cast<Render::WindowsManager::AnomalyEngine::OpaqueShader*>(cubeMesh->_material.Shader.get())->LoadTextures(
-        "/ALPHA_Engine/Engine_Assets/Textures/Planets/planet_continental_Base_Color.tga");
+        "/ALPHA_Engine/Engine_Assets/Textures/Planets/8k_earth_daymap.jpeg");
+
+    auto LightsSource = Core::Factory::CreateObject();
+    LightsSource->transform.AddPosition(0,5,0);
+
+    auto dirLight = Core::Factory::CreateDirectLight();
+    dirLight->Intensity = 0.1;
+    LightsSource->AddComponent(dirLight);
+
+    auto pointLight = Core::Factory::CreatePointLight();
+    pointLight->Intensity = 100;
+    LightsSource->AddComponent(pointLight);
+
 #endif
 }
 //Call every frame

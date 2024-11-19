@@ -25,13 +25,14 @@ namespace Core {
 		double _deltaTime = 0;
 
 		float _simulationSpeed = 1;
+		float _worldAmbient = 0.1f;
 
 		Core::Timer _timer;
 
 	private:
-		static std::list<std::unique_ptr<Core::Object>>* GetObjects();
+		static std::vector<std::unique_ptr<Core::Object>>* GetObjects();
 
-		static std::list<std::unique_ptr<Core::Component>>* GetUserScripts();
+		static std::vector<std::unique_ptr<Core::Component>>* GetUserScripts();
 
 #if RENDER_INCLUDED
 		//TODO: change to native sata type
@@ -39,19 +40,21 @@ namespace Core {
 #endif
 
 		static std::vector<std::unique_ptr<Core::Component>>* GetCameras();
-		static std::list<std::unique_ptr<Core::Geometry>>* GetMeshes();
+		static std::vector<std::unique_ptr<Core::Component>>* GetMeshes();
 
 		static std::vector<std::unique_ptr<Core::Component>>* GetDirectLights();
+		static std::vector<std::unique_ptr<Core::Component>>* GetPointLights();
 		static std::vector<std::unique_ptr<Core::Component>>* GetSpotLights();
-		static std::vector<std::unique_ptr<Core::Component>>* GetAreaLights();
+
 
 	public:
-		static const std::vector<std::unique_ptr<Core::Component>> *GetDirLights();
+		static const std::vector<std::unique_ptr<Core::Component>>* GetDirectLightsVec();
+		static const std::vector<std::unique_ptr<Core::Component>>* GetPointLightsVec();
 
 	private:
 #if BINDS_ENGINE_INCLUDED
 		//TODO: change to native sata type
-		static std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* GetBinds();
+		static std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* GetBinds();
 #endif
 
 	private:
@@ -67,6 +70,9 @@ namespace Core {
 		[[nodiscard]] static double GetElapsedTime();
 
 		[[nodiscard]] static bool GetStateOfGame();
+
+		[[nodiscard]] static float GetWorldAmbient();
+		static void SetWorldAmbient(float ambient);
 
 		static void CloseGame();
 		static void SetSimulationSpeed(float simSpeed);

@@ -26,6 +26,7 @@ namespace Render::WindowsManager {
         class Mesh;
         class Camera;
         class DirectLight;
+        class PointLight;
     }
 }
 
@@ -66,6 +67,7 @@ namespace Core {
         static Render::WindowsManager::AnomalyEngine::Mesh *CreateMesh(const std::string &path);
 
         static Render::WindowsManager::AnomalyEngine::DirectLight *CreateDirectLight(const Core::Vector3& direction = Core::Vector3(0, 0.7, 0.3));
+        static Render::WindowsManager::AnomalyEngine::PointLight *CreatePointLight(float radius = 1.0f, float constant = 1.0f, float linear = 0.7f, float quadratic = 1.8f);
 #endif
 
 #if BINDS_ENGINE_INCLUDED

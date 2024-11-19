@@ -10,7 +10,7 @@ Core::Host::Host() = default;
 Core::Host::~Host() = default;
 
 #if USER_SCRIPTS_REGISTER_INCLUDED
-void Core::Host::LoadRegistryBuffer(std::list<std::unique_ptr<Core::Component>> *scripts) {
+void Core::Host::LoadRegistryBuffer(std::vector<std::unique_ptr<Core::Component>> *scripts) {
 	const auto registry = Register::Registry::GetInstance();
 	registry->LoadRegistryBuffer(scripts);
 }
@@ -39,21 +39,21 @@ void Core::Host::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-void Core::Host::LoadMeshBuffer(std::list<std::unique_ptr<Core::Geometry>>* meshBuffer) {
+void Core::Host::LoadMeshBuffer(std::vector<std::unique_ptr<Core::Component>>* meshBuffer) {
 	const auto rend = Render::WindowsManager::AnomalyEngine::RenderEngine::GetInstance();
 	rend->LoadMeshArray(meshBuffer);
 }
 #else
-void Core::Host::LoadMeshBuffer(std::list<std::unique_ptr<Core::Geometry>>* meshBuffer) {}
+void Core::Host::LoadMeshBuffer(std::vector<std::unique_ptr<Core::Geometry>>* meshBuffer) {}
 #endif
 
 #if BINDS_ENGINE_INCLUDED
-void Core::Host::LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds) {
+void Core::Host::LoadBindsBuffer(std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds) {
 	const auto bind = Render::WindowsManager::BindsEngine::InputSystem::GetInstance();
 	bind->LoadBindsBuffer(binds);
 }
 #else
-void Core::Host::LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds) {}
+void Core::Host::LoadBindsBuffer(std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds) {}
 #endif
 
 void Core::Host::Physics() {

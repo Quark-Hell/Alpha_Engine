@@ -13,7 +13,7 @@ namespace Core {
 
 	private:
 		std::string _name = "Undefined";
-		std::vector<Core::Component*> _components;
+		std::vector<Component*> _components;
 		Tag _tag;
 
 	public:
@@ -31,7 +31,7 @@ namespace Core {
 		void SetName(const std::string &newName);
 		std::string GetName();
 
-		bool AddComponent(Core::Component* component);
+		bool AddComponent(Component* component);
 
 		[[nodiscard]] size_t GetCountOfComponents() const;
 

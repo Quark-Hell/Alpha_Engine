@@ -6,8 +6,8 @@
 namespace Render::WindowsManager::AnomalyEngine {
     class BaseLight : public Core::Component {
         public:
-            Core::Vector3 color{1,1,1};
-            float intensity = 1.0f;
+            Core::Vector3 Color{1,1,1};
+            float Intensity = 1.0f;
 
         protected:
             BaseLight() = default;

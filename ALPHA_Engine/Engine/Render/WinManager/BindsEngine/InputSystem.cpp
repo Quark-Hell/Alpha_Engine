@@ -21,7 +21,7 @@ namespace Render::WindowsManager::BindsEngine {
         return &instance;
     }
 
-    void InputSystem::LoadBindsBuffer(std::list<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* buffer) {
+    void InputSystem::LoadBindsBuffer(std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* buffer) {
         _bindsBuffer = buffer;
     }
 

@@ -22,9 +22,9 @@ namespace Register {
 		static Register::Registry* GetInstance();
 		Registry() = default;
 
-		std::list<std::unique_ptr<Core::Component>>* _scripts;
+		std::vector<std::unique_ptr<Core::Component>>* _scripts;
 
-		void LoadRegistryBuffer(std::list<std::unique_ptr<Core::Component>>* scripts);
+		void LoadRegistryBuffer(std::vector<std::unique_ptr<Core::Component>>* scripts);
 		void RegistryLoop() const;
 	};
 }

@@ -11,7 +11,7 @@ Register::Registry* Register::Registry::GetInstance() {
 	return &reg;
 }
 
-void Register::Registry::LoadRegistryBuffer(std::list<std::unique_ptr<Core::Component>>* scripts) {
+void Register::Registry::LoadRegistryBuffer(std::vector<std::unique_ptr<Core::Component>>* scripts) {
 	_scripts = scripts;
 }
 
@@ -33,9 +33,8 @@ bool Register::Registry::RegisterActorWithComponent(Register::UserScript* script
 		return false;
 	}
 
-	
 	//Later Host will call all UserScript functions
-	auto component = Core::Factory::CreateUserScript(script);
+	const auto component = Core::Factory::CreateUserScript(script);
 	Core::Object* obj = Core::Factory::CreateObject();
 	obj->AddComponent(component);
 	return true;

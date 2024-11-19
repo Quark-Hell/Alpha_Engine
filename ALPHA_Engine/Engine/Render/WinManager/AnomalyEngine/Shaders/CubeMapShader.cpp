@@ -18,8 +18,8 @@ namespace Render::WindowsManager::AnomalyEngine {
 namespace Render::WindowsManager::AnomalyEngine {
 
     CubeMapShader::CubeMapShader(Material* parentMat): ShaderProgram(parentMat) {
-        AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/CubeMapShader/VertexShader.txt)", ShadersType::VertexShader);
-        AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/CubeMapShader/FragmentShader.txt)", ShadersType::FragmentShader);
+        AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/CubeMapShader/VertexShader.glsl)", ShadersType::VertexShader);
+        AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/CubeMapShader/FragmentShader.glsl)", ShadersType::FragmentShader);
 
         if (ShaderProgram::CompileShader()) {
             ShaderProgram::AttachShader();

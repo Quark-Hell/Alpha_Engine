@@ -155,7 +155,7 @@ namespace Render::WindowsManager::AnomalyEngine {
         }
     }
 
-    void RenderEngine::LoadMeshArray(std::list<std::unique_ptr<Core::Geometry>>* meshBuffer) {
+    void RenderEngine::LoadMeshArray(std::vector<std::unique_ptr<Core::Component>>* meshBuffer) {
         _meshBuffer = meshBuffer;
     }
 

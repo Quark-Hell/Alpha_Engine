@@ -1,7 +1,5 @@
 #include "Factory.h"
 
-#include <Render/WinManager/AnomalyEngine/Components/DirectLight.h>
-
 #include "EngineConfig.h"
 
 #include "World.h"
@@ -154,14 +152,26 @@ Render::WindowsManager::AnomalyEngine::Mesh* Core::Factory::CreateMesh(const std
   return static_cast<Render::WindowsManager::AnomalyEngine::Mesh*>(meshes->back().get());
 }
 
-Render::WindowsManager::AnomalyEngine::DirectLight *Core::Factory::CreateDirectLight(const Core::Vector3& direction) {
+Render::WindowsManager::AnomalyEngine::DirectLight* Core::Factory::CreateDirectLight(const Core::Vector3& direction) {
   const auto lights = World::GetDirectLights();
 
-  lights->emplace_back(std::unique_ptr<Render::WindowsManager::AnomalyEngine::DirectLight>(new Render::WindowsManager::AnomalyEngine::DirectLight(direction)));
+  lights->emplace_back(std::unique_ptr<Render::WindowsManager::AnomalyEngine::DirectLight>
+    (new Render::WindowsManager::AnomalyEngine::DirectLight(direction)));
 
   Logger::Logger::LogInfo("Direct light created");
 
   return static_cast<Render::WindowsManager::AnomalyEngine::DirectLight*>(lights->back().get());
+}
+
+Render::WindowsManager::AnomalyEngine::PointLight* Core::Factory::CreatePointLight(const float radius, const float constant, const float linear, const float quadratic) {
+  const auto lights = World::GetPointLights();
+
+  lights->emplace_back(std::unique_ptr<Render::WindowsManager::AnomalyEngine::PointLight>
+    (new Render::WindowsManager::AnomalyEngine::PointLight(radius, constant, linear, quadratic)));
+
+  Logger::Logger::LogInfo("Point light created");
+
+  return static_cast<Render::WindowsManager::AnomalyEngine::PointLight*>(lights->back().get());
 }
 #endif
 

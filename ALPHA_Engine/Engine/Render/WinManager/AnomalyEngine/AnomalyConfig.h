@@ -5,3 +5,4 @@
 #include "Components/Mesh.h"
 
 #include "Components/DirectLight.h"
+#include "Components/PointLight.h"
