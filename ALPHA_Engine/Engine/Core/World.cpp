@@ -1,5 +1,4 @@
 #include "World.h"
-#include <memory>
 #include <Logger/Logger.h>
 
 #include "EngineConfig.h"

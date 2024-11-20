@@ -2,6 +2,7 @@
 
 #include "BaseConfig.h"
 #include "Core/Components/Component.h"
+#include <memory>
  
 namespace Core {
 

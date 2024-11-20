@@ -1,5 +1,5 @@
 #pragma once
-#include "BaseConfig.h"
+#include <memory>
 
 #include "Timer.h"
 
@@ -7,6 +7,8 @@
 #include "map"
 #include "Components/Component.h"
 
+#include "Core/ECS/System.h"
+#include "Core/ECS/SystemData.h"
 
 #if RENDER_INCLUDED
 namespace Render::WindowsManager {

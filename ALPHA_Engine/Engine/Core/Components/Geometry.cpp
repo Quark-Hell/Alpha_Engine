@@ -5,6 +5,8 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
+#include <filesystem>
+
 Core::Geometry::Geometry() {
 
 }

@@ -1,9 +1,5 @@
 #include "ShaderProgram.h"
 
-#include <fstream>
-#include <filesystem>
-#include <iostream>
-
 #include <GLEW/glew.h>
 
 #include "Core/Math/Vectors.h"

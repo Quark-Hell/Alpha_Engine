@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseConfig.h"
+#include <memory>
 
 namespace Render::WindowsManager::BindsEngine {
 	class Bind;
