@@ -9,21 +9,6 @@ Core::Host* Core::Host::GetInstance() {
 Core::Host::Host() = default;
 Core::Host::~Host() = default;
 
-#if RENDER_INCLUDED
-void Core::Host::InitRender() {
-	const auto winManager = Render::WindowsManager::WindowsManager::GetInstance();
-	winManager->Init();
-}
-
-void Core::Host::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows) {
-	const auto winManager = Render::WindowsManager::WindowsManager::GetInstance();
-	winManager->RenderLoop(windows);
-}
-#else
-void Core::Host::InitRender() {}
-void Core::Host::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows) {}
-#endif
-
 #if ANOMALY_ENGINE_INCLUDED
 void Core::Host::LoadMeshBuffer(std::vector<std::unique_ptr<Core::Component>>* meshBuffer) {
 	const auto rend = Render::WindowsManager::AnomalyEngine::RenderEngine::GetInstance();

@@ -1,6 +1,8 @@
 #include "WindowsManager.h"
 
 #include "Window.h"
+#include "WindowsBuffer.h"
+
 #include "GLFW/glfw3.h"
 #include "Logger/Logger.h"
 
@@ -13,46 +15,48 @@
 #endif
 
 namespace Render::WindowsManager {
-    WindowsManager::WindowsManager() = default;
-    WindowsManager::~WindowsManager() = default;
 
-    WindowsManager* WindowsManager::GetInstance() {
-        auto* winMan = new WindowsManager();
-        return winMan;
-    }
-
-    void WindowsManager::Init() {
+    WindowsManager::WindowsManager() : System({"WindowsBuffer"}, 400) {
         if (!glfwInit()) {
             Logger::Logger::LogCritical("Glfw does not inited: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             abort();
         }
+    };
+
+    WindowsManager* WindowsManager::GetInstance() {
+        static WindowsManager winMan;
+        return &winMan;
     }
 
-    void WindowsManager::RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows) {
+    void WindowsManager::EntryPoint(Core::SystemData& data) {
+        auto* buffer = dynamic_cast<WindowsBuffer*>(&data);
+        if (buffer == nullptr) {
+            return;
+        }
+
+        for (size_t i = 0; i < buffer->GetAllData().size(); i++) {
+            auto& component = buffer->GetData(i);
+
 #if ANOMALY_ENGINE_INCLUDED
-        const auto rend = Render::WindowsManager::AnomalyEngine::RenderEngine::GetInstance();
+            const auto rend = Render::WindowsManager::AnomalyEngine::RenderEngine::GetInstance();
 #endif
 
-        for (auto& window : *windows) {
-            if (glfwGetWindowAttrib(window->_window, GLFW_ICONIFIED) == GLFW_TRUE) {
+            if (glfwGetWindowAttrib(component._window, GLFW_ICONIFIED) == GLFW_TRUE) {
                 continue;
             }
 
-            glfwMakeContextCurrent(window->_window);
+            glfwMakeContextCurrent(component._window);
 
 #if BINDS_ENGINE_INCLUDED
-            if (glfwGetWindowAttrib(window->_window, GLFW_FOCUSED)) {
+            if (glfwGetWindowAttrib(component._window, GLFW_FOCUSED)) {
                 const auto bind = Render::WindowsManager::BindsEngine::InputSystem::GetInstance();
-                bind->IO_Events(window.get());
+                bind->IO_Events(&component);
             }
 #endif
-
 #if ANOMALY_ENGINE_INCLUDED
-            if (window != nullptr)
-                rend->RenderLoop(*window);
+            rend->RenderLoop(component);
 #endif
-
-            glfwSwapBuffers(window->_window);
+            glfwSwapBuffers(component._window);
         }
         glfwPollEvents();
     }

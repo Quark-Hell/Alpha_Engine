@@ -43,10 +43,6 @@ namespace Core {
         static bool RemoveObject(const Core::Object *object);
         static Core::Object *CreateObject();
 
-#if RENDER_INCLUDED
-        static Render::WindowsManager::Window *CreateWindow(int width, int height, const char *title);
-#endif
-
 #if ANOMALY_ENGINE_INCLUDED
         static Render::WindowsManager::AnomalyEngine::Camera *CreateCamera(float fov = 60, float aspect = 1,
                                                                        float zNear = 0.1f, float zFar = 10000);

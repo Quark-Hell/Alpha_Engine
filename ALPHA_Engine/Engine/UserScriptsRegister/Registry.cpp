@@ -1,16 +1,12 @@
 #include "Registry.h"
 
-#include <Core/Factory.h>
+#include "Core/Factory.h"
+#include "Core/Object.h"
 
 #include "UserScript.h"
 #include "UserScriptsBuffer.h"
 
-#include "Core/Object.h"
-
 namespace Register {
-	//Registration system in World
-	Registry* userScriptSystem = Registry::GetInstance();
-
 	Registry::Registry() : System({"UserScriptsBuffer"}, 100) {};
 
 	Registry* Registry::GetInstance() {
@@ -27,14 +23,12 @@ namespace Register {
 		for (size_t i = 0; i < buffer->GetAllData().size(); i++) {
 			auto& component = buffer->GetData(i);
 
-			auto& userScript = static_cast<UserScript&>(component);
-
-			if (userScript._isStarted == false) {
-				userScript.Start();
-				userScript._isStarted = true;
+			if (component._isStarted == false) {
+				component.Start();
+				component._isStarted = true;
 			}
 
-			userScript.Update();
+			component.Update();
 		}
 	}
 

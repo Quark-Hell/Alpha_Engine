@@ -141,10 +141,6 @@ void Core::World::SetWorldAmbient(const float ambient) {
 }
 
 void Core::World::Simulation() {
-#if RENDER_INCLUDED
-	Host::GetInstance()->InitRender();
-#endif
-
 	while (_isCloseGame)
 	{
 		_timer.Reset();
@@ -168,10 +164,6 @@ void Core::World::Simulation() {
 
 #if BINDS_ENGINE_INCLUDED
 		Host::GetInstance()->LoadBindsBuffer(GetBinds());
-#endif
-
-#if RENDER_INCLUDED
-		Host::GetInstance()->RenderLoop(GetWindows());
 #endif
 		//_host->Physics();
 

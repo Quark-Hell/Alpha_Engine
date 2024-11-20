@@ -32,29 +32,6 @@ Core::Object* Core::Factory::CreateObject() {
   return World::GetObjects()->back().get();
 }
 
-#if RENDER_INCLUDED
-Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, const int height, const char* title) {
-  using namespace Render::WindowsManager;
-
-  const auto windows = Core::World::GetWindows();
-
-  if (windows->size() >= 1) {
-    windows->emplace_back(std::unique_ptr<Window>
-(new Window(width,height, title,nullptr,windows->at(0)->_window)));
-
-    Logger::Logger::LogInfo("Created shared window");
-  }
-  else {
-    windows->emplace_back(std::unique_ptr<Window>
-(new Window(width,height, title,nullptr,nullptr)));
-
-    Logger::Logger::LogInfo("Window created");
-  }
-
-  return windows->back().get();
-}
-#endif
-
 #if ANOMALY_ENGINE_INCLUDED
 Render::WindowsManager::AnomalyEngine::Camera* Core::Factory::CreateCamera(const float fov, const float aspect, const float zNear, const float zFar) {
   const auto cameras = World::GetCameras();

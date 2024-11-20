@@ -9,7 +9,9 @@
 
 #include "Render/WinManager/AnomalyEngine/Components/Mesh.h"
 #include "Render/WinManager/AnomalyEngine/Components/Camera.h"
+
 #include "Render/WinManager/Window.h"
+#include "Render/WinManager/WindowsBuffer.h"
 
 #include "Render/WinManager/AnomalyEngine/Shaders/CubeMapShader.h"
 #include "Render/WinManager/AnomalyEngine/Shaders/OpaqueShader.h"
@@ -150,8 +152,8 @@ void MyScript::Start() {
     Player->SetName("TestObject");
 
 #if RENDER_INCLUDED
-    win1 = Core::Factory::CreateWindow(1280, 720, "Windows 1");
-    win2 = Core::Factory::CreateWindow(400, 400, "Windows 2");
+    win1 = Render::WindowsManager::WindowsBuffer::CreateWindow(1280, 720, "Windows 1");
+    win2 = Render::WindowsManager::WindowsBuffer::CreateWindow(400, 400, "Windows 2");
     win1->SetCursorVisible(false);
 #endif
 

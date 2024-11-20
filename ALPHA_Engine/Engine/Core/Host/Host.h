@@ -30,9 +30,6 @@ namespace Core {
 		~Host();
 
 	private:
-		void InitRender();
-		void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows);
-
 		void LoadMeshBuffer(std::vector<std::unique_ptr<Core::Component>>* meshBuffer);
 
 		void LoadBindsBuffer(std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds);

@@ -63,7 +63,7 @@ namespace Render::WindowsManager {
         }
     }
 
-    Window::Window(const int width, const int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share) {
+    Window::Window(const int width, const int height, const std::string& title, GLFWmonitor* monitor, GLFWwindow* share) {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -74,7 +74,7 @@ namespace Render::WindowsManager {
 
         glfwWindowHint(GLFW_SAMPLES, 4);
 
-        _window = glfwCreateWindow(width, height, title, monitor, share);
+        _window = glfwCreateWindow(width, height, title.c_str(), monitor, share);
         _width = width;
         _height = height;
         _title = title;

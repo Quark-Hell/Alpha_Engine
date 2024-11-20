@@ -114,6 +114,7 @@ ExportModulesConfig("RENDER_INCLUDED")
 copy_file("${Engine_Source}/Render/RenderConfig.h" "${Game_Engine_Dest}/headers/Render/RenderConfig.h")
 copy_file("${Engine_Source}/Render/WinManager/Window.h" "${Game_Engine_Dest}/headers/Render/WinManager/Window.h")
 copy_file("${Engine_Source}/Render/WinManager/WindowsManager.h" "${Game_Engine_Dest}/headers/Render/WinManager/WindowsManager.h")
+copy_file("${Engine_Source}/Render/WinManager/WindowsBuffer.h" "${Game_Engine_Dest}/headers/Render/WinManager/WindowsBuffer.h")
 copy_file("${Engine_Source}/Render/WinManager/WinManagerConfig.h" "${Game_Engine_Dest}/headers/Render/WinManager/WinManagerConfig.h")
 endif()
 

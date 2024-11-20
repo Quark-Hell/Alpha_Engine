@@ -1,10 +1,6 @@
 #pragma once
 #include "Core/ECS/System.h"
 
-namespace Core {
-	class Component;
-}
-
 namespace Register {
 	class UserScript;
 
@@ -20,4 +16,7 @@ namespace Register {
 		Registry();
 		void EntryPoint(Core::SystemData& data) override;
 	};
+
+	//Registration system in World
+	inline Register::Registry* userScriptSystem = Register::Registry::GetInstance();
 }

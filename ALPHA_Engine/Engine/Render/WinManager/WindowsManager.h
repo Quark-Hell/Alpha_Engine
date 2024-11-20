@@ -1,27 +1,20 @@
 #pragma once
-#include <vector>
-#include <memory>
-
-namespace Core {
-    class Host;
-}
+#include "Core/ECS/System.h"
 
 namespace Render::WindowsManager {
-    class Window;
-
-    class WindowsManager {
-        friend class Core::Host;
+    class WindowsManager final : public Core::System {
 
     private:
         WindowsManager();
 
-        static WindowsManager *GetInstance();
-
-        void Init();
-
-        void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>> *windows);
+        void EntryPoint(Core::SystemData& data) override;
 
     public:
-        ~WindowsManager();
+        ~WindowsManager() override = default;
+
+        static WindowsManager *GetInstance();
     };
+
+    //Registration system in World
+    inline Render::WindowsManager::WindowsManager* WindowsSystem = Render::WindowsManager:: WindowsManager::GetInstance();
 }

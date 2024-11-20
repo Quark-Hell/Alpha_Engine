@@ -29,12 +29,13 @@ namespace Core {
     System(const std::vector<std::string> &tokens, const size_t order);
     System() = delete;
 
+    //virtual void Init() = 0;
     virtual void EntryPoint(Core::SystemData& data) = 0;
 
   public:
     virtual ~System() = default;
 
-    const std::vector<std::string>& GetTokens() const { return _tokens; }
+    const std::vector<std::string>& GetTokens();
 
     System(const System&) = delete;
     System& operator=(const System&) = delete;

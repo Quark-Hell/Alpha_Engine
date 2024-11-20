@@ -4,6 +4,7 @@
 
 namespace Render::WindowsManager {
     class WindowsManager;
+    class WindowsBuffer;
 }
 
 namespace Render::WindowsManager::BindsEngine {
@@ -15,10 +16,6 @@ namespace Render::WindowsManager::AnomalyEngine {
     class Camera;
 }
 
-namespace Core {
-    class Factory;
-}
-
 struct GLFWwindow;
 struct GLFWmonitor;
 
@@ -28,7 +25,7 @@ namespace Render::WindowsManager {
         friend class WindowsManager;
         friend class AnomalyEngine::RenderEngine;
         friend class BindsEngine::InputSystem;
-        friend class Core::Factory;
+        friend class WindowsBuffer;
 
     private:
         GLFWwindow *_window;
@@ -45,7 +42,7 @@ namespace Render::WindowsManager {
 
     public:
         Window() = delete;
-        Window(int width, int height, const char *title, GLFWmonitor *monitor = nullptr, GLFWwindow *share = nullptr);
+        Window(int width, int height, const std::string& title, GLFWmonitor *monitor = nullptr, GLFWwindow *share = nullptr);
         ~Window();
 
         void Resize(int width, int height);

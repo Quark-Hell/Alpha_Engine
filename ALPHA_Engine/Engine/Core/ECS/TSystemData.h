@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include "Core/ECS/SystemData.h"
+#include "Logger/Logger.h"
 
 namespace Core {
     template<typename T>
@@ -15,13 +16,46 @@ namespace Core {
         TSystemData(const std::string& token) : SystemData(token) {};
 
     public:
-        virtual ~TSystemData() = default;
+        ~TSystemData() override = default;
 
-        virtual T& GetData(size_t pos) = 0;
-        virtual const std::vector<std::unique_ptr<T>>& GetAllData() = 0;
+        T& GetData(size_t pos) {
+            if (pos >= _data.size()) {
+                Logger::Logger::LogError("Script index out of bounds" + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            }
+            return *_data[pos];
+        }
+        const std::vector<std::unique_ptr<T>>& GetAllData() {
+            return _data;
+        }
 
-        virtual bool DestroyData(size_t pos) = 0;
-        virtual bool DestroyData(T* ptr) = 0;
+        bool DestroyData(size_t pos) {
+            if (pos >= _data.size()) {
+                Logger::Logger::LogError("Script index out of bounds" + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+                return false;
+            }
+
+            _data.erase(_data.begin() + pos);
+            Logger::Logger::LogInfo("Script was destroyed");
+            return true;
+        }
+        bool DestroyData(T* ptr) {
+            if (ptr == nullptr) {
+                Logger::Logger::LogError("Script is nullptr" + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+                return false;
+            }
+
+            for (auto it = _data.begin(); it != _data.end();) {
+                if (it->get() == ptr) {
+                    _data.erase(it);
+                    Logger::Logger::LogInfo("Script was destroyed");
+                    return true;
+                }
+                ++it;
+            }
+
+            Logger::Logger::LogError("Script does not exist" + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            return false;
+        }
 
         TSystemData(const TSystemData&) = delete;
         TSystemData& operator=(const TSystemData&) = delete;

@@ -5,21 +5,16 @@
 
 namespace Register {
     class UserScriptsBuffer final : public Core::TSystemData<UserScript> {
+    private:
+        UserScriptsBuffer();
 
-        private:
-            UserScriptsBuffer();
+    public:
+        static UserScriptsBuffer *GetInstance();
 
-        public:
-            static UserScriptsBuffer* GetInstance();
+        static UserScript *CreateUserScript(UserScript *script);
 
-            static UserScript* CreateUserScript(UserScript* script);
-
-            UserScript& GetData(size_t pos) override;
-            const std::vector<std::unique_ptr<UserScript>>& GetAllData() override;
-
-            bool DestroyData(size_t pos) override;
-            bool DestroyData(UserScript* ptr) override;
-
-            ~UserScriptsBuffer() override = default;
+        ~UserScriptsBuffer() override = default;
     };
+
+    inline UserScriptsBuffer* buffer = UserScriptsBuffer::GetInstance();
 }
