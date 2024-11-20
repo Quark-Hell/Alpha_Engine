@@ -30,9 +30,6 @@ namespace Core {
 		~Host();
 
 	private:
-		void LoadRegistryBuffer(std::vector<std::unique_ptr<Core::Component>> *scripts);
-		void RegistryLoop();
-
 		void InitRender();
 		void RenderLoop(std::vector<std::unique_ptr<Render::WindowsManager::Window>>* windows);
 

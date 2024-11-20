@@ -9,20 +9,6 @@ Core::Host* Core::Host::GetInstance() {
 Core::Host::Host() = default;
 Core::Host::~Host() = default;
 
-#if USER_SCRIPTS_REGISTER_INCLUDED
-void Core::Host::LoadRegistryBuffer(std::vector<std::unique_ptr<Core::Component>> *scripts) {
-	const auto registry = Register::Registry::GetInstance();
-	registry->LoadRegistryBuffer(scripts);
-}
-void Core::Host::RegistryLoop() {
-	const auto registry = Register::Registry::GetInstance();
-	registry->RegistryLoop();
-}
-#else
-void Core::Host::LoadRegistryBuffer(std::list<std::unique_ptr<Core::Component>> *scripts) {}
-void Core::Host::RegistryLoop() {}
-#endif
-
 #if RENDER_INCLUDED
 void Core::Host::InitRender() {
 	const auto winManager = Render::WindowsManager::WindowsManager::GetInstance();

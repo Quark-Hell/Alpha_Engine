@@ -15,7 +15,7 @@ namespace Core {
 		Object* ParentObject = nullptr;
 
 	protected:
-		Component();
+		Component() = default;
 
 	public:
 		virtual ~Component();

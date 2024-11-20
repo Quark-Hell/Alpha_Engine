@@ -1,41 +1,52 @@
 #include "Registry.h"
 
-#include "Core/Factory.h"
+#include <Core/Factory.h>
 
 #include "UserScript.h"
+#include "UserScriptsBuffer.h"
 
 #include "Core/Object.h"
 
-Register::Registry* Register::Registry::GetInstance() {
-	static Register::Registry reg;
-	return &reg;
-}
+namespace Register {
+	//Registration system in World
+	Registry* userScriptSystem = Registry::GetInstance();
 
-void Register::Registry::LoadRegistryBuffer(std::vector<std::unique_ptr<Core::Component>>* scripts) {
-	_scripts = scripts;
-}
+	Registry::Registry() : System({"UserScriptsBuffer"}, 100) {};
 
-void Register::Registry::RegistryLoop() const {
-	for (auto& it : *_scripts) {
-		auto* userScript = static_cast<UserScript*>(it.get());
+	Registry* Registry::GetInstance() {
+		static Register::Registry reg;
+		return &reg;
+	}
 
-		if (userScript->_isStarted == false) {
-			userScript->Start();
-			userScript->_isStarted = true;
+	void Registry::EntryPoint(Core::SystemData& data) {
+		auto* buffer = dynamic_cast<UserScriptsBuffer*>(&data);
+		if (buffer == nullptr) {
+			return;
 		}
 
-		userScript->Update();
-	}
-}
+		for (size_t i = 0; i < buffer->GetAllData().size(); i++) {
+			auto& component = buffer->GetData(i);
 
-bool Register::Registry::RegisterActorWithComponent(Register::UserScript* script, const std::string& objectName) {
-	if (script == nullptr) {
-		return false;
+			auto& userScript = static_cast<UserScript&>(component);
+
+			if (userScript._isStarted == false) {
+				userScript.Start();
+				userScript._isStarted = true;
+			}
+
+			userScript.Update();
+		}
 	}
 
-	//Later Host will call all UserScript functions
-	const auto component = Core::Factory::CreateUserScript(script);
-	Core::Object* obj = Core::Factory::CreateObject();
-	obj->AddComponent(component);
-	return true;
+	bool Registry::RegisterActorWithComponent(UserScript* script, const std::string& objectName) {
+		if (script == nullptr) {
+			return false;
+		}
+
+		const auto component = UserScriptsBuffer::CreateUserScript(script);
+		Core::Object* obj = Core::Factory::CreateObject();
+		obj->AddComponent(component);
+		obj->SetName(objectName);
+		return true;
+	}
 }

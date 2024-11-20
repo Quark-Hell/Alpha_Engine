@@ -32,50 +32,6 @@ Core::Object* Core::Factory::CreateObject() {
   return World::GetObjects()->back().get();
 }
 
-#if USER_SCRIPTS_REGISTER_INCLUDED
-Register::UserScript* Core::Factory::CreateUserScript() {
-  World::GetUserScripts()->emplace_back(std::unique_ptr<Register::UserScript>(new Register::UserScript()));
-  return static_cast<Register::UserScript*>(World::GetUserScripts()->back().get());
-}
-
-bool Core::Factory::RemoveUserScript(const Core::Component* script) {
-  const auto list = World::GetUserScripts();
-  auto it = std::begin(*list);
-  for (size_t i = 0; i < World::GetObjects()->size(); ++i) {
-    if (it->get() == &script[i]) {
-      Logger::Logger::LogInfo("Removing user script");
-      World::GetUserScripts()->erase(it);
-      Logger::Logger::LogInfo("User script removed");
-      return true;
-    }
-    std::advance(it, 1);
-  }
-
-  Logger::Logger::LogError("User script do not exist: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
-  return false;
-}
-
-Register::UserScript* Core::Factory::CreateUserScript(Core::Component* script) {
-  const auto src = dynamic_cast<Register::UserScript*>(script);
-  if (src == nullptr) {
-    Logger::Logger::LogError("Argument is not a User Script type: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
-    return nullptr;
-  }
-
-  const auto userScripts = World::GetUserScripts();
-  for (auto& it : *userScripts) {
-    if (src == it.get()) {
-      Logger::Logger::LogError("User script already exist: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
-      return nullptr;
-    }
-  }
-
-  userScripts->emplace_back(std::unique_ptr<Register::UserScript>(src));
-  return static_cast<Register::UserScript*>(World::GetUserScripts()->back().get());
-}
-#endif
-
-
 #if RENDER_INCLUDED
 Render::WindowsManager::Window* Core::Factory::CreateWindow(const int width, const int height, const char* title) {
   using namespace Render::WindowsManager;

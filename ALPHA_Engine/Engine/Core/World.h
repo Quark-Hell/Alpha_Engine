@@ -1,6 +1,12 @@
 #pragma once
 #include "BaseConfig.h"
+
 #include "Timer.h"
+
+#include "unordered_map"
+#include "map"
+#include "Components/Component.h"
+
 
 #if RENDER_INCLUDED
 namespace Render::WindowsManager {
@@ -13,11 +19,13 @@ namespace Render::WindowsManager {
 
 namespace Core {
 	class Object;
-  	class Geometry;
-	class Component;
+	class System;
+	class SystemData;
 
 	class World {
 		friend class Factory;
+		friend class System;
+		friend class SystemData;
 
 	private:
 		bool _isCloseGame = true;
@@ -29,10 +37,15 @@ namespace Core {
 
 		Core::Timer _timer;
 
+		std::map<size_t, std::unique_ptr<Core::System>> _worldSystem{};
+		std::unordered_map<std::string, std::unique_ptr<Core::SystemData>> _worldData{};
+
+	private:
+		static void AddSystem(size_t order, Core::System* system);
+		static void AddSystemData(const std::string& systemDataName, Core::SystemData* systemData);
+
 	private:
 		static std::vector<std::unique_ptr<Core::Object>>* GetObjects();
-
-		static std::vector<std::unique_ptr<Core::Component>>* GetUserScripts();
 
 #if RENDER_INCLUDED
 		//TODO: change to native sata type

@@ -6,7 +6,7 @@
 
 Register::UserScript::UserScript() {
 	Logger::Logger::LogInfo("Creating new user script");
-	Register::Registry::RegisterActorWithComponent(this);
+	Registry::RegisterActorWithComponent(this);
 }
 
 Register::UserScript::~UserScript() {

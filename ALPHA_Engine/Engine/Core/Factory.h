@@ -30,11 +30,6 @@ namespace Render::WindowsManager {
     }
 }
 
-
-namespace Register {
-    class UserScript;
-}
-
 namespace Core {
     class Object;
     class Component;
@@ -47,12 +42,6 @@ namespace Core {
     public:
         static bool RemoveObject(const Core::Object *object);
         static Core::Object *CreateObject();
-
-#if USER_SCRIPTS_REGISTER_INCLUDED
-        static Register::UserScript *CreateUserScript(Core::Component *script);
-        static bool RemoveUserScript(const Core::Component *object);
-        static Register::UserScript *CreateUserScript();
-#endif
 
 #if RENDER_INCLUDED
         static Render::WindowsManager::Window *CreateWindow(int width, int height, const char *title);

@@ -4,9 +4,9 @@
 
 #include "EngineConfig.h"
 
-#include "Core/Components/Geometry.h"
 #include "Core/Object.h"
 #include "Host/Host.h"
+
 
 Core::World::World() = default;
 Core::World::~World() = default;
@@ -19,11 +19,31 @@ std::vector<std::unique_ptr<Core::Object>>* Core::World::GetObjects() {
 }
 #pragma endregion
 
-std::vector<std::unique_ptr<Core::Component>>* Core::World::GetUserScripts() {
-	static std::vector<std::unique_ptr<Core::Component>> userScripts{};
-	userScripts.reserve(64);
-	return &userScripts;
+void Core::World::AddSystem(size_t order, Core::System* system) {
+	if (system == nullptr) {
+		Logger::Logger::LogError("System is null");
+		return;
+	}
+
+	const auto world = World::GetWorld();
+	world->_worldSystem.emplace(order, std::unique_ptr<Core::System>(system));
 }
+
+void Core::World::AddSystemData(const std::string& systemDataName, Core::SystemData* systemData) {
+	if (systemData == nullptr) {
+		Logger::Logger::LogError("System data is null");
+		return;
+	}
+	if (systemDataName.empty()) {
+		Logger::Logger::LogError("System data name is empty");
+		return;
+	}
+
+	const auto world = World::GetWorld();
+	world->_worldData.emplace(systemDataName, std::unique_ptr<Core::SystemData>(systemData));
+}
+
+
 
 #if RENDER_INCLUDED
 std::vector<std::unique_ptr<Render::WindowsManager::Window>>* Core::World::GetWindows() {
@@ -129,8 +149,20 @@ void Core::World::Simulation() {
 	{
 		_timer.Reset();
 
-		Host::GetInstance()->LoadRegistryBuffer(GetUserScripts());
-		Host::GetInstance()->RegistryLoop();
+		for (auto& system : _worldSystem) {
+			const auto& tokens = system.second->GetTokens();
+
+			for (auto& token : tokens) {
+				const auto data = _worldData.find(token);
+				if (data == _worldData.end()) {
+					Logger::Logger::LogError("Data for system with order", system.first, "by token", token, "not found "
+						 + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+					continue;
+				}
+
+				system.second->EntryPoint(*data->second);
+			}
+		}
 
 		Host::GetInstance()->LoadMeshBuffer(GetMeshes());
 

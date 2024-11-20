@@ -1,6 +1,5 @@
 #pragma once
 
-#include "BaseConfig.h"
 #include "Core/Components/Component.h"
 
 namespace Register {
