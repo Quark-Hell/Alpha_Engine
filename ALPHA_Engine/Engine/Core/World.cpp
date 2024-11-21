@@ -34,11 +34,15 @@ void Core::World::AddSystemData(const std::string& systemDataName, Core::SystemD
 		return;
 	}
 	if (systemDataName.empty()) {
-		Logger::Logger::LogError("System data name is empty");
+		Logger::Logger::LogError("System data name is empty" + std::string(__FILE__ ":") + std::to_string(__LINE__));
 		return;
 	}
 
 	const auto world = World::GetWorld();
+	if (world->_worldData.find(systemDataName) != world->_worldData.end()) {
+		Logger::Logger::LogCritical("System data with name:", systemDataName, "already exists");
+	}
+
 	world->_worldData.emplace(systemDataName, std::unique_ptr<Core::SystemData>(systemData));
 }
 
@@ -132,7 +136,7 @@ float Core::World::GetWorldAmbient() {
 }
 void Core::World::SetWorldAmbient(const float ambient) {
 	if (ambient < 0) {
-		Logger::Logger::LogError("Ambient should be bigger than zero " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+		Logger::Logger::LogError("Ambient should be bigger than zero " + std::string(__FILE__ ":") + std::to_string(__LINE__));
 		return;
 	}
 	const auto world = GetWorld();
@@ -152,8 +156,8 @@ void Core::World::Simulation() {
 			for (auto& token : tokens) {
 				const auto data = _worldData.find(token);
 				if (data == _worldData.end()) {
-					Logger::Logger::LogError("Data for system with order", system.first, "by token", token, "not found "
-						 + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+					Logger::Logger::LogError("Data for system with order", system.first, "by token", token, "not found: "
+						 + std::string(__FILE__ ":") + std::to_string(__LINE__));
 
 					dataVector.clear();
 					continue;

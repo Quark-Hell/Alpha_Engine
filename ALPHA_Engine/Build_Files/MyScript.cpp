@@ -144,8 +144,8 @@ void MyScript::Start() {
 #if LOGGER_INCLUDED
     Logger::Logger::LogInfo("TestLoggerEvent");
     Logger::Logger::LogWarning("TestLoggerWarning");
-    Logger::Logger::LogError("TestLoggerError: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
-    //Logger::Logger::LogCritical("TestLoggerCritical: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+    Logger::Logger::LogError("TestLoggerError: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
+    //Logger::Logger::LogCritical("TestLoggerCritical: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
 #endif
 
     std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;

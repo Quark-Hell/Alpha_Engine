@@ -29,32 +29,26 @@ namespace Render::WindowsManager {
     }
 
     void WindowsManager::EntryPoint(std::vector<Core::SystemData*>& data) {
-        for (const auto it : data) {
-            auto* buffer = dynamic_cast<WindowsBuffer*>(it);
-            if (buffer == nullptr) {
-                return;
-            }
+        auto* buffer = reinterpret_cast<WindowsBuffer*>(data[0]);
 
-
-            for (size_t i = 0; i < buffer->GetAllData().size(); i++) {
-                auto& component = buffer->GetData(i);
+        for (size_t i = 0; i < buffer->GetAllData().size(); i++) {
+            auto& component = buffer->GetData(i);
 
 #if ANOMALY_ENGINE_INCLUDED
-                const auto rend = Render::WindowsManager::AnomalyEngine::RenderEngine::GetInstance();
+            const auto rend = Render::WindowsManager::AnomalyEngine::RenderEngine::GetInstance();
 #endif
 
-                if (glfwGetWindowAttrib(component._window, GLFW_ICONIFIED) == GLFW_TRUE) {
-                    continue;
-                }
+            if (glfwGetWindowAttrib(component._window, GLFW_ICONIFIED) == GLFW_TRUE) {
+                continue;
+            }
 
-                glfwMakeContextCurrent(component._window);
+            glfwMakeContextCurrent(component._window);
 
 #if ANOMALY_ENGINE_INCLUDED
-                rend->RenderLoop(component);
+            rend->RenderLoop(component);
 #endif
-                glfwSwapBuffers(component._window);
-            }
-            glfwPollEvents();
+            glfwSwapBuffers(component._window);
         }
+        glfwPollEvents();
     }
 }

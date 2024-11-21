@@ -15,10 +15,7 @@ namespace Register {
 	}
 
 	void Registry::EntryPoint(std::vector<Core::SystemData*>& data) {
-		auto* buffer = dynamic_cast<UserScriptsBuffer*>(data[0]);
-		if (buffer == nullptr) {
-			return;
-		}
+		auto* buffer = reinterpret_cast<UserScriptsBuffer*>(data[0]);
 
 		for (size_t i = 0; i < buffer->GetAllData().size(); i++) {
 			auto& component = buffer->GetData(i);

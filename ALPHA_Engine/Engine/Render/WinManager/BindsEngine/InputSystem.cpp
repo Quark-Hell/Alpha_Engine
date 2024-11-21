@@ -25,14 +25,8 @@ namespace Render::WindowsManager::BindsEngine {
     }
 
     void InputSystem::EntryPoint(std::vector<Core::SystemData*>& data) {
-        auto* bindsBuffer = dynamic_cast<BindsBuffer*>(data[0]);
-        if (bindsBuffer == nullptr) {
-            return;
-        }
-        auto* windowsBuffer = dynamic_cast<WindowsBuffer*>(data[1]);
-        if (windowsBuffer == nullptr) {
-            return;
-        }
+        auto* bindsBuffer = reinterpret_cast<BindsBuffer*>(data[0]);
+        auto* windowsBuffer = reinterpret_cast<WindowsBuffer*>(data[1]);
 
         //Seek active window
         const Window* activeWindow = nullptr;
