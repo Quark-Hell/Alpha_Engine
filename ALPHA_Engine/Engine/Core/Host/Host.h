@@ -32,8 +32,6 @@ namespace Core {
 
 	private:
 		void LoadMeshBuffer(std::vector<std::unique_ptr<Core::Component>>* meshBuffer);
-
-		void LoadBindsBuffer(std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds);
 		void Physics();
 	};
 

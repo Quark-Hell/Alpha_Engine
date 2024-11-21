@@ -10,13 +10,13 @@ namespace Register {
 		static Registry* GetInstance();
 		~Registry() override = default;
 
-		static bool RegisterActorWithComponent(Register::UserScript* script, const std::string &objectName = "Undefined");
+		static bool RegisterActorWithComponent(UserScript* script, const std::string &objectName = "Undefined");
 		
 	private:
 		Registry();
-		void EntryPoint(Core::SystemData& data) override;
+		void EntryPoint(std::vector<Core::SystemData*>& data) override;
 	};
 
 	//Registration system in World
-	inline Register::Registry* userScriptSystem = Register::Registry::GetInstance();
+	inline Registry* userScriptSystem = Registry::GetInstance();
 }

@@ -1,17 +1,20 @@
 #include "InputSystem.h"
 
+#include <GLFW/glfw3.h>
 #include <Render/WinManager/Window.h>
+#include <Render/WinManager/WindowsBuffer.h>
+
 #include <Render/WinManager/BindsEngine/Keyboard/Keyboard.h>
 #include <Render/WinManager/BindsEngine/Mouse/Mouse.h>
-
 #include <Render/WinManager/BindsEngine/Binds.h>
+#include "BindsBuffer.h"
 
 #include "Keyboard/KeyboardSensors.h"
 #include "Mouse/MouseSensors.h"
 
 namespace Render::WindowsManager::BindsEngine {
 
-    InputSystem::InputSystem() {
+    InputSystem::InputSystem() : System({"BindsBuffer", "WindowsBuffer"}, 200) {
         _mouseClass = std::unique_ptr<Mouse>(new Mouse());
         _keyboardClass = std::unique_ptr<Keyboard>(new Keyboard());
     }
@@ -21,41 +24,63 @@ namespace Render::WindowsManager::BindsEngine {
         return &instance;
     }
 
-    void InputSystem::LoadBindsBuffer(std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* buffer) {
-        _bindsBuffer = buffer;
-    }
+    void InputSystem::EntryPoint(std::vector<Core::SystemData*>& data) {
+        auto* bindsBuffer = dynamic_cast<BindsBuffer*>(data[0]);
+        if (bindsBuffer == nullptr) {
+            return;
+        }
+        auto* windowsBuffer = dynamic_cast<WindowsBuffer*>(data[1]);
+        if (windowsBuffer == nullptr) {
+            return;
+        }
 
-    void InputSystem::IO_Events(const Render::WindowsManager::Window* window) const {
-        if (_bindsBuffer == nullptr) { return; }
+        //Seek active window
+        const Window* activeWindow = nullptr;
+        for (size_t i = 0; i < windowsBuffer->GetAllData().size(); i++) {
+            auto& component = windowsBuffer->GetData(i);
+
+            if (glfwGetWindowAttrib(component._window, GLFW_FOCUSED)) {
+                activeWindow = &component;
+            }
+        }
+        if (activeWindow == nullptr) {
+            return;
+        }
+
+        glfwMakeContextCurrent(activeWindow->_window);
+
 
         InputSystem::_mouseClass->UpdateMouseState();
         InputSystem::_keyboardClass->UpdateKeysState();
 
         //All values
-        for (const auto& bind : *_bindsBuffer) {
-            if (bind->IsActive == false) { continue; }
+        for (size_t i = 0; i < bindsBuffer->GetAllData().size(); i++) {
+
+            auto& component = bindsBuffer->GetData(i);
+
+            if (component.IsActive == false) { continue; }
             bool mark = true;
 
             //Keyboard statement check
-            for (size_t j = 0; j < bind->_keyboardKeys.size(); j++)
+            for (size_t j = 0; j < component._keyboardKeys.size(); j++)
             {
-                const EnumKeyboardKeysStates state = InputSystem::_keyboardClass->GetKeyState(bind->_keyboardKeys[j]);
+                const EnumKeyboardKeysStates state = InputSystem::_keyboardClass->GetKeyState(component._keyboardKeys[j]);
 
-                if (bind->_keyboardKeysState[j] != state) { mark = false; break; }
+                if (component._keyboardKeysState[j] != state) { mark = false; break; }
             }
 
             //Mouse button statement check
-            for (size_t j = 0; j < bind->_mouseKeys.size(); j++)
+            for (size_t j = 0; j < component._mouseKeys.size(); j++)
             {
-                EnumMouseKeysStates state = InputSystem::_mouseClass->GetKeyState(bind->_mouseKeys[j]);
+                EnumMouseKeysStates state = InputSystem::_mouseClass->GetKeyState(component._mouseKeys[j]);
 
-                if (bind->_mouseKeysState[j] != state) { mark = false; break; }
+                if (component._mouseKeysState[j] != state) { mark = false; break; }
             }
 
             const EnumMouseSensorStates state = InputSystem::_mouseClass->GetSensorState();
 
             //Check mouse sensor statement
-            for (const auto& it : bind->_mouseSensorState) {
+            for (const auto& it : component._mouseSensorState) {
                 if (it == EnumMouseSensorStates::Unknown && it != state) {
                     mark = false;
                     break;
@@ -66,7 +91,8 @@ namespace Render::WindowsManager::BindsEngine {
                 }
             }
 
-            if (mark) { bind->InvokeOperations(window); }
+            Logger::Logger::LogInfo(mark);
+            if (mark) { component.InvokeOperations(activeWindow); }
         }
     }
 

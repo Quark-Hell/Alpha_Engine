@@ -7,10 +7,6 @@ namespace Render::WindowsManager {
     class Window;
 }
 
-namespace Core {
-    class Factory;
-}
-
 namespace Render::WindowsManager::BindsEngine {
     enum class EnumMouseKeysStates : uint8_t;
     enum class EnumKeyboardKeysStates : uint8_t;
@@ -19,7 +15,10 @@ namespace Render::WindowsManager::BindsEngine {
     enum class EnumMouseSensorStates : uint8_t;
     enum class EnumMouseTable : uint8_t;
 
-    class Bind {
+    class Bind final {
+        friend class BindsBuffer;
+        friend class InputSystem;
+
     private:
         std::vector<std::function<void(void)> > _operations;
 
@@ -33,10 +32,6 @@ namespace Render::WindowsManager::BindsEngine {
 
     public:
         bool IsActive = true;
-
-    private:
-        friend class InputSystem;
-        friend class Core::Factory;
 
     private:
         Bind() = default;

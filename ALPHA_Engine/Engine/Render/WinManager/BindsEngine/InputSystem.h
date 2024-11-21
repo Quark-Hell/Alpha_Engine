@@ -1,11 +1,7 @@
 #pragma once
-#include <vector>
 #include <memory>
 
-namespace Render::WindowsManager {
-    class Window;
-    class WindowsManager;
-}
+#include "Core/ECS/System.h"
 
 namespace Render::WindowsManager::BindsEngine {
     class Mouse;
@@ -14,26 +10,23 @@ namespace Render::WindowsManager::BindsEngine {
 }
 
 namespace Render::WindowsManager::BindsEngine {
-    class InputSystem {
-        friend class Render::WindowsManager::WindowsManager;
-
+    class InputSystem final : Core::System {
     private:
-        std::vector<std::unique_ptr<Bind>>* _bindsBuffer = nullptr;
         std::unique_ptr<Mouse> _mouseClass;
         std::unique_ptr<Keyboard> _keyboardClass;
 
     private:
         InputSystem();
-        void IO_Events(const Render::WindowsManager::Window *window) const;
+        void EntryPoint(std::vector<Core::SystemData*>& data) override;
 
     public:
         static InputSystem *GetInstance();
 
-        void LoadBindsBuffer(std::vector<std::unique_ptr<Bind> > *buffer);
+        ~InputSystem() override = default;
 
-        ~InputSystem() = default;
-
-        Mouse *GetMouse() const;
-        Keyboard *GetKeyboard() const;
+        [[nodiscard]] Mouse *GetMouse() const;
+        [[nodiscard]] Keyboard *GetKeyboard() const;
     };
+
+    inline InputSystem* inputSystem = InputSystem::GetInstance();
 }

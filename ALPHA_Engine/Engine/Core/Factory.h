@@ -54,28 +54,5 @@ namespace Core {
         static Render::WindowsManager::AnomalyEngine::DirectLight *CreateDirectLight(const Core::Vector3& direction = Core::Vector3(0, 0.7, 0.3));
         static Render::WindowsManager::AnomalyEngine::PointLight *CreatePointLight(float radius = 1.0f, float constant = 1.0f, float linear = 0.7f, float quadratic = 1.8f);
 #endif
-
-#if BINDS_ENGINE_INCLUDED
-        static Render::WindowsManager::BindsEngine::Bind *CreateGeneralBind();
-
-        static Render::WindowsManager::BindsEngine::Bind *CreateMouseButtonsBind(
-            const std::vector<std::function<void(void)> > &Operations,
-            const std::vector<Render::WindowsManager::BindsEngine::EnumMouseKeysStates> &MouseKeysState,
-            const std::vector<Render::WindowsManager::BindsEngine::EnumMouseTable> &MouseKeys,
-            Render::WindowsManager::Window *window);
-
-        static Render::WindowsManager::BindsEngine::Bind *CreateMouseSensorBind(
-            const std::vector<std::function<void(void)>> &Operations,
-            const std::vector<Render::WindowsManager::BindsEngine::EnumMouseSensorStates>& MouseSensorState,
-            Render::WindowsManager::Window *window);
-
-        static Render::WindowsManager::BindsEngine::Bind *CreateKeyboardBind(
-            const std::vector<std::function<void(void)> > &Operations,
-            const std::vector<Render::WindowsManager::BindsEngine::EnumKeyboardKeysStates> &KeysState,
-            const std::vector<Render::WindowsManager::BindsEngine::EnumKeyboardTable> &KeyboardKeys,
-            Render::WindowsManager::Window *window);
-
-        static void RemoveBind(const Render::WindowsManager::BindsEngine::Bind *removedBind);
-#endif
     };
 }

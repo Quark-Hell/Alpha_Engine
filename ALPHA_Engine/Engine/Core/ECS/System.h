@@ -2,7 +2,6 @@
 #include <vector>
 #include <string>
 #include "Core/ECS/SystemData.h"
-//#include "Core/World.h"
 
 namespace Core {
   class World;
@@ -30,7 +29,7 @@ namespace Core {
     System() = delete;
 
     //virtual void Init() = 0;
-    virtual void EntryPoint(Core::SystemData& data) = 0;
+    virtual void EntryPoint(std::vector<Core::SystemData*>& data) = 0;
 
   public:
     virtual ~System() = default;

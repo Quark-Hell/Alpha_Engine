@@ -16,5 +16,5 @@ namespace Render::WindowsManager {
         ~WindowsBuffer() override = default;
     };
 
-    inline WindowsBuffer* buffer = WindowsBuffer::GetInstance();
+    inline WindowsBuffer* windowsBuffer = WindowsBuffer::GetInstance();
 }

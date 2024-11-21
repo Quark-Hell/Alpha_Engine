@@ -18,15 +18,6 @@ void Core::Host::LoadMeshBuffer(std::vector<std::unique_ptr<Core::Component>>* m
 void Core::Host::LoadMeshBuffer(std::vector<std::unique_ptr<Core::Geometry>>* meshBuffer) {}
 #endif
 
-#if BINDS_ENGINE_INCLUDED
-void Core::Host::LoadBindsBuffer(std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds) {
-	const auto bind = Render::WindowsManager::BindsEngine::InputSystem::GetInstance();
-	bind->LoadBindsBuffer(binds);
-}
-#else
-void Core::Host::LoadBindsBuffer(std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* binds) {}
-#endif
-
 void Core::Host::Physics() {
 
 }

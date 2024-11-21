@@ -10,12 +10,12 @@ namespace Register {
 	Registry::Registry() : System({"UserScriptsBuffer"}, 100) {};
 
 	Registry* Registry::GetInstance() {
-		static Register::Registry reg;
+		static Registry reg;
 		return &reg;
 	}
 
-	void Registry::EntryPoint(Core::SystemData& data) {
-		auto* buffer = dynamic_cast<UserScriptsBuffer*>(&data);
+	void Registry::EntryPoint(std::vector<Core::SystemData*>& data) {
+		auto* buffer = dynamic_cast<UserScriptsBuffer*>(data[0]);
 		if (buffer == nullptr) {
 			return;
 		}

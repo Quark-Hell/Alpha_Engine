@@ -7,7 +7,7 @@ namespace Render::WindowsManager {
     private:
         WindowsManager();
 
-        void EntryPoint(Core::SystemData& data) override;
+        void EntryPoint(std::vector<Core::SystemData*>& data) override;
 
     public:
         ~WindowsManager() override = default;

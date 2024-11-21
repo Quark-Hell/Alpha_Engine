@@ -147,23 +147,26 @@ void Core::World::Simulation() {
 		for (auto& system : _worldSystem) {
 			const auto& tokens = system.second->GetTokens();
 
+			std::vector<SystemData*> dataVector;
+
 			for (auto& token : tokens) {
 				const auto data = _worldData.find(token);
 				if (data == _worldData.end()) {
 					Logger::Logger::LogError("Data for system with order", system.first, "by token", token, "not found "
 						 + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+
+					dataVector.clear();
 					continue;
 				}
-
-				system.second->EntryPoint(*data->second);
+				dataVector.push_back(data->second.get());
+			}
+			if (!dataVector.empty()) {
+				system.second->EntryPoint(dataVector);
 			}
 		}
 
 		Host::GetInstance()->LoadMeshBuffer(GetMeshes());
 
-#if BINDS_ENGINE_INCLUDED
-		Host::GetInstance()->LoadBindsBuffer(GetBinds());
-#endif
 		//_host->Physics();
 
 		_deltaTime = _timer.Elapsed();
