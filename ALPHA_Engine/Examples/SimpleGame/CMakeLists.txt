@@ -43,7 +43,6 @@ if (Build_Examples)
 					PRIVATE "${OPENGL_LIBRARIES}"
 			)
 
-			message( "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assimp-vc143-mt.dll")
 			copy_file("${Examples_Build_Dir}/external/assimp-vc143-mt.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assimp-vc143-mt.dll")
 		elseif(MINGW)
 			target_link_libraries(SimpleGame
