@@ -18,7 +18,7 @@ This game engine is being developed to make it easier for developers to create s
 
 ## Documentation
 
-- In developing, but you can check [examples](https://github.com/Quark-Hell/Alpha_Engine/tree/Architect2.0/ALPHA_Engine/Build_Files)
+- In developing, but you can check [examples](https://github.com/Quark-Hell/Alpha_Engine/tree/Architect2.0/ALPHA_Engine/Examples)
 
 ## Developers
 - [Quark](https://github.com/Quark-Hell)
