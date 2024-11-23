@@ -1,7 +1,7 @@
 #pragma once
 #include "UserScriptsRegister/UserScriptConfig.h"
 
-namespace Render::WindowsManager {
+namespace WindowsManager {
 	class Window;
 }
 
@@ -10,11 +10,11 @@ class MyScript : public Register::UserScript {
 	Core::Object* Player = nullptr;
 	float moveSensitive = 10;
 
-	Render::WindowsManager::Window* win1 = nullptr;
-	Render::WindowsManager::Window* win2 = nullptr;
+	WindowsManager::Window* win1 = nullptr;
+	WindowsManager::Window* win2 = nullptr;
 
-	Render::WindowsManager::Window* win3 = nullptr;
-	Render::WindowsManager::Window* win4 = nullptr;
+	WindowsManager::Window* win3 = nullptr;
+	WindowsManager::Window* win4 = nullptr;
 
 	public:
 	MyScript() = default;

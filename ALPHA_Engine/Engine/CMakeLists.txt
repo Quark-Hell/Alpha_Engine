@@ -1,7 +1,8 @@
 file(WRITE "${Build_Dir}/config.cfg" "")
 
 #Modules
-include("Engine/Render/CMakeLists.txt")
+include("Engine/AnomalyEngine/CMakeLists.txt")
+include("Engine/WindowsManager/CMakeLists.txt")
 include("Engine/BindsEngine/CMakeLists.txt")
 include("Engine/UserScriptsRegister/CMakeLists.txt")
 #Modules
@@ -29,7 +30,7 @@ add_library (
         "${engine_core_list}"
 
         ##Engine Modules
-        "${engine_render_list}"
+        "${engine_windows_manager_list}"
         "${engine_anomaly_list}"
         "${engine_binds_list}"
         "${engine_user_scripts_list}"

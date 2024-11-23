@@ -1,7 +1,7 @@
 #include "InputSystem.h"
 
-#include "Render/WinManager/Window.h"
-#include "Render/WinManager/WindowsBuffer.h"
+#include "WindowsManager/Window.h"
+#include "WindowsManager/WindowsBuffer.h"
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -22,12 +22,12 @@ namespace BindsEngine {
         }
 
         auto* bindsBuffer = reinterpret_cast<BindsBuffer*>(data[0]);
-        auto* windowsBuffer = reinterpret_cast<Render::WindowsManager::WindowsBuffer*>(data[1]);
+        auto* windowsBuffer = reinterpret_cast<WindowsManager::WindowsBuffer*>(data[1]);
         auto* mouseSensorsBuffer = reinterpret_cast<MouseSensors*>(data[2]);
         auto* keyboardSensorsBuffer = reinterpret_cast<KeyboardSensors*>(data[3]);
 
         //Seek focused window
-        const Render::WindowsManager::Window* focusedWindow = windowsBuffer->GetFocusedWindow();
+        const WindowsManager::Window* focusedWindow = windowsBuffer->GetFocusedWindow();
         if (focusedWindow == nullptr) {
             return;
         }

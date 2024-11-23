@@ -8,7 +8,7 @@ namespace BindsEngine {
         const std::vector<EnumMouseKeysStates> &MouseKeysState,
         const std::vector<EnumMouseTable> &MouseKeys,
         const std::vector<EnumMouseSensorStates>& MouseSensorState,
-        Render::WindowsManager::Window *window) {
+        WindowsManager::Window *window) {
         _operations = Operations;
 
         _keyboardKeysState = KeyboardKeysState;
@@ -22,7 +22,7 @@ namespace BindsEngine {
         _bindedWindow = window;
     }
 
-    void Bind::InvokeOperations(const Render::WindowsManager::Window *window) const {
+    void Bind::InvokeOperations(const WindowsManager::Window *window) const {
         if (_bindedWindow != nullptr && _bindedWindow != window) {
             return;
         }

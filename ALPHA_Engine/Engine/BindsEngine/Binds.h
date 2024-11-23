@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <functional>
 
-namespace Render::WindowsManager {
+namespace WindowsManager {
     class Window;
 }
 
@@ -28,7 +28,7 @@ namespace BindsEngine {
         std::vector<EnumMouseTable> _mouseKeys;
         std::vector<EnumMouseSensorStates> _mouseSensorState;
 
-        Render::WindowsManager::Window *_bindedWindow = nullptr;
+        WindowsManager::Window *_bindedWindow = nullptr;
 
     public:
         bool IsActive = true;
@@ -36,7 +36,7 @@ namespace BindsEngine {
     private:
         Bind() = default;
 
-        void InvokeOperations(const Render::WindowsManager::Window *window) const;
+        void InvokeOperations(const WindowsManager::Window *window) const;
 
         void Create(const std::vector<std::function<void(void)> > &Operations = {},
                     const std::vector<EnumKeyboardKeysStates> &KeyboardKeysState = {},
@@ -44,7 +44,7 @@ namespace BindsEngine {
                     const std::vector<EnumMouseKeysStates> &MouseKeysState = {},
                     const std::vector<EnumMouseTable> &MouseKeys = {},
                     const std::vector<EnumMouseSensorStates>& MouseSensorState = {},
-                    Render::WindowsManager::Window *window = nullptr);
+                    WindowsManager::Window *window = nullptr);
 
     public:
         ~Bind() = default;

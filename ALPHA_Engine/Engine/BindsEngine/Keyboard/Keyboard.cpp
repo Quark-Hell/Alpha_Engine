@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Core/World.h"
-#include "Render/WinManager/WindowsBuffer.h"
+#include "WindowsManager/WindowsBuffer.h"
 
 namespace BindsEngine {
     KeyboardSystem::KeyboardSystem()  : System({"KeyboardSensorsBuffer", "WindowsBuffer"}, 210) {};
@@ -16,9 +16,9 @@ namespace BindsEngine {
         }
 
         auto* keysData = reinterpret_cast<KeyboardSensors*>(data[0]);
-        const auto* focusedWindow = reinterpret_cast<Render::WindowsManager::WindowsBuffer*>(data[1]);
+        const auto* focusedWindow = reinterpret_cast<WindowsManager::WindowsBuffer*>(data[1]);
 
-        Render::WindowsManager::Window* window = focusedWindow->GetFocusedWindow();
+        WindowsManager::Window* window = focusedWindow->GetFocusedWindow();
         if (window == nullptr) {
             Core::Logger::LogError("Window was null: " + __LOGERROR__);
             return;

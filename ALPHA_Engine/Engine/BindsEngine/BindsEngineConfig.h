@@ -1,7 +1,13 @@
 #pragma once
-#include "Keyboard/Keyboard.h"
-#include "Mouse/Mouse.h"
-
-#include "Binds.h"
 
 #include "InputSystem.h"
+
+#include "Binds.h"
+#include "BindsBuffer.h"
+
+#include "Keyboard/Keyboard.h"
+#include "Keyboard/KeyboardSensors.h"
+
+#include "Mouse/Mouse.h"
+#include "Mouse/MouseSensors.h"
+

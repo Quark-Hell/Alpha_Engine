@@ -1,53 +1,89 @@
 #include "MyScript.h"
 
-#include <BindsEngine/Keyboard/KeyboardSensors.h>
-
-#include "BindsEngine/Mouse/MouseSensors.h"
-#include "Render/WinManager/WindowsManager.h"
-#include "UserScriptsRegister/UserScriptsBuffer.h"
-
+//===================Core===================//
+#include "Core/World.h"
 #include "Core/Object.h"
 #include "Core/Factory.h"
 
 #include "Core/Logger/Logger.h"
+//===================Core===================//
 
-#include "Render/WinManager/AnomalyEngine/Components/DirectLight.h"
-#include "Render/WinManager/AnomalyEngine/Components/PointLight.h"
-
-#include "Render/WinManager/AnomalyEngine/Components/Mesh.h"
-#include "Render/WinManager/AnomalyEngine/Components/Camera.h"
-
-#include "Render/WinManager/Window.h"
-#include "Render/WinManager/WindowsBuffer.h"
-
-#include "BindsEngine/BindsBuffer.h"
-
-#include "Render/WinManager/AnomalyEngine/Shaders/CubeMapShader.h"
-#include "Render/WinManager/AnomalyEngine/Shaders/OpaqueShader.h"
-
+#include "UserScriptsRegister/UserScriptConfig.h"
+#include "WindowsManager/WindowsManagerConfig.h"
 #include "BindsEngine/BindsEngineConfig.h"
-#include "BindsEngine/InputSystem.h"
 
-#include "Core/World.h"
+//===================Anomaly Engine===================//
+#include "AnomalyEngine/RenderEngine.h"
+
+#include "AnomalyEngine/Buffers/CamerasBuffer.h"
+#include "AnomalyEngine/Buffers/MeshesBuffer.h"
+#include "AnomalyEngine/Buffers/DirectLightsBuffer.h"
+#include "AnomalyEngine/Buffers/PointLightsBuffer.h"
+
+#include "AnomalyEngine/Components/Mesh.h"
+#include "AnomalyEngine/Components/Camera.h"
+#include "AnomalyEngine/Components/DirectLight.h"
+#include "AnomalyEngine/Components/PointLight.h"
+
+#include "AnomalyEngine/Shaders/CubeMapShader.h"
+#include "AnomalyEngine/Shaders/OpaqueShader.h"
+//===================Anomaly Engine===================//
+
+//===================User Scripts Register===================//
+Register::Registry* userScriptSystem;
+Register::UserScriptsBuffer* userScriptsBuffer;
+//===================User Scripts Register===================//
+
+//===================Binds Engine===================//
+BindsEngine::KeyboardSystem* keyboardSystem;
+BindsEngine::KeyboardSensors* keyboardBuffer;
+
+BindsEngine::MouseSystem* mouseSystem;
+BindsEngine::MouseSensors* mouseBuffer;
+
+BindsEngine::InputSystem* inputSystem;
+BindsEngine::BindsBuffer* bindsBuffer;
+//===================Binds Engine===================//
+
+//===================Windows Manager===================//
+WindowsManager::WindowsManager* windowsSystem;
+WindowsManager::WindowsBuffer* windowsBuffer;
+//===================Windows Manager===================//
+
+//===================Anomaly Engine===================//
+AnomalyEngine::RenderEngine* anomalySystem;
+AnomalyEngine::MeshesBuffer* meshesBuffer;
+AnomalyEngine::CamerasBuffer* camerasBuffer;
+AnomalyEngine::DirectLightsBuffer* directLightsBuffer;
+AnomalyEngine::PointLightsBuffer* pointLightsBuffer;
+//===================Anomaly Engine===================//
 
 namespace Core {
+    //This function will be invoked before general cycle
+    //Use this for initialize global data
     void InstanceModule() {
-        auto* userScriptSystem = new Register::Registry();
-        auto* userScriptsBuffer = new Register::UserScriptsBuffer();
+        userScriptSystem = new Register::Registry();
+        userScriptsBuffer = new Register::UserScriptsBuffer();
 
-        auto* keyboardSystem = new BindsEngine::KeyboardSystem();
-        auto* keyboardBuffer = new BindsEngine::KeyboardSensors();
+        keyboardSystem = new BindsEngine::KeyboardSystem();
+        keyboardBuffer = new BindsEngine::KeyboardSensors();
 
-        auto* mouseSystem = new BindsEngine::MouseSystem();
-        auto* mouseBuffer = new BindsEngine::MouseSensors();
+        mouseSystem = new BindsEngine::MouseSystem();
+        mouseBuffer = new BindsEngine::MouseSensors();
 
-        auto* inputSystem = new BindsEngine::InputSystem();
-        auto* bindsBuffer = new BindsEngine::BindsBuffer();
+        inputSystem = new BindsEngine::InputSystem();
+        bindsBuffer = new BindsEngine::BindsBuffer();
 
-        auto* WindowsSystem = new Render::WindowsManager:: WindowsManager();
-        auto* windowsBuffer = new Render::WindowsManager::WindowsBuffer();
+        windowsSystem = new WindowsManager::WindowsManager();
+        windowsBuffer = new WindowsManager::WindowsBuffer();
 
-        auto* script = new MyScript();
+        anomalySystem = new AnomalyEngine::RenderEngine();
+        meshesBuffer = new AnomalyEngine::MeshesBuffer();
+        camerasBuffer = new AnomalyEngine::CamerasBuffer();
+        directLightsBuffer = new AnomalyEngine::DirectLightsBuffer();
+        pointLightsBuffer = new AnomalyEngine::PointLightsBuffer();
+
+        auto* script = userScriptsBuffer->CreateActor<MyScript>();
     }
 }
 
@@ -184,13 +220,13 @@ void MyScript::Start() {
     Player = Core::Factory::CreateObject();
     Player->SetName("TestObject");
 
-#if RENDER_INCLUDED
+#if WINDOWS_MANAGER_INCLUDED
     const auto windowsBuffer = Core::World::GetSystemData("WindowsBuffer");
     if (windowsBuffer == nullptr) {
         Core::Logger::LogError("Failed to get windows buffer: " + __LOGERROR__);
         return;
     }
-    const auto windows = reinterpret_cast<Render::WindowsManager::WindowsBuffer*>(windowsBuffer);
+    const auto windows = reinterpret_cast<WindowsManager::WindowsBuffer*>(windowsBuffer);
 
     win1 = windows->CreateWindow(1280, 720, "Windows 1");
     win2 = windows->CreateWindow(400, 400, "Windows 2");
@@ -275,11 +311,11 @@ void MyScript::Start() {
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-    auto cam1 = Core::Factory::CreateCamera();
-    auto cam2 = Core::Factory::CreateCamera();
+    auto cam1 = camerasBuffer->CreateCamera();
+    auto cam2 = camerasBuffer->CreateCamera();
 
-    win1->SetCamera(cam1);
-    win2->SetCamera(cam2);
+    cam1->SetRenderWindow(win1->GetGLFWwindow());
+    cam2->SetRenderWindow(win2->GetGLFWwindow());
 
     Player->AddComponent(cam1);
 
@@ -288,11 +324,11 @@ void MyScript::Start() {
 
     auto obj2 = Core::Factory::CreateObject();
     obj2->SetName("Mesh");
-    auto mesh = Core::Factory::CreateMesh("/Build/Engine_Assets/Models/Primitives/Cube.fbx");
+    auto mesh = meshesBuffer->CreateMesh("/Build/Engine_Assets/Models/Primitives/Cube.fbx");
     obj2->AddComponent(mesh);
 
-    mesh->_material.InitShader<Render::WindowsManager::AnomalyEngine::CubeMapShader>();
-    static_cast<Render::WindowsManager::AnomalyEngine::CubeMapShader*>(mesh->_material.Shader.get())->LoadTextures(
+    mesh->_material.InitShader<AnomalyEngine::CubeMapShader>();
+    static_cast<AnomalyEngine::CubeMapShader*>(mesh->_material.Shader.get())->LoadTextures(
         R"(/Build/Engine_Assets/Textures/CubeMap/Left_Tex.tga)",
         R"(/Build/Engine_Assets/Textures/CubeMap/Right_Tex.tga)",
         R"(/Build/Engine_Assets/Textures/CubeMap/Top_Tex.tga)",
@@ -309,11 +345,11 @@ void MyScript::Start() {
 
     cube->SetName("Cube");
 
-    auto cubeMesh = Core::Factory::CreateMesh("/Build/Engine_Assets/Models/Primitives/Cube.fbx");
+    auto cubeMesh = meshesBuffer->CreateMesh("/Build/Engine_Assets/Models/Primitives/Cube.fbx");
     cube->AddComponent(cubeMesh);
 
-    cubeMesh->_material.InitShader<Render::WindowsManager::AnomalyEngine::OpaqueShader>();
-    static_cast<Render::WindowsManager::AnomalyEngine::OpaqueShader*>(cubeMesh->_material.Shader.get())->LoadTextures(
+    cubeMesh->_material.InitShader<AnomalyEngine::OpaqueShader>();
+    static_cast<AnomalyEngine::OpaqueShader*>(cubeMesh->_material.Shader.get())->LoadTextures(
         "/Build/Engine_Assets/Textures/Planets/8k_earth_daymap.jpeg",
         "",
         "",
@@ -324,11 +360,11 @@ void MyScript::Start() {
     auto LightsSource = Core::Factory::CreateObject();
     LightsSource->transform.AddPosition(0,5,0);
 
-    auto dirLight = Core::Factory::CreateDirectLight();
+    auto dirLight = directLightsBuffer->CreateDirectLight();
     dirLight->Intensity = 0.1;
     LightsSource->AddComponent(dirLight);
 
-    auto pointLight = Core::Factory::CreatePointLight();
+    auto pointLight = pointLightsBuffer->CreatePointLight();
     pointLight->Intensity = 100;
     LightsSource->AddComponent(pointLight);
 #endif

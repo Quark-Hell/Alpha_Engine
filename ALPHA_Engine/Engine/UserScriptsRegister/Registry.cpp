@@ -25,23 +25,4 @@ namespace Register {
 			component.Update();
 		}
 	}
-
-	bool Registry::RegisterActorWithComponent(UserScript* script, const std::string& objectName) {
-		if (script == nullptr) {
-			Core::Logger::LogError("First argument was null: " + __LOGERROR__);
-			return false;
-		}
-		auto* scriptsBuffer = Core::World::GetSystemData("UserScriptsBuffer");
-		if (scriptsBuffer == nullptr) {
-			Core::Logger::LogError("Script buffer was null: " + __LOGERROR__);
-			return false;
-		}
-		auto* buffer = reinterpret_cast<UserScriptsBuffer*>(scriptsBuffer);
-
-		const auto component = buffer->CreateUserScript(script);
-		Core::Object* obj = Core::Factory::CreateObject();
-		obj->AddComponent(component);
-		obj->SetName(objectName);
-		return true;
-	}
 }

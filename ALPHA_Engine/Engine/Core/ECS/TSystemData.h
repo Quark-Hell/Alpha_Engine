@@ -20,7 +20,7 @@ namespace Core {
 
         T& GetData(size_t pos) {
             if (pos >= _data.size()) {
-                Logger::Logger::LogError("Script index out of bounds: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+                Logger::LogError("Script index out of bounds: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             }
             return *_data[pos];
         }
@@ -30,30 +30,30 @@ namespace Core {
 
         bool DestroyData(size_t pos) {
             if (pos >= _data.size()) {
-                Logger::Logger::LogError("Script index out of bounds: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+                Logger::LogError("Script index out of bounds: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
                 return false;
             }
 
             _data.erase(_data.begin() + pos);
-            Logger::Logger::LogInfo("Script was destroyed");
+            Logger::LogInfo("Script was destroyed");
             return true;
         }
         bool DestroyData(T* ptr) {
             if (ptr == nullptr) {
-                Logger::Logger::LogError("Script is nullptr: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+                Logger::LogError("Script is nullptr: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
                 return false;
             }
 
             for (auto it = _data.begin(); it != _data.end();) {
                 if (it->get() == ptr) {
                     _data.erase(it);
-                    Logger::Logger::LogInfo("Script was destroyed");
+                    Logger::LogInfo("Script was destroyed");
                     return true;
                 }
                 ++it;
             }
 
-            Logger::Logger::LogError("Script does not exist: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Logger::LogError("Script does not exist: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return false;
         }
 

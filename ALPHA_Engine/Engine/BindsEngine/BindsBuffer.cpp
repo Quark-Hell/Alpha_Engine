@@ -11,7 +11,7 @@ namespace BindsEngine {
         const std::vector<std::function<void()>> &Operations,
         const std::vector<EnumMouseKeysStates> &MouseKeysState,
         const std::vector<EnumMouseTable> &MouseKeys,
-        Render::WindowsManager::Window *window) {
+        WindowsManager::Window *window) {
 
         auto* bindsBuffer = Core::World::GetSystemData("BindsBuffer");
         if (bindsBuffer == nullptr) {
@@ -31,7 +31,7 @@ namespace BindsEngine {
     Bind *BindsBuffer::CreateMouseSensorBind(
         const std::vector<std::function<void()>> &Operations,
         const std::vector<EnumMouseSensorStates>& MouseSensorState,
-        Render::WindowsManager::Window *window) {
+        WindowsManager::Window *window) {
 
         auto* bindsBuffer = Core::World::GetSystemData("BindsBuffer");
         if (bindsBuffer == nullptr) {
@@ -51,7 +51,7 @@ namespace BindsEngine {
         const std::vector<std::function<void()>> &Operations,
         const std::vector<EnumKeyboardKeysStates> &KeysState,
         const std::vector<EnumKeyboardTable> &KeyboardKeys,
-        Render::WindowsManager::Window *window) {
+        WindowsManager::Window *window) {
 
         auto* bindsBuffer = Core::World::GetSystemData("BindsBuffer");
         if (bindsBuffer == nullptr) {

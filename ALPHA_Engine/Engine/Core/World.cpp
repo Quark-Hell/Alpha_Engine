@@ -1,26 +1,20 @@
 #include "World.h"
+
 #include "Core/Logger/Logger.h"
-
-#include "EngineConfig.h"
-
 #include "Core/Object.h"
-#include "Host/Host.h"
-
 
 Core::World::World() = default;
 Core::World::~World() = default;
 
-#pragma region ObjectManager
 std::vector<std::unique_ptr<Core::Object>>* Core::World::GetObjects() {
 	static std::vector<std::unique_ptr<Core::Object>> objects{};
 	objects.reserve(64);
 	return &objects;
 }
-#pragma endregion
 
 void Core::World::AddSystem(size_t order, Core::System* system) {
 	if (system == nullptr) {
-		Logger::Logger::LogError("System is null");
+		Logger::LogError("System is null");
 		return;
 	}
 
@@ -30,17 +24,17 @@ void Core::World::AddSystem(size_t order, Core::System* system) {
 
 void Core::World::AddSystemData(const std::string& systemDataName, Core::SystemData* systemData) {
 	if (systemData == nullptr) {
-		Logger::Logger::LogError("System data is null");
+		Logger::LogError("System data is null");
 		return;
 	}
 	if (systemDataName.empty()) {
-		Logger::Logger::LogError("System data name is empty" + std::string(__FILE__ ":") + std::to_string(__LINE__));
+		Logger::LogError("System data name is empty" + std::string(__FILE__ ":") + std::to_string(__LINE__));
 		return;
 	}
 
 	const auto world = World::GetWorld();
 	if (world->_worldData.find(systemDataName) != world->_worldData.end()) {
-		Logger::Logger::LogCritical("System data with name:", systemDataName, "already exists");
+		Logger::LogCritical("System data with name:", systemDataName, "already exists");
 	}
 
 	world->_worldData.emplace(systemDataName, std::unique_ptr<Core::SystemData>(systemData));
@@ -51,7 +45,7 @@ Core::System* Core::World::GetSystem(const size_t order) {
 	if (world->_worldSystem.find(order) != world->_worldSystem.end()) {
 		return world->_worldSystem[order].get();
 	}
-	Logger::Logger::LogError("System not found: " + __LOGERROR__);
+	Logger::LogError("System not found: " + __LOGERROR__);
 	return nullptr;
 }
 
@@ -60,53 +54,9 @@ Core::SystemData* Core::World::GetSystemData(const std::string& systemDataName) 
 	if (world->_worldData.find(systemDataName) != world->_worldData.end()) {
 		return world->_worldData[systemDataName].get();
 	}
-	Logger::Logger::LogError("System data not found: " + __LOGERROR__);
+	Logger::LogError("System data not found: " + __LOGERROR__);
 	return nullptr;
 }
-
-
-
-#if RENDER_INCLUDED
-std::vector<std::unique_ptr<Render::WindowsManager::Window>>* Core::World::GetWindows() {
-	static std::vector<std::unique_ptr<Render::WindowsManager::Window>> windows{};
-	return &windows;
-}
-#endif
-
-std::vector<std::unique_ptr<Core::Component>>* Core::World::GetCameras() {
-	static std::vector<std::unique_ptr<Core::Component>> cameras{};
-	return &cameras;
-}
-std::vector<std::unique_ptr<Core::Component>>* Core::World::GetMeshes() {
-	static std::vector<std::unique_ptr<Core::Component>> meshes{};
-	meshes.reserve(64);
-	return &meshes;
-}
-
-std::vector<std::unique_ptr<Core::Component>>* Core::World::GetDirectLights() {
-	static std::vector<std::unique_ptr<Core::Component>> directLights{};
-	directLights.reserve(16);
-	return &directLights;
-}
-const std::vector<std::unique_ptr<Core::Component>> *Core::World::GetDirectLightsVec() {
-	return Core::World::GetDirectLights();
-}
-
-
-std::vector<std::unique_ptr<Core::Component>>* Core::World::GetSpotLights() {
-	static std::vector<std::unique_ptr<Core::Component>> spotLights{};
-	spotLights.reserve(16);
-	return &spotLights;
-}
-std::vector<std::unique_ptr<Core::Component>>* Core::World::GetPointLights() {
-	static std::vector<std::unique_ptr<Core::Component>> areaLights{};
-	areaLights.reserve(16);
-	return &areaLights;
-}
-const std::vector<std::unique_ptr<Core::Component>>* Core::World::GetPointLightsVec() {
-	return Core::World::GetPointLights();
-}
-
 
 #pragma region WorldFunctions
 Core::World* Core::World::GetWorld() {
@@ -146,7 +96,7 @@ float Core::World::GetWorldAmbient() {
 }
 void Core::World::SetWorldAmbient(const float ambient) {
 	if (ambient < 0) {
-		Logger::Logger::LogError("Ambient should be bigger than zero " + std::string(__FILE__ ":") + std::to_string(__LINE__));
+		Logger::LogError("Ambient should be bigger than zero " + __LOGERROR__);
 		return;
 	}
 	const auto world = GetWorld();
@@ -169,21 +119,22 @@ void Core::World::Simulation() {
 			for (auto& token : tokens) {
 				const auto data = _worldData.find(token);
 				if (data == _worldData.end()) {
-					Core::Logger::LogWarning("Data for system with order", system.first, "by token", token, "not found: "
+					Logger::LogWarning("Data for system with order", system.first, "by token", token, "not found: "
 						 + std::string(__FILE__ ":") + std::to_string(__LINE__));
+
+					dataVector.push_back(nullptr);
 				}
-				dataVector.push_back(data->second.get());
+				else {
+					dataVector.push_back(data->second.get());
+				}
 			}
 			system.second->EntryPoint(dataVector);
 		}
-
-		Host::GetInstance()->LoadMeshBuffer(GetMeshes());
-
-		//_host->Physics();
 
 		_deltaTime = _timer.Elapsed();
 		_timeElapsed += _timer.Elapsed();
 		_timer.Reset();
 	}
+	Logger::LogInfo("See you next time");
 }
 #pragma endregion

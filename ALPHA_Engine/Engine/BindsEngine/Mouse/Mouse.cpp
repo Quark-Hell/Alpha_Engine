@@ -1,9 +1,8 @@
 #include "Mouse.h"
 
-#include <array>
 #include <GLFW/glfw3.h>
-#include <Render/WinManager/Window.h>
-#include <Render/WinManager/WindowsBuffer.h>
+#include "WindowsManager/Window.h"
+#include "WindowsManager/WindowsBuffer.h"
 
 #include "MouseSensors.h"
 #include "Core/Math/Vectors.h"
@@ -19,10 +18,10 @@ namespace BindsEngine {
         }
 
         auto* mouseSensors = reinterpret_cast<MouseSensors*>(data[0]);
-        auto* windowsBuffer = reinterpret_cast<Render::WindowsManager::WindowsBuffer*>(data[1]);
+        auto* windowsBuffer = reinterpret_cast<WindowsManager::WindowsBuffer*>(data[1]);
 
         double xPos, yPos;
-        const Render::WindowsManager::Window* focusedWindow = windowsBuffer->GetFocusedWindow();
+        const WindowsManager::Window* focusedWindow = windowsBuffer->GetFocusedWindow();
         if (focusedWindow == nullptr) {
             return;
         }
@@ -48,7 +47,7 @@ namespace BindsEngine {
         }
 
         for (const auto& key : mouseSensors->_data) {
-            if (glfwGetMouseButton(const_cast<GLFWwindow*>(focusedWindow->GetGLFWwindow()), static_cast<int>(key->KEY))) {
+            if (glfwGetMouseButton(focusedWindow->GetGLFWwindow(), static_cast<int>(key->KEY))) {
                 if (key->KeyState == EnumMouseKeysStates::KeyNotPressed) {
                     key->KeyState = EnumMouseKeysStates::KeyPressed;
                 }

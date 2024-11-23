@@ -3,21 +3,11 @@
 
 #include "Timer.h"
 
-#include "unordered_map"
 #include "map"
-#include "Components/Component.h"
+#include "unordered_map"
 
 #include "Core/ECS/System.h"
 #include "Core/ECS/SystemData.h"
-
-#if RENDER_INCLUDED
-namespace Render::WindowsManager {
-	class Window;
-	namespace BindsEngine {
-		class Bind;
-	}
-}
-#endif
 
 namespace Core {
 	class Object;
@@ -39,14 +29,14 @@ namespace Core {
 		float _simulationSpeed = 1;
 		float _worldAmbient = 0.1f;
 
-		Core::Timer _timer;
+		Timer _timer;
 
-		std::map<size_t, std::unique_ptr<Core::System>> _worldSystem{};
-		std::unordered_map<std::string, std::unique_ptr<Core::SystemData>> _worldData{};
+		std::map<size_t, std::unique_ptr<System>> _worldSystem{};
+		std::unordered_map<std::string, std::unique_ptr<SystemData>> _worldData{};
 
 	private:
-		static void AddSystem(size_t order, Core::System* system);
-		static void AddSystemData(const std::string& systemDataName, Core::SystemData* systemData);
+		static void AddSystem(size_t order, System* system);
+		static void AddSystemData(const std::string& systemDataName, SystemData* systemData);
 
 	public:
 		[[nodiscard]] static System* GetSystem(size_t order);
@@ -55,23 +45,6 @@ namespace Core {
 	private:
 		static std::vector<std::unique_ptr<Core::Object>>* GetObjects();
 
-#if RENDER_INCLUDED
-		//TODO: change to native sata type
-		static std::vector<std::unique_ptr<Render::WindowsManager::Window>>* GetWindows();
-#endif
-
-		static std::vector<std::unique_ptr<Core::Component>>* GetCameras();
-		static std::vector<std::unique_ptr<Core::Component>>* GetMeshes();
-
-		static std::vector<std::unique_ptr<Core::Component>>* GetDirectLights();
-		static std::vector<std::unique_ptr<Core::Component>>* GetPointLights();
-		static std::vector<std::unique_ptr<Core::Component>>* GetSpotLights();
-
-
-	public:
-		static const std::vector<std::unique_ptr<Core::Component>>* GetDirectLightsVec();
-		static const std::vector<std::unique_ptr<Core::Component>>* GetPointLightsVec();
-
 	private:
 		World();
 
@@ -79,7 +52,7 @@ namespace Core {
 		World(const World& obj) = delete;
 		~World();
 
-		static Core::World* GetWorld();
+		static World* GetWorld();
 
 		[[nodiscard]] static double GetDeltaTime();
 		[[nodiscard]] static double GetElapsedTime();
