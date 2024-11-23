@@ -37,6 +37,10 @@ namespace AnomalyEngine {
 
         if (initIndices) {
             s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+            if (s == nullptr) {
+                Core::Logger::Logger::LogError("Failed to load Mesh from", path, ":" + __LOGERROR__);
+                return false;
+            }
             mesh = s->mMeshes[0];
 
             Geometry::_indices->resize(mesh->mNumFaces * 3);
@@ -51,6 +55,10 @@ namespace AnomalyEngine {
         else
         {
             s = importer.ReadFile(path, aiProcess_Triangulate);
+            if (s == nullptr) {
+                Core::Logger::Logger::LogError("Failed to load Mesh from", path, ":" + __LOGERROR__);
+                return false;
+            }
             mesh = s->mMeshes[0];
         }
 

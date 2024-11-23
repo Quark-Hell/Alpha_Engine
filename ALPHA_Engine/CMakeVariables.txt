@@ -24,6 +24,7 @@ include_directories(${STB})
 
 set(Build_Dir "${CMAKE_BINARY_DIR}/Build")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/Build/lib")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Examples/SimpleGame")
 
 #Game source
 set (Game "${BuildDir}")

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/Factory.h"
+#include "Core/Object.h"
+
 #include "UserScript.h"
 #include "Core/ECS/TSystemData.h"
 

@@ -26,8 +26,8 @@
 namespace AnomalyEngine {
 
     OpaqueShader::OpaqueShader(Material *parentMat) : ShaderProgram(parentMat) {
-        AddShaderSource(R"(/Build/Engine_Assets/Shaders/OpaqueShader/VertexShader.glsl)", ShadersType::VertexShader);
-        AddShaderSource(R"(/Build/Engine_Assets/Shaders/OpaqueShader/FragmentShader.glsl)", ShadersType::FragmentShader);
+        AddShaderSource(R"(/Engine_Assets/Shaders/OpaqueShader/VertexShader.glsl)", ShadersType::VertexShader);
+        AddShaderSource(R"(/Engine_Assets/Shaders/OpaqueShader/FragmentShader.glsl)", ShadersType::FragmentShader);
 
         OpaqueShader::LoadTextures();
 
@@ -62,63 +62,63 @@ namespace AnomalyEngine {
                 loader->AddTask(_textures[0], diffusePath);
             }
             else {
-                loader->AddTask(_textures[0], R"(/Build/Engine_Assets/Textures/EmptyTexture.png)");
+                loader->AddTask(_textures[0], R"(/Engine_Assets/Textures/EmptyTexture.png)");
             }
 
             if (!metallicPath.empty()) {
                 loader->AddTask(_textures[1], metallicPath);
             }
             else {
-                loader->AddTask(_textures[1], R"(/Build/Engine_Assets/Textures/EmptyTexture.png)");
+                loader->AddTask(_textures[1], R"(/Engine_Assets/Textures/EmptyTexture.png)");
             }
 
             if (!specularPath.empty()) {
                 loader->AddTask(_textures[2], specularPath);
             }
             else {
-                loader->AddTask(_textures[2], R"(/Build/Engine_Assets/Textures/EmptyTexture.png)");
+                loader->AddTask(_textures[2], R"(/Engine_Assets/Textures/EmptyTexture.png)");
             }
 
             if (!roughnessPath.empty()) {
                 loader->AddTask(_textures[3], roughnessPath);
             }
             else {
-                loader->AddTask(_textures[3], R"(/Build/Engine_Assets/Textures/EmptyTexture.png)");
+                loader->AddTask(_textures[3], R"(/Engine_Assets/Textures/EmptyTexture.png)");
             }
 
             if (!anisotropicPath.empty()) {
                 loader->AddTask(_textures[4], anisotropicPath);
             }
             else {
-                loader->AddTask(_textures[4], R"(/Build/Engine_Assets/Textures/EmptyTexture.png)");
+                loader->AddTask(_textures[4], R"(/Engine_Assets/Textures/EmptyTexture.png)");
             }
 
             if (!emissionPath.empty()) {
                 loader->AddTask(_textures[5], emissionPath);
             }
             else {
-                loader->AddTask(_textures[5], R"(/Build/Engine_Assets/Textures/EmptyEmission.png)");
+                loader->AddTask(_textures[5], R"(/Engine_Assets/Textures/EmptyEmission.png)");
             }
 
             if (!normalMapPath.empty()) {
                 loader->AddTask(_textures[6], normalMapPath);
             }
             else {
-                loader->AddTask(_textures[6], R"(/Build/Engine_Assets/Textures/EmptyTexture.png)");
+                loader->AddTask(_textures[6], R"(/Engine_Assets/Textures/EmptyTexture.png)");
             }
 
             if (!opacityMapPath.empty()) {
                 loader->AddTask(_textures[7], opacityMapPath);
             }
             else {
-                loader->AddTask(_textures[7], R"(/Build/Engine_Assets/Textures/EmptyTexture.png)");
+                loader->AddTask(_textures[7], R"(/Engine_Assets/Textures/EmptyTexture.png)");
             }
 
             if (!occlusionMapPath.empty()) {
                 loader->AddTask(_textures[8], occlusionMapPath);
             }
             else {
-                loader->AddTask(_textures[8], R"(/Build/Engine_Assets/Textures/EmptyTexture.png)");
+                loader->AddTask(_textures[8], R"(/Engine_Assets/Textures/EmptyTexture.png)");
             }
 
             loader->DoWork();

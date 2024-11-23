@@ -17,6 +17,9 @@ if (Build_Examples)
 
 	add_dependencies(SimpleGame ALPHA_Engine)
 
+	file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Examples/SimpleGame/Logs")
+	recurse_copy_assets(${Engine_Assets} "${CMAKE_BINARY_DIR}/Examples/SimpleGame/Engine_Assets")
+
 	target_compile_definitions(SimpleGame
 			PRIVATE
 			_CRT_SECURE_NO_WARNINGS

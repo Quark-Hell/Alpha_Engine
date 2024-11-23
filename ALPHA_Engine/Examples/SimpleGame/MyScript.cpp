@@ -324,17 +324,17 @@ void MyScript::Start() {
 
     auto obj2 = Core::Factory::CreateObject();
     obj2->SetName("Mesh");
-    auto mesh = meshesBuffer->CreateMesh("/Build/Engine_Assets/Models/Primitives/Cube.fbx");
+    auto mesh = meshesBuffer->CreateMesh("/Engine_Assets/Models/Primitives/Cube.fbx");
     obj2->AddComponent(mesh);
 
     mesh->_material.InitShader<AnomalyEngine::CubeMapShader>();
     static_cast<AnomalyEngine::CubeMapShader*>(mesh->_material.Shader.get())->LoadTextures(
-        R"(/Build/Engine_Assets/Textures/CubeMap/Left_Tex.tga)",
-        R"(/Build/Engine_Assets/Textures/CubeMap/Right_Tex.tga)",
-        R"(/Build/Engine_Assets/Textures/CubeMap/Top_Tex.tga)",
-        R"(/Build/Engine_Assets/Textures/CubeMap/Bottom_Tex.tga)",
-        R"(/Build/Engine_Assets/Textures/CubeMap/Front_Tex.tga)",
-        R"(/Build/Engine_Assets/Textures/CubeMap/Back_Tex.tga)"
+        R"(/Engine_Assets/Textures/CubeMap/Left_Tex.tga)",
+        R"(/Engine_Assets/Textures/CubeMap/Right_Tex.tga)",
+        R"(/Engine_Assets/Textures/CubeMap/Top_Tex.tga)",
+        R"(/Engine_Assets/Textures/CubeMap/Bottom_Tex.tga)",
+        R"(/Engine_Assets/Textures/CubeMap/Front_Tex.tga)",
+        R"(/Engine_Assets/Textures/CubeMap/Back_Tex.tga)"
     );
 
     auto cube = Core::Factory::CreateObject();
@@ -345,17 +345,17 @@ void MyScript::Start() {
 
     cube->SetName("Cube");
 
-    auto cubeMesh = meshesBuffer->CreateMesh("/Build/Engine_Assets/Models/Primitives/Cube.fbx");
+    auto cubeMesh = meshesBuffer->CreateMesh("/Engine_Assets/Models/Primitives/Cube.fbx");
     cube->AddComponent(cubeMesh);
 
     cubeMesh->_material.InitShader<AnomalyEngine::OpaqueShader>();
     static_cast<AnomalyEngine::OpaqueShader*>(cubeMesh->_material.Shader.get())->LoadTextures(
-        "/Build/Engine_Assets/Textures/Planets/8k_earth_daymap.jpeg",
+        "/Engine_Assets/Textures/Planets/8k_earth_daymap.jpeg",
         "",
         "",
         "",
         "",
-        "/Build/Engine_Assets/Textures/Planets/8k_earth_nightmap.jpg");
+        "/Engine_Assets/Textures/Planets/8k_earth_nightmap.jpg");
 
     auto LightsSource = Core::Factory::CreateObject();
     LightsSource->transform.AddPosition(0,5,0);
