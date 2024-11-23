@@ -36,15 +36,18 @@ if (Build_Examples)
 	if(WIN32)
 		if(MSVC)
 			target_link_libraries(SimpleGame
-					PRIVATE "${CMAKE_BINARY_DIR}/Build/lib/ALPHA_Engine.lib"
+					PRIVATE ALPHA_Engine
 					PRIVATE "${Examples_Build_Dir}/external/glfw3.lib"
 					PRIVATE "${Examples_Build_Dir}/external/assimp.lib"
 					PRIVATE "${Examples_Build_Dir}/external/glew32s.lib"
 					PRIVATE "${OPENGL_LIBRARIES}"
 			)
+
+			message( "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assimp-vc143-mt.dll")
+			copy_file("${Examples_Build_Dir}/external/assimp-vc143-mt.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assimp-vc143-mt.dll")
 		elseif(MINGW)
 			target_link_libraries(SimpleGame
-					PRIVATE "${CMAKE_BINARY_DIR}/Build/lib/ALPHA_Engine.lib"
+					PRIVATE ALPHA_Engine
 					PRIVATE "${Examples_Build_Dir}/external/glfw3.a"
 					PRIVATE "${Examples_Build_Dir}/external/assimp.dll.a"
 					PRIVATE "${Examples_Build_Dir}/external/glew32.dll.a"
