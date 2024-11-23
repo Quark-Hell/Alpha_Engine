@@ -1,5 +1,7 @@
 #pragma once
-#include "BaseConfig.h"
+#include <map>
+#include <string>
+#include <vector>
 
 namespace Core {
 

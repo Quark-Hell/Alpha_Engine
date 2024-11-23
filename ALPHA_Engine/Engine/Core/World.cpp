@@ -1,5 +1,5 @@
 #include "World.h"
-#include <Logger/Logger.h>
+#include "Core/Logger/Logger.h"
 
 #include "EngineConfig.h"
 
@@ -46,6 +46,24 @@ void Core::World::AddSystemData(const std::string& systemDataName, Core::SystemD
 	world->_worldData.emplace(systemDataName, std::unique_ptr<Core::SystemData>(systemData));
 }
 
+Core::System* Core::World::GetSystem(const size_t order) {
+	const auto world = World::GetWorld();
+	if (world->_worldSystem.find(order) != world->_worldSystem.end()) {
+		return world->_worldSystem[order].get();
+	}
+	Logger::Logger::LogError("System not found: " + __LOGERROR__);
+	return nullptr;
+}
+
+Core::SystemData* Core::World::GetSystemData(const std::string& systemDataName) {
+	const auto world = World::GetWorld();
+	if (world->_worldData.find(systemDataName) != world->_worldData.end()) {
+		return world->_worldData[systemDataName].get();
+	}
+	Logger::Logger::LogError("System data not found: " + __LOGERROR__);
+	return nullptr;
+}
+
 
 
 #if RENDER_INCLUDED
@@ -88,14 +106,6 @@ std::vector<std::unique_ptr<Core::Component>>* Core::World::GetPointLights() {
 const std::vector<std::unique_ptr<Core::Component>>* Core::World::GetPointLightsVec() {
 	return Core::World::GetPointLights();
 }
-
-#if BINDS_ENGINE_INCLUDED
-std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* Core::World::GetBinds() {
-	static std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>> binds{};
-	binds.reserve(32);
-	return &binds;
-}
-#endif
 
 
 #pragma region WorldFunctions
@@ -144,6 +154,8 @@ void Core::World::SetWorldAmbient(const float ambient) {
 }
 
 void Core::World::Simulation() {
+	InstanceModule();
+
 	while (_isCloseGame)
 	{
 		_timer.Reset();
@@ -152,21 +164,17 @@ void Core::World::Simulation() {
 			const auto& tokens = system.second->GetTokens();
 
 			std::vector<SystemData*> dataVector;
+			dataVector.reserve(tokens.size());
 
 			for (auto& token : tokens) {
 				const auto data = _worldData.find(token);
 				if (data == _worldData.end()) {
-					Logger::Logger::LogError("Data for system with order", system.first, "by token", token, "not found: "
+					Core::Logger::LogWarning("Data for system with order", system.first, "by token", token, "not found: "
 						 + std::string(__FILE__ ":") + std::to_string(__LINE__));
-
-					dataVector.clear();
-					continue;
 				}
 				dataVector.push_back(data->second.get());
 			}
-			if (!dataVector.empty()) {
-				system.second->EntryPoint(dataVector);
-			}
+			system.second->EntryPoint(dataVector);
 		}
 
 		Host::GetInstance()->LoadMeshBuffer(GetMeshes());

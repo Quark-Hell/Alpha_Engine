@@ -1,25 +1,25 @@
 #include "Logger.h"
 
-Logger::Logger::Logger() {
+Core::Logger::Logger() {
 	_logFile.open(GetLogFileName(), std::ios::app);
 	_logFile.close();
 }
 
-Logger::Logger::~Logger() {
+Core::Logger::~Logger() {
 	if (_logFile.is_open()) {
 		_logFile.close();
 	}
 }
 
-void Logger::Logger::WriteToBuffer(const std::string& message) {
+void Core::Logger::WriteToBuffer(const std::string& message) {
 	_logBuffer.emplace_back(message);
 }
 
-void Logger::Logger::SetDaysToDeleteLogFile(const int days) {
+void Core::Logger::SetDaysToDeleteLogFile(const int days) {
 	_daysToDeleteLogFile = days;
 }
 
-std::string Logger::Logger::GetCurrentDate() {
+std::string Core::Logger::GetCurrentDate() {
 	const auto now = std::chrono::system_clock::now();
 	const auto time = std::chrono::system_clock::to_time_t(now);
 	std::ostringstream current_time;
@@ -27,7 +27,7 @@ std::string Logger::Logger::GetCurrentDate() {
 	return current_time.str();
 }
 
-std::string Logger::Logger::GetCurrentTime() {
+std::string Core::Logger::GetCurrentTime() {
 	const auto now = std::chrono::system_clock::now();
 	const auto time = std::chrono::system_clock::to_time_t(now);
 	std::ostringstream current_time;
@@ -35,7 +35,7 @@ std::string Logger::Logger::GetCurrentTime() {
 	return current_time.str();
 }
 
-std::string Logger::Logger::GetLogFileName() {
+std::string Core::Logger::GetLogFileName() {
 	#ifdef WINDOWS
 		return std::filesystem::current_path().string()+"\\Logs\\" + GetCurrentDate() + ".log";
 	#else
@@ -44,21 +44,21 @@ std::string Logger::Logger::GetLogFileName() {
 }
 
 
-void Logger::Logger::WriteToFile(const std::string& message) {
+void Core::Logger::WriteToFile(const std::string& message) {
 	if (_logFile.is_open()) {
 		_logFile << message << std::endl;
 	}
 }
 
-Logger::Logger* Logger::Logger::GetInstance() {
+Core::Logger* Core::Logger::GetInstance() {
 	static Logger logger;
 	return &logger;
 }
 
-const std::list<std::string>& Logger::Logger::GetLogBuffer() {
+const std::list<std::string>& Core::Logger::GetLogBuffer() {
   return _logBuffer;
 }
 
-void Logger::Logger::CheckAndDeleteOldLogFile() {
+void Core::Logger::CheckAndDeleteOldLogFile() {
 
 }

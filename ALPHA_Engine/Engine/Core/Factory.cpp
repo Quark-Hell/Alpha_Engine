@@ -14,21 +14,21 @@ bool Core::Factory::RemoveObject(const Core::Object* object) {
 
   for (size_t i = 0; i < World::GetObjects()->size(); ++i) {
     if (it->get() == &object[i]) {
-      Logger::Logger::LogInfo("Removing object");
+      Core::Logger::LogInfo("Removing object");
       World::GetObjects()->erase(it);
-      Logger::Logger::LogInfo("Object removed");
+      Core::Logger::LogInfo("Object removed");
       return true;
     }
     std::advance(it, 1);
   }
 
-  Logger::Logger::LogInfo("Object do not exist");
+  Core::Logger::LogInfo("Object do not exist");
   return false;
 }
 
 Core::Object* Core::Factory::CreateObject() {
   World::GetObjects()->emplace_back(std::unique_ptr<Core::Object>(new Core::Object()));
-  Logger::Logger::LogInfo("Object created");
+  Core::Logger::LogInfo("Object created");
   return World::GetObjects()->back().get();
 }
 
@@ -39,7 +39,7 @@ Render::WindowsManager::AnomalyEngine::Camera* Core::Factory::CreateCamera(const
   cameras->emplace_back(std::unique_ptr<Render::WindowsManager::AnomalyEngine::Camera>
     (new Render::WindowsManager::AnomalyEngine::Camera(fov, aspect, zNear, zFar)));
 
-  Logger::Logger::LogInfo("Camera created");
+  Core::Logger::LogInfo("Camera created");
   return static_cast<Render::WindowsManager::AnomalyEngine::Camera*>(cameras->back().get());
 }
 
@@ -49,15 +49,15 @@ bool Core::Factory::RemoveCamera(const Render::WindowsManager::AnomalyEngine::Ca
 
   for (size_t i = 0; i < World::GetCameras()->size(); ++i) {
     if (it->get() == &camera[i]) {
-      Logger::Logger::LogInfo("Removing camera");
+      Core::Logger::LogInfo("Removing camera");
       World::GetCameras()->erase(it);
-      Logger::Logger::LogInfo("Camera removed");
+      Core::Logger::LogInfo("Camera removed");
       return true;
     }
     std::advance(it, 1);
   }
 
-  Logger::Logger::LogError("Camera cannot be removed: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+  Core::Logger::LogError("Camera cannot be removed: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
   return false;
 }
 
@@ -67,7 +67,7 @@ Render::WindowsManager::AnomalyEngine::Mesh* Core::Factory::CreateMesh() {
   meshes->emplace_back(std::unique_ptr<Render::WindowsManager::AnomalyEngine::Mesh>
     (new Render::WindowsManager::AnomalyEngine::Mesh()));
 
-  Logger::Logger::LogInfo("Mesh created");
+  Core::Logger::LogInfo("Mesh created");
 
   return static_cast<Render::WindowsManager::AnomalyEngine::Mesh*>(meshes->back().get());
 }
@@ -80,7 +80,7 @@ Render::WindowsManager::AnomalyEngine::Mesh* Core::Factory::CreateMesh(const std
 
   static_cast<Render::WindowsManager::AnomalyEngine::Mesh*>(meshes->back().get())->Create(path);
 
-  Logger::Logger::LogInfo("Mesh created");
+  Core::Logger::LogInfo("Mesh created");
 
   return static_cast<Render::WindowsManager::AnomalyEngine::Mesh*>(meshes->back().get());
 }
@@ -91,7 +91,7 @@ Render::WindowsManager::AnomalyEngine::DirectLight* Core::Factory::CreateDirectL
   lights->emplace_back(std::unique_ptr<Render::WindowsManager::AnomalyEngine::DirectLight>
     (new Render::WindowsManager::AnomalyEngine::DirectLight(direction)));
 
-  Logger::Logger::LogInfo("Direct light created");
+  Core::Logger::LogInfo("Direct light created");
 
   return static_cast<Render::WindowsManager::AnomalyEngine::DirectLight*>(lights->back().get());
 }
@@ -102,7 +102,7 @@ Render::WindowsManager::AnomalyEngine::PointLight* Core::Factory::CreatePointLig
   lights->emplace_back(std::unique_ptr<Render::WindowsManager::AnomalyEngine::PointLight>
     (new Render::WindowsManager::AnomalyEngine::PointLight(radius, constant, linear, quadratic)));
 
-  Logger::Logger::LogInfo("Point light created");
+  Core::Logger::LogInfo("Point light created");
 
   return static_cast<Render::WindowsManager::AnomalyEngine::PointLight*>(lights->back().get());
 }

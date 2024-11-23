@@ -2,7 +2,7 @@
 
 #include <GLEW/glew.h>
 
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 namespace Render::WindowsManager::AnomalyEngine {
 
@@ -16,7 +16,7 @@ namespace Render::WindowsManager::AnomalyEngine {
 
     bool OpenGLTexture::TransferToGPU(const bool genTextureAuto, const EnumTypeOfTexture typeOfTexture) {
         if (_textureData == nullptr) {
-            Logger::Logger::LogError("Texture has no data: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::Logger::LogError("Texture has no data: " + std::string(__FILE__ "") + std::to_string(__LINE__));
             return false;
         }
 
@@ -44,7 +44,7 @@ namespace Render::WindowsManager::AnomalyEngine {
                 textureType = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
                 break;
             default:
-                Logger::Logger::LogError("Not allowed type of texture: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+                Core::Logger::Logger::LogError("Not allowed type of texture: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
                 return false;
                 break;
         }
@@ -52,17 +52,17 @@ namespace Render::WindowsManager::AnomalyEngine {
         if (_textureID != 0) {
             glDeleteTextures(1, &_textureID);
             _textureID = 0;
-            Logger::Logger::LogInfo("Old texture was deleted from VRAM");
+            Core::Logger::Logger::LogInfo("Old texture was deleted from VRAM");
         }
 
         if (genTextureAuto) {
             glGenTextures(1, &_textureID);
             glBindTexture(textureType, _textureID);
-            Logger::Logger::LogInfo("Texture was binded");
+            Core::Logger::Logger::LogInfo("Texture was binded");
         }
 
         if (BaseTexture::_width == 0 || BaseTexture::_height == 0 || BaseTexture::_channelsCount == 0) {
-            Logger::Logger::LogError("width, height or channels count of texture equal is zero: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::Logger::LogError("width, height or channels count of texture equal is zero: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return false;
         }
 
@@ -84,11 +84,11 @@ namespace Render::WindowsManager::AnomalyEngine {
              GL_UNSIGNED_BYTE,
              _textureData.get());
 
-        Logger::Logger::LogInfo("Created texture with ", _channelsCount, " channels count");
+        Core::Logger::Logger::LogInfo("Created texture with ", _channelsCount, " channels count");
 
         if (genTextureAuto) {
             glBindTexture(textureType, 0);
-            Logger::Logger::LogInfo("Texture was unbinded");
+            Core::Logger::Logger::LogInfo("Texture was unbinded");
             DeleteTextureFromRAM();
         }
 
@@ -108,7 +108,7 @@ namespace Render::WindowsManager::AnomalyEngine {
             return true;
         }
 
-        Logger::Logger::LogError("Texture data does not exist: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+        Core::Logger::Logger::LogError("Texture data does not exist: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         return false;
     }
 }

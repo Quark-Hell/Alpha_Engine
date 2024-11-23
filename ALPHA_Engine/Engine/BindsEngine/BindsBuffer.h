@@ -2,37 +2,31 @@
 #include "Binds.h"
 #include "Core/ECS/TSystemData.h"
 
-namespace Render::WindowsManager::BindsEngine {
-    class BindsBuffer final : public Core::TSystemData<Bind>{
+namespace BindsEngine {
+    class BindsBuffer final : public Core::TSystemData<Bind> {
         friend class InputSystem;
 
-    private:
-        BindsBuffer();
-
     public:
-        static BindsBuffer *GetInstance();
+        BindsBuffer();
+        Bind *CreateGeneralBind();
 
-        static Bind *CreateGeneralBind();
-
-        static Bind *CreateMouseButtonsBind(
+        Bind *CreateMouseButtonsBind(
             const std::vector<std::function<void()>> &Operations,
             const std::vector<EnumMouseKeysStates> &MouseKeysState,
             const std::vector<EnumMouseTable> &MouseKeys,
-            Window *window);
+            Render::WindowsManager::Window *window);
 
-        static Bind *CreateMouseSensorBind(
+        Bind *CreateMouseSensorBind(
             const std::vector<std::function<void()>> &Operations,
             const std::vector<EnumMouseSensorStates>& MouseSensorState,
-            Window *window);
+            Render::WindowsManager::Window *window);
 
-        static Bind *CreateKeyboardBind(
+        Bind *CreateKeyboardBind(
             const std::vector<std::function<void()>> &Operations,
             const std::vector<EnumKeyboardKeysStates> &KeysState,
             const std::vector<EnumKeyboardTable> &KeyboardKeys,
-            Window *window);
+            Render::WindowsManager::Window *window);
 
         ~BindsBuffer() override = default;
     };
-
-    inline BindsBuffer* bindsBuffer = BindsBuffer::GetInstance();
 }

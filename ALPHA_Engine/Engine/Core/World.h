@@ -24,6 +24,8 @@ namespace Core {
 	class System;
 	class SystemData;
 
+	extern void InstanceModule();
+
 	class World {
 		friend class Factory;
 		friend class System;
@@ -46,6 +48,10 @@ namespace Core {
 		static void AddSystem(size_t order, Core::System* system);
 		static void AddSystemData(const std::string& systemDataName, Core::SystemData* systemData);
 
+	public:
+		[[nodiscard]] static System* GetSystem(size_t order);
+		[[nodiscard]] static SystemData* GetSystemData(const std::string& systemDataName);
+
 	private:
 		static std::vector<std::unique_ptr<Core::Object>>* GetObjects();
 
@@ -65,12 +71,6 @@ namespace Core {
 	public:
 		static const std::vector<std::unique_ptr<Core::Component>>* GetDirectLightsVec();
 		static const std::vector<std::unique_ptr<Core::Component>>* GetPointLightsVec();
-
-	private:
-#if BINDS_ENGINE_INCLUDED
-		//TODO: change to native sata type
-		static std::vector<std::unique_ptr<Render::WindowsManager::BindsEngine::Bind>>* GetBinds();
-#endif
 
 	private:
 		World();

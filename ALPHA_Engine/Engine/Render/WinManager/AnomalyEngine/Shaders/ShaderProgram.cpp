@@ -8,18 +8,18 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtx/string_cast.hpp"
 
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 namespace Render::WindowsManager::AnomalyEngine {
 
     ShaderProgram::ShaderProgram(Material* parentMat) {
     	if (parentMat == nullptr) {
-    		Logger::Logger::LogCritical("Parent material was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+    		Core::Logger::Logger::LogCritical("Parent material was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
     		abort();
     	}
 
         _parentMaterial = parentMat;
-    	Logger::Logger::LogInfo("Base shader program created");
+    	Core::Logger::Logger::LogInfo("Base shader program created");
     }
 
     ShaderProgram::~ShaderProgram() {
@@ -28,7 +28,7 @@ namespace Render::WindowsManager::AnomalyEngine {
         if (_programId != 0)
             glDeleteProgram(_programId);
 
-    	Logger::Logger::LogInfo("Shader was be deleted");
+    	Core::Logger::Logger::LogInfo("Shader was be deleted");
     }
 
 #pragma region Getter
@@ -83,12 +83,12 @@ namespace Render::WindowsManager::AnomalyEngine {
 
     bool ShaderProgram::BindShader() const {
         if (_isCompiled == false) {
-        	Logger::Logger::LogError("Shader was not be compiled: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+        	Core::Logger::Logger::LogError("Shader was not be compiled: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         	return false;
         }
 
         if (_programId == 0) {
-        	Logger::Logger::LogError("Shader program was not be created on GPU: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+        	Core::Logger::Logger::LogError("Shader program was not be created on GPU: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         	return false;
         }
 
@@ -107,7 +107,7 @@ namespace Render::WindowsManager::AnomalyEngine {
 		auto readShaderSource = [](const std::string& path, std::string& str) {
 
 			const std::string genPath = std::filesystem::current_path().string() + path;
-			Logger::Logger::LogInfo("Read shader source by ", genPath);
+			Core::Logger::LogInfo("Read shader source by ", genPath);
 			std::ifstream sourceStream(genPath);
 			if (sourceStream.is_open()) {
 				str.clear();
@@ -119,7 +119,7 @@ namespace Render::WindowsManager::AnomalyEngine {
 				sourceStream.close();
 				return true;
 			}
-			Logger::Logger::LogError("Could not read shader source by ", genPath);
+			Core::Logger::LogError("Could not read shader source by ", genPath);
 			return false;
 
 		};
@@ -192,7 +192,7 @@ namespace Render::WindowsManager::AnomalyEngine {
 		}
 
 		_isCompiled = false;
-    	Logger::Logger::LogInfo("Shader source was be moved to VRAM");
+    	Core::Logger::LogInfo("Shader source was be moved to VRAM");
 		return true;
     }
 
@@ -209,17 +209,17 @@ namespace Render::WindowsManager::AnomalyEngine {
     			char info_log[1024];
     			glGetShaderInfoLog(shaderId, 1024, nullptr, info_log);
 
-    			Logger::Logger::LogError("Shader compilation error: ", info_log);
+    			Core::Logger::LogError("Shader compilation error: ", info_log);
 
     			compiledStatus = false;
     			return false;
     		}
-    		Logger::Logger::LogInfo("Shader was be compiled");
+    		Core::Logger::LogInfo("Shader was be compiled");
     		compiledStatus = true;
     		return true;
     	};
 
-    	Logger::Logger::LogInfo("Starting compiling shader");
+    	Core::Logger::LogInfo("Starting compiling shader");
     	if (_vertexShaderId != 0)
     		if (!(TryCompile(ShaderProgram::_vertexShaderId, ShaderProgram::_isCompiled)))
     			return false;
@@ -249,13 +249,13 @@ namespace Render::WindowsManager::AnomalyEngine {
 
 	bool ShaderProgram::AttachShader() {
     	if (ShaderProgram::_isCompiled == false) {
-    		Logger::Logger::LogError("Shader could not be attached because there was not be compiled. You need to use CompileShader() previously: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+    		Core::Logger::LogError("Shader could not be attached because there was not be compiled. You need to use CompileShader() previously: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
     		return false;
     	}
 
     	if (ShaderProgram::_programId == 0) {
     		ShaderProgram::_programId = glCreateProgram();
-    		Logger::Logger::LogInfo("New shader program was be created");
+    		Core::Logger::LogInfo("New shader program was be created");
     	}
 
     	if (_vertexShaderId != 0)
@@ -300,7 +300,7 @@ namespace Render::WindowsManager::AnomalyEngine {
     	if (ShaderProgram::_computeShaderId != 0)
     		glDeleteShader(_computeShaderId);
 
-    	Logger::Logger::LogInfo("Shader was be deleted from VRAM");
+    	Core::Logger::LogInfo("Shader was be deleted from VRAM");
     }
 
 	void ShaderProgram::ApplyShadersSettings(Camera* camera) {
@@ -313,7 +313,7 @@ namespace Render::WindowsManager::AnomalyEngine {
 
 	void ShaderProgram::SetValue(const UniformType type, const std::string& fieldName, void* value) const {
     	if (ShaderProgram::_programId == 0) {
-    		Logger::Logger::LogInfo("Shader does not exist");
+    		Core::Logger::LogInfo("Shader does not exist");
     		return;
     	}
 

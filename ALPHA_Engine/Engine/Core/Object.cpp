@@ -1,6 +1,5 @@
 #include "Object.h"
 
-#include "BaseConfig.h"
 #include "Factory.h"
 #include "Components/Component.h"
 

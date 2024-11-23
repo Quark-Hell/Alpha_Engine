@@ -3,8 +3,10 @@
 #include "Window.h"
 #include "WindowsBuffer.h"
 
-#include "GLFW/glfw3.h"
-#include "Logger/Logger.h"
+#include <GLEW/glew.h>
+#include <GLFW/glfw3.h>
+
+#include "Core/Logger/Logger.h"
 
 #if ANOMALY_ENGINE_INCLUDED
 #include <Render/WinManager/AnomalyEngine/RenderEngine.h>
@@ -18,15 +20,10 @@ namespace Render::WindowsManager {
 
     WindowsManager::WindowsManager() : System({"WindowsBuffer"}, 400) {
         if (!glfwInit()) {
-            Logger::Logger::LogCritical("Glfw does not inited: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::LogCritical("Glfw does not inited: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             abort();
         }
     };
-
-    WindowsManager* WindowsManager::GetInstance() {
-        static WindowsManager winMan;
-        return &winMan;
-    }
 
     void WindowsManager::EntryPoint(std::vector<Core::SystemData*>& data) {
         auto* buffer = reinterpret_cast<WindowsBuffer*>(data[0]);
@@ -40,6 +37,9 @@ namespace Render::WindowsManager {
 
             if (glfwGetWindowAttrib(component._window, GLFW_ICONIFIED) == GLFW_TRUE) {
                 continue;
+            }
+            if (glfwGetWindowAttrib(const_cast<GLFWwindow*>(component.GetGLFWwindow()), GLFW_FOCUSED)) {
+                buffer->_focusedWindow = &component;
             }
 
             glfwMakeContextCurrent(component._window);

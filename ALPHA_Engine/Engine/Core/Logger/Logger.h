@@ -1,6 +1,5 @@
 #pragma once
 #include <fstream>
-#include <vector>
 #include <chrono>
 #include <sstream>
 #include <iostream>
@@ -8,7 +7,9 @@
 #include <list>
 #include <mutex>
 
-namespace Logger {
+#define __LOGERROR__ (std::string(__FILE__ ":") + std::to_string(__LINE__))
+
+namespace Core {
     class Logger {
     private:
         std::ofstream _logFile;

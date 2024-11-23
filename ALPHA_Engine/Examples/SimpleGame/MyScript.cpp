@@ -1,8 +1,15 @@
 #include "MyScript.h"
+
+#include <BindsEngine/Keyboard/KeyboardSensors.h>
+
+#include "BindsEngine/Mouse/MouseSensors.h"
+#include "Render/WinManager/WindowsManager.h"
+#include "UserScriptsRegister/UserScriptsBuffer.h"
+
 #include "Core/Object.h"
 #include "Core/Factory.h"
 
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 #include "Render/WinManager/AnomalyEngine/Components/DirectLight.h"
 #include "Render/WinManager/AnomalyEngine/Components/PointLight.h"
@@ -13,17 +20,36 @@
 #include "Render/WinManager/Window.h"
 #include "Render/WinManager/WindowsBuffer.h"
 
-#include "Render/WinManager/BindsEngine/BindsBuffer.h"
+#include "BindsEngine/BindsBuffer.h"
 
 #include "Render/WinManager/AnomalyEngine/Shaders/CubeMapShader.h"
 #include "Render/WinManager/AnomalyEngine/Shaders/OpaqueShader.h"
 
-#include "Render/WinManager/BindsEngine/BindsEngineConfig.h"
-#include "Render/WinManager/BindsEngine/InputSystem.h"
+#include "BindsEngine/BindsEngineConfig.h"
+#include "BindsEngine/InputSystem.h"
 
 #include "Core/World.h"
 
-MyScript* script = new MyScript();
+namespace Core {
+    void InstanceModule() {
+        auto* userScriptSystem = new Register::Registry();
+        auto* userScriptsBuffer = new Register::UserScriptsBuffer();
+
+        auto* keyboardSystem = new BindsEngine::KeyboardSystem();
+        auto* keyboardBuffer = new BindsEngine::KeyboardSensors();
+
+        auto* mouseSystem = new BindsEngine::MouseSystem();
+        auto* mouseBuffer = new BindsEngine::MouseSensors();
+
+        auto* inputSystem = new BindsEngine::InputSystem();
+        auto* bindsBuffer = new BindsEngine::BindsBuffer();
+
+        auto* WindowsSystem = new Render::WindowsManager:: WindowsManager();
+        auto* windowsBuffer = new Render::WindowsManager::WindowsBuffer();
+
+        auto* script = new MyScript();
+    }
+}
 
 void MyScript::CameraRotate() {
     if (win1->GetCursorVisible() == true)
@@ -31,13 +57,18 @@ void MyScript::CameraRotate() {
 
     double sensitive = 7;
     sensitive *= Core::World::GetDeltaTime();
-    const auto bind = Render::WindowsManager::BindsEngine::InputSystem::GetInstance();
 
-    if (bind->GetMouse()->IsMouseChangePosition()) {
+    Core::SystemData *mouseData = Core::World::GetSystemData("MouseSensorsBuffer");
+    if (mouseData == nullptr) {
+
+    }
+    auto mouse = reinterpret_cast<BindsEngine::MouseSensors*>(mouseData);
+
+    if (mouse->IsMouseChangePosition()) {
 
         Core::Vector3 delta;
-        delta.X = bind->GetMouse()->GetMouseDelta().X;
-        delta.Y = bind->GetMouse()->GetMouseDelta().Y;
+        delta.X = mouse->GetMouseDelta().X;
+        delta.Y = mouse->GetMouseDelta().Y;
 
         auto newRot = static_cast<Core::Vector3>(Player->transform.GetRotation());
 
@@ -142,76 +173,90 @@ void MyScript::DownMoveCamera() {
 //Call after created
 void MyScript::Start() {
 #if LOGGER_INCLUDED
-    Logger::Logger::LogInfo("TestLoggerEvent");
-    Logger::Logger::LogWarning("TestLoggerWarning");
-    Logger::Logger::LogError("TestLoggerError: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
+    Core::Logger::LogInfo("TestLoggerEvent");
+    Core::Logger::LogWarning("TestLoggerWarning");
+    Core::Logger::LogError("TestLoggerError: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
     //Logger::Logger::LogCritical("TestLoggerCritical: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
 #endif
 
-    std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;
+    //std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;
 
     Player = Core::Factory::CreateObject();
     Player->SetName("TestObject");
 
 #if RENDER_INCLUDED
-    win1 = Render::WindowsManager::WindowsBuffer::CreateWindow(1280, 720, "Windows 1");
-    win2 = Render::WindowsManager::WindowsBuffer::CreateWindow(400, 400, "Windows 2");
+    const auto windowsBuffer = Core::World::GetSystemData("WindowsBuffer");
+    if (windowsBuffer == nullptr) {
+        Core::Logger::LogError("Failed to get windows buffer: " + __LOGERROR__);
+        return;
+    }
+    const auto windows = reinterpret_cast<Render::WindowsManager::WindowsBuffer*>(windowsBuffer);
+
+    win1 = windows->CreateWindow(1280, 720, "Windows 1");
+    win2 = windows->CreateWindow(400, 400, "Windows 2");
     win1->SetCursorVisible(false);
 #endif
 
 #if BINDS_ENGINE_INCLUDED
     {
-        using namespace Render::WindowsManager::BindsEngine;
+        using namespace BindsEngine;
 
-        auto showCursor = BindsBuffer::CreateKeyboardBind(
+        auto* bindsBuffer = Core::World::GetSystemData("BindsBuffer");
+        if (bindsBuffer == nullptr) {
+            Core::Logger::LogError("BindsBuffer does not exist: " + __LOGERROR__);
+            return;
+        }
+        auto* buffer = reinterpret_cast<BindsBuffer*>(bindsBuffer);
+
+        auto showCursor = buffer->CreateKeyboardBind(
             { std::bind(&MyScript::ShowCursor, this) },
             { EnumKeyboardKeysStates::KeyPressed },
             { EnumKeyboardTable::LAlt },
             win1);
 
-        auto hideCursor = BindsBuffer::CreateKeyboardBind(
+        auto hideCursor = buffer->CreateKeyboardBind(
             { std::bind(&MyScript::HideCursor, this) },
             { EnumKeyboardKeysStates::KeyReleased },
             { EnumKeyboardTable::LAlt },
             win1
         );
 
-        auto leftMove = BindsBuffer::CreateKeyboardBind(
+        auto leftMove = buffer->CreateKeyboardBind(
             { std::bind(&MyScript::LeftMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::A },
             win1
         );
 
-        auto rightMove = BindsBuffer::CreateKeyboardBind(
+        auto rightMove = buffer->CreateKeyboardBind(
             { std::bind(&MyScript::RightMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::D },
             win1
         );
 
-        auto forwardMove = BindsBuffer::CreateKeyboardBind(
+        auto forwardMove = buffer->CreateKeyboardBind(
             { std::bind(&MyScript::ForwardMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::W },
             win1
         );
 
-        auto backwardMove = BindsBuffer::CreateKeyboardBind(
+        auto backwardMove = buffer->CreateKeyboardBind(
             { std::bind(&MyScript::BackwardMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::S },
             win1
         );
 
-        auto upMove = BindsBuffer::CreateKeyboardBind(
+        auto upMove = buffer->CreateKeyboardBind(
             { std::bind(&MyScript::UpMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Q },
             win1
         );
 
-        auto downMove = BindsBuffer::CreateKeyboardBind(
+        auto downMove = buffer->CreateKeyboardBind(
             { std::bind(&MyScript::DownMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::E },
@@ -219,7 +264,7 @@ void MyScript::Start() {
         );
 
 
-        auto rotateBind = BindsBuffer::CreateMouseSensorBind(
+        auto rotateBind = buffer->CreateMouseSensorBind(
             { std::bind(&MyScript::CameraRotate, this) },
             { EnumMouseSensorStates::MouseKeepMoved, EnumMouseSensorStates::MouseStartMoved },
             win1
@@ -243,17 +288,17 @@ void MyScript::Start() {
 
     auto obj2 = Core::Factory::CreateObject();
     obj2->SetName("Mesh");
-    auto mesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Cube.fbx");
+    auto mesh = Core::Factory::CreateMesh("/Build/Engine_Assets/Models/Primitives/Cube.fbx");
     obj2->AddComponent(mesh);
 
     mesh->_material.InitShader<Render::WindowsManager::AnomalyEngine::CubeMapShader>();
     static_cast<Render::WindowsManager::AnomalyEngine::CubeMapShader*>(mesh->_material.Shader.get())->LoadTextures(
-        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Left_Tex.tga)",
-        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Right_Tex.tga)",
-        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Top_Tex.tga)",
-        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Bottom_Tex.tga)",
-        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Front_Tex.tga)",
-        R"(/ALPHA_Engine/Engine_Assets/Textures/CubeMap/Back_Tex.tga)"
+        R"(/Build/Engine_Assets/Textures/CubeMap/Left_Tex.tga)",
+        R"(/Build/Engine_Assets/Textures/CubeMap/Right_Tex.tga)",
+        R"(/Build/Engine_Assets/Textures/CubeMap/Top_Tex.tga)",
+        R"(/Build/Engine_Assets/Textures/CubeMap/Bottom_Tex.tga)",
+        R"(/Build/Engine_Assets/Textures/CubeMap/Front_Tex.tga)",
+        R"(/Build/Engine_Assets/Textures/CubeMap/Back_Tex.tga)"
     );
 
     auto cube = Core::Factory::CreateObject();
@@ -264,17 +309,17 @@ void MyScript::Start() {
 
     cube->SetName("Cube");
 
-    auto cubeMesh = Core::Factory::CreateMesh("/ALPHA_Engine/Engine_Assets/Models/Primitives/Cube.fbx");
+    auto cubeMesh = Core::Factory::CreateMesh("/Build/Engine_Assets/Models/Primitives/Cube.fbx");
     cube->AddComponent(cubeMesh);
 
     cubeMesh->_material.InitShader<Render::WindowsManager::AnomalyEngine::OpaqueShader>();
     static_cast<Render::WindowsManager::AnomalyEngine::OpaqueShader*>(cubeMesh->_material.Shader.get())->LoadTextures(
-        "/ALPHA_Engine/Engine_Assets/Textures/Planets/8k_earth_daymap.jpeg",
+        "/Build/Engine_Assets/Textures/Planets/8k_earth_daymap.jpeg",
         "",
         "",
         "",
         "",
-        "/ALPHA_Engine/Engine_Assets/Textures/Planets/8k_earth_nightmap.jpg");
+        "/Build/Engine_Assets/Textures/Planets/8k_earth_nightmap.jpg");
 
     auto LightsSource = Core::Factory::CreateObject();
     LightsSource->transform.AddPosition(0,5,0);
@@ -286,12 +331,11 @@ void MyScript::Start() {
     auto pointLight = Core::Factory::CreatePointLight();
     pointLight->Intensity = 100;
     LightsSource->AddComponent(pointLight);
-
 #endif
 }
 //Call every frame
 void MyScript::Update() {
-    Logger::Logger::LogInfo(Core::World::GetDeltaTime());
+    Core::Logger::LogInfo(Core::World::GetDeltaTime());
 }
 //Call before deleted
 void MyScript::End() {

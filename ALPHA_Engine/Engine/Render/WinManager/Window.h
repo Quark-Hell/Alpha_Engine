@@ -1,14 +1,9 @@
 #pragma once
-#include <memory>
 #include <string>
 
 namespace Render::WindowsManager {
     class WindowsManager;
     class WindowsBuffer;
-}
-
-namespace Render::WindowsManager::BindsEngine {
-    class InputSystem;
 }
 
 namespace Render::WindowsManager::AnomalyEngine {
@@ -19,13 +14,11 @@ namespace Render::WindowsManager::AnomalyEngine {
 struct GLFWwindow;
 struct GLFWmonitor;
 
-
 namespace Render::WindowsManager {
     class Window {
         friend class WindowsManager;
-        friend class AnomalyEngine::RenderEngine;
-        friend class BindsEngine::InputSystem;
         friend class WindowsBuffer;
+        friend class AnomalyEngine::RenderEngine;
 
     private:
         GLFWwindow *_window;
@@ -52,5 +45,7 @@ namespace Render::WindowsManager {
 
         bool GetCursorVisible();
         void SetCursorVisible(bool isVisible);
+
+        GLFWwindow *GetGLFWwindow() const;
     };
 }

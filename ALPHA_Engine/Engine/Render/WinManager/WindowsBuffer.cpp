@@ -4,27 +4,24 @@
 namespace Render::WindowsManager {
     WindowsBuffer::WindowsBuffer() : Core::TSystemData<Window>("WindowsBuffer") {}
 
-    WindowsBuffer* WindowsBuffer::GetInstance() {
-        static WindowsBuffer buffer;
-        return &buffer;
-    }
-
     Window* WindowsBuffer::CreateWindow(const int width, const int height, const std::string& title) {
-        const auto buffer = WindowsBuffer::GetInstance();
+        if (GetAllData().size() >= 1) {
+            _data.emplace_back(std::unique_ptr<Window>
+        (new Window(width,height, title,nullptr, GetData(0)._window)));
 
-        if (buffer->GetAllData().size() >= 1) {
-            buffer->_data.emplace_back(std::unique_ptr<Window>
-        (new Window(width,height, title,nullptr, buffer->GetData(0)._window)));
-
-            Logger::Logger::LogInfo("Created shared window");
+            Core::Logger::LogInfo("Created shared window");
         }
         else {
-            buffer->_data.emplace_back(std::unique_ptr<Window>
+            _data.emplace_back(std::unique_ptr<Window>
         (new Window(width,height, title,nullptr,nullptr)));
 
-            Logger::Logger::LogInfo("Window created");
+            Core::Logger::LogInfo("Window created");
         }
 
-        return buffer->_data.back().get();
+        return _data.back().get();
+    }
+
+    Window *WindowsBuffer::GetFocusedWindow() const {
+        return _focusedWindow;
     }
 }

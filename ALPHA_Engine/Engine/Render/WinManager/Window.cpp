@@ -4,10 +4,10 @@
 #define GLEW_STATIC
 #include <GLEW/glew.h>
 #include <GL/gl.h>
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 #include <iostream>
-#include <Logger/Logger.h>
+#include "Core/Logger/Logger.h"
 
 #include "AnomalyEngine/Components/Camera.h"
 
@@ -81,7 +81,7 @@ namespace Render::WindowsManager {
 
         if (_window == nullptr)
         {
-            Logger::Logger::LogCritical("Failed to create GLFW window: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::LogCritical("Failed to create GLFW window: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             glfwTerminate();
             abort();
         }
@@ -108,7 +108,7 @@ namespace Render::WindowsManager {
         GLenum err = glewInit();
         if (GLEW_OK != err)
         {
-            Logger::Logger::LogCritical("Critical: glew does not inited: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::LogCritical("Critical: glew does not inited: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
             fprintf(stderr, "%s\n", glewGetErrorString(err));
             glfwTerminate();
             abort();
@@ -147,4 +147,7 @@ namespace Render::WindowsManager {
             glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
+    GLFWwindow *Window::GetGLFWwindow() const {
+        return _window;
+    }
 }

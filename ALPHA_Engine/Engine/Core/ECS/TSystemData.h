@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include "Core/ECS/SystemData.h"
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 namespace Core {
     template<typename T>

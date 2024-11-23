@@ -7,7 +7,7 @@
 #include "Render/WinManager/AnomalyEngine/Textures/BaseTexture.h"
 #include "Render/WinManager/AnomalyEngine/Textures/TextureLoader.h"
 
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 #include "Core/Timer.h"
 
@@ -18,8 +18,8 @@ namespace Render::WindowsManager::AnomalyEngine {
 namespace Render::WindowsManager::AnomalyEngine {
 
     CubeMapShader::CubeMapShader(Material* parentMat): ShaderProgram(parentMat) {
-        AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/CubeMapShader/VertexShader.glsl)", ShadersType::VertexShader);
-        AddShaderSource(R"(/ALPHA_Engine/Engine_Assets/Shaders/CubeMapShader/FragmentShader.glsl)", ShadersType::FragmentShader);
+        AddShaderSource(R"(/Build/Engine_Assets/Shaders/CubeMapShader/VertexShader.glsl)", ShadersType::VertexShader);
+        AddShaderSource(R"(/Build/Engine_Assets/Shaders/CubeMapShader/FragmentShader.glsl)", ShadersType::FragmentShader);
 
         if (ShaderProgram::CompileShader()) {
             ShaderProgram::AttachShader();
@@ -27,10 +27,10 @@ namespace Render::WindowsManager::AnomalyEngine {
         }
         else {
             ShaderProgram::DeleteShader();
-            Logger::Logger::LogError("Cube map shader was not be created: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::LogError("Cube map shader was not be created: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         }
 
-        Logger::Logger::LogInfo("Cube map shader was be created");
+        Core::Logger::LogInfo("Cube map shader was be created");
     }
 
     void CubeMapShader::LoadTextures(
@@ -61,7 +61,7 @@ namespace Render::WindowsManager::AnomalyEngine {
         if (_textureId != 0) {
             glDeleteTextures(1, &_textureId);
             _textureId = 0;
-            Logger::Logger::LogInfo("Old texture was deleted from VRAM");
+            Core::Logger::LogInfo("Old texture was deleted from VRAM");
         }
 
         glGenTextures(1, &_textureId);
@@ -88,7 +88,7 @@ namespace Render::WindowsManager::AnomalyEngine {
 
     void CubeMapShader::ApplyShadersSettings(Camera* camera) {
         if (camera->GetParentObject() == nullptr) {
-            Logger::Logger::LogError("camera parent was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::LogError("camera parent was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return;
         }
 

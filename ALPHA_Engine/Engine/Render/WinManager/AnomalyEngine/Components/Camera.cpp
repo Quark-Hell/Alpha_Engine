@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 namespace Render::WindowsManager::AnomalyEngine {
     Camera::Camera(const float fov, const float aspect , const float zNear, const float zFar)
@@ -28,7 +28,7 @@ namespace Render::WindowsManager::AnomalyEngine {
         else {
             //TODO: add support for ortho matrix
             //const glm::mat4 projectionMatrix = glm::ortho( 0, 400, 0, 400, _zNear, _zFar );
-            Logger::Logger::LogError("Now support only perspective matrix, returned identity matrix: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::Logger::LogError("Now support only perspective matrix, returned identity matrix: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             const glm::mat4x4 projectionMatrix(1);
             return projectionMatrix;
         }

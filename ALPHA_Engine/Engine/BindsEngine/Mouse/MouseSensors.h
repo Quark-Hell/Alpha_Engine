@@ -2,9 +2,9 @@
 #include <cstdint>
 #include <memory>
 #include "Core/Math/Vectors.h"
+#include "Core/ECS/TSystemData.h"
 
-namespace Render::WindowsManager::BindsEngine {
-
+namespace BindsEngine {
     enum class EnumMouseSensorStates : uint8_t {
         Unknown,
         MouseWheelStartMoved,
@@ -47,22 +47,27 @@ namespace Render::WindowsManager::BindsEngine {
         ~MouseKey() = default;
     };
 
-    class MouseData {
-        friend class Mouse;
+    class MouseSensors final : public Core::TSystemData<MouseKey> {
+        friend class MouseSystem;
 
     private:
-        std::shared_ptr<std::array<MouseKey, 8>> Keys;
-
         Core::Vector2 _previousMousePos;
         Core::Vector2 _currentMousePos;
         Core::Vector2 _mouseDelta;
 
         EnumMouseSensorStates _mouseSensorState;
-    private:
-        MouseData();
 
     public:
-        static MouseData *GetInstance();
-        ~MouseData() = default;
+        MouseSensors();
+
+        [[nodiscard]] Core::Vector2 GetMousePos() const;
+        [[nodiscard]] Core::Vector2 GetMouseDelta() const;
+
+        [[nodiscard]] bool IsMouseChangePosition() const;
+
+        [[nodiscard]] EnumMouseKeysStates GetKeyState(EnumMouseTable key) const;
+        [[nodiscard]] EnumMouseSensorStates GetSensorState() const;
+
+        ~MouseSensors() = default;
     };
 }

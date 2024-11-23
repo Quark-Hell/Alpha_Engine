@@ -1,16 +1,15 @@
 #include "UserScript.h"
-#include "BaseConfig.h"
 #include "Registry.h"
 
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 Register::UserScript::UserScript() {
-	Logger::Logger::LogInfo("Creating new user script");
+	Core::Logger::LogInfo("Creating new user script");
 	Registry::RegisterActorWithComponent(this);
 }
 
 Register::UserScript::~UserScript() {
-	Logger::Logger::LogInfo("Script deleted successfully");
+	Core::Logger::LogInfo("Script deleted successfully");
 }
 
 

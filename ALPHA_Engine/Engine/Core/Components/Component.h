@@ -1,5 +1,5 @@
 #pragma once
-#include "BaseConfig.h"
+#include <string>
 
 namespace Core {
 	class Object;

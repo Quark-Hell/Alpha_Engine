@@ -5,16 +5,10 @@
 
 namespace Register {
     class UserScriptsBuffer final : public Core::TSystemData<UserScript> {
-    private:
-        UserScriptsBuffer();
-
     public:
-        static UserScriptsBuffer *GetInstance();
-
-        static UserScript *CreateUserScript(UserScript *script);
+        UserScriptsBuffer();
+        UserScript *CreateUserScript(UserScript *script);
 
         ~UserScriptsBuffer() override = default;
     };
-
-    inline UserScriptsBuffer* buffer = UserScriptsBuffer::GetInstance();
 }

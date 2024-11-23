@@ -1,6 +1,6 @@
 #include "BaseTexture.h"
 
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -26,7 +26,7 @@ namespace Render::WindowsManager::AnomalyEngine {
                                         &width, &height, &channelsCount, 0);
 
         if (data == nullptr) {
-            Logger::Logger::LogError("Could not create texture. Check path: ", std::filesystem::current_path().string() + pathToTexture);
+            Core::Logger::Logger::LogError("Could not create texture. Check path: ", std::filesystem::current_path().string() + pathToTexture);
             return;
         }
 
@@ -35,12 +35,12 @@ namespace Render::WindowsManager::AnomalyEngine {
         _width = width;
         _height = height;
         _channelsCount = channelsCount;
-        Logger::Logger::LogInfo("Texture created successfully");
+        Core::Logger::Logger::LogInfo("Texture created successfully");
     }
 
     void BaseTexture::DeleteTextureFromRAM() {
         _textureData.reset();
-        Logger::Logger::LogInfo("Texture was deleted from RAM");
+        Core::Logger::Logger::LogInfo("Texture was deleted from RAM");
     }
     void BaseTexture::DeleteTextureFromVRAM() {
         if (_textureID == 0)
@@ -49,7 +49,7 @@ namespace Render::WindowsManager::AnomalyEngine {
         glDeleteTextures(1, &_textureID);
         _textureID = 0;
 
-        Logger::Logger::LogInfo("Texture was deleted from VRAM");
+        Core::Logger::Logger::LogInfo("Texture was deleted from VRAM");
     }
 
     unsigned int BaseTexture::GetTextureId() const

@@ -1,6 +1,6 @@
 #include "Binds.h"
 
-namespace Render::WindowsManager::BindsEngine {
+namespace BindsEngine {
     void Bind::Create(
         const std::vector<std::function<void(void)> > &Operations,
         const std::vector<EnumKeyboardKeysStates> &KeyboardKeysState,
@@ -8,7 +8,7 @@ namespace Render::WindowsManager::BindsEngine {
         const std::vector<EnumMouseKeysStates> &MouseKeysState,
         const std::vector<EnumMouseTable> &MouseKeys,
         const std::vector<EnumMouseSensorStates>& MouseSensorState,
-        Window *window) {
+        Render::WindowsManager::Window *window) {
         _operations = Operations;
 
         _keyboardKeysState = KeyboardKeysState;

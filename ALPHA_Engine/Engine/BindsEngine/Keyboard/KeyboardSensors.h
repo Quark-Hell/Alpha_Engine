@@ -1,8 +1,8 @@
 #pragma once
 #include <cstdint>
-#include <memory>
+#include "Core/ECS/TSystemData.h"
 
-namespace Render::WindowsManager::BindsEngine {
+namespace BindsEngine {
 
     enum class EnumKeyboardKeysStates : uint8_t {
         KeyNotPressed,
@@ -55,17 +55,13 @@ namespace Render::WindowsManager::BindsEngine {
         ~KeyboardKey() = default;
     };
 
-    class KeyboardData {
-        friend class Keyboard;
-
-    private:
-        KeyboardData();
-
-    private:
-        std::shared_ptr<std::array<KeyboardKey, 99>> Keys;
+    class KeyboardSensors final : Core::TSystemData<KeyboardKey> {
+        friend class KeyboardSystem;
 
     public:
-        static KeyboardData *GetInstance();
-        ~KeyboardData() = default;
+        KeyboardSensors();
+        ~KeyboardSensors() override = default;
+
+        [[nodiscard]] EnumKeyboardKeysStates GetKeyState(const EnumKeyboardTable key) const;
     };
 }

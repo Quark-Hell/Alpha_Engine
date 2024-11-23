@@ -6,7 +6,7 @@
 
 #include "../Binder.h"
 
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 namespace Render::WindowsManager::AnomalyEngine {
     Mesh::Mesh() = default;
@@ -15,13 +15,13 @@ namespace Render::WindowsManager::AnomalyEngine {
     }
 
     bool Mesh::Create(const std::string &linkToFBX) {
-        Logger::Logger::LogInfo("Mesh load process started");
+        Core::Logger::Logger::LogInfo("Mesh load process started");
 
         Mesh::_vertex->clear();
         Mesh::_indices->clear();
         Mesh::_normals->clear();
         Mesh::_texCoords->clear();
-        Logger::Logger::LogInfo("Mesh data has been cleared");
+        Core::Logger::Logger::LogInfo("Mesh data has been cleared");
 
         Assimp::Importer importer;
         const std::string path = std::filesystem::current_path().string() + linkToFBX;
@@ -29,11 +29,11 @@ namespace Render::WindowsManager::AnomalyEngine {
         //TODO: Check if fbx
         const aiScene* s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
         if (s == nullptr) {
-            Logger::Logger::LogError("Cannot read the file by path: : " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::Logger::LogError("Cannot read the file by path:", path, " " + std::string(__FILE__ ":") + std::to_string(__LINE__));
             return false;
         }
 
-        Logger::Logger::LogInfo("Read .fbx by ",path);
+        Core::Logger::Logger::LogInfo("Read .fbx by ",path);
         const aiMesh* mesh = s->mMeshes[0];
 
         Mesh::_indices->resize(mesh->mNumFaces * 3);
@@ -77,7 +77,7 @@ namespace Render::WindowsManager::AnomalyEngine {
         }
 
         Mesh::_isIndexed = true;
-        Logger::Logger::LogInfo("Mesh has been loaded");
+        Core::Logger::Logger::LogInfo("Mesh has been loaded");
 
         Binder::BindMesh(this);
         return true;
@@ -90,13 +90,13 @@ namespace Render::WindowsManager::AnomalyEngine {
         const bool initNormals,
         const bool initTexCoord,
         const bool initMaterial) {
-        Logger::Logger::LogInfo("Mesh load process started");
+        Core::Logger::Logger::LogInfo("Mesh load process started");
 
         Mesh::_vertex->clear();
         Mesh::_indices->clear();
         Mesh::_normals->clear();
         Mesh::_texCoords->clear();
-        Logger::Logger::LogInfo("Mesh data has been cleared");
+        Core::Logger::Logger::LogInfo("Mesh data has been cleared");
 
         Assimp::Importer importer;
         const std::string path = std::filesystem::current_path().string() + linkToFBX;
@@ -158,7 +158,7 @@ namespace Render::WindowsManager::AnomalyEngine {
         }
 
         Mesh::_isIndexed = true;
-        Logger::Logger::LogInfo("Mesh has been loaded");
+        Core::Logger::Logger::LogInfo("Mesh has been loaded");
 
         Binder::BindMesh(this);
         return true;

@@ -2,7 +2,7 @@
 
 #include "BaseTexture.h"
 
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 namespace Render::WindowsManager::AnomalyEngine {
 
@@ -11,11 +11,11 @@ namespace Render::WindowsManager::AnomalyEngine {
     void TextureWork::CompleteTask() const {
         if (_parent != nullptr) {
             _texture->CreateTexture(_path);
-            Logger::Logger::LogInfo("Work completed");
+            Core::Logger::Logger::LogInfo("Work completed");
             _parent->_isActive = false;
         }
         else {
-            Logger::Logger::LogError("Parent is null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::Logger::LogError("Parent is null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         }
     }
 
@@ -25,7 +25,7 @@ namespace Render::WindowsManager::AnomalyEngine {
     void ThreadObject::Start(const std::shared_ptr<TextureWork> &work)
     {
         if (work.get() == nullptr) {
-            Logger::Logger::LogError("Work is null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::Logger::LogError("Work is null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return;
         }
 
@@ -36,7 +36,7 @@ namespace Render::WindowsManager::AnomalyEngine {
         work->_parent = this;
         _isActive = true;
         _thread = std::thread(&TextureWork::CompleteTask, work);
-        Logger::Logger::LogInfo("Thread activated");
+        Core::Logger::Logger::LogInfo("Thread activated");
     }
 
     //-------------------------------------------------------------------------//
@@ -65,7 +65,7 @@ namespace Render::WindowsManager::AnomalyEngine {
     void TextureLoader::DoWork()
     {
         if (_taskList.empty()) {
-            Logger::Logger::LogError("No task: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::Logger::LogError("No task: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return;
         }
 

@@ -1,0 +1,77 @@
+#include("CMakeVariables.txt")
+
+function(recurse_add_cpp_items src return_list)
+file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.cpp")
+    foreach(file ${templateFiles})
+		set(copy_src "${src}/${file}")
+		list(APPEND return_list "${copy_src}")
+    endforeach()
+	message("${return_list}\n")
+	set(${return_list} "${${return_list}}" PARENT_SCOPE)
+endfunction()
+
+function(add_cpp_items src return_list)
+file(GLOB templateFiles RELATIVE ${src} "${src}/*.cpp")
+    foreach(file ${templateFiles})
+		set(copy_src "${src}/${file}")
+		list(APPEND return_list "${copy_src}")
+    endforeach()
+	message("${return_list}\n")
+	set(${return_list} "${${return_list}}" PARENT_SCOPE)
+endfunction()
+
+function(add_definition ModuleName)
+	set(ExportModule
+			"add_compile_definitions(${ModuleName})\n"
+	)
+
+	file(APPEND "${Build_Dir}/config.cfg"
+			${ExportModule}
+	)
+endfunction()
+
+function(copy_file src dest)
+	message("${Cyan}copy header${ColourReset} ${src} to\n ${dest}\n")
+
+	execute_process(
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	${src}
+	${dest}
+	)
+endfunction()
+
+function(recurse_copy_headers src dest)
+	message("${Red}copy headers${ColourReset}")
+	file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.h" "${src}/*.hpp")
+	foreach(templateFile ${templateFiles})
+		set(copy_src "${src}/${templateFile}")
+		set(copy_dest "${dest}/${templateFile}")
+
+		message("${Cyan}copy header${ColourReset} ${copy_src} to\n ${copy_dest}")
+
+		execute_process(
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		${copy_src}
+		${copy_dest}
+		)
+	endforeach(templateFile)
+	message("\n")
+endfunction()
+
+function(recurse_copy_assets src dest)
+	message("\n${Red}copy assets${ColourReset}")
+	file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*")
+	foreach(templateFile ${templateFiles})
+		set(copy_src "${src}/${templateFile}")
+		set(copy_dest "${dest}/${templateFile}")
+
+		message("${Cyan}copy asset${ColourReset} ${copy_src} to\n ${copy_dest}")
+
+		add_custom_command(TARGET ALPHA_Engine POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		${copy_src}
+		${copy_dest}
+		)
+	endforeach(templateFile)
+	message("\n")
+endfunction()

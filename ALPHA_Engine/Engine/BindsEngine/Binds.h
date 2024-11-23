@@ -1,13 +1,13 @@
 #pragma once
 
-#include <BaseConfig.h>
+#include <cstdint>
 #include <functional>
 
 namespace Render::WindowsManager {
     class Window;
 }
 
-namespace Render::WindowsManager::BindsEngine {
+namespace BindsEngine {
     enum class EnumMouseKeysStates : uint8_t;
     enum class EnumKeyboardKeysStates : uint8_t;
     enum class EnumKeyboardTable : uint16_t;
@@ -15,7 +15,7 @@ namespace Render::WindowsManager::BindsEngine {
     enum class EnumMouseSensorStates : uint8_t;
     enum class EnumMouseTable : uint8_t;
 
-    class Bind final {
+    class Bind {
         friend class BindsBuffer;
         friend class InputSystem;
 
@@ -28,7 +28,7 @@ namespace Render::WindowsManager::BindsEngine {
         std::vector<EnumMouseTable> _mouseKeys;
         std::vector<EnumMouseSensorStates> _mouseSensorState;
 
-        Window *_bindedWindow = nullptr;
+        Render::WindowsManager::Window *_bindedWindow = nullptr;
 
     public:
         bool IsActive = true;
@@ -44,7 +44,7 @@ namespace Render::WindowsManager::BindsEngine {
                     const std::vector<EnumMouseKeysStates> &MouseKeysState = {},
                     const std::vector<EnumMouseTable> &MouseKeys = {},
                     const std::vector<EnumMouseSensorStates>& MouseSensorState = {},
-                    Window *window = nullptr);
+                    Render::WindowsManager::Window *window = nullptr);
 
     public:
         ~Bind() = default;

@@ -5,16 +5,15 @@
 
 namespace Render::WindowsManager {
     class WindowsBuffer final : public Core::TSystemData<Window> {
-    private:
-        WindowsBuffer();
+        friend class WindowsManager;
+        Window* _focusedWindow = nullptr;
 
     public:
-        static WindowsBuffer *GetInstance();
+        WindowsBuffer();
+        Window *CreateWindow(int width = 100, int height = 100, const std::string &title = "Window");
 
-        static Window *CreateWindow(int width = 100, int height = 100, const std::string &title = "Window");
+        [[nodiscard]] Window *GetFocusedWindow() const;
 
         ~WindowsBuffer() override = default;
     };
-
-    inline WindowsBuffer* windowsBuffer = WindowsBuffer::GetInstance();
 }

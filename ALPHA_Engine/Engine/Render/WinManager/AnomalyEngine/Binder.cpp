@@ -3,7 +3,7 @@
 #include <GLEW/glew.h>
 #include <GL/gl.h>
 
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 #include "Components/Mesh.h"
 
@@ -11,7 +11,7 @@ namespace Render::WindowsManager::AnomalyEngine {
      bool Binder::BindMesh(Mesh* mesh) {
 
         if (mesh == nullptr) {
-            Logger::Logger::LogError("Mesh pointer is null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::LogError("Mesh pointer is null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return false;
         }
 
@@ -36,14 +36,14 @@ namespace Render::WindowsManager::AnomalyEngine {
         if (mesh->_vao != 0)
             glDeleteVertexArrays(1, &mesh->_vao);
 
-        Logger::Logger::LogInfo("Old buffers deleted");
+        Core::Logger::Logger::LogInfo("Old buffers deleted");
 
         if (mesh->_vertex != nullptr) {
             glGenBuffers(1, &mesh->_vertexVbo);
             glBindBuffer(GL_ARRAY_BUFFER, mesh->_vertexVbo);
             glBufferData(GL_ARRAY_BUFFER, mesh->_vertex->size() * sizeof(float), mesh->_vertex->data(), GL_STATIC_DRAW);
 
-            Logger::Logger::LogInfo("Vertex binded");
+            Core::Logger::Logger::LogInfo("Vertex binded");
         }
 
         if (mesh->_normals->data() != nullptr) {
@@ -51,7 +51,7 @@ namespace Render::WindowsManager::AnomalyEngine {
             glBindBuffer(GL_ARRAY_BUFFER, mesh->_normalsVbo);
             glBufferData(GL_ARRAY_BUFFER, mesh->_normals->size() * sizeof(float), mesh->_normals->data(), GL_STATIC_DRAW);
 
-            Logger::Logger::LogInfo("Normals binded");
+            Core::Logger::Logger::LogInfo("Normals binded");
         }
 
         if (mesh->_vertexColors->data() != nullptr) {
@@ -59,7 +59,7 @@ namespace Render::WindowsManager::AnomalyEngine {
             glBindBuffer(GL_ARRAY_BUFFER, mesh->_colorsVbo);
             glBufferData(GL_ARRAY_BUFFER, mesh->_vertexColors->size() * sizeof(float), mesh->_vertexColors->data(), GL_STATIC_DRAW);
 
-            Logger::Logger::LogInfo("Vertex colors binded");
+            Core::Logger::Logger::LogInfo("Vertex colors binded");
         }
 
         if (mesh->_texCoords->data() != nullptr) {
@@ -67,10 +67,10 @@ namespace Render::WindowsManager::AnomalyEngine {
             glBindBuffer(GL_ARRAY_BUFFER, mesh->_texCoordsVbo);
             glBufferData(GL_ARRAY_BUFFER, mesh->_texCoords->size() * sizeof(float), mesh->_texCoords->data(), GL_STATIC_DRAW);
 
-            Logger::Logger::LogInfo("Texture coordinate binded");
+            Core::Logger::Logger::LogInfo("Texture coordinate binded");
         }
 
-         Logger::Logger::LogInfo("Mesh has been bind to OpenGL");
+         Core::Logger::Logger::LogInfo("Mesh has been bind to OpenGL");
          return true;
      }
 

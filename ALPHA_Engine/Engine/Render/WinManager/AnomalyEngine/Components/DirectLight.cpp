@@ -1,6 +1,6 @@
 #include "DirectLight.h"
 
-#include "Logger/Logger.h"
+#include "Core/Logger/Logger.h"
 
 namespace Render::WindowsManager::AnomalyEngine {
     DirectLight::DirectLight(const Core::Vector3& direction) {
@@ -13,7 +13,7 @@ namespace Render::WindowsManager::AnomalyEngine {
 
     void DirectLight::SetDirection(const Core::Vector3& newDirection) {
         if (newDirection == Core::Vector3(0,0,0)) {
-            Logger::Logger::LogError("Direction cannot be zero vector: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::LogError("Direction cannot be zero vector: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return;
         }
 

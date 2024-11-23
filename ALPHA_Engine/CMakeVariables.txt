@@ -2,7 +2,7 @@
 SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}")
 SET (Engine_Source "${ALPHA_Engine}/Engine")
 SET (Engine_Assets "${ALPHA_Engine}/Engine_Assets")
-SET (Build_Files "${ALPHA_Engine}/Build_Files")
+SET (Example "${ALPHA_Engine}/Build_Files")
 include_directories(${Engine_Source})
 
 #Engine libraries
@@ -22,47 +22,11 @@ SET(STB "${ALPHA_Engine}/STB")
 include_directories(${STB})
 #Engine libraries
 
-#Build Directory
-get_filename_component(SandBox "${PROJECT_SOURCE_DIR}/../Sandbox" ABSOLUTE)
-
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
-set(BuildDir "${SandBox}/Debug")
-else() 
-set(BuildDir "${SandBox}/Release")
-endif()
-
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BuildDir})
-set(LIBRARY_OUTPUT_PATH ${BuildDir}/Game/ALPHA_Engine/lib)
-
-set(CMAKE_BINARY_DIR "${BuildDir}")
-
-message(SandBox${BuildDir})
-#Build Directory
+set(Build_Dir "${CMAKE_BINARY_DIR}/Build")
+set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/Build/lib")
 
 #Game source
 set (Game "${BuildDir}")
 set (Game_Files_Dest "${Game}/Game")
 set (Game_Engine_Dest "${Game_Files_Dest}/ALPHA_Engine")
 set (Game_Source_Dest "${Game_Files_Dest}/Source")
-
-#Engine headers
-set(engine_core_list)
-set(engine_binds_list)
-
-set(engine_shader_program_list)
-
-#Render
-option(RENDER_BASE "Build base render" ON)
-option(RENDER_ANOMALY_ENGINE "Build graphics engine. Require RENDER_BASE option" ON)
-option(RENDER_BINDS_ENGINE "Build input system. Require RENDER_BASE option" ON)
-set(engine_render_list)
-set(engine_anomaly_list)
-set(engine_binds_list)
-
-#User scripts
-option(USER_SCRIPTS_REGISTER "Build user scripts register" ON)
-set(engine_user_scripts_list)
-
-#Logger
-option(LOGGER "Build logger" ON)
-set(engine_logger_list)
