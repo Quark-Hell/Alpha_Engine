@@ -32,52 +32,34 @@ This game engine is being developed to make it easier for developers to create s
 <pre>
 <b>Step 1:</b> Clone repository to your computer and switch to the "Architect2.0" branch
 <b>Step 2:</b> In Visual Studio build project as you need(Debug or Release)
-<b>Step 3:</b> Open .../Alpha_Engine/Sandbox/"BuildType"/Game in visual studio and biuld project as you need(Debug or Release)
-<b>Step 4:</b> Enjoy
+<b>Step 3:</b> Enjoy
 </pre>
 
-<br></br>
 ### Linux(tested with: manjaro, arch and openSUSE):
 
 <b>Step 1:</b>
 Clone the repo
 ```
-git clone https://github.com/Quark-Hell/Alpha_Engine.git
+git clone https://github.com/Quark-Hell/Alpha_Engine.git --branch Architect2.0   
 ```
 <b>Step 2:</b>
-Go to the repo folder and switch branch:
+Go to the Engine source directory and create build folder. Then generate cmake files(I use ninja as generator and clang as compiler, but make will work too):
 ```
-cd Alpha_Engine
-git checkout Architect2.0   
-```
-<b>Step 3:</b>
-Go to the Engine source directory and create build folder.Then generate cmake files(I use ninja as generator and clang as compiler, but make will work too):
-```
-cd ALPHA_Engine
+cd Alpha_Engine/ALPHA_Engine  
 mkdir build
 cmake -G "Ninja" -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -B build
 ```
-<b>Step 4:</b>
+<b>Step 3:</b>
 Build engine
 ```
 cd build
 ninja
 ```
-Now engine automatically generate sandbox by path .../Alpha_Engine/Sandbox/"BuildType"/Game. Go to this folder.
-
-<b>Step 5:</b>
-Create folder for game and build it:
-```
-mkdir game_build 
-cmake -G "Ninja" -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -B game_build
-cd game_build
-ninja
-```
-<b>Step 6:</b>
-Go to the game build folder and run sandbox project
-```
-cd game_build
-./Game
-```
-
 Done
+
+## Note
+<pre>
+Folder "Build" contains files needed for linking with your project
+External dependencies do not included. Check this <a href="https://github.com/Quark-Hell/Alpha_Engine_Dependencies">repo</a> for download it
+Or check folder "build/Examples/external" if you build with it        
+</pre>
