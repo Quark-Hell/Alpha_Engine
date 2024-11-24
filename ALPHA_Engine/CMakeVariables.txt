@@ -12,9 +12,6 @@ include_directories("${GLFW}/include")
 set (GLM "${ALPHA_Engine}/GLM")
 include_directories("${GLM}")
 
-#set (GLEW "${ALPHA_Engine}/GLEW")
-#include_directories("${GLEW}")
-
 set (GLAD "${ALPHA_Engine}/GLAD")
 include_directories("${GLAD}/glad/include")
 

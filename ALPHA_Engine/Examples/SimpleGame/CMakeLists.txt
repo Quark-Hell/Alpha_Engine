@@ -51,7 +51,6 @@ if (Build_Examples)
 					PRIVATE "${OPENGL_LIBRARIES}"
 			)
 
-			copy_file("${Examples_Build_Dir}/external/glew32.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/glew32.dll")
 			copy_file("${Examples_Build_Dir}/external/libassimp-5.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libassimp-5.dll")
 		endif()
 
