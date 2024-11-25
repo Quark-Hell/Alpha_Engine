@@ -14,4 +14,5 @@ if (RENDER_BASE AND RENDER_ANOMALY_ENGINE)
     recurse_copy_headers("${Engine_Source}/AnomalyEngine" "${Build_Dir}/headers/AnomalyEngine")
 
     copy_file("${Engine_Source}/AnomalyEngine/Module.cfg" "${Configs_Dir}/AnomalyEngine/Module.cfg")
+    recurse_copy_assets("${Engine_Source}/AnomalyEngine/Assets" "${Build_Dir}/Assets")
 endif ()

@@ -1,5 +1,6 @@
 #include "Camera.h"
 
+#include <glm/gtx/transform.hpp>
 #include <GLFW/glfw3.h>
 
 #include "Core/Logger/Logger.h"

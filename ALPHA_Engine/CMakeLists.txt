@@ -32,7 +32,6 @@ SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
 SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
 
 include("Engine/CMakeLists.txt") #Build engine core with modules
-recurse_copy_assets(${Engine_Assets} "${Build_Dir}/Engine_Assets")
 
 target_compile_definitions(ALPHA_Engine
 		PRIVATE
@@ -44,7 +43,8 @@ target_compile_definitions(ALPHA_Engine
 		$<$<CONFIG:MinSizeRel>:OE_RELEASE>
 )
 
-include(Examples/SimpleGame/CMakeLists.txt)
+#Example
+include("Examples/SimpleGame/CMakeLists.txt")
 
 #Utility
 include("Utility/AlphaConfigurator/CMakeLists.txt")

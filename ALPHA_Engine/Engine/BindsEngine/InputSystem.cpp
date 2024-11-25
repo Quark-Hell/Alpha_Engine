@@ -32,7 +32,8 @@ namespace BindsEngine {
             return;
         }
 
-        glfwMakeContextCurrent(const_cast<GLFWwindow*>(focusedWindow->GetGLFWwindow()));
+        GLFWwindow* win = focusedWindow->GetGLFWwindow();
+        glfwMakeContextCurrent(win);
 
         //All values
         for (size_t i = 0; i < bindsBuffer->GetAllData().size(); i++) {

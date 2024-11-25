@@ -20,7 +20,7 @@ namespace BindsEngine {
 
         WindowsManager::Window* window = focusedWindow->GetFocusedWindow();
         if (window == nullptr) {
-            Core::Logger::LogError("Window was null: " + __LOGERROR__);
+            Core::Logger::LogWarning("Window was null");
             return;
         }
         GLFWwindow* glfwWindow = window->GetGLFWwindow();

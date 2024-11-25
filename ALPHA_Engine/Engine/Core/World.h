@@ -22,7 +22,7 @@ namespace Core {
 		friend class SystemData;
 
 	private:
-		bool _isCloseGame = true;
+		bool _isCloseGame = false;
 		double _timeElapsed = 0;
 		double _deltaTime = 0;
 

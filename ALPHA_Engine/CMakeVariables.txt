@@ -1,7 +1,7 @@
 #Engine source
 SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}")
 SET (Engine_Source "${ALPHA_Engine}/Engine")
-SET (Engine_Assets "${ALPHA_Engine}/Engine_Assets")
+SET (Engine_Assets "${ALPHA_Engine}/Assets")
 SET (Example "${ALPHA_Engine}/Build_Files")
 include_directories(${Engine_Source})
 

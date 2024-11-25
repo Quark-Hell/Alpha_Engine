@@ -118,7 +118,7 @@ namespace AnomalyEngine {
 				sourceStream.close();
 				return true;
 			}
-			Core::Logger::LogError("Could not read shader source by ", genPath);
+			Core::Logger::LogError("Could not read shader source by", genPath + ": " + __LOGERROR__);
 			return false;
 
 		};

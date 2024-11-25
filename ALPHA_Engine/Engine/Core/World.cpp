@@ -106,7 +106,7 @@ void Core::World::SetWorldAmbient(const float ambient) {
 void Core::World::Simulation() {
 	InstanceModule();
 
-	while (_isCloseGame)
+	while (!_isCloseGame)
 	{
 		_timer.Reset();
 

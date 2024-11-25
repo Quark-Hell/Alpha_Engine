@@ -17,8 +17,8 @@ namespace AnomalyEngine {
 namespace AnomalyEngine {
 
     CubeMapShader::CubeMapShader(Material* parentMat): ShaderProgram(parentMat) {
-        AddShaderSource(R"(/Engine_Assets/Shaders/CubeMapShader/VertexShader.glsl)", ShadersType::VertexShader);
-        AddShaderSource(R"(/Engine_Assets/Shaders/CubeMapShader/FragmentShader.glsl)", ShadersType::FragmentShader);
+        AddShaderSource(R"(/Assets/Shaders/CubeMapShader/VertexShader.glsl)", ShadersType::VertexShader);
+        AddShaderSource(R"(/Assets/Shaders/CubeMapShader/FragmentShader.glsl)", ShadersType::FragmentShader);
 
         if (ShaderProgram::CompileShader()) {
             ShaderProgram::AttachShader();

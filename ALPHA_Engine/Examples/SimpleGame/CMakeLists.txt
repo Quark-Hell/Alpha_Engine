@@ -13,12 +13,16 @@ if (Build_Examples)
 
 	add_executable (SimpleGame
 			"${Examples_Dir}/SimpleGame/MyScript.cpp"
+			"GLAD/glad/src/glad.c"
 	)
 
 	add_dependencies(SimpleGame ALPHA_Engine)
 
 	file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Examples/SimpleGame/Logs")
-	recurse_copy_assets(${Engine_Assets} "${CMAKE_BINARY_DIR}/Examples/SimpleGame/Engine_Assets")
+	recurse_copy_assets(${Engine_Assets} "${CMAKE_BINARY_DIR}/Examples/SimpleGame/Assets")
+	if(RENDER_ANOMALY_ENGINE)
+		recurse_copy_assets(${Engine_Source}/AnomalyEngine/Assets "${CMAKE_BINARY_DIR}/Examples/SimpleGame/Assets")
+	endif ()
 
 	target_compile_definitions(SimpleGame
 			PRIVATE

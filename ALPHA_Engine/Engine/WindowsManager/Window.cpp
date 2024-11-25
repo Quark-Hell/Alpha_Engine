@@ -54,9 +54,10 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
 
 namespace WindowsManager {
     Window::~Window() {
-        if (_window != nullptr) {
-            free(_window);
-        }
+        glfwDestroyWindow(_window);
+        //if (_window != nullptr) {
+        //    free(_window);
+        //}
     }
 
     Window::Window(const int width, const int height, const std::string& title, GLFWmonitor* monitor, GLFWwindow* share) {

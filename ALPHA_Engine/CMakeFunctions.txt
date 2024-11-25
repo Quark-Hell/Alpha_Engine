@@ -67,7 +67,7 @@ function(recurse_copy_assets src dest)
 
 		message("${Cyan}copy asset${ColourReset} ${copy_src} to\n ${copy_dest}")
 
-		add_custom_command(TARGET ALPHA_Engine POST_BUILD
+		execute_process(
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		${copy_src}
 		${copy_dest}
