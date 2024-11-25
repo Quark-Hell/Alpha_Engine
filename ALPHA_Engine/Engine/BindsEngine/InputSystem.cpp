@@ -3,7 +3,7 @@
 #include "WindowsManager/Window.h"
 #include "WindowsManager/WindowsBuffer.h"
 
-#include <GLEW/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "Binds.h"

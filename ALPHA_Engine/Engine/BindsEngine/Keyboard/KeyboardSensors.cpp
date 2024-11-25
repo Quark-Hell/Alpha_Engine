@@ -1,6 +1,6 @@
 #include "KeyboardSensors.h"
 
-#include <GLEW/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "Keyboard.h"
 

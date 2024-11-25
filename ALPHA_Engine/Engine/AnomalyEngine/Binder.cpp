@@ -1,6 +1,6 @@
 #include "Binder.h"
 
-#include <GLEW/glew.h>
+#include <glad/glad.h>
 #include <GL/gl.h>
 
 #include "Core/Logger/Logger.h"

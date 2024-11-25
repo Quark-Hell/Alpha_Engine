@@ -12,5 +12,7 @@ if (RENDER_BASE AND RENDER_BINDS_ENGINE)
     message("${Cyan}include .cpp engine_binds_list${ColourReset}")
     recurse_add_cpp_items("${Engine_Source}/BindsEngine" engine_binds_list)
     recurse_copy_headers("${Engine_Source}/BindsEngine" "${Build_Dir}/headers/BindsEngine")
+
+    copy_file("${Engine_Source}/BindsEngine/Module.cfg" "${Configs_Dir}/BindsEngine/Module.cfg")
 endif ()
 

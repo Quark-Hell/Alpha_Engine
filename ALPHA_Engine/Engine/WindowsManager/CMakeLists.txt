@@ -8,4 +8,6 @@ if(RENDER_BASE)
     message("${Cyan}include .cpp engine_windows_manager_list${ColourReset}")
     recurse_add_cpp_items("${Engine_Source}/WindowsManager" engine_windows_manager_list)
     recurse_copy_headers("${Engine_Source}/WindowsManager" "${Build_Dir}/headers/WindowsManager")
+
+    copy_file("${Engine_Source}/WindowsManager/Module.cfg" "${Configs_Dir}/WindowsManager/Module.cfg")
 endif()

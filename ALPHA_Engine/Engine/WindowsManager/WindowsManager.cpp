@@ -3,7 +3,7 @@
 #include "Window.h"
 #include "WindowsBuffer.h"
 
-#include <GLEW/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "Core/Logger/Logger.h"

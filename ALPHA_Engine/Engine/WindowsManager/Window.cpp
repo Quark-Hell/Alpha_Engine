@@ -1,7 +1,6 @@
 #include "Window.h"
 
-#define GLEW_STATIC
-#include <GLEW/glew.h>
+#include <glad/glad.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
@@ -83,6 +82,17 @@ namespace WindowsManager {
             abort();
         }
 
+        glfwMakeContextCurrent(_window);
+        glfwSwapInterval(1);
+
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            glfwTerminate();
+            Core::Logger::LogCritical("Critical: glad does not inited: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
+        }
+
+        glEnable(GL_MULTISAMPLE);
+
         int bufferWidth, bufferHeight;
         glfwGetFramebufferSize(_window, &bufferWidth, &bufferHeight);
         if (_width > _height) {
@@ -92,23 +102,23 @@ namespace WindowsManager {
             glViewport((_width - _height) / 2, 0, bufferWidth, bufferHeight);
         }
 
-        glfwMakeContextCurrent(_window);
-        glfwSwapInterval(1);
 
-        glEnable(GL_MULTISAMPLE);
 
         if (glfwRawMouseMotionSupported())
             glfwSetInputMode(_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
-        glewExperimental = GL_TRUE;
-        GLenum err = glewInit();
-        if (GLEW_OK != err)
-        {
-            Core::Logger::LogCritical("Critical: glew does not inited: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
-            fprintf(stderr, "%s\n", glewGetErrorString(err));
-            glfwTerminate();
-            abort();
-        }
+
+
+
+        //glewExperimental = GL_TRUE;
+        //GLenum err = glewInit();
+        //if (GLEW_OK != err)
+        //{
+        //    Core::Logger::LogCritical("Critical: glew does not inited: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
+        //    fprintf(stderr, "%s\n", glewGetErrorString(err));
+        //    glfwTerminate();
+        //    abort();
+        //}
 
         glEnable(GL_DEBUG_OUTPUT );
         glDebugMessageCallback(openglCallbackFunction, 0);

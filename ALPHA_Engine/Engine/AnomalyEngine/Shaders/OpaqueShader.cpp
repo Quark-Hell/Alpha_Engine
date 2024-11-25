@@ -10,7 +10,7 @@
 
 #include <Core/Object.h>
 #include <Core/World.h>
-#include <GLEW/glew.h>
+#include <glad/glad.h>
 
 #include "AnomalyEngine/Components/Material.h"
 #include "AnomalyEngine/Components/Mesh.h"

@@ -9,7 +9,7 @@
 
 #include <string>
 #include <algorithm>
-#include <GLEW/glew.h>
+#include <glad/glad.h>
 
 namespace AnomalyEngine {
     void BaseTexture::CreateTexture(std::string pathToTexture) {

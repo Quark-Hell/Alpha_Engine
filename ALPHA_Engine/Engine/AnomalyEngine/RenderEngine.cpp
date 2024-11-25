@@ -1,5 +1,5 @@
 #include "RenderEngine.h"
-#include <GLEW/glew.h>
+#include <glad/glad.h>
 #include <GL/gl.h>
 #include <WindowsManager/WindowsBuffer.h>
 

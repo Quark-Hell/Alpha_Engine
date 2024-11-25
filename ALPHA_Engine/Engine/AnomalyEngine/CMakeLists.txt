@@ -12,4 +12,6 @@ if (RENDER_BASE AND RENDER_ANOMALY_ENGINE)
     message("${Cyan}include .cpp engine_anomaly_list${ColourReset}")
     recurse_add_cpp_items(${Engine_Source}/AnomalyEngine engine_anomaly_list)
     recurse_copy_headers("${Engine_Source}/AnomalyEngine" "${Build_Dir}/headers/AnomalyEngine")
+
+    copy_file("${Engine_Source}/AnomalyEngine/Module.cfg" "${Configs_Dir}/AnomalyEngine/Module.cfg")
 endif ()

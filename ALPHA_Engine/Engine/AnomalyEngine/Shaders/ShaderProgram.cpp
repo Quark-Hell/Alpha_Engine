@@ -1,7 +1,6 @@
 #include "ShaderProgram.h"
 
-#include <GLEW/glew.h>
-
+#include <glad/glad.h>
 #include "Core/Math/Vectors.h"
 
 #include "glm/glm.hpp"

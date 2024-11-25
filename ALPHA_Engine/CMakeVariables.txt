@@ -12,8 +12,11 @@ include_directories("${GLFW}/include")
 set (GLM "${ALPHA_Engine}/GLM")
 include_directories("${GLM}")
 
-set (GLEW "${ALPHA_Engine}/GLEW")
-include_directories("${GLEW}")
+#set (GLEW "${ALPHA_Engine}/GLEW")
+#include_directories("${GLEW}")
+
+set (GLAD "${ALPHA_Engine}/GLAD")
+include_directories("${GLAD}/glad/include")
 
 SET (assimp "${ALPHA_Engine}/assimp")
 include_directories("${assimp}/include")
@@ -23,6 +26,7 @@ include_directories(${STB})
 #Engine libraries
 
 set(Build_Dir "${CMAKE_BINARY_DIR}/Build")
+set(Configs_Dir "${Build_Dir}/Configs")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/Build/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Examples/SimpleGame")
 

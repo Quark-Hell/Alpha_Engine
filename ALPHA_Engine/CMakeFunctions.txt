@@ -1,7 +1,7 @@
 #include("CMakeVariables.txt")
 
 function(recurse_add_cpp_items src return_list)
-file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.cpp")
+file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.cpp" "${src}/*.c")
     foreach(file ${templateFiles})
 		set(copy_src "${src}/${file}")
 		list(APPEND return_list "${copy_src}")

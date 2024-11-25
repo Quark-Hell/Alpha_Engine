@@ -1,6 +1,6 @@
 #include "OpenGLTexture.h"
 
-#include <GLEW/glew.h>
+#include <glad/glad.h>
 
 #include "Core/Logger/Logger.h"
 

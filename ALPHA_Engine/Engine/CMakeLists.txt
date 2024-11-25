@@ -26,6 +26,7 @@ endif()
 add_library (
         ALPHA_Engine STATIC
         "Engine/ALPHA_Engine.cpp"
+		"GLAD/glad/src/glad.c"
 
         ##Core
         "${engine_core_list}"

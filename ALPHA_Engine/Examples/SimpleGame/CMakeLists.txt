@@ -39,7 +39,6 @@ if (Build_Examples)
 					PRIVATE ALPHA_Engine
 					PRIVATE "${Examples_Build_Dir}/external/glfw3.lib"
 					PRIVATE "${Examples_Build_Dir}/external/assimp.lib"
-					PRIVATE "${Examples_Build_Dir}/external/glew32s.lib"
 					PRIVATE "${OPENGL_LIBRARIES}"
 			)
 
@@ -49,7 +48,6 @@ if (Build_Examples)
 					PRIVATE ALPHA_Engine
 					PRIVATE "${Examples_Build_Dir}/external/glfw3.a"
 					PRIVATE "${Examples_Build_Dir}/external/assimp.dll.a"
-					PRIVATE "${Examples_Build_Dir}/external/glew32.dll.a"
 					PRIVATE "${OPENGL_LIBRARIES}"
 			)
 
@@ -58,13 +56,10 @@ if (Build_Examples)
 		endif()
 
 	else()
-		find_package(GLEW REQUIRED)
-
 		target_link_libraries(SimpleGame
 				PUBLIC ALPHA_Engine
 				PRIVATE "${Examples_Build_Dir}/external/glfw3.a"
 				PRIVATE "${Examples_Build_Dir}/external/libassimp.so.5"
-				PRIVATE "GLEW::GLEW"
 				PRIVATE "${OPENGL_LIBRARIES}"
 		)
 	endif()

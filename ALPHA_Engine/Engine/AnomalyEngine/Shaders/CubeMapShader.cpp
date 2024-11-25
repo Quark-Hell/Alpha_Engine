@@ -1,6 +1,6 @@
 #include "CubeMapShader.h"
 
-#include <GLEW/glew.h>
+#include <glad/glad.h>
 
 #include "Core/Object.h"
 #include "Core/Timer.h"
