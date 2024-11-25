@@ -1,7 +1,7 @@
 #include "Binder.h"
 
 #include <glad/glad.h>
-#include <GL/gl.h>
+
 
 #include "Core/Logger/Logger.h"
 

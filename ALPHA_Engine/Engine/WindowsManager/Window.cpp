@@ -1,7 +1,6 @@
 #include "Window.h"
 
 #include <glad/glad.h>
-#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -55,9 +54,6 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
 namespace WindowsManager {
     Window::~Window() {
         glfwDestroyWindow(_window);
-        //if (_window != nullptr) {
-        //    free(_window);
-        //}
     }
 
     Window::Window(const int width, const int height, const std::string& title, GLFWmonitor* monitor, GLFWwindow* share) {
