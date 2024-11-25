@@ -26,9 +26,11 @@ target_compile_definitions(SimpleGame
 )
 
 find_package(OpenGL REQUIRED)
-include(CMakeCloneDependencies.txt)
+
 
 if(WIN32)
+	include(CMakeCloneDependencies.txt)
+
 	if(MSVC)
 		target_link_libraries(SimpleGame
 				PRIVATE ALPHA_Engine
@@ -50,10 +52,13 @@ if(WIN32)
 	endif()
 
 else()
+	find_package(glfw3 REQUIRED)
+	find_package(assimp REQUIRED)
+
 	target_link_libraries(SimpleGame
 			PUBLIC ALPHA_Engine
-			PRIVATE "${Examples_Build_Dir}/external/glfw3.a"
-			PRIVATE "${Examples_Build_Dir}/external/libassimp.so.5"
+			PRIVATE glfw
+			PRIVATE assimp
 			PRIVATE "${OPENGL_LIBRARIES}"
 	)
 endif()

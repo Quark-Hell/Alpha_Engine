@@ -1,17 +1,6 @@
 include(FetchContent)
 
-if(UNIX AND NOT APPLE)
-
-    FetchContent_Declare(Dependencies
-      GIT_REPOSITORY "https://github.com/Quark-Hell/Alpha_Engine_Dependencies.git"
-      GIT_TAG "origin/Linux"
-      GIT_PROGRESS   TRUE
-      GIT_SHALLOW    TRUE
-      SOURCE_DIR "${Examples_Build_Dir}/external"
-    )
-    FetchContent_MakeAvailable(Dependencies)
-
-elseif(WIN32)
+if(WIN32)
 
     if(MSVC)
 
@@ -39,7 +28,6 @@ elseif(WIN32)
 
 else()
     message( FATAL_ERROR "Unsupported system. Now supported: \
-    Linux; \
     Windows with MSVC Compiler; \
     Windows with MinGW Compiler" )
 endif()
