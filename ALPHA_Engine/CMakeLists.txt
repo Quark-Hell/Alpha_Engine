@@ -44,7 +44,7 @@ target_compile_definitions(ALPHA_Engine
 )
 
 #Example
-include("Examples/SimpleGame/CMakeLists.txt")
+include("Examples/CMakeLists.txt")
 
 #Utility
 include("Utility/AlphaConfigurator/CMakeLists.txt")

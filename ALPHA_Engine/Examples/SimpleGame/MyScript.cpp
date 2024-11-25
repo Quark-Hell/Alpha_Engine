@@ -83,7 +83,7 @@ namespace Core {
         directLightsBuffer = new AnomalyEngine::DirectLightsBuffer();
         pointLightsBuffer = new AnomalyEngine::PointLightsBuffer();
 
-        auto* script = userScriptsBuffer->CreateActor<MyScript>();
+        /*auto* script =*/ userScriptsBuffer->CreateActor<MyScript>();
     }
 }
 
@@ -244,55 +244,55 @@ void MyScript::Start() {
         }
         auto* buffer = reinterpret_cast<BindsBuffer*>(bindsBuffer);
 
-        auto showCursor = buffer->CreateKeyboardBind(
+        /*auto showCursor =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::ShowCursor, this) },
             { EnumKeyboardKeysStates::KeyPressed },
             { EnumKeyboardTable::LAlt },
             win1);
 
-        auto hideCursor = buffer->CreateKeyboardBind(
+        /*auto hideCursor =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::HideCursor, this) },
             { EnumKeyboardKeysStates::KeyReleased },
             { EnumKeyboardTable::LAlt },
             win1
         );
 
-        auto leftMove = buffer->CreateKeyboardBind(
+        /*auto leftMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::LeftMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::A },
             win1
         );
 
-        auto rightMove = buffer->CreateKeyboardBind(
+        /*auto rightMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::RightMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::D },
             win1
         );
 
-        auto forwardMove = buffer->CreateKeyboardBind(
+        /*auto forwardMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::ForwardMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::W },
             win1
         );
 
-        auto backwardMove = buffer->CreateKeyboardBind(
+        /*auto backwardMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::BackwardMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::S },
             win1
         );
 
-        auto upMove = buffer->CreateKeyboardBind(
+        /*auto upMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::UpMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Q },
             win1
         );
 
-        auto downMove = buffer->CreateKeyboardBind(
+        /*auto downMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::DownMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::E },
@@ -300,7 +300,7 @@ void MyScript::Start() {
         );
 
 
-        auto rotateBind = buffer->CreateMouseSensorBind(
+        /*auto rotateBind =*/ buffer->CreateMouseSensorBind(
             { std::bind(&MyScript::CameraRotate, this) },
             { EnumMouseSensorStates::MouseKeepMoved, EnumMouseSensorStates::MouseStartMoved },
             win1
