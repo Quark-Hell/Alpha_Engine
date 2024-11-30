@@ -8,20 +8,20 @@ namespace BindsEngine {
 
     public:
         BindsBuffer();
-        Bind *CreateGeneralBind();
+        Bind& CreateGeneralBind();
 
-        Bind *CreateMouseButtonsBind(
+        Bind& CreateMouseButtonsBind(
             const std::vector<std::function<void()>> &Operations,
             const std::vector<EnumMouseKeysStates> &MouseKeysState,
             const std::vector<EnumMouseTable> &MouseKeys,
             WindowsManager::Window *window);
 
-        Bind *CreateMouseSensorBind(
+        Bind& CreateMouseSensorBind(
             const std::vector<std::function<void()>> &Operations,
             const std::vector<EnumMouseSensorStates>& MouseSensorState,
             WindowsManager::Window *window);
 
-        Bind *CreateKeyboardBind(
+        Bind& CreateKeyboardBind(
             const std::vector<std::function<void()>> &Operations,
             const std::vector<EnumKeyboardKeysStates> &KeysState,
             const std::vector<EnumKeyboardTable> &KeyboardKeys,

@@ -48,5 +48,6 @@ namespace BindsEngine {
 
     public:
         ~Bind() = default;
+        Bind(const Bind&) = delete;
     };
 }
