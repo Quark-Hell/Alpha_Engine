@@ -14,6 +14,6 @@ namespace Core {
 
     public:
         static bool RemoveObject(const Core::Object *object);
-        static Core::Object *CreateObject();
+        static Core::Object& CreateObject();
     };
 }

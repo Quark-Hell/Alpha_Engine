@@ -11,7 +11,7 @@ namespace AnomalyEngine {
         MeshesBuffer();
         ~MeshesBuffer() override = default;
 
-        Mesh* CreateMesh(
+        Mesh& CreateMesh(
                     const std::string& linkToFBX,
                     bool initIndices = true,
                     bool initVertex = true,

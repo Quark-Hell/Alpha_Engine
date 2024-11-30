@@ -5,7 +5,7 @@ namespace AnomalyEngine {
         _data.reserve(64);
     }
 
-    Mesh* MeshesBuffer::CreateMesh(
+    Mesh& MeshesBuffer::CreateMesh(
             const std::string& linkToFBX,
             const bool initIndices,
             const bool initVertex,
@@ -15,6 +15,6 @@ namespace AnomalyEngine {
         _data.emplace_back(std::unique_ptr<Mesh>(new Mesh()));
         _data.back().get()->Create(linkToFBX, initIndices, initVertex, initNormals, initTexCoord);
 
-        return _data.back().get();
+        return *_data.back().get();
     }
 }

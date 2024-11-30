@@ -30,7 +30,7 @@ namespace Core {
 		void SetName(const std::string &newName);
 		std::string GetName();
 
-		bool AddComponent(Component* component);
+		bool AddComponent(Component& component);
 
 		[[nodiscard]] size_t GetCountOfComponents() const;
 

@@ -4,25 +4,50 @@
 #include <filesystem>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
-class Configurator {
-private:
-    const std::string _fileTemplate = "Module.cfg";
+#include "File.h"
+#include "SystemRegistrator.h"
 
-    std::unordered_map<std::string, std::string> _config;
+namespace Utility {
+    class Configurator {
+    private:
+        std::vector<File> _configFiles;
+        std::vector<File> _headers;
+        std::vector<File> _source;
 
-    const std::string _includeToken  = "[INCLUDE]";
-    const std::string _variableToken = "[VARIABLE]";
-    const std::string _moduleToken   = "[MODULE]";
+        std::vector<File> _configGenerated;
+        std::vector<File> _headersGenerated;
+        std::vector<File> _sourceGenerated;
 
-private:
-    void GenerateConfig(const std::filesystem::directory_entry& file);
+        SystemRegistrator _registrator;
 
-public:
-    Configurator();
+        const std::unordered_map<std::string, std::vector<File>&> _filesType = {
+            {".h", _headers},
+            {".hpp", _headers},
+            {".c", _source},
+            {".cpp", _source},
+            {".cfg", _configFiles}
+        };
 
-    void ReadFromFile(const std::filesystem::path& directory);
-    void WriteToFile(const std::string& directory);
-};
+        const std::unordered_map<std::string, std::string> _config = {
+            {"ACLASS()",""},
+            {"GENERATE_BODY()",""},
+        };
+
+    private:
+        void GenerateClassHierarchy(const std::filesystem::directory_entry& file);
+        void GenerateConfig(const std::filesystem::directory_entry& file);
+
+    public:
+        Configurator();
+
+        void IncludeFiles(const std::filesystem::path& directory);
+        void LoadFilesContent();
+
+
+        void WriteToFile();
+    };
+}
 
 #endif //CONFIGURATOR_H

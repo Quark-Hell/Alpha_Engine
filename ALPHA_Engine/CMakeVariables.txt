@@ -15,11 +15,14 @@ include_directories("${GLM}")
 set (GLAD "${ALPHA_Engine}/GLAD")
 include_directories("${GLAD}/glad/include")
 
-SET (assimp "${ALPHA_Engine}/assimp")
+set (assimp "${ALPHA_Engine}/assimp")
 include_directories("${assimp}/include")
 
-SET(STB "${ALPHA_Engine}/STB")
+set(STB "${ALPHA_Engine}/STB")
 include_directories(${STB})
+
+set(bitsery "${ALPHA_Engine}/bitsery")
+include_directories(${bitsery})
 #Engine libraries
 
 set(Build_Dir "${CMAKE_BINARY_DIR}/Build")

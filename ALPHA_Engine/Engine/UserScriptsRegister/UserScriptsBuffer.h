@@ -12,7 +12,7 @@ namespace Register {
         UserScriptsBuffer();
 
         template<typename T,
-        typename K = std::enable_if_t<std::is_convertible_v<T, UserScript>>>
+        typename K = std::enable_if_t<std::is_base_of_v<T, UserScript>>>
         T* CreateUserScript() {
             T* userScript = new T();
 
@@ -23,15 +23,15 @@ namespace Register {
         }
 
         template<typename T,
-        typename K = std::enable_if_t<std::is_convertible_v<T, UserScript>>>
+        typename K = std::enable_if_t<std::is_base_of_v<UserScript, T>>>
         T* CreateActor(const std::string& name = "Actor") {
             T* userScript = new T();
 
             _data.emplace_back(std::unique_ptr<UserScript>(new T()));
-            Core::Object* obj = Core::Factory::CreateObject();
+            Core::Object& obj = Core::Factory::CreateObject();
 
-            obj->AddComponent(_data.back().get());
-            obj->SetName(name);
+            obj.AddComponent(*_data.back().get());
+            obj.SetName(name);
 
             Core::Logger::LogInfo("Actor created");
 

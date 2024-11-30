@@ -9,7 +9,7 @@ namespace AnomalyEngine {
         PointLightsBuffer();
         ~PointLightsBuffer() override = default;
 
-        PointLight* CreatePointLight(float radius = 1.0f, float constant = 1.0f, float linear = 0.7f, float quadratic = 1.8f);
+        PointLight& CreatePointLight(float radius = 1.0f, float constant = 1.0f, float linear = 0.7f, float quadratic = 1.8f);
     };
 }
 

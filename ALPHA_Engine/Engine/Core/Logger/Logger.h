@@ -42,14 +42,14 @@ namespace Core {
 #if LOGGER_INCLUDED
         template<typename... Data>
         static void LogInfo(const Data &... data) {
-            const auto logger = Logger::GetInstance();
+            const auto logger = GetInstance();
 
             std::ostringstream messageStream;
             messageStream << "[" << logger->GetCurrentTime() << "] INFO:";
             ((messageStream << " " << data), ...);
             const std::string message = "\033[36m" + messageStream.str() + "\033[0m";
 
-            const std::lock_guard<std::mutex> guard(logger->_mutex);
+            const std::lock_guard guard(logger->_mutex);
             logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
 
             logger->WriteToFile(messageStream.str());
@@ -60,14 +60,14 @@ namespace Core {
 
         template<typename... Data>
         static void LogWarning(const Data &... data) {
-            const auto logger = Logger::GetInstance();
+            const auto logger = GetInstance();
 
             std::ostringstream messageStream;
             messageStream << "[" << logger->GetCurrentTime() << "] WARNING:";
             ((messageStream << " " << data), ...);
             const std::string message = "\033[33m" + messageStream.str() + "\033[0m";
 
-            const std::lock_guard<std::mutex> guard(logger->_mutex);
+            const std::lock_guard guard(logger->_mutex);
             logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
 
             logger->WriteToFile(messageStream.str());
@@ -78,14 +78,14 @@ namespace Core {
 
         template<typename... Data>
         static void LogError(const Data &... data) {
-            const auto logger = Logger::GetInstance();
+            const auto logger = GetInstance();
 
             std::ostringstream messageStream;
             messageStream << "[" << logger->GetCurrentTime() << "] ERROR:";
             ((messageStream << " " << data), ...);
             const std::string message = "\033[31m" + messageStream.str() + "\033[0m";
 
-            const std::lock_guard<std::mutex> guard(logger->_mutex);
+            const std::lock_guard guard(logger->_mutex);
             logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
 
             logger->WriteToFile(messageStream.str());
@@ -96,14 +96,14 @@ namespace Core {
 
         template<typename... Data>
         static void LogCritical(const Data &... data) {
-            const auto logger = Logger::GetInstance();
+            const auto logger = GetInstance();
 
             std::ostringstream messageStream;
             messageStream << "[" << logger->GetCurrentTime() << "] CRITICAL:";
             ((messageStream << " " << data), ...);
             const std::string message = "\033[1;31m" + messageStream.str() + "\033[0m";
 
-            const std::lock_guard<std::mutex> guard(logger->_mutex);
+            const std::lock_guard guard(logger->_mutex);
             logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
 
             logger->WriteToFile(messageStream.str());

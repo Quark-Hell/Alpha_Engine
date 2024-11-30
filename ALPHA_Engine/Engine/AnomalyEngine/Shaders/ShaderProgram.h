@@ -47,8 +47,6 @@ public:
 	ShaderProgram() = delete;
     virtual ~ShaderProgram();
 
-    ShaderProgram& operator=(ShaderProgram&& shaderProgram);
-
     ShaderProgram(const ShaderProgram&) = delete;
     ShaderProgram& operator=(const ShaderProgram&) = delete;
 

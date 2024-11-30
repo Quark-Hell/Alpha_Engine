@@ -51,6 +51,8 @@ namespace AnomalyEngine {
         glfwGetWindowSize(_window, &width, &height);
         _width = width;
         _height = height;
+
+        _aspect = width / static_cast<float>(height);
     }
 
     void Camera::SetFov(const float fov) {

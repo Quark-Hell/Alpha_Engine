@@ -99,23 +99,8 @@ namespace WindowsManager {
             glViewport((_width - _height) / 2, 0, bufferWidth, bufferHeight);
         }
 
-
-
         if (glfwRawMouseMotionSupported())
             glfwSetInputMode(_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-
-
-
-
-        //glewExperimental = GL_TRUE;
-        //GLenum err = glewInit();
-        //if (GLEW_OK != err)
-        //{
-        //    Core::Logger::LogCritical("Critical: glew does not inited: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
-        //    fprintf(stderr, "%s\n", glewGetErrorString(err));
-        //    glfwTerminate();
-        //    abort();
-        //}
 
         glEnable(GL_DEBUG_OUTPUT );
         glDebugMessageCallback(openglCallbackFunction, 0);

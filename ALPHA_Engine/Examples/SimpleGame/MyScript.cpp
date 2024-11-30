@@ -27,6 +27,7 @@
 
 #include "AnomalyEngine/Shaders/CubeMapShader.h"
 #include "AnomalyEngine/Shaders/OpaqueShader.h"
+#include "AnomalyEngine/Shaders/SimplexFractalShader.h"
 //===================Anomaly Engine===================//
 
 //===================User Scripts Register===================//
@@ -206,8 +207,91 @@ void MyScript::DownMoveCamera() {
     Player->transform.SetPosition(newPos);
 }
 
+void MyScript::GenerateCubeMap() {
+    auto& obj2 = Core::Factory::CreateObject();
+    obj2.SetName("Mesh");
+    auto& mesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
+    obj2.AddComponent(mesh);
+
+    //AnomalyEngine::CubeMapShader* sh = new AnomalyEngine::CubeMapShader(nullptr);
+    //AnomalyEngine::ShaderProgram* test = dynamic_cast<AnomalyEngine::ShaderProgram*>(sh);
+
+    auto& shader = mesh._material.InitShader<AnomalyEngine::CubeMapShader>();
+    shader.LoadTextures(
+    R"(/Assets/Textures/CubeMap/Left_Tex.tga)",
+    R"(/Assets/Textures/CubeMap/Right_Tex.tga)",
+    R"(/Assets/Textures/CubeMap/Top_Tex.tga)",
+    R"(/Assets/Textures/CubeMap/Bottom_Tex.tga)",
+    R"(/Assets/Textures/CubeMap/Front_Tex.tga)",
+    R"(/Assets/Textures/CubeMap/Back_Tex.tga)"
+        );
+}
+
+void MyScript::GenerateLightSource() {
+    auto& LightsSource = Core::Factory::CreateObject();
+    LightsSource.transform.AddPosition(0,5,0);
+
+    auto& dirLight = directLightsBuffer->CreateDirectLight();
+    dirLight.Intensity = 0.1;
+    LightsSource.AddComponent(dirLight);
+
+    auto& pointLight = pointLightsBuffer->CreatePointLight();
+    pointLight.Intensity = 100;
+    LightsSource.AddComponent(pointLight);
+}
+
+void MyScript::GenerateEarth() {
+    auto& cube = Core::Factory::CreateObject();
+
+    cube.transform.AddPosition(0, -5, -25);
+    cube.transform.AddRotation(0, 0, 0);
+    cube.transform.SetScale(50, 0.5, 50);
+
+    cube.SetName("Cube");
+
+    auto& cubeMesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
+    cube.AddComponent(cubeMesh);
+
+    auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
+    shader.LoadTextures(
+        "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
+        "",
+        "",
+        "",
+        "",
+        "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+}
+
+void MyScript::GenerateSun() {
+    auto& Sun = Core::Factory::CreateObject();
+
+    Sun.transform.AddPosition(0, 35, -55);
+    Sun.transform.SetScale(15, 15, 15);
+
+    Sun.SetName("Sun");
+
+    auto& sunMesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Sphere.fbx");
+    Sun.AddComponent(sunMesh);
+
+    auto& shader = sunMesh._material.InitShader<AnomalyEngine::SimplexFractalShader>();
+    shader.resolution = 3;
+}
+
 //Call after created
 void MyScript::Start() {
+
+    //MyStruct2 myStorage{234,5, "Name",{2.0f,1.1f,56.7f,3.8f}};
+//
+    //MyStruct2 res{324,0, "",{}};
+    //res.Serialize(myStorage);
+    //res.Deserialize(res);
+//
+    //std::string path = "/Saved.bin";
+    //MyStruct2::SaveData(myStorage, path);
+//
+    //MyStruct2 res2{-35,0, "",{}};
+    //MyStruct2::LoadData(res2, path);
+
 #if LOGGER_INCLUDED
     Core::Logger::LogInfo("TestLoggerEvent");
     Core::Logger::LogWarning("TestLoggerWarning");
@@ -217,7 +301,7 @@ void MyScript::Start() {
 
     //std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;
 
-    Player = Core::Factory::CreateObject();
+    Player = &Core::Factory::CreateObject();
     Player->SetName("TestObject");
 
 #if WINDOWS_MANAGER_INCLUDED
@@ -311,62 +395,21 @@ void MyScript::Start() {
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-    auto cam1 = camerasBuffer->CreateCamera();
-    auto cam2 = camerasBuffer->CreateCamera();
+    auto& cam1 = camerasBuffer->CreateCamera();
+    auto& cam2 = camerasBuffer->CreateCamera();
 
-    cam1->SetRenderWindow(win1->GetGLFWwindow());
-    cam2->SetRenderWindow(win2->GetGLFWwindow());
+    cam1.SetRenderWindow(win1->GetGLFWwindow());
+    cam2.SetRenderWindow(win2->GetGLFWwindow());
 
     Player->AddComponent(cam1);
 
-    auto obj3 = Core::Factory::CreateObject();
-    obj3->AddComponent(cam2);
+    auto& obj3 = Core::Factory::CreateObject();
+    obj3.AddComponent(cam2);
 
-    auto obj2 = Core::Factory::CreateObject();
-    obj2->SetName("Mesh");
-    auto mesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
-    obj2->AddComponent(mesh);
-
-    mesh->_material.InitShader<AnomalyEngine::CubeMapShader>();
-    static_cast<AnomalyEngine::CubeMapShader*>(mesh->_material.Shader.get())->LoadTextures(
-        R"(/Assets/Textures/CubeMap/Left_Tex.tga)",
-        R"(/Assets/Textures/CubeMap/Right_Tex.tga)",
-        R"(/Assets/Textures/CubeMap/Top_Tex.tga)",
-        R"(/Assets/Textures/CubeMap/Bottom_Tex.tga)",
-        R"(/Assets/Textures/CubeMap/Front_Tex.tga)",
-        R"(/Assets/Textures/CubeMap/Back_Tex.tga)"
-    );
-
-    auto cube = Core::Factory::CreateObject();
-
-    cube->transform.AddPosition(0, -5, -25);
-    cube->transform.AddRotation(0, 0, 0);
-    cube->transform.SetScale(50, 0.5, 50);
-
-    cube->SetName("Cube");
-
-    auto cubeMesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
-    cube->AddComponent(cubeMesh);
-
-    cubeMesh->_material.InitShader<AnomalyEngine::OpaqueShader>();
-    static_cast<AnomalyEngine::OpaqueShader*>(cubeMesh->_material.Shader.get())->LoadTextures(
-        "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
-        "",
-        "",
-        "",
-        "",
-        "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
-
-    auto LightsSource = Core::Factory::CreateObject();
-    LightsSource->transform.AddPosition(0,5,0);
-
-    auto dirLight = directLightsBuffer->CreateDirectLight();
-    dirLight->Intensity = 0.1;
-    LightsSource->AddComponent(dirLight);
-
-    auto pointLight = pointLightsBuffer->CreatePointLight();
-    pointLight->Intensity = 100;
-    LightsSource->AddComponent(pointLight);
+    GenerateCubeMap();
+    GenerateEarth();
+    GenerateLightSource();
+    GenerateSun();
 #endif
 }
 //Call every frame

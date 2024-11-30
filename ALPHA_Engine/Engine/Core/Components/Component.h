@@ -19,6 +19,7 @@ namespace Core {
 
 	public:
 		virtual ~Component();
+		Component(const Component&) = delete;
 
 		//virtual void Delete() = 0;
 

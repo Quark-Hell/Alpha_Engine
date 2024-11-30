@@ -22,7 +22,6 @@
 
 #include "Core/ECS/TSystemData.h"
 
-
 namespace AnomalyEngine {
 
     OpaqueShader::OpaqueShader(Material *parentMat) : ShaderProgram(parentMat) {
@@ -199,7 +198,7 @@ namespace AnomalyEngine {
 
         if (!directLightsBuffer->GetAllData().empty()) {
             for (size_t i = 0; i < directLightsBuffer->GetAllData().size(); i++) {
-                auto dirLight = directLightsBuffer->GetData(i);
+                auto& dirLight = directLightsBuffer->GetData(i);
 
                 Core::Vector3 direction = dirLight.GetDirection();
 
@@ -221,7 +220,7 @@ namespace AnomalyEngine {
 
         if (!pointLightsBuffer->GetAllData().empty()) {
             for (size_t i = 0; i < pointLightsBuffer->GetAllData().size(); i++) {
-                auto pLight = pointLightsBuffer->GetData(i);
+                auto& pLight = pointLightsBuffer->GetData(i);
 
                 Core::Vector3 pos = pLight.GetParentObject()->transform.GetPosition();
 

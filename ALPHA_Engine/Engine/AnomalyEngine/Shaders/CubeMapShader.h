@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ShaderProgram.h"
+#include "TShaderProgram.h"
 #include "AnomalyEngine/Textures/OpenGLTexture.h"
 
 #include <array>

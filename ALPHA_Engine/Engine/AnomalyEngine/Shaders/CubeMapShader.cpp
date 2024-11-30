@@ -16,6 +16,7 @@ namespace AnomalyEngine {
 
 namespace AnomalyEngine {
 
+
     CubeMapShader::CubeMapShader(Material* parentMat): ShaderProgram(parentMat) {
         AddShaderSource(R"(/Assets/Shaders/CubeMapShader/VertexShader.glsl)", ShadersType::VertexShader);
         AddShaderSource(R"(/Assets/Shaders/CubeMapShader/FragmentShader.glsl)", ShadersType::FragmentShader);
@@ -23,10 +24,10 @@ namespace AnomalyEngine {
         if (ShaderProgram::CompileShader()) {
             ShaderProgram::AttachShader();
             ShaderProgram::DeleteShader();
-        }
-        else {
+        } else {
             ShaderProgram::DeleteShader();
-            Core::Logger::LogError("Cube map shader was not be created: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::LogError(
+                "Cube map shader was not be created: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
         }
 
         Core::Logger::LogInfo("Cube map shader was be created");

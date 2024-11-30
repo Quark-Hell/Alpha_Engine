@@ -119,8 +119,7 @@ void Core::World::Simulation() {
 			for (auto& token : tokens) {
 				const auto data = _worldData.find(token);
 				if (data == _worldData.end()) {
-					Logger::LogWarning("Data for system with order", system.first, "by token", token, "not found: "
-						 + std::string(__FILE__ ":") + std::to_string(__LINE__));
+					Logger::LogWarning("Data for system with order", system.first, "by token", token, "not found: " + __LOGERROR__);
 
 					dataVector.push_back(nullptr);
 				}

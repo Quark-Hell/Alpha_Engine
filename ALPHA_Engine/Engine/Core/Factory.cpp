@@ -23,10 +23,10 @@ bool Core::Factory::RemoveObject(const Core::Object* object) {
   return false;
 }
 
-Core::Object* Core::Factory::CreateObject() {
+Core::Object& Core::Factory::CreateObject() {
   World::GetObjects()->emplace_back(std::unique_ptr<Core::Object>(new Core::Object()));
   Core::Logger::LogInfo("Object created");
-  return World::GetObjects()->back().get();
+  return *World::GetObjects()->back().get();
 }
 
 

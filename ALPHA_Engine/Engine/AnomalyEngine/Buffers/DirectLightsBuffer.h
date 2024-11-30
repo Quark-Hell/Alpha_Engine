@@ -11,7 +11,7 @@ namespace AnomalyEngine {
         DirectLightsBuffer();
         ~DirectLightsBuffer() override = default;
 
-        DirectLight* CreateDirectLight(const Core::Vector3& direction = Core::Vector3(0, 0.7, 0.3));
+        DirectLight& CreateDirectLight(const Core::Vector3& direction = Core::Vector3(0, 0.7, 0.3));
     };
 }
 
