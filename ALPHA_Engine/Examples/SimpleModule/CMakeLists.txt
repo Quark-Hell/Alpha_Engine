@@ -6,8 +6,7 @@ if (Build_Examples)
     add_executable (SimpleModule
             "${Examples_Dir}/SimpleModule/MyModule.cpp"
             "${Examples_Dir}/SimpleModule/MyModuleData.cpp"
-            "${Examples_Dir}/SimpleModule/Registration.cpp"
-    )
+            "${Examples_Dir}/SimpleModule/Registration.cpp")
 
     add_dependencies(SimpleModule ALPHA_Engine)
 

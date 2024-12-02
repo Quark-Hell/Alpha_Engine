@@ -34,8 +34,7 @@ add_library (
         "${engine_windows_manager_list}"
         "${engine_anomaly_list}"
         "${engine_binds_list}"
-        "${engine_user_scripts_list}"
-)
+        "${engine_user_scripts_list}")
 
 set_target_properties(ALPHA_Engine PROPERTIES PREFIX "")
 set_target_properties(ALPHA_Engine PROPERTIES OUTPUT_NAME "ALPHA_Engine")

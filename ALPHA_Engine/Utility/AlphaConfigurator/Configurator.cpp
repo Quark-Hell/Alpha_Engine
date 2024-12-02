@@ -1,5 +1,4 @@
 #include "Configurator.h"
-
 #include <iostream>
 
 namespace Utility {

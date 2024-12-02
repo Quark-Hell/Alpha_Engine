@@ -21,8 +21,7 @@ add_executable (
         "Utility/AlphaConfigurator/File.cpp"
         "Utility/AlphaConfigurator/File.h"
         "Utility/AlphaConfigurator/SystemRegistrator.cpp"
-        "Utility/AlphaConfigurator/SystemRegistrator.h"
-)
+        "Utility/AlphaConfigurator/SystemRegistrator.h")
 
 set_target_properties(ALPHA_Configurator PROPERTIES PREFIX "")
 set_target_properties(ALPHA_Configurator PROPERTIES OUTPUT_NAME "ALPHA Configurator")
