@@ -5,8 +5,7 @@ endif(POLICY CMP0072)
 
 add_executable (SimpleGame
 		"${Examples_Dir}/SimpleGame/MyScript.cpp"
-		"GLAD/glad/src/glad.c"
-)
+		"GLAD/glad/src/glad.c")
 
 add_dependencies(SimpleGame ALPHA_Engine)
 
