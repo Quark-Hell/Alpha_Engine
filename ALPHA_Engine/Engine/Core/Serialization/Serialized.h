@@ -27,36 +27,14 @@
 
 #include <bitsery/adapter/stream.h>
 
-#include "Core/Logger/Logger.h"
-
-#define SERIALIZE(...)                                                                                              \
-friend bitsery::Access;                                                                                             \
-template<typename S>		                                                                                        \
-void serialize(S& s) {                                                                                              \
-    s(__VA_ARGS__);				                                                                                    \
-}
-
-
-
-
-#define VIRTUAL_SERIALIZE(type, ...)                                                                                \
-friend bitsery::Access;                                                                                             \
-template<typename S>		                                                                                        \
-void serialize(S& s) {                                                                                              \
-        s.ext(*this, bitsery::ext::BaseClass<type>{});                                                              \
-        std::cout << "type" << std::endl;                                                                           \
-        s(__VA_ARGS__);				                                                                                \
-}
-
-
 namespace Core {
     class Serialized {
     protected:
         using Buffer = std::vector<uint8_t>;
 
     protected:
-        Buffer _buffer;
-        size_t _size = 0;
+        std::vector<uint8_t> _buffer;
+        unsigned long _size = 0;
 
     public:
         Serialized() = default;

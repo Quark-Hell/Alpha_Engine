@@ -174,77 +174,83 @@ namespace AnomalyEngine {
 
         //=============================================Object Matrices=============================================//
         auto modelMat = glm::mat4(glm::mat3(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
-        SetValue(UniformType::mat4x4,"model_matrix", &modelMat);
+        SetValue("model_matrix", &modelMat);
 
         auto transMat = glm::mat3(glm::transpose(glm::inverse(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix())));
-        SetValue(UniformType::mat3x3,"trans_model_mat", &transMat);
+        SetValue("trans_model_mat", &transMat);
 
         auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->GetTransformMatrix() * GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
-        SetValue(UniformType::mat4x4,"MVP", &MVP);
+        SetValue("MVP", &MVP);
         //=============================================Object Matrices=============================================//
 
 
 
         //=============================================Ambient Light=============================================//
         float ambStrength = Core::World::GetWorldAmbient();
-        SetValue(UniformType::floatType,"ambientStrength", &ambStrength);
+        SetValue("ambientStrength", &ambStrength);
         //=============================================Ambient Light=============================================//
 
 
 
         //=============================================Direct Light=============================================//
-        size_t directLightsCount = 0;
+        int directLightsCount = 0;
         auto directLightsBuffer = reinterpret_cast<DirectLightsBuffer*>(Core::World::GetSystemData("DirectLightsBuffer"));
 
         if (!directLightsBuffer->GetAllData().empty()) {
             for (size_t i = 0; i < directLightsBuffer->GetAllData().size(); i++) {
                 auto& dirLight = directLightsBuffer->GetData(i);
 
-                Core::Vector3 direction = dirLight.GetDirection();
+                glm::vec3 direction = dirLight.GetDirection();
 
-                SetValue(UniformType::vec3,std::string("directLights[").append(std::to_string(directLightsCount)).append("].direction"), &direction);
-                SetValue(UniformType::vec3,std::string("directLights[").append(std::to_string(directLightsCount)).append("].color"), &dirLight.Color);
-                SetValue(UniformType::floatType,std::string("directLights[").append(std::to_string(directLightsCount)).append("].strength"), &dirLight.Intensity);
+                SetValue(std::string("directLights[").append(std::to_string(directLightsCount)).append("].direction"), &direction);
+                SetValue(std::string("directLights[").append(std::to_string(directLightsCount)).append("].color"), &dirLight.Color);
+                SetValue(std::string("directLights[").append(std::to_string(directLightsCount)).append("].strength"), &dirLight.Intensity);
 
                 directLightsCount++;
             }
         }
-        SetValue(UniformType::integer,"DirectLightsCount", &directLightsCount);
+        SetValue("DirectLightsCount", &directLightsCount);
         //=============================================Direct Light=============================================//
 
 
 
         //=============================================Point Light=============================================//
-        size_t pointLightsCount = 0;
+        int pointLightsCount = 0;
         auto pointLightsBuffer = reinterpret_cast<PointLightsBuffer*>(Core::World::GetSystemData("PointLightsBuffer"));
 
         if (!pointLightsBuffer->GetAllData().empty()) {
             for (size_t i = 0; i < pointLightsBuffer->GetAllData().size(); i++) {
                 auto& pLight = pointLightsBuffer->GetData(i);
 
-                Core::Vector3 pos = pLight.GetParentObject()->transform.GetPosition();
+                glm::vec3 pos = glm::vec3(
+                        pLight.GetParentObject()->transform.GetPosition().x,
+                        pLight.GetParentObject()->transform.GetPosition().y,
+                        pLight.GetParentObject()->transform.GetPosition().z);
 
-                SetValue(UniformType::vec3, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].position"), &pos);
-                SetValue(UniformType::vec3, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].color"), &pLight.Color);
-                SetValue(UniformType::floatType, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].radius"), &pLight.Radius);
-                SetValue(UniformType::floatType, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].strength"), &pLight.Intensity);
+                SetValue(std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].position"), &pos);
+                SetValue(std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].color"), &pLight.Color);
+                SetValue(std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].radius"), &pLight.Radius);
+                SetValue(std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].strength"), &pLight.Intensity);
 
-                SetValue(UniformType::floatType, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].constant"), &pLight.Constant);
-                SetValue(UniformType::floatType, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].linear"), &pLight.Linear);
-                SetValue(UniformType::floatType, std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].quadratic"), &pLight.Quadratic);
+                SetValue(std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].constant"), &pLight.Constant);
+                SetValue(std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].linear"), &pLight.Linear);
+                SetValue(std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].quadratic"), &pLight.Quadratic);
 
                 pointLightsCount++;
             }
         }
-        SetValue(UniformType::integer,"PointLightsCount", &pointLightsCount);
+        SetValue("PointLightsCount", &pointLightsCount);
         //=============================================Point Light=============================================//
 
         size_t spotLightsCount = 0;
 
 //        SetValue(UniformType::integer,"SpotLightsCount", &spotLightsCount);
 
-        Core::Vector3 pos = camera.GetParentObject()->transform.GetPosition();
-        SetValue(UniformType::vec3,"viewPos", &pos);
+        glm::vec3 pos = glm::vec3(
+                camera.GetParentObject()->transform.GetPosition().x,
+                camera.GetParentObject()->transform.GetPosition().y,
+                camera.GetParentObject()->transform.GetPosition().z);
+        SetValue("viewPos", &pos);
 
         //=============================================Bind Textures=============================================//
         _textures[0].BindTexture(0, OpaqueShader::GetProgramId(), "diffuseMap");

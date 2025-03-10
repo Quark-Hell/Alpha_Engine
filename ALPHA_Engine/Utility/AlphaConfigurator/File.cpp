@@ -16,9 +16,10 @@ namespace Utility {
     }
 
     void File::PushBuffer() {
-        std::cout << sourcePath << sourceName << std::endl;
+        std::filesystem::path path = sourcePath;
+        path /= sourceName + ".generated" + sourceType;
 
-        std::ofstream outputFile(sourcePath + sourceName + ".generated" + sourceType,std::ios::out | std::ios::trunc);
+        std::ofstream outputFile(path,std::ios::out | std::ios::trunc);
         if (!outputFile.is_open()) {
             std::cout << "filed to open file: " << sourcePath << std::endl;
             return;
@@ -33,8 +34,10 @@ namespace Utility {
 
     void File::LoadBuffer(){
         PopBuffer();
+        std::filesystem::path path = sourcePath;
+        path /= sourceName + sourceType;
 
-        std::ifstream inputFile(sourcePath.c_str());
+        std::ifstream inputFile(path);
         if (!inputFile.is_open()) {
             std::cout << "filed to open file: " << sourcePath << std::endl;
             return;

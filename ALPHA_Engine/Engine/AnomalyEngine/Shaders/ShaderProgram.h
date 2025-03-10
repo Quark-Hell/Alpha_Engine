@@ -1,4 +1,8 @@
 #pragma once
+#include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
+#include "Core/Logger/Logger.h"
+
 #include <memory>
 #include <string>
 
@@ -7,6 +11,13 @@ namespace AnomalyEngine {
 	class Material;
 	class RenderEngine;
 }
+
+template <typename T, typename... U>
+concept IsAnyOf = (std::same_as<T, U> || ...);
+
+template<typename T>
+concept UniformType = IsAnyOf<T, int, unsigned int, float, glm::vec2, glm::vec3, glm::vec4, glm::mat3x3, glm::mat4x4>;
+
 
 namespace AnomalyEngine {
     enum ShadersType  : unsigned short {
@@ -65,15 +76,37 @@ public:
 
 	[[nodiscard]] RenderMode GetRenderMode() const;
 
-	enum class UniformType : uint8_t {
-		mat4x4 = 0,
-		mat3x3 = 1,
-		integer = 2,
-		unsigned_int = 3,
-		floatType = 4,
-		vec3 = 5,
-	};
-	void SetValue(UniformType type, const std::string& fieldName, void* value) const;
+
+    template<UniformType T>
+	void SetValue(const std::string& fieldName, T* value) const{
+        if (ShaderProgram::_programId == 0) {
+            Core::Logger::LogInfo("Shader does not exist");
+            return;
+        }
+
+        if constexpr (std::is_same_v<glm::mat4x4, T> == true){
+            glUniformMatrix4fv(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), 1, GL_FALSE, glm::value_ptr(*value));
+        }
+        else if constexpr (std::is_same_v<glm::mat3x3, T> == true){
+            glUniformMatrix3fv(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), 1, GL_FALSE, glm::value_ptr(*value));
+        }
+        else if constexpr (std::is_same_v<float, T> == true){
+            glUniform1f(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *value);
+        }
+        else if constexpr (std::is_same_v<int, T> == true){
+            glUniform1i(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *value);
+        }
+        else if constexpr (std::is_same_v<unsigned int, T> == true){
+            glUniform1ui(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), *value);
+        }
+
+        else if constexpr (std::is_same_v<glm::vec3, T> == true){
+            glUniform3f(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), value->x, value->y, value->z);
+        }
+        else if constexpr (std::is_same_v<glm::vec2, T> == true){
+            glUniform2f(glGetUniformLocation(ShaderProgram::_programId, fieldName.c_str()), value->x, value->y);
+        }
+    }
 
 	void SetRenderMode(RenderMode mode);
 

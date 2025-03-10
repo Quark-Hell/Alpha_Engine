@@ -8,6 +8,7 @@
 
 #include "File.h"
 #include "SystemRegistrator.h"
+#include "MacrosGenerator.h"
 
 namespace Utility {
     class Configurator {
@@ -16,11 +17,8 @@ namespace Utility {
         std::vector<File> _headers;
         std::vector<File> _source;
 
-        std::vector<File> _configGenerated;
-        std::vector<File> _headersGenerated;
-        std::vector<File> _sourceGenerated;
-
         SystemRegistrator _registrator;
+        MacrosGenerator _macrosGenerator;
 
         const std::unordered_map<std::string, std::vector<File>&> _filesType = {
             {".h", _headers},
@@ -29,15 +27,6 @@ namespace Utility {
             {".cpp", _source},
             {".cfg", _configFiles}
         };
-
-        const std::unordered_map<std::string, std::string> _config = {
-            {"ACLASS()",""},
-            {"GENERATE_BODY()",""},
-        };
-
-    private:
-        void GenerateClassHierarchy(const std::filesystem::directory_entry& file);
-        void GenerateConfig(const std::filesystem::directory_entry& file);
 
     public:
         Configurator();

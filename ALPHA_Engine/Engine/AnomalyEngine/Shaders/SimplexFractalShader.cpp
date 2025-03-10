@@ -49,18 +49,18 @@ namespace AnomalyEngine {
 
         //=============================================Object Matrices=============================================//
         auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->GetTransformMatrix() * GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
-        SetValue(UniformType::mat4x4,"MVP", &MVP);
+        SetValue("MVP", &MVP);
 
         auto modelMat = glm::mat4(glm::mat3(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
-        SetValue(UniformType::mat4x4,"model_matrix", &modelMat);
+        SetValue("model_matrix", &modelMat);
         //=============================================Object Matrices=============================================//
 
         seed = glfwGetTime();
-        SetValue(UniformType::floatType,"seed", &seed);
-        SetValue(UniformType::floatType,"resolution", &resolution);
-        SetValue(UniformType::floatType,"intensity",  &intensity);
-        SetValue(UniformType::floatType,"minFactor",  &minFactor);
-        SetValue(UniformType::floatType,"maxFactor",  &maxFactor);
+        SetValue("seed", &seed);
+        SetValue("resolution", &resolution);
+        SetValue("intensity",  &intensity);
+        SetValue("minFactor",  &minFactor);
+        SetValue("maxFactor",  &maxFactor);
 
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);

@@ -1,8 +1,8 @@
 #include "Mouse.h"
 
 #include <GLFW/glfw3.h>
-#include "WindowsManager/Window.h"
-#include "WindowsManager/WindowsBuffer.h"
+#include "WindowsManager/Components/Window.h"
+#include "WindowsManager/Buffers/WindowsBuffer.h"
 
 #include "MouseSensors.h"
 #include "Core/Math/Vectors.h"
@@ -27,12 +27,12 @@ namespace BindsEngine {
         }
         glfwGetCursorPos(focusedWindow->GetGLFWwindow(), &xPos, &yPos);
 
-        mouseSensors->_previousMousePos = mouseSensors->_currentMousePos;
-        mouseSensors->_currentMousePos = {static_cast<float>(xPos), static_cast<float>(yPos)};
+        mouseSensors->_previousMousePos = glm::vec2(mouseSensors->_currentMousePos.x, mouseSensors->_currentMousePos.y);
+        mouseSensors->_currentMousePos = glm::vec2(static_cast<float>(xPos), static_cast<float>(yPos));
 
-        mouseSensors->_mouseDelta = Core::Vector2{mouseSensors->_currentMousePos - mouseSensors->_previousMousePos};
+        mouseSensors->_mouseDelta = mouseSensors->_currentMousePos - mouseSensors->_previousMousePos;
 
-        if (mouseSensors->_mouseDelta != Core::Vector2{0, 0}) {
+        if (mouseSensors->_mouseDelta != glm::vec2 (0, 0)) {
             if (mouseSensors->_mouseSensorState == EnumMouseSensorStates::MouseNotMoved || mouseSensors->_mouseSensorState == EnumMouseSensorStates::MouseEndMoved) {
                 mouseSensors->_mouseSensorState = EnumMouseSensorStates::MouseStartMoved;
             } else if (mouseSensors->_mouseSensorState == EnumMouseSensorStates::MouseStartMoved) {

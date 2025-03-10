@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <Core/Math/Vectors.h>
+
 #include "Core/ECS/System.h"
 
 namespace WindowsManager {
@@ -21,9 +23,10 @@ namespace AnomalyEngine  {
 
     private:
         void ClearFrameBuffer();
-        void PrepareRender();
-
-        void SetWindowMatrix(size_t width, size_t height);
+        void PrepareRender(const size_t width, const size_t height);
+        void PrepareRender(
+            glm::vec2 size,
+            glm::vec2 position);
 
         ///Before use LoadMeshArray()
         void EntryPoint(std::vector<Core::SystemData*>& data) override;

@@ -39,7 +39,7 @@ vec4 grad4(float j, vec4 ip)
     const vec4 ones = vec4(1.0, 1.0, 1.0, -1.0);
     vec4 p,s;
 
-    p.xyz = floor( fract (vec3(j) * ip.xyz) * 7.0) * ip.z - 1.0;
+    p.xyz = floor( fract (vec3(j) * ip.xyz) * 10.0) * ip.z - 1.0;
     p.w = 1.5 - dot(abs(p.xyz), ones.xyz);
     s = vec4(lessThan(p, vec4(0.0)));
     p.xyz = p.xyz + (s.xyz*2.0 - 1.0) * s.www;
@@ -119,11 +119,11 @@ float snoise(vec4 v)
     p4 *= taylorInvSqrt(dot(p4,p4));
 
     // Mix contributions from the five corners
-    vec3 m0 = max(0.6 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
-    vec2 m1 = max(0.6 - vec2(dot(x3,x3), dot(x4,x4)            ), 0.0);
+    vec3 m0 = max(0.5 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
+    vec2 m1 = max(0.5 - vec2(dot(x3,x3), dot(x4,x4)            ), 0.0);
     m0 = m0 * m0;
     m1 = m1 * m1;
-    return 49.0 * ( dot(m0*m0, vec3( dot( p0, x0 ), dot( p1, x1 ), dot( p2, x2 )))
+    return 90.0 * ( dot(m0*m0, vec3( dot( p0, x0 ), dot( p1, x1 ), dot( p2, x2 )))
     + dot(m1*m1, vec2( dot( p3, x3 ), dot( p4, x4 ) ) ) ) ;
 
 }
@@ -144,12 +144,19 @@ void main()
     float value;
 
     value = simplex3d_fractal(p3/resolution);
-    value = 0.1 + 2*value;
 
-    vec3 red = vec3(0.4470588235294118,0.00392156862745098,0.00392156862745098);
-    vec3 green = vec3(0.9058823529411765,0.49411764705882355,0.07450980392156863);
 
-    vec3 color = mix(red, green, vec3(value));
+    vec3 red = vec3(0.9921568627450981,0.97254901960784311,0.6627450980392157);
+    vec3 green = vec3(0.3176470588235294,0.03529411764705882,0.00392156862745098);
+
+
+    value = smoothstep(-1.0, 1.0, value);
+    value = smoothstep(-0.4, 1.0, value);
+
+    vec3 color;
+    color = mix(red, green, value);
+
+
     color = smoothstep(minFactor, maxFactor, color);
     color = color * intensity;
 

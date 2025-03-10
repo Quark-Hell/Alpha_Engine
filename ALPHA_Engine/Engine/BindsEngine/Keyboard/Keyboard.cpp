@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Core/World.h"
-#include "WindowsManager/WindowsBuffer.h"
+#include "WindowsManager/Buffers/WindowsBuffer.h"
 
 namespace BindsEngine {
     KeyboardSystem::KeyboardSystem()  : System({"KeyboardSensorsBuffer", "WindowsBuffer"}, 210) {};

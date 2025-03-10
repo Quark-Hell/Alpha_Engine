@@ -51,17 +51,17 @@ namespace BindsEngine {
         friend class MouseSystem;
 
     private:
-        Core::Vector2 _previousMousePos;
-        Core::Vector2 _currentMousePos;
-        Core::Vector2 _mouseDelta;
+        glm::vec2 _previousMousePos{0,0};
+        glm::vec2 _currentMousePos{0,0};
+        glm::vec2 _mouseDelta{0,0};
 
         EnumMouseSensorStates _mouseSensorState;
 
     public:
         MouseSensors();
 
-        [[nodiscard]] Core::Vector2 GetMousePos() const;
-        [[nodiscard]] Core::Vector2 GetMouseDelta() const;
+        [[nodiscard]] glm::vec2 GetMousePos() const;
+        [[nodiscard]] glm::vec2 GetMouseDelta() const;
 
         [[nodiscard]] bool IsMouseChangePosition() const;
 

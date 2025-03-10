@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WindowsManager/Window.h"
+#include "WindowsManager/Components/Window.h"
 #include "Core/ECS/TSystemData.h"
 
 namespace WindowsManager {

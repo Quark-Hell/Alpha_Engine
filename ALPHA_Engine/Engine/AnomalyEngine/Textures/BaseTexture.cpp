@@ -39,7 +39,8 @@ namespace AnomalyEngine {
     }
 
     void BaseTexture::DeleteTextureFromRAM() {
-        _textureData.reset();
+        stbi_image_free(_textureData.release());
+        //_textureData.reset();
         Core::Logger::Logger::LogInfo("Texture was deleted from RAM");
     }
     void BaseTexture::DeleteTextureFromVRAM() {

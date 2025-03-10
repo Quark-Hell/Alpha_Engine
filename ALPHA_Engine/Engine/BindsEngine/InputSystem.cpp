@@ -1,7 +1,7 @@
 #include "InputSystem.h"
 
-#include "WindowsManager/Window.h"
-#include "WindowsManager/WindowsBuffer.h"
+#include "WindowsManager/Components/Window.h"
+#include "WindowsManager/Buffers/WindowsBuffer.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

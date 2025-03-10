@@ -93,10 +93,10 @@ namespace AnomalyEngine {
         }
 
         auto view = glm::mat4(glm::mat3(camera.GetParentObject()->GetTransformMatrix()));
-        SetValue(UniformType::mat4x4,"view_matrix", &view);
+        SetValue("view_matrix", &view);
 
         auto projMatrix = camera.GetProjectionMatrix();
-        SetValue(UniformType::mat4x4, "projection_matrix", &projMatrix);
+        SetValue("projection_matrix", &projMatrix);
 
         glDepthFunc(GL_LEQUAL);
         glBindTexture(GL_TEXTURE_CUBE_MAP, _textureId);

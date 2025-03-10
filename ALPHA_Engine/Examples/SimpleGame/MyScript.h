@@ -1,28 +1,48 @@
 #pragma once
-#include <utility>
-
 #include "UserScriptsRegister/UserScriptConfig.h"
+#include "Core/Serialization/TSerialized.h"
+#include "MyScript.generated.h"
 
 namespace WindowsManager {
 	class Window;
+    class Rectangle;
 }
 
-#define ACLASS()
-#define GENERATE_BODY()
+ACLASS()
+class Data {
+	public:
+	    float f1 = 100;
+	    float f2 = 200;
+	    float f3 = 300;
+
+		Data() = default;
+		Data(const float f1, const float f2, const float f3) : f1(f1), f2(f2), f3(f3) {}
+		virtual ~Data() = default;
+
+		SERIALIZE_DATA(f1,f2,f3);
+};
 
 ACLASS()
-class MyScript final : public Register::UserScript {
-	GENERATE_BODY()
+class DerivedData final : public virtual  Data {
+	public:
+		float f4 = 400;
 
+	    DerivedData() = default;
+		DerivedData(const float v1, const float v2, const float v3, const float v4) : Data(v1, v2, v3) , f4(v4) {}
+		~DerivedData() override = default;
+
+		SERIALIZE_DERIVEDDATA(f4);
+};
+
+
+class MyScript final : public Register::UserScript {
 	private:
 	Core::Object* Player = nullptr;
 	float moveSensitive = 10;
 
 	WindowsManager::Window* win1 = nullptr;
-	WindowsManager::Window* win2 = nullptr;
 
-	WindowsManager::Window* win3 = nullptr;
-	WindowsManager::Window* win4 = nullptr;
+    WindowsManager::Rectangle* rect;
 
 	public:
 	MyScript() = default;
@@ -35,6 +55,9 @@ class MyScript final : public Register::UserScript {
 
     void CameraRotate();
 
+	void Serialization();
+	void LogExample();
+
 	void LeftMoveCamera();
 	void RightMoveCamera();
 	void ForwardMoveCamera();
@@ -42,67 +65,21 @@ class MyScript final : public Register::UserScript {
     void UpMoveCamera();
     void DownMoveCamera();
 
+	void PushUp();
+	void PushDown();
+	void PushRight();
+	void PushLeft();
+
 	void ShowCursor();
 	void HideCursor();
+
+    void WindowsTest1();
+    void WindowsTest2();
+    void WindowsTest3();
+    void WindowsTest4();
 
 	void GenerateCubeMap();
 	void GenerateLightSource();
 	void GenerateEarth();
 	void GenerateSun();
-};
-
-#include "Core/Serialization/TSerialized.h"
-
-class MyStruct : public Core::TSerialized<MyStruct>
-{
-public:
-	MyStruct() = default;
-	MyStruct(const uint32_t n, std::string nam, const std::vector<float>& vec) : i(n), name(std::move(nam)), fs(vec) {}
-	~MyStruct() override = default;
-
-public:
-	uint32_t i{};
-	std::string name;
-	std::vector<float> fs;
-
-	//SERIALIZE(i, name ,fs)
-
-	template<typename S>
-	void serialize(S& s) {
-		s(i, name, fs);
-	}
-};
-
-class MyStruct2 : public MyStruct {
-public:
-	float dickSize;
-	MyStruct2() = default;
-	MyStruct2(const float size, const uint32_t n, std::string nam, const std::vector<float>& vec) {
-		dickSize = size;
-		name = std::move(nam);
-		fs = vec;
-		i = n;
-	}
-
-	~MyStruct2() override = default;
-
-	template<typename S>
-	void serialize(S& s)
-	{
-		s.ext(*this, bitsery::ext::BaseClass<MyStruct>{});
-		s.value4b(dickSize);
-		std::cout << "test" << std::endl;
-	}
-
-	//VIRTUAL_SERIALIZE(MyStruct,dickSize)
-};
-
-template <typename T>
-void printType()
-{
-#ifndef _MSC_VER
-	std::cout << __PRETTY_FUNCTION__ << '\n';
-#else
-	std::cout << __FUNCSIG__ << '\n';
-#endif
 };

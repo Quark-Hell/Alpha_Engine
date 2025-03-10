@@ -1,5 +1,6 @@
 #include "Configurator.h"
 
+#include <filesystem>
 #include <iostream>
 
 namespace Utility {
@@ -19,7 +20,11 @@ namespace Utility {
                 //Add file to container
                 auto it = _filesType.find(entry.path().extension());
                 if (it != _filesType.end()) {
-                    it->second.emplace_back(entry.path().filename(), entry.path(), entry.path().extension());
+                    const std::filesystem::path& filePath = entry.path();
+                    std::string fileName = filePath.filename().string();
+                    if (fileName.find(".generated") != std::string::npos) {continue;}
+
+                    it->second.emplace_back(filePath.stem() , filePath.parent_path() , filePath.extension());
                 }
             }
         }
@@ -35,15 +40,46 @@ namespace Utility {
 
     void Configurator::WriteToFile() {
         _registrator.GenerateConfig(_configFiles);
+        _macrosGenerator.GenerateConfig(_headers);
     }
 
 }
 
 int main() {
-
     Utility::Configurator config;
-    //config.IncludeFiles(USER_FILES_DIRECTORY);
-    config.IncludeFiles(CONFIG_SOURCE);
+
+    std::string sourceDir;
+    std::string configDir;
+
+    while (true) {
+        std::cout << "Enter path to sources directory or enter \"null\" for skip it" << std::endl;
+        std::getline(std::cin, sourceDir);
+
+        if (sourceDir == "null") {break;}
+
+        if (!(std::filesystem::exists(sourceDir) && std::filesystem::is_directory(sourceDir))) {
+            std::cout << "Directory does not exist: " << sourceDir << std::endl;
+        }
+        else {
+            config.IncludeFiles(sourceDir);
+            break;
+        }
+    }
+    while (true) {
+        std::cout << "Enter path to configs directory or enter \"null\" for skip it" << std::endl;
+        std::getline(std::cin, configDir);
+
+        if (configDir == "null") {break;}
+
+        if (!(std::filesystem::exists(configDir) && std::filesystem::is_directory(configDir))) {
+            std::cout << "Directory does not exist: " << configDir << std::endl;
+        }
+        else {
+            config.IncludeFiles(configDir);
+            break;
+        }
+    }
+
     config.LoadFilesContent();
     config.WriteToFile();
 

@@ -1,3 +1,4 @@
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Examples/SimpleGame")
 if (POLICY CMP0072)
 	cmake_policy (SET CMP0072 NEW)
 endif(POLICY CMP0072)
@@ -26,7 +27,6 @@ target_compile_definitions(SimpleGame
 )
 
 find_package(OpenGL REQUIRED)
-
 
 if(WIN32)
 	include(CMakeCloneDependencies.txt)
@@ -62,3 +62,4 @@ else()
 			PRIVATE "${OPENGL_LIBRARIES}"
 	)
 endif()
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")

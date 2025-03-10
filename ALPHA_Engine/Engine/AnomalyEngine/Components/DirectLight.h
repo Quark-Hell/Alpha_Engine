@@ -7,15 +7,15 @@ namespace AnomalyEngine {
         friend class DirectLightsBuffer;
     private:
         ///Do not set direction as zero vector to avoid render errors
-        Core::Vector3 _direction;
+        glm::vec3 _direction = glm::vec3(0, 0.7, 0.3);
 
     private:
-        DirectLight(const Core::Vector3& direction = Core::Vector3(0, 0.7, 0.3));
+        DirectLight(const glm::vec3& direction);
 
     public:
         ~DirectLight() override = default;
 
-        Core::Vector3 GetDirection();
-        void SetDirection(const Core::Vector3& newDirection = Core::Vector3(0.0f, 0.7f, 0.3f));
+        glm::vec3 GetDirection();
+        void SetDirection(const glm::vec3& newDirection = glm::vec3(0.0f, 0.7f, 0.3f));
     };
 }

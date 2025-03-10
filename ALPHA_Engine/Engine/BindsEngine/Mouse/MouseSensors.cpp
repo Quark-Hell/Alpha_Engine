@@ -30,16 +30,16 @@ namespace BindsEngine {
         return _mouseSensorState;
     }
 
-    Core::Vector2 MouseSensors::GetMouseDelta() const {
+    glm::vec2 MouseSensors::GetMouseDelta() const {
         return _mouseDelta;
     }
 
-    Core::Vector2 MouseSensors::GetMousePos() const {
+    glm::vec2 MouseSensors::GetMousePos() const {
         return _currentMousePos;
     }
 
     bool MouseSensors::IsMouseChangePosition() const {
-        if (_mouseDelta == Core::Vector2{0, 0}) {
+        if (_mouseDelta == glm::vec2(0, 0)) {
             return false;
         }
         return true;

@@ -1,3 +1,4 @@
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Examples/SimpleModule")
 if (Build_Examples)
     if (POLICY CMP0072)
         cmake_policy (SET CMP0072 NEW)
@@ -15,3 +16,4 @@ if (Build_Examples)
             PRIVATE ALPHA_Engine
     )
 endif ()
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")

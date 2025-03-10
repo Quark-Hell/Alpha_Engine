@@ -4,6 +4,7 @@
 
 namespace WindowsManager {
     class WindowsManager;
+    class Window;
 }
 struct GLFWwindow;
 
@@ -14,8 +15,11 @@ namespace AnomalyEngine {
         friend class WindowsManager::WindowsManager;
 
     private:
-        Camera(size_t width = 100, size_t height = 100, float fov = 60, float aspect = 1.3333333, float zNear = 0.01, float zFar = 10000);
-        GLFWwindow* _window = nullptr;
+        Camera(size_t width = 100, size_t height = 100, float fov = 45, float aspect = 1.3333333, float zNear = 0.01, float zFar = 10000);
+        WindowsManager::Window* _window = nullptr;
+
+        bool _useRectangle = false;
+        size_t _rectangleIndex = 0;
 
         float _fov;
         float _aspect;
@@ -28,7 +32,7 @@ namespace AnomalyEngine {
         size_t _height;
 
     public:
-        ~Camera();
+        ~Camera() override = default;
 
         void SetProjection(bool isPerspective);
         //True = perspective matrix
@@ -36,19 +40,19 @@ namespace AnomalyEngine {
         [[nodiscard]] bool GetProjection() const;
         glm::mat4x4 GetProjectionMatrix();
 
-        void SetRenderWindow(GLFWwindow* window);
+        void SetRenderWindow(WindowsManager::Window* window);
 
         void SetFov(float fov);
-        void SetAspect(float aspect);
         void SetZNear(float zNear);
         void SetZFar(float zFar);
         void SetWidth(size_t width);
         void SetHeight(size_t height);
+        void SetUseRectangle(bool use);
+        void SetIndexRectangle(size_t index);
 
         [[nodiscard]] size_t GetWidth() const;
         [[nodiscard]] size_t GetHeight() const;
-
-        void SetCameraInfo(float Fov, float Aspect, float ZNear, float ZFar);
-        void GetCameraInfo(float* Fov, float* Aspect, float* ZNear, float* ZFar);
+        [[nodiscard]] bool GetUseRectangle() const;
+        [[nodiscard]] size_t GetRectangleIndex() const;
     };
 }

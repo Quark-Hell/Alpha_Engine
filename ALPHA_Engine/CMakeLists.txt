@@ -19,7 +19,7 @@ if (LINUX)
 	add_compile_definitions(LINUX)
 endif ()
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -28,8 +28,10 @@ endif()
 
 SET(CMAKE_CXX_FLAGS "-Wall -frtti")
 SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
-SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
+SET(CMAKE_CXX_FLAGS_RELEASE "-O3 -flto")
 SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
+
+#SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g -fsanitize=undefined -fsanitize=address")
 
 include("Engine/CMakeLists.txt") #Build engine core with modules
 
@@ -43,8 +45,8 @@ target_compile_definitions(ALPHA_Engine
 		$<$<CONFIG:MinSizeRel>:OE_RELEASE>
 )
 
-#Example
-include("Examples/CMakeLists.txt")
-
 #Utility
 include("Utility/AlphaConfigurator/CMakeLists.txt")
+
+#Example
+include("Examples/CMakeLists.txt")

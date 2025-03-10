@@ -6,19 +6,20 @@
 
 namespace Core {
 
-    template <typename T>//, typename = std::enable_if_t<std::is_base_of_v<Serialized,T>, bool>>
-    class TSerialized : public Serialized {
+    template <typename T>
+    class TSerialized final : public Serialized {
 
     public:
         //This serializes data into local buffer
         void Serialize(const T& data) {
-            _size = bitsery::quickSerialization<bitsery::OutputBufferAdapter<Buffer>>(_buffer, data);
+            _size = bitsery::quickSerialization<bitsery::OutputBufferAdapter<std::vector<uint8_t>>>(_buffer, data);
         }
 
         //This deserializes data into T& input from local buffer
         void Deserialize(T& input) {
             if (_buffer.empty()) {
                 Logger::LogError("Buffer is empty, you should previously use TSerialized<T>::Serialize function: " + __LOGERROR__);
+                return;
             }
 
             auto state = bitsery::quickDeserialization<bitsery::InputBufferAdapter<Buffer>>({_buffer.begin(), _size}, input);
@@ -26,7 +27,7 @@ namespace Core {
         }
 
         //This saved data into file by path
-        static void SaveData(T& data, std::string& path) {
+        static void SaveData(const T& data, const std::string& path) {
             if (path.empty()) {
                 Logger::LogError("path is empty: " + __LOGERROR__);
                 return;
@@ -52,10 +53,7 @@ namespace Core {
            stream.close();
         }
 
-
-
-
-        static void LoadData(T& data, std::string& path) {
+        static void LoadData(T& data, const std::string& path) {
             if (path.empty()) {
                 Logger::LogError("path is empty: " + __LOGERROR__);
                 return;
@@ -78,7 +76,6 @@ namespace Core {
             /*auto state =*/ bitsery::quickDeserialization<bitsery::InputStreamAdapter>(stream, data);
             //assert(state.first == bitsery::ReaderError::NoError && state.second);
         }
-
     };
 
 }

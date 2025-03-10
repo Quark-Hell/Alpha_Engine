@@ -9,7 +9,7 @@ namespace AnomalyEngine {
     public:
         float seed;
         float resolution = 4;
-        float intensity = 2.5;
+        float intensity = 4;
         float minFactor = 0;
         float maxFactor = 1.5;
 

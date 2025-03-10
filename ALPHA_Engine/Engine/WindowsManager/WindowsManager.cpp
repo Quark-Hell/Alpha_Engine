@@ -4,8 +4,8 @@
 #include <AnomalyEngine/Components/Camera.h>
 #include <Core/World.h>
 
-#include "Window.h"
-#include "WindowsBuffer.h"
+#include "WindowsManager/Components/Window.h"
+#include "Buffers/WindowsBuffer.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -36,7 +36,7 @@ namespace WindowsManager {
                     auto camerabuffer = reinterpret_cast<AnomalyEngine::CamerasBuffer*>(data[1]);
                     for (size_t j = 0; j < camerabuffer->GetAllData().size(); j++) {
                         auto& camera = camerabuffer->GetData(j);
-                        if (camera._window == component._window) {
+                        if (camera._window == &component) {
                             camera._window = nullptr;
                         }
                     }

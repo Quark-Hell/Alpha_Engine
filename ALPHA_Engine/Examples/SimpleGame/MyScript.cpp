@@ -96,21 +96,18 @@ void MyScript::CameraRotate() {
     sensitive *= Core::World::GetDeltaTime();
 
     Core::SystemData *mouseData = Core::World::GetSystemData("MouseSensorsBuffer");
-    if (mouseData == nullptr) {
-
-    }
     auto mouse = reinterpret_cast<BindsEngine::MouseSensors*>(mouseData);
 
     if (mouse->IsMouseChangePosition()) {
 
-        Core::Vector3 delta;
-        delta.X = mouse->GetMouseDelta().X;
-        delta.Y = mouse->GetMouseDelta().Y;
+        glm::vec2 delta;
+        delta.x = mouse->GetMouseDelta().x;
+        delta.y = mouse->GetMouseDelta().y;
 
-        auto newRot = static_cast<Core::Vector3>(Player->transform.GetRotation());
+        glm::vec3 newRot = Player->transform.GetRotation();
 
-        newRot.X += delta.Y * sensitive;
-        newRot.Y += delta.X * sensitive;
+        newRot.x += delta.y * sensitive;
+        newRot.y += delta.x * sensitive;
 
         Player->transform.SetRotation(newRot);
 
@@ -127,13 +124,13 @@ void MyScript::HideCursor() {
 }
 
 void MyScript::LeftMoveCamera() {
-    Core::Vector3 newPos = Player->transform.GetPosition();
+    glm::vec3 newPos = Player->transform.GetPosition();
 
-    Core::Vector3 UpVector;
+    glm::vec3 UpVector;
 
-    UpVector.X = sinf((Player->transform.GetRotation().Y + 90) * 3.14159 / 180);
-    UpVector.Y = 0;
-    UpVector.Z = sinf((Player->transform.GetRotation().Y) * 3.14159 / 180);
+    UpVector.x = sinf((Player->transform.GetRotation().y + 90) * 3.14159 / 180);
+    UpVector.y = 0;
+    UpVector.z = sinf((Player->transform.GetRotation().y) * 3.14159 / 180);
 
     float sensitive = moveSensitive;
     sensitive *= Core::World::GetDeltaTime();
@@ -141,15 +138,14 @@ void MyScript::LeftMoveCamera() {
 
     Player->transform.SetPosition(newPos);
 }
-
 void MyScript::RightMoveCamera() {
-    Core::Vector3 newPos = Player->transform.GetPosition();
+    glm::vec3 newPos = Player->transform.GetPosition();
 
-    Core::Vector3 UpVector;
+    glm::vec3 UpVector;
 
-    UpVector.X = sin((Player->transform.GetRotation().Y + 90) * 3.14159 / 180);
-    UpVector.Y = 0;
-    UpVector.Z = sin((Player->transform.GetRotation().Y) * 3.14159 / 180);
+    UpVector.x = sin((Player->transform.GetRotation().y + 90) * 3.14159 / 180);
+    UpVector.y = 0;
+    UpVector.z = sin((Player->transform.GetRotation().y) * 3.14159 / 180);
 
     float sensitive = moveSensitive;
     sensitive *= Core::World::GetDeltaTime();
@@ -157,14 +153,15 @@ void MyScript::RightMoveCamera() {
 
     Player->transform.SetPosition(newPos);
 }
+
 void MyScript::ForwardMoveCamera() {
-    Core::Vector3 newPos = Player->transform.GetPosition();
+    glm::vec3 newPos = Player->transform.GetPosition();
 
-    Core::Vector3 ForwardVector{ 0,0,0 };
+    glm::vec3 ForwardVector{ 0,0,0 };
 
-    ForwardVector.X = sin((Player->transform.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
-    ForwardVector.Y = cos((Player->transform.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
-    ForwardVector.Z = sin((Player->transform.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
+    ForwardVector.x = sin((Player->transform.GetRotation().y + 180) * 3.14159 / 180); // RIGHT
+    ForwardVector.y = cos((Player->transform.GetRotation().x + 270) * 3.14159 / 180); // RIGHT
+    ForwardVector.z = sin((Player->transform.GetRotation().y + 90) * 3.14159 / 180); // RIGHT
 
     float sensitive = moveSensitive;
     sensitive *= Core::World::GetDeltaTime();
@@ -173,13 +170,13 @@ void MyScript::ForwardMoveCamera() {
     Player->transform.SetPosition(newPos);
 }
 void MyScript::BackwardMoveCamera() {
-    Core::Vector3 newPos = Player->transform.GetPosition();
+    glm::vec3 newPos = Player->transform.GetPosition();
 
-    Core::Vector3 BackwardVector{ 0,0,0 };
+    glm::vec3 BackwardVector{ 0,0,0 };
 
-    BackwardVector.X = sin((Player->transform.GetRotation().Y + 180) * 3.14159 / 180); // RIGHT
-    BackwardVector.Y = cos((Player->transform.GetRotation().X + 270) * 3.14159 / 180); // RIGHT
-    BackwardVector.Z = sin((Player->transform.GetRotation().Y + 90) * 3.14159 / 180); // RIGHT
+    BackwardVector.x = sin((Player->transform.GetRotation().y + 180) * 3.14159 / 180); // RIGHT
+    BackwardVector.y = cos((Player->transform.GetRotation().x + 270) * 3.14159 / 180); // RIGHT
+    BackwardVector.z = sin((Player->transform.GetRotation().y + 90) * 3.14159 / 180); // RIGHT
 
     float sensitive = moveSensitive;
     sensitive *= Core::World::GetDeltaTime();
@@ -189,22 +186,51 @@ void MyScript::BackwardMoveCamera() {
 }
 
 void MyScript::UpMoveCamera() {
-    Core::Vector3 newPos = Player->transform.GetPosition();
+    glm::vec3 newPos = Player->transform.GetPosition();
 
     float sensitive = moveSensitive;
     sensitive *= Core::World::GetDeltaTime();
-    newPos.Y += sensitive;
+    newPos.y += sensitive;
 
     Player->transform.SetPosition(newPos);
 }
 void MyScript::DownMoveCamera() {
-    Core::Vector3 newPos = Player->transform.GetPosition();
+    glm::vec3 newPos = Player->transform.GetPosition();
 
     float sensitive = moveSensitive;
     sensitive *= Core::World::GetDeltaTime();
-    newPos.Y -= sensitive;
+    newPos.y -= sensitive;
 
     Player->transform.SetPosition(newPos);
+}
+
+
+void MyScript::PushUp() {
+   //glm::vec2 size = win1->GetRectangleSize(0);
+   //size.y += 255.0 * Core::World::GetDeltaTime();
+
+   //win1->PushLeftRectEdge(size, 0);
+}
+void MyScript::PushDown() {
+   //glm::vec2 size = win1->GetRectangleSize(0);
+   //size.y -= 255.0 * Core::World::GetDeltaTime();
+
+   //win1->PushLeftRectEdge(size, 0);
+}
+
+void MyScript::PushRight() {
+   float delta = -0.2f;
+   delta *= Core::World::GetDeltaTime();
+
+    win1->PushRightRectEdge(-delta, *rect, nullptr);  // --> work
+    //win1->PushLeftRectEdge(delta, *rect, nullptr);  // --> work
+}
+void MyScript::PushLeft() {
+    float delta = 0.2f;
+    delta *= Core::World::GetDeltaTime();
+
+    win1->PushRightRectEdge(-delta, *rect, nullptr); // <-- work
+    //win1->PushLeftRectEdge(delta, *rect, nullptr);  // --> work
 }
 
 void MyScript::GenerateCubeMap() {
@@ -274,29 +300,219 @@ void MyScript::GenerateSun() {
     shader.resolution = 3;
 }
 
-//Call after created
-void MyScript::Start() {
+void MyScript::Serialization() {
+    DerivedData data{10,20,30,40};
+    DerivedData res{0,0,0,0};
 
-    //MyStruct2 myStorage{234,5, "Name",{2.0f,1.1f,56.7f,3.8f}};
-//
-    //MyStruct2 res{324,0, "",{}};
-    //res.Serialize(myStorage);
-    //res.Deserialize(res);
-//
-    //std::string path = "/Saved.bin";
-    //MyStruct2::SaveData(myStorage, path);
-//
-    //MyStruct2 res2{-35,0, "",{}};
-    //MyStruct2::LoadData(res2, path);
+    Core::TSerialized<DerivedData> dataBuffer;
+    dataBuffer.Serialize(data);
+    dataBuffer.Deserialize(res);
 
+    Core::TSerialized<DerivedData>::SaveData(data,"/Saved.bin");
+    Core::TSerialized<DerivedData>::LoadData(data,"/Saved.bin");
+}
+void MyScript::LogExample() {
 #if LOGGER_INCLUDED
     Core::Logger::LogInfo("TestLoggerEvent");
     Core::Logger::LogWarning("TestLoggerWarning");
-    Core::Logger::LogError("TestLoggerError: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
-    //Logger::Logger::LogCritical("TestLoggerCritical: " + std::string(__FILE__ ":") + std::to_string(__LINE__));
+    Core::Logger::LogError("TestLoggerError: " + __LOGERROR__);
+    //Logger::Logger::LogCritical("TestLoggerCritical: " + __LOGERROR__); //This crash Game with your error
 #endif
+}
 
-    //std::cout << "Start from " << script->GetParentObject()->GetName() << std::endl;
+void MyScript::WindowsTest1() {
+    auto& cam1_1 = camerasBuffer->CreateCamera();
+    auto& cam1_2 = camerasBuffer->CreateCamera();
+
+    win1->CreateRectangle({0,0},{0.3,0.3});
+    cam1_1.SetRenderWindow(win1);
+    cam1_1.SetUseRectangle(true);
+    cam1_1.SetIndexRectangle(0);
+
+    win1->CreateRectangle({0.5,0},{0.5,0.5});
+    cam1_2.SetRenderWindow(win1);
+    cam1_2.SetUseRectangle(true);
+    cam1_2.SetIndexRectangle(1);
+
+    Player->AddComponent(cam1_1);
+    Player->AddComponent(cam1_2);
+}
+
+void MyScript::WindowsTest2() {
+    auto& cam1_1 = camerasBuffer->CreateCamera();
+
+    win1->CreateRectangle({0,0},{0.025,0.95});
+    cam1_1.SetRenderWindow(win1);
+    cam1_1.SetUseRectangle(true);
+    cam1_1.SetIndexRectangle(0);
+
+    Player->AddComponent(cam1_1);
+
+    //------------------------------------------------//
+
+    auto& cam1_2 = camerasBuffer->CreateCamera();
+
+    win1->CreateRectangle({0,0.95},{1,0.05});
+    cam1_2.SetRenderWindow(win1);
+    cam1_2.SetUseRectangle(true);
+    cam1_2.SetIndexRectangle(1);
+
+    Player->AddComponent(cam1_2);
+
+    //------------------------------------------------//
+    auto& cam1_3 = camerasBuffer->CreateCamera();
+
+    win1->CreateRectangle({0.025,0.3},{0.3,0.651});
+    cam1_3.SetRenderWindow(win1);
+    cam1_3.SetUseRectangle(true);
+    cam1_3.SetIndexRectangle(2);
+
+    Player->AddComponent(cam1_3);
+
+    //------------------------------------------------//
+    auto& cam1_4 = camerasBuffer->CreateCamera();
+
+    win1->CreateRectangle({0.025,0},{0.975,0.3});
+    cam1_4.SetRenderWindow(win1);
+    cam1_4.SetUseRectangle(true);
+    cam1_4.SetIndexRectangle(3);
+
+    Player->AddComponent(cam1_4);
+
+    //------------------------------------------------//
+    auto& cam1_5 = camerasBuffer->CreateCamera();
+
+    auto& rect = win1->CreateRectangle({0.355,0.4},{0.375,0.251});
+    cam1_5.SetRenderWindow(win1);
+    cam1_5.SetUseRectangle(true);
+    cam1_5.SetIndexRectangle(4);
+
+    Player->AddComponent(cam1_5);
+
+    win1->RectangleFillFreeSpace(rect);
+}
+
+void MyScript::WindowsTest3() {
+    auto& cam1_1 = camerasBuffer->CreateCamera();
+
+    rect = &win1->CreateRectangle({0.3f,0.3f},{0.4f,0.4f});
+
+    cam1_1.SetRenderWindow(win1);
+    cam1_1.SetUseRectangle(true);
+    cam1_1.SetIndexRectangle(0);
+
+    Player->AddComponent(cam1_1);
+
+    //------------------------------------------------//
+
+    auto& cam1_2 = camerasBuffer->CreateCamera();
+
+    auto& rect2 = win1->CreateRectangle({0,0},{0.1f,0.1f});
+    cam1_2.SetRenderWindow(win1);
+    cam1_2.SetUseRectangle(true);
+    cam1_2.SetIndexRectangle(1);
+
+    Player->AddComponent(cam1_2);
+    win1->RectangleFillFreeSpace(rect2);
+
+    //------------------------------------------------//
+
+    auto& cam1_3 = camerasBuffer->CreateCamera();
+
+    auto& rect3 = win1->CreateRectangle({0.9f,0.9f},{0.1f,0.1f});
+    cam1_3.SetRenderWindow(win1);
+    cam1_3.SetUseRectangle(true);
+    cam1_3.SetIndexRectangle(2);
+
+    Player->AddComponent(cam1_3);
+    win1->RectangleFillFreeSpace(rect3);
+
+    //------------------------------------------------//
+
+    auto& cam1_4 = camerasBuffer->CreateCamera();
+
+    auto& rect4 = win1->CreateRectangle({0.5f,0.9f},{0.1f,0.1f});
+    cam1_4.SetRenderWindow(win1);
+    cam1_4.SetUseRectangle(true);
+    cam1_4.SetIndexRectangle(3);
+
+    Player->AddComponent(cam1_4);
+    win1->RectangleFillFreeSpace(rect4);
+
+    //------------------------------------------------//
+
+    auto& cam1_5 = camerasBuffer->CreateCamera();
+
+    auto& rect5 = win1->CreateRectangle({0.5f,0.0},{0.1f,0.1f});
+    cam1_5.SetRenderWindow(win1);
+    cam1_5.SetUseRectangle(true);
+    cam1_5.SetIndexRectangle(4);
+
+    Player->AddComponent(cam1_5);
+    win1->RectangleFillFreeSpace(rect5);
+
+    //------------------------------------------------//
+
+    rect->SetPosition({0.4, 0.4});
+    rect->SetSize({0.2, 0.2});
+    win1->RectangleFillFreeSpace(*rect);
+
+    std::cout << "end";
+
+    //win1->PushLeftRectEdge(-0.2f, rect1, nullptr);  // --> work
+    //win1->PushLeftRectEdge(0.2f, rect1, nullptr);   // <-- work
+
+    //win1->PushRightRectEdge(-0.2f, rect1, nullptr); // <-- work
+    //win1->PushRightRectEdge(0.2f, rect1, nullptr);  // --> work
+}
+
+void MyScript::WindowsTest4() {
+    auto& cam1_2 = camerasBuffer->CreateCamera();
+
+    rect = &win1->CreateRectangle({0.0f,0.0f},{0.1f, 0.2f});
+
+    cam1_2.SetRenderWindow(win1);
+    cam1_2.SetUseRectangle(true);
+    cam1_2.SetIndexRectangle(1);
+
+    Player->AddComponent(cam1_2);
+
+    //------------------------------------------------//
+
+    auto& cam1_3 = camerasBuffer->CreateCamera();
+
+    auto& rect3 = win1->CreateRectangle({0.4f,0.0f},{0.1f, 0.2f});
+
+    cam1_3.SetRenderWindow(win1);
+    cam1_3.SetUseRectangle(true);
+    cam1_3.SetIndexRectangle(2);
+
+    Player->AddComponent(cam1_3);
+
+    //------------------------------------------------//
+
+    auto& cam1_1 = camerasBuffer->CreateCamera();
+
+    auto& rect1 = win1->CreateRectangle({0.3f,0.0f},{0.05f, 1.0f});
+
+    cam1_1.SetRenderWindow(win1);
+    cam1_1.SetUseRectangle(true);
+    cam1_1.SetIndexRectangle(0);
+
+    Player->AddComponent(cam1_1);
+
+    //------------------------------------------------//
+
+    win1->RectangleFillFreeSpace(rect3);
+    win1->RectangleFillFreeSpace(*rect);
+
+    std::cout << "test" << std::endl;
+}
+
+//Call after created
+void MyScript::Start() {
+    Serialization();
+    LogExample();
 
     Player = &Core::Factory::CreateObject();
     Player->SetName("TestObject");
@@ -310,7 +526,6 @@ void MyScript::Start() {
     const auto windows = reinterpret_cast<WindowsManager::WindowsBuffer*>(windowsBuffer);
 
     win1 = windows->CreateWindow(1280, 720, "Windows 1");
-    win2 = windows->CreateWindow(400, 400, "Windows 2");
     win1->SetCursorVisible(false);
 #endif
 
@@ -387,21 +602,38 @@ void MyScript::Start() {
             win1
         );
 
+        buffer->CreateKeyboardBind(
+            { std::bind(&MyScript::PushRight, this) },
+            { EnumKeyboardKeysStates::KeyHold },
+            { EnumKeyboardTable::Right },
+            win1
+        );
+        buffer->CreateKeyboardBind(
+            { std::bind(&MyScript::PushLeft, this) },
+            { EnumKeyboardKeysStates::KeyHold },
+            { EnumKeyboardTable::Left },
+            win1
+        );
+        buffer->CreateKeyboardBind(
+            { std::bind(&MyScript::PushUp, this) },
+            { EnumKeyboardKeysStates::KeyHold },
+            { EnumKeyboardTable::Up },
+            win1
+        );
+        buffer->CreateKeyboardBind(
+            { std::bind(&MyScript::PushDown, this) },
+            { EnumKeyboardKeysStates::KeyHold },
+            { EnumKeyboardTable::Down },
+            win1
+        );
+
+
         //bind.IsActive = false;
     }
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-    auto& cam1 = camerasBuffer->CreateCamera();
-    auto& cam2 = camerasBuffer->CreateCamera();
-
-    cam1.SetRenderWindow(win1->GetGLFWwindow());
-    cam2.SetRenderWindow(win2->GetGLFWwindow());
-
-    Player->AddComponent(cam1);
-
-    auto& obj3 = Core::Factory::CreateObject();
-    obj3.AddComponent(cam2);
+    WindowsTest4();
 
     GenerateCubeMap();
     GenerateEarth();
@@ -411,7 +643,7 @@ void MyScript::Start() {
 }
 //Call every frame
 void MyScript::Update() {
-    Core::Logger::LogInfo(Core::World::GetDeltaTime());
+    //Core::Logger::LogInfo(Core::World::GetDeltaTime());
 }
 //Call before deleted
 void MyScript::End() {

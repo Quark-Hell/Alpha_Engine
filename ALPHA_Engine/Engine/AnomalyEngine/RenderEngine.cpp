@@ -1,7 +1,7 @@
 #include "RenderEngine.h"
 #include <glad/glad.h>
 
-#include <WindowsManager/WindowsBuffer.h>
+#include "WindowsManager/Buffers/WindowsBuffer.h"
 
 #include "GLFW/glfw3.h"
 
@@ -13,20 +13,31 @@
 #include "Shaders/ShaderProgram.h"
 
 namespace AnomalyEngine {
-    RenderEngine::RenderEngine() : System({"MeshBuffer", "CamerasBuffer"}, 5000) {}
+    RenderEngine::RenderEngine() : System({"MeshBuffer", "CamerasBuffer", "WindowsBuffer"}, 5000) {}
 
     void RenderEngine::ClearFrameBuffer() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void RenderEngine::SetWindowMatrix(const size_t width, const size_t height) {
+    void RenderEngine::PrepareRender(const size_t width, const size_t height) {
         glViewport(0, 0, width, height);
-    }
+        glDisable(GL_SCISSOR_TEST);
 
-    void RenderEngine::PrepareRender() {
         glClearColor(0.3f, 0.3f, 0.3f, 0.f);
 
-        //TODO: I think I shouldn't do this here
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+    void RenderEngine::PrepareRender(
+        glm::vec2 size,
+        glm::vec2 position) {
+
+        glViewport(static_cast<int>(position.x), static_cast<int>(position.y), static_cast<int>(size.x), static_cast<int>(size.y));
+        glScissor(static_cast<int>(position.x), static_cast<int>(position.y), static_cast<int>(size.x), static_cast<int>(size.y));
+        glEnable(GL_SCISSOR_TEST);
+
+        glClearColor(0.1f, 0.1f, 0.1f, 0.f);
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
@@ -127,34 +138,75 @@ namespace AnomalyEngine {
     }
 
     void RenderEngine::EntryPoint(std::vector<Core::SystemData *> &data) {
-        if (data[0] == nullptr || data[1] == nullptr) {
+        if (data[0] == nullptr || data[1] == nullptr || data[2] == nullptr) {
             Core::Logger::LogError("Data was null: " + __LOGERROR__);
             return;
         }
 
         auto *meshesBuffer = reinterpret_cast<MeshesBuffer*>(data[0]);
         auto *camerasBuffer = reinterpret_cast<CamerasBuffer*>(data[1]);
+        auto *windowsBuffer = reinterpret_cast<WindowsManager::WindowsBuffer*>(data[2]);
+
+        for (auto& window : windowsBuffer->GetAllData()) {
+            glm::vec2 size = window->GetSize();
+            PrepareRender(size.x, size.y);
+            ClearFrameBuffer();
+        }
+
+        int i = 0;
 
         for (auto& camera : camerasBuffer->_data) {
+            i++;
             if (camera->_window == nullptr) {
                 Core::Logger::LogWarning("Camera window was null");
                 continue;
             }
-            glfwMakeContextCurrent(camera->_window);
+            if (camera->_window->GetGLFWwindow() == nullptr) {
+                Core::Logger::LogWarning("Camera glfw window was null");
+                continue;
+            }
+
+            glfwMakeContextCurrent(camera->_window->GetGLFWwindow());
+
+            if (camera->GetUseRectangle()) {
+                if (camera->_window->CheckRectangleExist(camera->GetRectangleIndex())) {
+                    constexpr float epsilon = 0.0005f;
+
+                    float xRealSize = camera->_window->GetRectangleSize(camera->GetRectangleIndex()).x * camera->_window->GetSize().x;
+                    float yRealSize = camera->_window->GetRectangleSize(camera->GetRectangleIndex()).y * camera->_window->GetSize().y;
+
+                    glm::vec2 realSize = {xRealSize + epsilon, yRealSize + epsilon};
+
+                    float xRealPos = camera->_window->GetRectanglePosition(camera->GetRectangleIndex()).x * camera->_window->GetSize().x;
+                    float yRealPos = camera->_window->GetRectanglePosition(camera->GetRectangleIndex()).y * camera->_window->GetSize().y;
+
+                    glm::vec2 realPosition = {xRealPos + epsilon, yRealPos};
+
+                    if (realSize.x + 0.5f > std::ceilf(realSize.x)) {
+                        realSize.x = std::ceilf(realSize.x);
+                    }
+                    if (realPosition.x + 0.5f > std::ceilf(realPosition.x)) {
+                        realPosition.x = std::ceilf(realPosition.x);
+                    }
+
+                    PrepareRender(
+                            realSize,
+                            realPosition
+                        );
+                }
+                else {
+                    Core::Logger::LogCritical("Index out of bounds: " + __LOGERROR__);
+                }
+            }
+            else {
+                PrepareRender(camera->GetWidth(), camera->GetHeight());
+            }
 
             ClearFrameBuffer();
-            PrepareRender();
-
-            SetWindowMatrix(camera->GetWidth(), camera->GetHeight());
 
             RenderMeshes(*camera, *meshesBuffer);
 
             glFinish();
         }
-
-        //if (camera.window == nullptr) {
-        //    Core::Logger::Logger::LogError("active camera was be null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
-        //    return;
-        //}
     }
 }
