@@ -17,6 +17,28 @@ namespace WindowsManager {
         friend class WindowsManager;
         friend class WindowsBuffer;
 
+        enum Direction {
+            NotAvailable = 0,
+            Left = -1,
+            Right = 1
+        };
+
+        class Buffer {
+        public:
+            Rectangle* Rect = nullptr;
+            float OriginDelta = 0;
+            float FoundDelta = 0;
+            Direction Direct = Direction::NotAvailable;
+
+            Buffer() = delete;
+            Buffer(Rectangle* rect, float origin, float found, Direction direct) {
+                Rect = rect;
+                OriginDelta = origin;
+                FoundDelta = found;
+                Direct = direct;
+            }
+        };
+
     private:
         GLFWwindow *_window;
 
@@ -31,6 +53,8 @@ namespace WindowsManager {
 
         bool _isSync = true;
         bool _isCursorVisible = true;
+
+        const float _algEpsilon = 0.000005f;
 
     private:
         void SetWindowHints();
@@ -77,24 +101,39 @@ namespace WindowsManager {
 
         //X component - change left edge
         //Y component - change right edge
-        float PushLeftRectEdge(
+        void PushLeftRectEdge(
                 float delta,
                 Rectangle& support,
-                std::shared_ptr<std::vector<std::pair<Rectangle*, bool>>> checked);
+                std::shared_ptr<std::vector<Buffer>> checkedPos,
+                std::shared_ptr<std::vector<Buffer>> checkedSize,
+                Rectangle* origin);
 
-        float PushRightRectEdge(
+        void PushRightRectEdge(
                 float delta,
                 Rectangle& support,
-                std::shared_ptr<std::vector<std::pair<Rectangle*, bool>>> checked);
+                std::shared_ptr<std::vector<Buffer>> checkedPos,
+                std::shared_ptr<std::vector<Buffer>> checkedSize,
+                Rectangle* origin);
 
 
-        float PushLeftRect (
+        void PushRectToLeft (
                 float delta,
                 Rectangle& support,
-                std::shared_ptr<std::vector<std::pair<Rectangle*, bool>>> checked
+                std::shared_ptr<std::vector<Buffer>> checkedPos,
+                std::shared_ptr<std::vector<Buffer>> checkedSize,
+                Rectangle* origin
                 );
 
-        void SetRectanglePosition(const glm::vec2& position, size_t index);
+        void PushRectToRight (
+                float delta,
+                Rectangle& support,
+                std::shared_ptr<std::vector<Buffer>> checkedPos,
+                std::shared_ptr<std::vector<Buffer>> checkedSize,
+                Rectangle* origin
+        );
+
+        bool HasPathLeft(Rectangle& rect, Rectangle& origin);
+        bool HasPathRight(Rectangle& rect, Rectangle& origin);
 
         void RectangleFillFreeSpace(Rectangle& support);
 

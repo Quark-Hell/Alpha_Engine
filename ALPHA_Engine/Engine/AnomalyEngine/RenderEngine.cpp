@@ -170,17 +170,15 @@ namespace AnomalyEngine {
 
             if (camera->GetUseRectangle()) {
                 if (camera->_window->CheckRectangleExist(camera->GetRectangleIndex())) {
-                    constexpr float epsilon = 0.0005f;
-
                     float xRealSize = camera->_window->GetRectangleSize(camera->GetRectangleIndex()).x * camera->_window->GetSize().x;
                     float yRealSize = camera->_window->GetRectangleSize(camera->GetRectangleIndex()).y * camera->_window->GetSize().y;
 
-                    glm::vec2 realSize = {xRealSize + epsilon, yRealSize + epsilon};
+                    glm::vec2 realSize = {xRealSize, yRealSize};
 
                     float xRealPos = camera->_window->GetRectanglePosition(camera->GetRectangleIndex()).x * camera->_window->GetSize().x;
                     float yRealPos = camera->_window->GetRectanglePosition(camera->GetRectangleIndex()).y * camera->_window->GetSize().y;
 
-                    glm::vec2 realPosition = {xRealPos + epsilon, yRealPos};
+                    glm::vec2 realPosition = {xRealPos, yRealPos};
 
                     if (realSize.x + 0.5f > std::ceilf(realSize.x)) {
                         realSize.x = std::ceilf(realSize.x);

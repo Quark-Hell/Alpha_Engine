@@ -5,6 +5,8 @@
 #include "Core/Object.h"
 #include "Core/Factory.h"
 
+#include "Core/Timer.h"
+
 #include "Core/Logger/Logger.h"
 //===================Core===================//
 
@@ -222,15 +224,20 @@ void MyScript::PushRight() {
    float delta = -0.2f;
    delta *= Core::World::GetDeltaTime();
 
-    win1->PushRightRectEdge(-delta, *rect, nullptr);  // --> work
-    //win1->PushLeftRectEdge(delta, *rect, nullptr);  // --> work
+    {
+        Core::ScopedTimer timer("timer");
+        win1->PushRightRectEdge(-delta, *rect, nullptr, nullptr, nullptr);  // -->
+    }
+    std::cout << "============" << std::endl;
+    //win1->PushLeftRectEdge(delta, *rect, nullptr, nullptr, nullptr);  // -->
 }
 void MyScript::PushLeft() {
     float delta = 0.2f;
     delta *= Core::World::GetDeltaTime();
 
-    win1->PushRightRectEdge(-delta, *rect, nullptr); // <-- work
-    //win1->PushLeftRectEdge(delta, *rect, nullptr);  // --> work
+    win1->PushRightRectEdge(-delta, *rect, nullptr, nullptr, nullptr); // <--
+    std::cout << "============" << std::endl;
+    //win1->PushLeftRectEdge(delta, *rect, nullptr, nullptr, nullptr);  // -->
 }
 
 void MyScript::GenerateCubeMap() {
@@ -457,7 +464,9 @@ void MyScript::WindowsTest3() {
     rect->SetSize({0.2, 0.2});
     win1->RectangleFillFreeSpace(*rect);
 
-    std::cout << "end";
+    rect = &rect2;
+
+    //std::cout << "end";
 
     //win1->PushLeftRectEdge(-0.2f, rect1, nullptr);  // --> work
     //win1->PushLeftRectEdge(0.2f, rect1, nullptr);   // <-- work
@@ -505,6 +514,8 @@ void MyScript::WindowsTest4() {
 
     win1->RectangleFillFreeSpace(rect3);
     win1->RectangleFillFreeSpace(*rect);
+
+    //rect = &rect3;
 
     std::cout << "test" << std::endl;
 }
@@ -633,7 +644,7 @@ void MyScript::Start() {
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-    WindowsTest4();
+    WindowsTest3();
 
     GenerateCubeMap();
     GenerateEarth();

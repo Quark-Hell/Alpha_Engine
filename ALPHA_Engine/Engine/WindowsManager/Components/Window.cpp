@@ -16,22 +16,22 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
     switch (type) {
         case GL_DEBUG_TYPE_ERROR:
             std::cout << "ERROR";
-        break;
+            break;
         case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
             std::cout << "DEPRECATED_BEHAVIOR";
-        break;
+            break;
         case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
             std::cout << "UNDEFINED_BEHAVIOR";
-        break;
+            break;
         case GL_DEBUG_TYPE_PORTABILITY:
             std::cout << "PORTABILITY";
-        break;
+            break;
         case GL_DEBUG_TYPE_PERFORMANCE:
             std::cout << "PERFORMANCE";
-        break;
+            break;
         case GL_DEBUG_TYPE_OTHER:
             std::cout << "OTHER";
-        break;
+            break;
     }
     std::cout << std::endl;
 
@@ -40,13 +40,13 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
     switch (severity){
         case GL_DEBUG_SEVERITY_LOW:
             std::cout << "LOW";
-        break;
+            break;
         case GL_DEBUG_SEVERITY_MEDIUM:
             std::cout << "MEDIUM";
-        break;
+            break;
         case GL_DEBUG_SEVERITY_HIGH:
             std::cout << "HIGH";
-        break;
+            break;
     }
     std::cout << std::endl;
     std::cout << "---------------------opengl-callback-end--------------" << std::endl;
@@ -179,30 +179,30 @@ namespace WindowsManager {
                 size_t index,
                 std::vector<std::pair<size_t, float>>& distances) {
 
-                glm::vec2 p1 = glm::ProjectPointOnAxis(corner1, itP1, itP2);
-                glm::vec2 p2 = glm::ProjectPointOnAxis(corner2, itP1, itP2);
+            glm::vec2 p1 = glm::ProjectPointOnAxis(corner1, itP1, itP2);
+            glm::vec2 p2 = glm::ProjectPointOnAxis(corner2, itP1, itP2);
 
-                glm::vec2 vec = p1 - corner1;
+            glm::vec2 vec = p1 - corner1;
 
-                constexpr float epsilon = 0.01f;
+            constexpr float epsilon = 0.01f;
 
-                if (std::fabs(glm::dot(vec, norm)) > epsilon) {
-                    if (glm::dot(glm::normalize(vec), norm) < 0)
-                        return;
-                }
-
-
-                bool exp1 = glm::InSegment(p1, itP1, itP2);
-                bool exp2 = glm::InSegment(p2, itP1, itP2);
-
-                bool exp3 = glm::InSegment(itP1, p1, p2);
-                bool exp4 = glm::InSegment(itP2, p1, p2);
-
-
-                if((exp1 + exp2 + exp3 + exp4) < 2)
+            if (std::fabs(glm::dot(vec, norm)) > epsilon) {
+                if (glm::dot(glm::normalize(vec), norm) < 0)
                     return;
+            }
 
-                distances.emplace_back(index, glm::length2(vec));
+
+            bool exp1 = glm::InSegment(p1, itP1, itP2);
+            bool exp2 = glm::InSegment(p2, itP1, itP2);
+
+            bool exp3 = glm::InSegment(itP1, p1, p2);
+            bool exp4 = glm::InSegment(itP2, p1, p2);
+
+
+            if((exp1 + exp2 + exp3 + exp4) < 2)
+                return;
+
+            distances.emplace_back(index, glm::length2(vec));
         };
 
         constexpr float epsilon = 0.001f;
@@ -362,6 +362,8 @@ namespace WindowsManager {
         ADD_DEPENDENCIES(_bottomNeighbors, _topNeighbors);
         ADD_DEPENDENCIES(_leftNeighbors, _rightNeighbors);
         ADD_DEPENDENCIES(_rightNeighbors, _leftNeighbors);
+
+        std::cout << "end" << std::endl;
     }
 
     void Window::ResizeRectangle(Rectangle& support, glm::vec2 newSize) {
@@ -473,13 +475,13 @@ namespace WindowsManager {
                 v2 = glm::InSegment(p2, it->GetRightBottomCorner(), it->GetRightTopCorner());
 
                 //if (v1 || v2) {
-                    glm::vec2 vect = p2 - support.GetLeftTopCorner();
-                    float xDist = glm::length(vect);
+                glm::vec2 vect = p2 - support.GetLeftTopCorner();
+                float xDist = glm::length(vect);
 
-                    if (xLeftMaxDistance > xDist) xLeftMaxDistance = xDist;
+                if (xLeftMaxDistance > xDist) xLeftMaxDistance = xDist;
                 //}
             }
-            //right
+                //right
             else {
                 glm::vec2 p1 = glm::ProjectPointOnAxis(support.GetRightBottomCorner(), it->GetLeftBottomCorner(), it->GetLeftTopCorner());
                 glm::vec2 p2 = glm::ProjectPointOnAxis(support.GetRightTopCorner(), it->GetLeftBottomCorner(), it->GetLeftTopCorner());
@@ -488,10 +490,10 @@ namespace WindowsManager {
                 v2 = glm::InSegment(p2, it->GetLeftBottomCorner(), it->GetLeftTopCorner());
 
                 //if (v1 || v2) {
-                    glm::vec2 vect = p2 - support.GetRightTopCorner();
-                    float xDist = glm::length(vect);
+                glm::vec2 vect = p2 - support.GetRightTopCorner();
+                float xDist = glm::length(vect);
 
-                    if (xRightMaxDistance > xDist) xRightMaxDistance = xDist;
+                if (xRightMaxDistance > xDist) xRightMaxDistance = xDist;
                 //}
             }
 
@@ -510,7 +512,7 @@ namespace WindowsManager {
                     if (yBottomMaxDistance > yDist) yBottomMaxDistance = yDist;
                 }
             }
-            //top
+                //top
             else {
                 glm::vec2 p1 = glm::ProjectPointOnAxis(support.GetLeftTopCorner(), it->GetLeftBottomCorner(), it->GetRightBottomCorner());
                 glm::vec2 p2 = glm::ProjectPointOnAxis(support.GetRightTopCorner(), it->GetLeftBottomCorner(), it->GetRightBottomCorner());
@@ -583,8 +585,8 @@ namespace WindowsManager {
 //=============================RECTANGLE SETTINGS=============================//
 
     Rectangle& Window::CreateRectangle(
-        const glm::vec2& position,
-        const glm::vec2& size) {
+            const glm::vec2& position,
+            const glm::vec2& size) {
 
         if (position.x < 0) {
             Core::Logger::LogCritical("X position should be positive: " + __LOGERROR__);
@@ -648,30 +650,79 @@ namespace WindowsManager {
         return *_rectangles[index];
     }
 
-    float Window::PushLeftRectEdge(
+
+    float proximity(float a, float b) {
+        if (a == b) return 1.0f;
+        if (a == 0.0f) return 0.0f;
+        return 1.0f - std::fabs(a - b) / std::max(std::fabs(a), std::fabs(b));
+    }
+
+    bool Window::HasPathLeft(Rectangle& rect, Rectangle& origin) {
+        bool answer = false;
+
+        if(rect._leftNeighbors.empty()) {
+            if(&rect == &origin) {
+                answer = true;
+            }
+        }
+        else {
+            for(auto it : rect._leftNeighbors) {
+                answer = HasPathLeft(*it, origin);
+            }
+        }
+
+        return answer;
+    }
+
+    bool Window::HasPathRight(Rectangle& rect, Rectangle& origin) {
+        bool answer = false;
+
+        if(rect._rightNeighbors.empty()) {
+            if(&rect == &origin) {
+                answer = true;
+            }
+        }
+        else {
+            for(auto it : rect._rightNeighbors) {
+                answer = HasPathRight(*it, origin);
+            }
+        }
+
+        return answer;
+    }
+
+    void Window::PushLeftRectEdge(
             const float delta,
             Rectangle& support,
-            std::shared_ptr<std::vector<std::pair<Rectangle*, bool>>> checked) {
+            std::shared_ptr<std::vector<Buffer>> checkedPos,
+            std::shared_ptr<std::vector<Buffer>> checkedSize,
+            Rectangle* origin) {
 
         bool isHeader = false;
 
-        if (checked == nullptr) {
-            isHeader = true;
-            checked = std::make_shared<std::vector<std::pair<Rectangle*, bool>>>();
+        if (checkedPos == nullptr) {
+            checkedPos = std::make_shared<std::vector<Buffer>>();
         }
-        checked->emplace_back(&support, false);
+        if (checkedSize == nullptr) {
+            isHeader = true;
+            origin = &support;
+            checkedSize = std::make_shared<std::vector<Buffer>>();
+        }
+
+        checkedSize->emplace_back(&support, delta, 0, Direction::Left);
+
+        std::cout << checkedPos->size() << "  " << checkedSize->size() << "   PushLeftRectEdge" << std::endl;
 
         auto checkBorders = [](float newPos) {
             float delta = 0;
 
             if (newPos < 0) {
                 delta = std::fabs(newPos);
-                newPos = 0;
             }
 
             return delta;
         };
-        auto checkSize = [](float newLeftCorner, float oldRightCorner, float minSize){
+        auto checkSize = [](float newLeftCorner, float oldRightCorner, float minSize) {
             float delta = 0;
 
             float currentDelta = oldRightCorner - newLeftCorner;
@@ -683,9 +734,6 @@ namespace WindowsManager {
             return delta;
         };
 
-
-        constexpr float epsilon = 0.0005f;
-
         //Check if it out of bounds
         float realDeltaSize = delta;
 
@@ -695,11 +743,13 @@ namespace WindowsManager {
             float borderDelta = checkBorders(newPos);
             newPos += borderDelta;
 
-            //float sizeDelta = checkSize(support.GetLeftBottomCorner().x + borderDelta, support.GetRightBottomCorner().x, support._minSize.x);
             float sizeDelta = checkSize(newPos, support.GetRightBottomCorner().x, support._minSize.x);
-            realDeltaSize += sizeDelta;
 
-            std::cout << newPos << "  " << support.GetRightBottomCorner().x << std::endl;
+            if (realDeltaSize < 0) {
+                realDeltaSize += (borderDelta + sizeDelta);
+            } else {
+                realDeltaSize -= (borderDelta + sizeDelta);
+            }
         }
 
         //if real delta < 0
@@ -715,99 +765,141 @@ namespace WindowsManager {
         for (auto it: support._leftNeighbors) {
             bool isAvailable = true;
 
-            for (auto & check : *checked) {
-                if (it == check.first) {
+            for (auto &check: *checkedSize) {
+                if (it == check.Rect) {
                     isAvailable = false;
                     break;
                 }
             }
 
             if (isAvailable) {
-                float newDelta = PushRightRectEdge(realDeltaSize * -1, *it, checked);
-                if(newDelta < realDeltaSize) {
-                    realDeltaSize = newDelta;
+                if (!HasPathLeft(*it, *origin) || isHeader) {
+                    PushRightRectEdge(realDeltaSize * -1, *it, checkedPos, checkedSize, origin);
                 }
             }
         }
 
-        if (std::fabs(realDeltaSize) < epsilon) { realDeltaSize = 0; }
+        if (std::fabs(realDeltaSize) < _algEpsilon) { realDeltaSize = 0; }
 
-        if (realDeltaSize != delta) {
-            float shortageDelta = delta - realDeltaSize;
+        float shortageDelta = delta - realDeltaSize;
+        if (
+                !isHeader &&
+                delta < 0 &&
+                std::fabsf(shortageDelta) > _algEpsilon) {
 
-            for (auto it: support._rightNeighbors) {
-                bool isAvailable = true;
+            bool isAvailable = true;
+            for (auto &check: *checkedPos) {
+                if (&support == check.Rect) {
+                    isAvailable = false;
+                    break;
+                }
+            }
 
-                for (auto &check: *checked) {
-                    if (it == check.first) {
-                        isAvailable = false;
+            if (isAvailable) {
+                if (shortageDelta > 0) {
+                    PushRectToLeft(shortageDelta, support, checkedPos, checkedSize, origin);
+                } else {
+                    PushRectToRight(shortageDelta, support, checkedPos, checkedSize, origin);
+                }
+            }
+        }
+
+
+        for (auto &it: *checkedSize) {
+            if (it.Rect == &support) {
+                it.FoundDelta = realDeltaSize;
+                break;
+            }
+        }
+
+        if (isHeader) {
+            float factor = 1;
+
+            for (auto &it: *checkedSize) {
+                float bdelta = std::fabsf(it.FoundDelta);
+
+                for (auto &jt: *checkedPos) {
+                    if (it.Rect == jt.Rect) {
+                        bdelta += std::fabsf(jt.FoundDelta);
                         break;
                     }
                 }
 
-                if (isAvailable) {
-                    //PushLeftRect(shortageDelta * -1, support, checked);
-                    //std::pair<float, float> newDelta = PushLeftRectEdge(shortageDelta, *it, checked);
-                    //posDelta = newDelta.first;
-                    //if(newDelta < realDelta) {
-                    //    realDelta = newDelta;
-                    //}
-                }
+                float bfactor = proximity(bdelta, std::fabsf(it.OriginDelta));
+                if (factor > bfactor) { factor = bfactor; }
             }
-            std::cout << "test" << std::endl;
-        }
 
-        if (isHeader) {
-            for(auto& it : *checked) {
-                if (it.second) {
-                    glm::vec2 newSize = it.first->GetSize();
-                    newSize.x += -realDeltaSize;
+            for (auto &it: *checkedSize) {
+                if (it.Direct == Direction::Right) {
+                    glm::vec2 newSize = it.Rect->GetSize();
 
-                    it.first->SetSize(newSize);
-                }
-                else {
-                    float oldXRightCorner = it.first->GetRightBottomCorner().x;
+                    if (
+                            (factor != 0 && factor != 1) &&
+                            (std::fabsf(it.FoundDelta) <= std::fabsf(delta * factor) + _algEpsilon)) {
 
-                    glm::vec2 newPos = it.first->GetPosition();
+                        newSize.x += it.FoundDelta;
+                    } else {
+                        newSize.x += (it.FoundDelta * factor);
+                    }
 
-                    newPos.x += -realDeltaSize;
+                    it.Rect->SetSize(newSize);
+                } else if (it.Direct == Direction::Left) {
+                    float oldXRightCorner = it.Rect->GetRightBottomCorner().x;
 
-                    it.first->SetPosition(newPos);
+                    glm::vec2 newPos = it.Rect->GetPosition();
 
-                   //glm::vec2 newSize = it.first->GetSize();
-                   //newSize.x += realDelta;
+                    if (
+                            (factor != 0 && factor != 1) &&
+                            (std::fabsf(it.FoundDelta) <= std::fabsf(delta * factor) + _algEpsilon)) {
 
-                   //it.first->SetSize(newSize);
+                        newPos.x += -it.FoundDelta;
+                    } else {
+                        newPos.x += -(it.FoundDelta * factor);
+                    }
 
-                    float newXRightCorner = it.first->GetRightBottomCorner().x;
+                    //newPos.x += -(it.FoundDelta * factor);
+
+                    it.Rect->SetPosition(newPos);
+
+                    float newXRightCorner = it.Rect->GetRightBottomCorner().x;
 
                     float errorDelta = newXRightCorner - oldXRightCorner;
-                    glm::vec2 newSize = it.first->GetSize();
+                    glm::vec2 newSize = it.Rect->GetSize();
                     newSize.x += -errorDelta;
-                    it.first->SetSize(newSize);
+                    it.Rect->SetSize(newSize);
                 }
             }
-        }
 
-        return -realDeltaSize;
+            for (auto &it: *checkedPos) {
+                glm::vec2 newPos = it.Rect->GetPosition();
+                newPos.x += (it.FoundDelta * factor);
+
+                it.Rect->SetPosition(newPos);
+            }
+        }
     }
 
-
-
-
-    float Window::PushRightRectEdge(
+    void Window::PushRightRectEdge(
             const float delta,
             Rectangle& support,
-            std::shared_ptr<std::vector<std::pair<Rectangle*, bool>>> checked) {
+            std::shared_ptr<std::vector<Buffer>> checkedPos,
+            std::shared_ptr<std::vector<Buffer>> checkedSize,
+            Rectangle* origin) {
 
         bool isHeader = false;
 
-        if (checked == nullptr) {
+        if (checkedPos == nullptr) {
+            checkedPos = std::make_shared<std::vector<Buffer>>();
+        }
+        if (checkedSize == nullptr) {
             isHeader = true;
-            checked = std::make_shared<std::vector<std::pair<Rectangle*, bool>>>();
+            origin = &support;
+            checkedSize = std::make_shared<std::vector<Buffer>>();
         }
 
-        checked->emplace_back(&support, true);
+        checkedSize->emplace_back(&support, delta, 0, Direction::Right);
+
+        std::cout << checkedPos->size() << "  " << checkedSize->size() << "   PushRightRectEdge" << std::endl;
 
 
         auto checkBorders = [](float pos, float size) {
@@ -821,19 +913,20 @@ namespace WindowsManager {
             return delta;
         };
 
-        auto checkSize = [](float oldLeftCorner, float newRightCorner, float minSize){
+        auto checkSize = [](float oldLeftCorner, float newRightCorner, float minSize) {
             float delta = 0;
 
             float currentDelta = newRightCorner - oldLeftCorner;
 
             if (minSize > currentDelta) {
+                if (oldLeftCorner == 0) {
+                    delta = minSize - currentDelta;
+                }
                 delta = minSize - currentDelta;
             }
 
             return delta;
         };
-
-        constexpr float epsilon = 0.0005f;
 
         //Check if it out of bounds
         float realDeltaSize = delta;
@@ -842,13 +935,12 @@ namespace WindowsManager {
             float newSize = support.GetSize().x + delta;
 
             float borderDelta = checkBorders(support.GetPosition().x, newSize);
-            realDeltaSize -= borderDelta;
+            realDeltaSize += borderDelta;
 
             newSize = support.GetRightBottomCorner().x + realDeltaSize;
-            float sizeDelta = checkSize(support.GetLeftBottomCorner().x,newSize,support._minSize.x);
-            realDeltaSize += sizeDelta;
+            float sizeDelta = checkSize(support.GetLeftBottomCorner().x, newSize, support._minSize.x);
 
-            //std::cout << "  " << support.GetSize().x << std::endl;
+            realDeltaSize += sizeDelta;
         }
 
         //if real delta > 0
@@ -864,68 +956,232 @@ namespace WindowsManager {
         for (auto it: support._rightNeighbors) {
             bool isAvailable = true;
 
-            for (auto & check : *checked) {
-                if (it == check.first) {
+            for (auto &check: *checkedSize) {
+                if (it == check.Rect) {
                     isAvailable = false;
                     break;
                 }
             }
 
             if (isAvailable) {
-                float newDelta = PushLeftRectEdge(realDeltaSize * -1, *it, checked);
-                if(newDelta < realDeltaSize) {
-                    realDeltaSize = newDelta;
+                if (!HasPathRight(*it, *origin) || isHeader) {
+                    PushLeftRectEdge(realDeltaSize * -1, *it, checkedPos, checkedSize, origin);
                 }
             }
         }
 
-        if (std::fabs(realDeltaSize) < epsilon) {
-            realDeltaSize = 0;
+        if (std::fabs(realDeltaSize) < _algEpsilon) { realDeltaSize = 0; }
+
+        float shortageDelta = delta - realDeltaSize;
+        if (
+                !isHeader &&
+                delta < 0 &&
+                std::fabsf(shortageDelta) > _algEpsilon) {
+
+            bool isAvailable = true;
+            for (auto &check: *checkedPos) {
+                if (&support == check.Rect) {
+                    isAvailable = false;
+                    break;
+                }
+            }
+
+            if (isAvailable) {
+                if (shortageDelta < 0) {
+                    PushRectToLeft(shortageDelta, support, checkedPos, checkedSize, origin);
+                } else {
+                    PushRectToRight(shortageDelta, support, checkedPos, checkedSize, origin);
+                }
+            }
+        }
+
+        for (auto &it: *checkedSize) {
+            if (it.Rect == &support) {
+                it.FoundDelta = realDeltaSize;
+                break;
+            }
         }
 
         if (isHeader) {
-            for(auto& it : *checked) {
-                if (it.second) {
-                    glm::vec2 newSize = it.first->GetSize();
-                    newSize.x += realDeltaSize;
+            float factor = 1;
 
-                    it.first->SetSize(newSize);
+            for (auto &it: *checkedSize) {
+                float bdelta = std::fabsf(it.FoundDelta);
+
+                for (auto &jt: *checkedPos) {
+                    if (it.Rect == jt.Rect) {
+                        bdelta += std::fabsf(jt.FoundDelta);
+                        break;
+                    }
                 }
-                else {
-                    glm::vec2 newPos = it.first->GetPosition();
-                    newPos.x += realDeltaSize;
 
-                    it.first->SetPosition(newPos);
+                float bfactor = proximity(bdelta, std::fabsf(it.OriginDelta));
+                if (factor > bfactor) { factor = bfactor; }
+            }
 
-                    glm::vec2 newSize = it.first->GetSize();
-                    newSize.x += -realDeltaSize;
+            for (auto &it: *checkedSize) {
+                //check sign
+                if (it.Direct == Direction::Right) {
+                    glm::vec2 newSize = it.Rect->GetSize();
 
-                    it.first->SetSize(newSize);
+                    if (
+                            (factor != 0 && factor != 1) &&
+                            (std::fabsf(it.FoundDelta) <= std::fabsf(delta * factor) + _algEpsilon)) {
+
+                        newSize.x += it.FoundDelta;
+                    } else {
+                        newSize.x += (it.FoundDelta * factor);
+                    }
+
+                    it.Rect->SetSize(newSize);
+                }
+                else if (it.Direct == Direction::Left) {
+                    float oldXRightCorner = it.Rect->GetRightBottomCorner().x;
+
+                    glm::vec2 newPos = it.Rect->GetPosition();
+
+                    if (
+                            (factor != 0 && factor != 1) &&
+                            (std::fabsf(it.FoundDelta) <= std::fabsf(delta * factor) + _algEpsilon)) {
+
+                        newPos.x += -it.FoundDelta;
+                    }
+                    else {
+                        newPos.x += -(it.FoundDelta * factor);
+                    }
+
+                    it.Rect->SetPosition(newPos);
+
+                    float newXRightCorner = it.Rect->GetRightBottomCorner().x;
+
+
+                    float errorDelta = newXRightCorner - oldXRightCorner;
+                    glm::vec2 newSize = it.Rect->GetSize();
+                    newSize.x += -errorDelta;
+                    it.Rect->SetSize(newSize);
                 }
             }
-        }
 
-        return -realDeltaSize;
+            for (auto &it: *checkedPos) {
+                glm::vec2 newPos = it.Rect->GetPosition();
+                newPos.x += (it.FoundDelta * factor);
+
+                it.Rect->SetPosition(newPos);
+            }
+        }
     }
 
-    float Window::PushLeftRect (
+    void Window::PushRectToLeft (
             float delta,
             Rectangle& support,
-            std::shared_ptr<std::vector<std::pair<Rectangle*, bool>>> checked) {
+            std::shared_ptr<std::vector<Buffer>> checkedPos,
+            std::shared_ptr<std::vector<Buffer>> checkedSize,
+            Rectangle* origin) {
 
         bool isHeader = false;
+        if (delta > 0) { delta *= -1; }
 
-        if (checked == nullptr) {
-            isHeader = true;
-            checked = std::make_shared<std::vector<std::pair<Rectangle*, bool>>>();
+        if (checkedSize == nullptr) {
+            checkedSize = std::make_shared<std::vector<Buffer>>();
         }
+        if (checkedPos == nullptr) {
+            isHeader = true;
+            origin = &support;
+            checkedPos = std::make_shared<std::vector<Buffer>>();
+        }
+        checkedPos->emplace_back(&support, delta, 0, Direction::Left);
+
+        std::cout << checkedPos->size() << "  " << checkedSize->size() << "   PushRectToLeft" << std::endl;
 
         auto checkBorders = [](float pos, float size) {
             float delta = 0;
 
-            if (pos < 0) {
-                delta = std::abs(pos);
+            if (pos < 0) { delta = std::abs(pos); }
+
+            return delta;
+        };
+
+        //Check if it out of bounds
+        float realDeltaPos = delta;
+
+        {
+            float newPos = support.GetPosition().x + realDeltaPos;
+            float borderDelta = checkBorders(newPos, support.GetSize().x);
+
+            realDeltaPos += borderDelta;
+        }
+
+        //push from left ot left <--
+        if (realDeltaPos < 0) {
+            for (auto it: support._leftNeighbors) {
+                bool isAvailable = true;
+
+                for (auto &check: *checkedPos) {
+                    if (it == check.Rect) {
+                        isAvailable = false;
+                        break;
+                    }
+                }
+
+                if (isAvailable) {
+                    PushRectToLeft(realDeltaPos, *it, checkedPos, checkedSize, origin);
+                }
             }
+        }
+
+        if (std::fabs(realDeltaPos) < _algEpsilon) { realDeltaPos = 0; }
+
+        float shortageDelta = delta - realDeltaPos;
+        //!isHeader &&
+        if (std::fabsf(shortageDelta) > _algEpsilon) {
+
+            bool isAvailable = true;
+
+            for (auto &check: *checkedSize) {
+                if (&support == check.Rect) {
+                    isAvailable = false;
+                    break;
+                }
+            }
+
+            if (isAvailable) {
+                PushRightRectEdge(shortageDelta, support, checkedPos, checkedSize, origin);
+            }
+        }
+
+        for(auto& it : *checkedPos) {
+            if(it.Rect == &support) {
+                it.FoundDelta = realDeltaPos;
+                break;
+            }
+        }
+    }
+
+    void Window::PushRectToRight (
+            float delta,
+            Rectangle& support,
+            std::shared_ptr<std::vector<Buffer>> checkedPos,
+            std::shared_ptr<std::vector<Buffer>> checkedSize,
+            Rectangle* origin
+    ) {
+        bool isHeader = false;
+        if (delta < 0) { delta *= -1; }
+
+        if (checkedSize == nullptr) {
+            checkedSize = std::make_shared<std::vector<Buffer>>();
+        }
+        if (checkedPos == nullptr) {
+            isHeader = true;
+            origin = &support;
+            checkedPos = std::make_shared<std::vector<Buffer>>();
+        }
+
+        checkedPos->emplace_back(&support, delta, 0, Direction::Right);
+
+        std::cout << checkedPos->size() << "  " << checkedSize->size() << "   PushRectToRight" << std::endl;
+
+        auto checkBorders = [](float pos, float size) {
+            float delta = 0;
 
             if (pos + size > 1) {
                 delta = 1 - (pos + size);
@@ -933,10 +1189,6 @@ namespace WindowsManager {
 
             return delta;
         };
-
-        checked->emplace_back(&support, true);
-
-        constexpr float epsilon = 0.0005f;
 
         //Check if it out of bounds
         float realDeltaPos = delta;
@@ -953,230 +1205,45 @@ namespace WindowsManager {
             for (auto it: support._rightNeighbors) {
                 bool isAvailable = true;
 
-                for (auto & check : *checked) {
-                    if (it == check.first) {
+                for (auto &check: *checkedPos) {
+                    if (it == check.Rect) {
                         isAvailable = false;
                         break;
                     }
                 }
 
                 if (isAvailable) {
-                    float newDelta = PushLeftRect(realDeltaPos, *it, checked);
-                    if(newDelta < realDeltaPos) {
-                        realDeltaPos = newDelta;
-                    }
-                }
-            }
-        }
-        //push from left ot left <--
-        else if (realDeltaPos < 0) {
-
-        }
-
-        if (std::fabs(realDeltaPos) < epsilon) { realDeltaPos = 0; }
-
-        if (realDeltaPos != delta) {
-            float shortageDelta = delta - realDeltaPos;
-
-            //PushLeftRectEdge(shortageDelta * -1, support, checked);
-            //std::pair<float, float> newDelta = PushLeftRectEdge(shortageDelta, *it, checked);
-            //posDelta = newDelta.first;
-            //if(newDelta < realDelta) {
-            //    realDelta = newDelta;
-            //}
-        }
-
-        if (isHeader) {
-            for(auto& it : *checked) {
-                if (it.second) {
-
-                }
-                else {
-
+                    PushRectToRight(realDeltaPos, *it, checkedPos, checkedSize, origin);
                 }
             }
         }
 
-        return -realDeltaPos;
-    }
+        if (std::fabs(realDeltaPos) < _algEpsilon) { realDeltaPos = 0; }
 
-    void Window::SetRectanglePosition(const glm::vec2& position, const size_t index) {
-        if (index >= _rectangles.size()) {
-            Core::Logger::LogCritical("Index out of bounds: " + __LOGERROR__);
-            return;
-        }
+        float shortageDelta = delta - realDeltaPos;
+        //!isHeader &&
+        if (std::fabsf(shortageDelta) > _algEpsilon) {
 
-        //separate x and y component
-        float xTransform = position.x;
-        float yTransform = position.y;
+            bool isAvailable = true;
 
-        struct Deltas {
-            float xLeftDelta = 0, xRightDelta = 0;
-            float yTopDelta = 0, yBottomDelta = 0;
-        };
-        //struct separateDeltas {
-        //    //or bottom
-        //    float leftDelta = 0;
-        //    //or top
-        //    float rightDelta = 0;
-        //};
-
-
-        auto checkBorders = [](glm::vec2& pos) {
-            Deltas deltas;
-
-            if (pos.x < 0) {
-                deltas.xLeftDelta = std::abs(pos.x);
-                pos.x = 0;
-            }
-            if (pos.y < 0) {
-                deltas.yBottomDelta = std::abs(pos.y);
-                pos.y = 0;
-            }
-
-            if (pos.x > 1) {
-                deltas.xRightDelta = 1 - pos.x;
-                pos.x = 1;
-            }
-            if (pos.y > 1) {
-                deltas.yTopDelta = 1 - pos.y;
-                pos.y = 1;
-            }
-
-            return deltas;
-        };
-        auto separateCheckBorders = [](float oldPos, float newPos) {
-            float delta = newPos - oldPos;
-
-            if (newPos < 0) {
-                delta = 0;
-            }
-            if (newPos > 1) {
-                delta = 0;
-            }
-
-            return delta;
-        };
-        auto separateCheckSize = [](
-                float leftCorner, float rightCorner, float pushDelta, float minimumDistance) {
-
-            float delta = 0;
-            float newLeftCorner = leftCorner + pushDelta;
-
-            float dist = rightCorner - newLeftCorner;
-            float maxAcceptableDelta = dist - minimumDistance;
-
-            if (newLeftCorner > rightCorner) {
-                float currDist = 0;
-
-                if (currDist < maxAcceptableDelta) {
-                    delta = std::fabs(maxAcceptableDelta - newLeftCorner);
-                    return delta;
+            for (auto &check: *checkedSize) {
+                if (&support == check.Rect) {
+                    isAvailable = false;
+                    break;
                 }
             }
-            else if (dist > maxAcceptableDelta) {
-                delta = pushDelta - (dist - maxAcceptableDelta);
-                return delta;
-            }
 
-            return pushDelta;
-        };
-
-        auto changeSize = [](glm::vec2 delta, Rectangle& changes, bool isPushRightEdge) {
-            if (isPushRightEdge) {
-                glm::vec2 newSize = changes.GetSize();
-                newSize += delta;
-
-                changes.SetSize(newSize);
-                return;
-            }
-
-            glm::vec2 oldPos = changes.GetPosition();
-            glm::vec2 newPos = oldPos + delta;
-
-            glm::vec2 oldSize = changes.GetSize();
-            glm::vec2 newSize = oldSize - delta;
-
-            changes.SetPosition(newPos);
-            changes.SetSize(newSize);
-        };
-
-        constexpr float epsilon = 0.0005f;
-        auto &support = _rectangles[index];
-
-        //Check if it out of bounds
-        glm::vec2 newPos = position;
-        checkBorders(newPos);
-        glm::vec2 delta = newPos - support->_position;
-
-        auto step = [&separateCheckBorders, &separateCheckSize]
-                (float leftCorner, float rightCorner, float delta, float minSize) {
-
-            //first - max found empty space for pushing neighbor
-            //second - max found size(in this case: push left edge to the right)
-            std::pair<float, float> maximum {0, 0};
-
-            //trying change pos without changing size
-            {
-                float newRightCorner = rightCorner + delta;
-                float neighDelta = separateCheckBorders(rightCorner, newRightCorner);
-
-                maximum.first += neighDelta;
-            }
-
-            //trying changing size(in this case: push left edge to the right)
-            {
-                float neighDeltas = separateCheckSize(
-                        leftCorner,
-                        rightCorner,
-                        delta,
-                        minSize);
-
-                maximum.second += neighDeltas;
-            }
-
-            return maximum;
-        };
-
-        //check xComponent
-        if (delta.x != 0) {
-
-            //push left
-            if (delta.x < 0) {
-                //change left neighbors
-
-                //trying to make smaller right neighbors
-
-                //first - max found empty space for pushing neighbor
-                //second - max found size(in this case: push left edge to the right)
-                std::pair<float, float> maximum {0, 0};
-
-                for (auto it: support->_leftNeighbors) {
-                    maximum = step(it->GetRightBottomCorner().x, it->GetLeftBottomCorner().x, delta.x, it->_minSize.x);
-
-                    changeSize({maximum.second, 0}, *it, true);
-                }
-            }
-            //push right
-            else if (delta.x > 0) {
-                //change right neighbors
-
-                //trying to make smaller right neighbors
-
-                //first - max found empty space for pushing neighbor
-                //second - max found size(in this case: push left edge to the right)
-                std::pair<float, float> maximum {0, 0};
-
-                for (auto it: support->_rightNeighbors) {
-                    maximum = step(it->GetLeftBottomCorner().x, it->GetRightBottomCorner().x, delta.x, it->_minSize.x);
-
-                   changeSize({maximum.second, 0}, *it, false);
-                }
-
+            if (isAvailable) {
+                PushLeftRectEdge(-shortageDelta, support, checkedPos, checkedSize, origin);
             }
         }
 
-        support->SetPosition(newPos);
+        for(auto& it : *checkedPos) {
+            if(it.Rect == &support) {
+                it.FoundDelta = realDeltaPos;
+                break;
+            }
+        }
     }
 
     glm::vec2 Window::GetRectangleSize(const size_t index) const {
