@@ -3,8 +3,13 @@ if (POLICY CMP0072)
 	cmake_policy (SET CMP0072 NEW)
 endif(POLICY CMP0072)
 
+SET (Game_Source "${CMAKE_CURRENT_LIST_DIR}")
+include_directories("${Game_Source}")
+
 add_executable (SimpleGame
 		"${Examples_Dir}/SimpleGame/MyScript.cpp"
+		"${Examples_Dir}/SimpleGame/Windows/WindowsSettings.cpp"
+		"${Examples_Dir}/SimpleGame/Modules.cpp"
 		"GLAD/glad/src/glad.c")
 
 add_dependencies(SimpleGame ALPHA_Engine)

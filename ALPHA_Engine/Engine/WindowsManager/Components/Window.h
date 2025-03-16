@@ -99,41 +99,59 @@ namespace WindowsManager {
         //TODO: Make it
         void DestroyRectangle(size_t index);
 
-        //X component - change left edge
-        //Y component - change right edge
+    private:
         void PushLeftRectEdge(
                 float delta,
                 Rectangle& support,
-                std::shared_ptr<std::vector<Buffer>> checkedPos,
-                std::shared_ptr<std::vector<Buffer>> checkedSize,
-                Rectangle* origin);
+                const std::shared_ptr<std::vector<Buffer>>& checkedPos,
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize,
+                Rectangle* origin,
+                bool isHeader = false);
 
         void PushRightRectEdge(
                 float delta,
                 Rectangle& support,
-                std::shared_ptr<std::vector<Buffer>> checkedPos,
-                std::shared_ptr<std::vector<Buffer>> checkedSize,
-                Rectangle* origin);
+                const std::shared_ptr<std::vector<Buffer>>& checkedPos,
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize,
+                Rectangle* origin,
+                bool isHeader = false);
 
 
         void PushRectToLeft (
                 float delta,
                 Rectangle& support,
-                std::shared_ptr<std::vector<Buffer>> checkedPos,
-                std::shared_ptr<std::vector<Buffer>> checkedSize,
-                Rectangle* origin
-                );
+                const std::shared_ptr<std::vector<Buffer>>& checkedPos,
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize,
+                Rectangle* origin,
+                bool isHeader = false);
 
         void PushRectToRight (
                 float delta,
                 Rectangle& support,
-                std::shared_ptr<std::vector<Buffer>> checkedPos,
-                std::shared_ptr<std::vector<Buffer>> checkedSize,
-                Rectangle* origin
+                const std::shared_ptr<std::vector<Buffer>>& checkedPos,
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize,
+                Rectangle* origin,
+                bool isHeader = false
         );
+
+        void ApplyChanges(
+                float delta,
+                const std::shared_ptr<std::vector<Buffer>>& checkedPos,
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize) const;
+
+        void LeftEnd(Rectangle& support);
+        void RightEnd(Rectangle& support);
 
         bool HasPathLeft(Rectangle& rect, Rectangle& origin);
         bool HasPathRight(Rectangle& rect, Rectangle& origin);
+
+    public:
+        void PushLeftRectEdge(float delta, Rectangle& support);
+        void PushRightRectEdge(float delta, Rectangle& support);
+
+        void PushRectToLeft(float delta, Rectangle& support);
+
+        void PushRectToRight(float delta, Rectangle& support);
 
         void RectangleFillFreeSpace(Rectangle& support);
 

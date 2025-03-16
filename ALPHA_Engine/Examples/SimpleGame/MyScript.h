@@ -3,10 +3,7 @@
 #include "Core/Serialization/TSerialized.h"
 #include "MyScript.generated.h"
 
-namespace WindowsManager {
-	class Window;
-    class Rectangle;
-}
+#include "Windows/WindowsSettings.h"
 
 ACLASS()
 class Data {
@@ -39,10 +36,8 @@ class MyScript final : public Register::UserScript {
 	private:
 	Core::Object* Player = nullptr;
 	float moveSensitive = 10;
+    WindowsSettings winSettings;
 
-	WindowsManager::Window* win1 = nullptr;
-
-    WindowsManager::Rectangle* rect;
 
 	public:
 	MyScript() = default;
@@ -50,8 +45,6 @@ class MyScript final : public Register::UserScript {
 	void Start() override;
 	void Update() override;
 	void End() override;
-
-	void Print();
 
     void CameraRotate();
 
@@ -69,14 +62,6 @@ class MyScript final : public Register::UserScript {
 	void PushDown();
 	void PushRight();
 	void PushLeft();
-
-	void ShowCursor();
-	void HideCursor();
-
-    void WindowsTest1();
-    void WindowsTest2();
-    void WindowsTest3();
-    void WindowsTest4();
 
 	void GenerateCubeMap();
 	void GenerateLightSource();

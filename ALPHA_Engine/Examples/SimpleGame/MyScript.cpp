@@ -1,97 +1,10 @@
 #include "MyScript.h"
 
-//===================Core===================//
-#include "Core/World.h"
-#include "Core/Object.h"
-#include "Core/Factory.h"
+#include "Modules.h"
 
-#include "Core/Timer.h"
-
-#include "Core/Logger/Logger.h"
-//===================Core===================//
-
-#include "UserScriptsRegister/UserScriptConfig.h"
-#include "WindowsManager/WindowsManagerConfig.h"
-#include "BindsEngine/BindsEngineConfig.h"
-
-//===================Anomaly Engine===================//
-#include "AnomalyEngine/RenderEngine.h"
-
-#include "AnomalyEngine/Buffers/CamerasBuffer.h"
-#include "AnomalyEngine/Buffers/MeshesBuffer.h"
-#include "AnomalyEngine/Buffers/DirectLightsBuffer.h"
-#include "AnomalyEngine/Buffers/PointLightsBuffer.h"
-
-#include "AnomalyEngine/Components/Mesh.h"
-#include "AnomalyEngine/Components/Camera.h"
-#include "AnomalyEngine/Components/DirectLight.h"
-#include "AnomalyEngine/Components/PointLight.h"
-
-#include "AnomalyEngine/Shaders/CubeMapShader.h"
-#include "AnomalyEngine/Shaders/OpaqueShader.h"
-#include "AnomalyEngine/Shaders/SimplexFractalShader.h"
-//===================Anomaly Engine===================//
-
-//===================User Scripts Register===================//
-Register::Registry* userScriptSystem;
-Register::UserScriptsBuffer* userScriptsBuffer;
-//===================User Scripts Register===================//
-
-//===================Binds Engine===================//
-BindsEngine::KeyboardSystem* keyboardSystem;
-BindsEngine::KeyboardSensors* keyboardBuffer;
-
-BindsEngine::MouseSystem* mouseSystem;
-BindsEngine::MouseSensors* mouseBuffer;
-
-BindsEngine::InputSystem* inputSystem;
-BindsEngine::BindsBuffer* bindsBuffer;
-//===================Binds Engine===================//
-
-//===================Windows Manager===================//
-WindowsManager::WindowsManager* windowsSystem;
-WindowsManager::WindowsBuffer* windowsBuffer;
-//===================Windows Manager===================//
-
-//===================Anomaly Engine===================//
-AnomalyEngine::RenderEngine* anomalySystem;
-AnomalyEngine::MeshesBuffer* meshesBuffer;
-AnomalyEngine::CamerasBuffer* camerasBuffer;
-AnomalyEngine::DirectLightsBuffer* directLightsBuffer;
-AnomalyEngine::PointLightsBuffer* pointLightsBuffer;
-//===================Anomaly Engine===================//
-
-namespace Core {
-    //This function will be invoked before general cycle
-    //Use this for initialize global data
-    void InstanceModule() {
-        userScriptSystem = new Register::Registry();
-        userScriptsBuffer = new Register::UserScriptsBuffer();
-
-        keyboardSystem = new BindsEngine::KeyboardSystem();
-        keyboardBuffer = new BindsEngine::KeyboardSensors();
-
-        mouseSystem = new BindsEngine::MouseSystem();
-        mouseBuffer = new BindsEngine::MouseSensors();
-
-        inputSystem = new BindsEngine::InputSystem();
-        bindsBuffer = new BindsEngine::BindsBuffer();
-
-        windowsSystem = new WindowsManager::WindowsManager();
-        windowsBuffer = new WindowsManager::WindowsBuffer();
-
-        anomalySystem = new AnomalyEngine::RenderEngine();
-        meshesBuffer = new AnomalyEngine::MeshesBuffer();
-        camerasBuffer = new AnomalyEngine::CamerasBuffer();
-        directLightsBuffer = new AnomalyEngine::DirectLightsBuffer();
-        pointLightsBuffer = new AnomalyEngine::PointLightsBuffer();
-
-        /*auto* script =*/ userScriptsBuffer->CreateActor<MyScript>();
-    }
-}
 
 void MyScript::CameraRotate() {
-    if (win1->GetCursorVisible() == true)
+    if (winSettings.win1->GetCursorVisible() == true)
         return;
 
     double sensitive = 7;
@@ -114,15 +27,6 @@ void MyScript::CameraRotate() {
         Player->transform.SetRotation(newRot);
 
     }
-}
-
-void MyScript::ShowCursor() {
-    std::cout << "Show";
-    win1->SetCursorVisible(true);
-}
-
-void MyScript::HideCursor() {
-    win1->SetCursorVisible(false);
 }
 
 void MyScript::LeftMoveCamera() {
@@ -226,18 +130,18 @@ void MyScript::PushRight() {
 
     {
         Core::ScopedTimer timer("timer");
-        win1->PushRightRectEdge(-delta, *rect, nullptr, nullptr, nullptr);  // -->
+        winSettings.win1->PushRightRectEdge(-delta, *winSettings.rect);  // -->
     }
     std::cout << "============" << std::endl;
-    //win1->PushLeftRectEdge(delta, *rect, nullptr, nullptr, nullptr);  // -->
+    //win1->PushLeftRectEdge(delta, *rect);  // -->
 }
 void MyScript::PushLeft() {
     float delta = 0.2f;
     delta *= Core::World::GetDeltaTime();
 
-    win1->PushRightRectEdge(-delta, *rect, nullptr, nullptr, nullptr); // <--
+    winSettings.win1->PushRightRectEdge(-delta, *winSettings.rect); // <--
     std::cout << "============" << std::endl;
-    //win1->PushLeftRectEdge(delta, *rect, nullptr, nullptr, nullptr);  // -->
+    //win1->PushLeftRectEdge(delta, *rect);  // -->
 }
 
 void MyScript::GenerateCubeMap() {
@@ -327,199 +231,6 @@ void MyScript::LogExample() {
 #endif
 }
 
-void MyScript::WindowsTest1() {
-    auto& cam1_1 = camerasBuffer->CreateCamera();
-    auto& cam1_2 = camerasBuffer->CreateCamera();
-
-    win1->CreateRectangle({0,0},{0.3,0.3});
-    cam1_1.SetRenderWindow(win1);
-    cam1_1.SetUseRectangle(true);
-    cam1_1.SetIndexRectangle(0);
-
-    win1->CreateRectangle({0.5,0},{0.5,0.5});
-    cam1_2.SetRenderWindow(win1);
-    cam1_2.SetUseRectangle(true);
-    cam1_2.SetIndexRectangle(1);
-
-    Player->AddComponent(cam1_1);
-    Player->AddComponent(cam1_2);
-}
-
-void MyScript::WindowsTest2() {
-    auto& cam1_1 = camerasBuffer->CreateCamera();
-
-    win1->CreateRectangle({0,0},{0.025,0.95});
-    cam1_1.SetRenderWindow(win1);
-    cam1_1.SetUseRectangle(true);
-    cam1_1.SetIndexRectangle(0);
-
-    Player->AddComponent(cam1_1);
-
-    //------------------------------------------------//
-
-    auto& cam1_2 = camerasBuffer->CreateCamera();
-
-    win1->CreateRectangle({0,0.95},{1,0.05});
-    cam1_2.SetRenderWindow(win1);
-    cam1_2.SetUseRectangle(true);
-    cam1_2.SetIndexRectangle(1);
-
-    Player->AddComponent(cam1_2);
-
-    //------------------------------------------------//
-    auto& cam1_3 = camerasBuffer->CreateCamera();
-
-    win1->CreateRectangle({0.025,0.3},{0.3,0.651});
-    cam1_3.SetRenderWindow(win1);
-    cam1_3.SetUseRectangle(true);
-    cam1_3.SetIndexRectangle(2);
-
-    Player->AddComponent(cam1_3);
-
-    //------------------------------------------------//
-    auto& cam1_4 = camerasBuffer->CreateCamera();
-
-    win1->CreateRectangle({0.025,0},{0.975,0.3});
-    cam1_4.SetRenderWindow(win1);
-    cam1_4.SetUseRectangle(true);
-    cam1_4.SetIndexRectangle(3);
-
-    Player->AddComponent(cam1_4);
-
-    //------------------------------------------------//
-    auto& cam1_5 = camerasBuffer->CreateCamera();
-
-    auto& rect = win1->CreateRectangle({0.355,0.4},{0.375,0.251});
-    cam1_5.SetRenderWindow(win1);
-    cam1_5.SetUseRectangle(true);
-    cam1_5.SetIndexRectangle(4);
-
-    Player->AddComponent(cam1_5);
-
-    win1->RectangleFillFreeSpace(rect);
-}
-
-void MyScript::WindowsTest3() {
-    auto& cam1_1 = camerasBuffer->CreateCamera();
-
-    rect = &win1->CreateRectangle({0.3f,0.3f},{0.4f,0.4f});
-
-    cam1_1.SetRenderWindow(win1);
-    cam1_1.SetUseRectangle(true);
-    cam1_1.SetIndexRectangle(0);
-
-    Player->AddComponent(cam1_1);
-
-    //------------------------------------------------//
-
-    auto& cam1_2 = camerasBuffer->CreateCamera();
-
-    auto& rect2 = win1->CreateRectangle({0,0},{0.1f,0.1f});
-    cam1_2.SetRenderWindow(win1);
-    cam1_2.SetUseRectangle(true);
-    cam1_2.SetIndexRectangle(1);
-
-    Player->AddComponent(cam1_2);
-    win1->RectangleFillFreeSpace(rect2);
-
-    //------------------------------------------------//
-
-    auto& cam1_3 = camerasBuffer->CreateCamera();
-
-    auto& rect3 = win1->CreateRectangle({0.9f,0.9f},{0.1f,0.1f});
-    cam1_3.SetRenderWindow(win1);
-    cam1_3.SetUseRectangle(true);
-    cam1_3.SetIndexRectangle(2);
-
-    Player->AddComponent(cam1_3);
-    win1->RectangleFillFreeSpace(rect3);
-
-    //------------------------------------------------//
-
-    auto& cam1_4 = camerasBuffer->CreateCamera();
-
-    auto& rect4 = win1->CreateRectangle({0.5f,0.9f},{0.1f,0.1f});
-    cam1_4.SetRenderWindow(win1);
-    cam1_4.SetUseRectangle(true);
-    cam1_4.SetIndexRectangle(3);
-
-    Player->AddComponent(cam1_4);
-    win1->RectangleFillFreeSpace(rect4);
-
-    //------------------------------------------------//
-
-    auto& cam1_5 = camerasBuffer->CreateCamera();
-
-    auto& rect5 = win1->CreateRectangle({0.5f,0.0},{0.1f,0.1f});
-    cam1_5.SetRenderWindow(win1);
-    cam1_5.SetUseRectangle(true);
-    cam1_5.SetIndexRectangle(4);
-
-    Player->AddComponent(cam1_5);
-    win1->RectangleFillFreeSpace(rect5);
-
-    //------------------------------------------------//
-
-    rect->SetPosition({0.4, 0.4});
-    rect->SetSize({0.2, 0.2});
-    win1->RectangleFillFreeSpace(*rect);
-
-    rect = &rect2;
-
-    //std::cout << "end";
-
-    //win1->PushLeftRectEdge(-0.2f, rect1, nullptr);  // --> work
-    //win1->PushLeftRectEdge(0.2f, rect1, nullptr);   // <-- work
-
-    //win1->PushRightRectEdge(-0.2f, rect1, nullptr); // <-- work
-    //win1->PushRightRectEdge(0.2f, rect1, nullptr);  // --> work
-}
-
-void MyScript::WindowsTest4() {
-    auto& cam1_2 = camerasBuffer->CreateCamera();
-
-    rect = &win1->CreateRectangle({0.0f,0.0f},{0.1f, 0.2f});
-
-    cam1_2.SetRenderWindow(win1);
-    cam1_2.SetUseRectangle(true);
-    cam1_2.SetIndexRectangle(1);
-
-    Player->AddComponent(cam1_2);
-
-    //------------------------------------------------//
-
-    auto& cam1_3 = camerasBuffer->CreateCamera();
-
-    auto& rect3 = win1->CreateRectangle({0.4f,0.0f},{0.1f, 0.2f});
-
-    cam1_3.SetRenderWindow(win1);
-    cam1_3.SetUseRectangle(true);
-    cam1_3.SetIndexRectangle(2);
-
-    Player->AddComponent(cam1_3);
-
-    //------------------------------------------------//
-
-    auto& cam1_1 = camerasBuffer->CreateCamera();
-
-    auto& rect1 = win1->CreateRectangle({0.3f,0.0f},{0.05f, 1.0f});
-
-    cam1_1.SetRenderWindow(win1);
-    cam1_1.SetUseRectangle(true);
-    cam1_1.SetIndexRectangle(0);
-
-    Player->AddComponent(cam1_1);
-
-    //------------------------------------------------//
-
-    win1->RectangleFillFreeSpace(rect3);
-    win1->RectangleFillFreeSpace(*rect);
-
-    //rect = &rect3;
-
-    std::cout << "test" << std::endl;
-}
-
 //Call after created
 void MyScript::Start() {
     Serialization();
@@ -536,8 +247,8 @@ void MyScript::Start() {
     }
     const auto windows = reinterpret_cast<WindowsManager::WindowsBuffer*>(windowsBuffer);
 
-    win1 = windows->CreateWindow(1280, 720, "Windows 1");
-    win1->SetCursorVisible(false);
+    winSettings.win1 = windows->CreateWindow(1280, 720, "Windows 1");
+    winSettings.win1->SetCursorVisible(false);
 #endif
 
 #if BINDS_ENGINE_INCLUDED
@@ -552,90 +263,90 @@ void MyScript::Start() {
         auto* buffer = reinterpret_cast<BindsBuffer*>(bindsBuffer);
 
         /*auto& showCursor =*/ buffer->CreateKeyboardBind(
-            { std::bind(&MyScript::ShowCursor, this) },
+            { std::bind(&WindowsSettings::ShowCursor, winSettings) },
             { EnumKeyboardKeysStates::KeyPressed },
             { EnumKeyboardTable::LAlt },
-            win1);
+            winSettings.win1);
 
         /*auto& hideCursor =*/ buffer->CreateKeyboardBind(
-            { std::bind(&MyScript::HideCursor, this) },
+            { std::bind(&WindowsSettings::HideCursor, winSettings) },
             { EnumKeyboardKeysStates::KeyReleased },
             { EnumKeyboardTable::LAlt },
-            win1
+            winSettings.win1
         );
 
         /*auto& leftMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::LeftMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::A },
-            win1
+            winSettings.win1
         );
 
         /*auto& rightMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::RightMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::D },
-            win1
+            winSettings.win1
         );
 
         /*auto& forwardMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::ForwardMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::W },
-            win1
+            winSettings.win1
         );
 
         /*auto& backwardMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::BackwardMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::S },
-            win1
+            winSettings.win1
         );
 
         /*auto& upMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::UpMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Q },
-            win1
+            winSettings.win1
         );
 
         /*auto& downMove =*/ buffer->CreateKeyboardBind(
             { std::bind(&MyScript::DownMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::E },
-            win1
+            winSettings.win1
         );
 
 
         /*auto& rotateBind =*/ buffer->CreateMouseSensorBind(
             { std::bind(&MyScript::CameraRotate, this) },
             { EnumMouseSensorStates::MouseKeepMoved, EnumMouseSensorStates::MouseStartMoved },
-            win1
+            winSettings.win1
         );
 
         buffer->CreateKeyboardBind(
             { std::bind(&MyScript::PushRight, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Right },
-            win1
+            winSettings.win1
         );
         buffer->CreateKeyboardBind(
             { std::bind(&MyScript::PushLeft, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Left },
-            win1
+            winSettings.win1
         );
         buffer->CreateKeyboardBind(
             { std::bind(&MyScript::PushUp, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Up },
-            win1
+            winSettings.win1
         );
         buffer->CreateKeyboardBind(
             { std::bind(&MyScript::PushDown, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Down },
-            win1
+            winSettings.win1
         );
 
 
@@ -644,7 +355,7 @@ void MyScript::Start() {
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-    WindowsTest3();
+    winSettings.WindowsTest3(*Player);
 
     GenerateCubeMap();
     GenerateEarth();

@@ -183,8 +183,15 @@ namespace AnomalyEngine {
                     if (realSize.x + 0.5f > std::ceilf(realSize.x)) {
                         realSize.x = std::ceilf(realSize.x);
                     }
+                    if (realSize.y + 0.5f > std::ceilf(realSize.y)) {
+                        realSize.y = std::ceilf(realSize.y);
+                    }
+
                     if (realPosition.x + 0.5f > std::ceilf(realPosition.x)) {
                         realPosition.x = std::ceilf(realPosition.x);
+                    }
+                    if (realPosition.y + 0.5f > std::ceilf(realPosition.y)) {
+                        realPosition.y = std::ceilf(realPosition.y);
                     }
 
                     PrepareRender(
