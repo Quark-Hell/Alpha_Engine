@@ -112,16 +112,24 @@ void MyScript::DownMoveCamera() {
 
 
 void MyScript::PushUp() {
-   //glm::vec2 size = win1->GetRectangleSize(0);
-   //size.y += 255.0 * Core::World::GetDeltaTime();
+    float delta = 0.2f;
+    delta *= Core::World::GetDeltaTime();
 
-   //win1->PushLeftRectEdge(size, 0);
+    {
+        Core::ScopedTimer timer("timer");
+        //winSettings.win1->PushTopRectEdge(delta, *winSettings.rect);
+        winSettings.win1->PushBottomRectEdge(-delta, *winSettings.rect);
+    }
 }
 void MyScript::PushDown() {
-   //glm::vec2 size = win1->GetRectangleSize(0);
-   //size.y -= 255.0 * Core::World::GetDeltaTime();
+    float delta = -0.2f;
+    delta *= Core::World::GetDeltaTime();
 
-   //win1->PushLeftRectEdge(size, 0);
+    {
+        Core::ScopedTimer timer("timer");
+        //winSettings.win1->PushTopRectEdge(delta, *winSettings.rect);
+        winSettings.win1->PushBottomRectEdge(-delta, *winSettings.rect);
+    }
 }
 
 void MyScript::PushRight() {
@@ -132,7 +140,6 @@ void MyScript::PushRight() {
         Core::ScopedTimer timer("timer");
         winSettings.win1->PushRightRectEdge(-delta, *winSettings.rect);  // -->
     }
-    std::cout << "============" << std::endl;
     //win1->PushLeftRectEdge(delta, *rect);  // -->
 }
 void MyScript::PushLeft() {
@@ -140,7 +147,6 @@ void MyScript::PushLeft() {
     delta *= Core::World::GetDeltaTime();
 
     winSettings.win1->PushRightRectEdge(-delta, *winSettings.rect); // <--
-    std::cout << "============" << std::endl;
     //win1->PushLeftRectEdge(delta, *rect);  // -->
 }
 
@@ -355,7 +361,7 @@ void MyScript::Start() {
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-    winSettings.WindowsTest3(*Player);
+    winSettings.WindowsTest5(*Player);
 
     GenerateCubeMap();
     GenerateEarth();

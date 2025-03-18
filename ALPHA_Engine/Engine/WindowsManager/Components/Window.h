@@ -19,8 +19,10 @@ namespace WindowsManager {
 
         enum Direction {
             NotAvailable = 0,
-            Left = -1,
-            Right = 1
+            Left         = 1,
+            Right        = 2,
+            Top          = 3,
+            Bottom       = 4
         };
 
         class Buffer {
@@ -134,7 +136,45 @@ namespace WindowsManager {
                 bool isHeader = false
         );
 
-        void ApplyChanges(
+        void PushTopRectEdge(
+                float delta,
+                Rectangle& support,
+                const std::shared_ptr<std::vector<Buffer>>& checkedPos,
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize,
+                Rectangle* origin,
+                bool isHeader = false);
+
+        void PushBottomRectEdge(
+                float delta,
+                Rectangle& support,
+                const std::shared_ptr<std::vector<Buffer>>& checkedPos,
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize,
+                Rectangle* origin,
+                bool isHeader = false);
+
+        void PushRectToUp (
+                float delta,
+                Rectangle& support,
+                const std::shared_ptr<std::vector<Buffer>>& checkedPos,
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize,
+                Rectangle* origin,
+                bool isHeader = false);
+
+        void PushRectToDown (
+                float delta,
+                Rectangle& support,
+                const std::shared_ptr<std::vector<Buffer>>& checkedPos,
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize,
+                Rectangle* origin,
+                bool isHeader = false
+        );
+
+        void ApplyChangesX(
+                float delta,
+                const std::shared_ptr<std::vector<Buffer>>& checkedPos,
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize) const;
+
+        void ApplyChangesY(
                 float delta,
                 const std::shared_ptr<std::vector<Buffer>>& checkedPos,
                 const std::shared_ptr<std::vector<Buffer>>& checkedSize) const;
@@ -142,16 +182,24 @@ namespace WindowsManager {
         void LeftEnd(Rectangle& support);
         void RightEnd(Rectangle& support);
 
+        void TopEnd(Rectangle& support);
+        void BottomEnd(Rectangle& support);
+
         bool HasPathLeft(Rectangle& rect, Rectangle& origin);
         bool HasPathRight(Rectangle& rect, Rectangle& origin);
+
+        bool HasPathTop(Rectangle& rect, Rectangle& origin);
+        bool HasPathBottom(Rectangle& rect, Rectangle& origin);
 
     public:
         void PushLeftRectEdge(float delta, Rectangle& support);
         void PushRightRectEdge(float delta, Rectangle& support);
+        void PushTopRectEdge(float delta, Rectangle& support);
+        void PushBottomRectEdge(float delta, Rectangle& support);
 
         void PushRectToLeft(float delta, Rectangle& support);
-
         void PushRectToRight(float delta, Rectangle& support);
+
 
         void RectangleFillFreeSpace(Rectangle& support);
 
