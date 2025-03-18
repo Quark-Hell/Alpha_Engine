@@ -200,7 +200,7 @@ void WindowsSettings::WindowsTest4(Core::Object& Player) {
 void WindowsSettings::WindowsTest5(Core::Object& Player) {
     auto& cam1_1 = camerasBuffer->CreateCamera();
 
-    rect = &win1->CreateRectangle({0.0f,0.0f},{0.4f, 1.0f});
+    rect = &win1->CreateRectangle({0.0f,0.1f},{0.4f, 0.8f});
 
     cam1_1.SetRenderWindow(win1);
     cam1_1.SetUseRectangle(true);
@@ -260,7 +260,7 @@ void WindowsSettings::WindowsTest5(Core::Object& Player) {
 
     auto& cam1_6 = camerasBuffer->CreateCamera();
 
-    auto& rect6 = win1->CreateRectangle({0.45,0.55f},{0.1f, 0.2f});
+    auto& rect6 = win1->CreateRectangle({0.6,0.0f},{0.4, 1.0f});
 
     cam1_6.SetRenderWindow(win1);
     cam1_6.SetUseRectangle(true);
@@ -274,11 +274,43 @@ void WindowsSettings::WindowsTest5(Core::Object& Player) {
 
     auto& cam1_7 = camerasBuffer->CreateCamera();
 
-    win1->CreateRectangle({0.6,0.0f},{0.4, 1.0f});
+    auto& rect7 = win1->CreateRectangle({0.45,0.55f},{0.1f, 0.2f});
 
     cam1_7.SetRenderWindow(win1);
     cam1_7.SetUseRectangle(true);
     cam1_7.SetIndexRectangle(6);
 
     Player.AddComponent(cam1_7);
+
+    win1->RectangleFillFreeSpace(rect7);
+
+    //------------------------------------------------//
+
+    auto& cam1_8 = camerasBuffer->CreateCamera();
+
+    auto& rect8 = win1->CreateRectangle({0.0f,0.92f},{0.1f, 0.06f});
+
+    cam1_8.SetRenderWindow(win1);
+    cam1_8.SetUseRectangle(true);
+    cam1_8.SetIndexRectangle(7);
+
+    Player.AddComponent(cam1_8);
+
+    win1->RectangleFillFreeSpace(rect8);
+
+    //------------------------------------------------//
+
+    auto& cam1_9 = camerasBuffer->CreateCamera();
+    //win1->CreateRectangle({0.0f,0.92f},{0.1f, 0.06f});
+    auto& rect9 = win1->CreateRectangle({0.0f,0.0},{0.1f, 0.06f});
+
+    cam1_9.SetRenderWindow(win1);
+    cam1_9.SetUseRectangle(true);
+    cam1_9.SetIndexRectangle(8);
+
+    Player.AddComponent(cam1_9);
+
+    win1->RectangleFillFreeSpace(rect9);
+
+   std::cout << "end" << std::endl;
 }

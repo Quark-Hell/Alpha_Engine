@@ -184,7 +184,7 @@ namespace WindowsManager {
 
             glm::vec2 vec = p1 - corner1;
 
-            constexpr float epsilon = 0.01f;
+            constexpr float epsilon = 0.00001f;
 
             if (std::fabs(glm::dot(vec, norm)) > epsilon) {
                 if (glm::dot(glm::normalize(vec), norm) < 0)
@@ -202,10 +202,10 @@ namespace WindowsManager {
             if((exp1 + exp2 + exp3 + exp4) < 2)
                 return;
 
-            distances.emplace_back(index, glm::length2(vec));
+            distances.emplace_back(index, glm::length(vec));
         };
 
-        constexpr float epsilon = 0.001f;
+        constexpr float epsilon = 0.00001f;
         auto removeExtra = [](std::vector<std::pair<size_t, float>>& distances, float eps) {
             distances.erase(
                     std::remove_if(distances.begin(), distances.end(),
@@ -371,73 +371,14 @@ namespace WindowsManager {
 
     }
 
-    void Window::RecalculateFreeSpace(const Rectangle& support) {
-        //find intersect AABB
-        //It may be more than 1
-        //So we need check vector at all
-        std::vector<std::pair<glm::vec2, glm::vec2>> intersectBuffer;
-        std::vector<size_t> indexBuffer;
-
-        size_t index = 0;
-        for(auto& rect : _freeRectangles) {
-            glm::vec2 leftCorner = rect.first;
-            glm::vec2 rightCorner = rect.second;
-
-            bool intersect = glm::CheckAABBIntersection(
-                    support.GetLeftBottomCorner(),
-                    support.GetRightTopCorner(),
-                    leftCorner,
-                    rightCorner);
-
-            if(intersect) {
-                intersectBuffer.emplace_back(rect);
-                indexBuffer.emplace_back(index);
-            }
-
-            index++;
-        }
-
-        //Divide intersect rectangle
-        for(size_t i = intersectBuffer.size(); i--;){
-            std::vector<std::pair<glm::vec2, glm::vec2>> pushBuffer;
-            pushBuffer.resize(4);
-
-            //Calculate left rectangle
-            pushBuffer[0].first    = intersectBuffer[i].first;
-            pushBuffer[0].second.x = support.GetLeftBottomCorner().x;
-            pushBuffer[0].second.y = intersectBuffer[i].second.y;
-
-            //Calculate top rectangle
-            pushBuffer[1].first.x  = intersectBuffer[i].first.x;
-            pushBuffer[1].first.y  = support.GetRightTopCorner().y;
-            pushBuffer[1].second.x = support.GetRightTopCorner().x;
-            pushBuffer[1].second.y = intersectBuffer[i].second.y;
-
-            //Calculate right rectangle
-            pushBuffer[2].first.x  = support.GetRightBottomCorner().x;
-            pushBuffer[2].first.y  = intersectBuffer[i].first.y;
-            pushBuffer[2].second   = intersectBuffer[i].second;
-
-            //Calculate bottom rectangle
-            pushBuffer[3].first    = intersectBuffer[i].first;
-            pushBuffer[3].second   = support.GetRightBottomCorner();
-
-            //Remove divided rectangle from buffer
-            _freeRectangles.erase(_freeRectangles.begin() + indexBuffer[i]);
-
-            //Remove zero rectangle
-            for(auto& rect : pushBuffer) {
-                //if(rect.first.x == rect.second.x || rect.first.y == rect.second.y) { continue; }
-                if(rect.first.x >= rect.second.x) { continue; }
-                if(rect.first.y >= rect.second.y) { continue; }
-
-                _freeRectangles.emplace_back(rect);
-            }
-        }
-    }
-
     void Window::RectangleFillFreeSpace(Rectangle& support) {
         constexpr float epsilon = 0.0005f;
+
+        constexpr glm::vec2 left = {-1, 0};
+        constexpr glm::vec2 right = {1, 0};
+
+        constexpr glm::vec2 top = {0, 1};
+        constexpr glm::vec2 bottom = {0, -1};
 
         glm::vec2 centerPoint = glm::GetRectangleCenter(
                 support.GetLeftBottomCorner(),
@@ -463,68 +404,57 @@ namespace WindowsManager {
 
             glm::vec2 vec = rectCenterPoint - centerPoint;
 
-            //expression
-            bool v1 = false, v2 = false, v3 = false, v4 = false;
-
             //left
             if (vec.x < 0) {
-                glm::vec2 p1 = glm::ProjectPointOnAxis(support.GetLeftBottomCorner(), it->GetRightBottomCorner(), it->GetRightTopCorner());
                 glm::vec2 p2 = glm::ProjectPointOnAxis(support.GetLeftTopCorner(), it->GetRightBottomCorner(), it->GetRightTopCorner());
 
-                v1 = glm::InSegment(p1, it->GetRightBottomCorner(), it->GetRightTopCorner());
-                v2 = glm::InSegment(p2, it->GetRightBottomCorner(), it->GetRightTopCorner());
-
-                //if (v1 || v2) {
                 glm::vec2 vect = p2 - support.GetLeftTopCorner();
-                float xDist = glm::length(vect);
+                float dot = glm::dot(vect, left);
 
-                if (xLeftMaxDistance > xDist && xDist > epsilon) { xLeftMaxDistance = xDist; }
-                //}
+                if(dot >= 0) {
+                    float xDist = glm::length(vect);
+
+                    if (xLeftMaxDistance > xDist) { xLeftMaxDistance = xDist; }
+                }
             }
-                //right
+            //right
             else {
-                glm::vec2 p1 = glm::ProjectPointOnAxis(support.GetRightBottomCorner(), it->GetLeftBottomCorner(), it->GetLeftTopCorner());
                 glm::vec2 p2 = glm::ProjectPointOnAxis(support.GetRightTopCorner(), it->GetLeftBottomCorner(), it->GetLeftTopCorner());
 
-                v1 = glm::InSegment(p1, it->GetLeftBottomCorner(), it->GetLeftTopCorner());
-                v2 = glm::InSegment(p2, it->GetLeftBottomCorner(), it->GetLeftTopCorner());
-
-                //if (v1 || v2) {
                 glm::vec2 vect = p2 - support.GetRightTopCorner();
-                float xDist = glm::length(vect);
+                float dot = glm::dot(vect, right);
 
-                if (xRightMaxDistance > xDist && xDist > epsilon) { xRightMaxDistance = xDist; }
-                //}
+                if(dot >= 0 && (it->GetLeftTopCorner().y >= support.GetLeftBottomCorner().y)) {
+                    float xDist = glm::length(vect);
+
+                    if (xRightMaxDistance > xDist) { xRightMaxDistance = xDist; }
+                }
             }
 
             //bottom
             if (vec.y < 0) {
-                glm::vec2 p1 = glm::ProjectPointOnAxis(support.GetLeftBottomCorner(), it->GetLeftTopCorner(), it->GetRightTopCorner());
                 glm::vec2 p2 = glm::ProjectPointOnAxis(support.GetRightBottomCorner(), it->GetLeftTopCorner(), it->GetRightTopCorner());
 
-                v3 = glm::InSegment(p1, it->GetLeftTopCorner(), it->GetRightTopCorner());
-                v4 = glm::InSegment(p2, it->GetLeftTopCorner(), it->GetRightTopCorner());
+                glm::vec2 vect = p2 - support.GetRightBottomCorner();
+                float dot = glm::dot(vect, bottom);
 
-                if (v3 || v4) {
-                    glm::vec2 vect = p2 - support.GetRightBottomCorner();
+                if(dot >= 0) {
                     float yDist = glm::length(vect);
 
-                    if (yBottomMaxDistance > yDist && yDist > epsilon) { yBottomMaxDistance = yDist; }
+                    if (yBottomMaxDistance > yDist) { yBottomMaxDistance = yDist; }
                 }
             }
-                //top
+            //top
             else {
-                glm::vec2 p1 = glm::ProjectPointOnAxis(support.GetLeftTopCorner(), it->GetLeftBottomCorner(), it->GetRightBottomCorner());
                 glm::vec2 p2 = glm::ProjectPointOnAxis(support.GetRightTopCorner(), it->GetLeftBottomCorner(), it->GetRightBottomCorner());
 
-                v3 = glm::InSegment(p1, it->GetLeftBottomCorner(), it->GetRightBottomCorner());
-                v4 = glm::InSegment(p2, it->GetLeftBottomCorner(), it->GetRightBottomCorner());
+                glm::vec2 vect = p2 - support.GetRightTopCorner();
+                float dot = glm::dot(vect, top);
 
-                if (v3 || v4) {
-                    glm::vec2 vect = p2 - support.GetRightTopCorner();
+                if(dot >= 0) {
                     float yDist = glm::length(vect);
 
-                    if (yTopMaxDistance > yDist && yDist > epsilon) { yTopMaxDistance = yDist; }
+                    if (yTopMaxDistance > yDist) { yTopMaxDistance = yDist; }
                 }
             }
         }
@@ -576,7 +506,6 @@ namespace WindowsManager {
         support.SetPosition(newPos);
         support.SetSize(newSize);
 
-        RecalculateFreeSpace(support);
         RecalculateRectangleNeighbors(support);
     }
 
@@ -623,7 +552,6 @@ namespace WindowsManager {
 
         _rectangles.emplace_back(std::unique_ptr<Rectangle>(new Rectangle(position, size)));
 
-        RecalculateFreeSpace(*_rectangles.back());
         RecalculateRectangleNeighbors(*_rectangles.back());
 
         return *_rectangles.back();
@@ -635,7 +563,6 @@ namespace WindowsManager {
             return;
         }
 
-        RecalculateFreeSpace(*_rectangles.back());
         RecalculateRectangleNeighbors(*_rectangles.back());
     }
 
@@ -656,51 +583,43 @@ namespace WindowsManager {
     }
 
     bool Window::HasPathLeft(Rectangle& rect, Rectangle& origin) {
-        bool answer = false;
-
         if (&rect == &origin) { return true; }
 
         for (auto it: rect._leftNeighbors) {
-            answer = HasPathLeft(*it, origin);
+            return HasPathLeft(*it, origin);
         }
 
-        return answer;
+        return false;
     }
 
     bool Window::HasPathRight(Rectangle& rect, Rectangle& origin) {
-        bool answer = false;
-
         if (&rect == &origin) { return true; }
 
         for (auto it: rect._rightNeighbors) {
-            answer = HasPathRight(*it, origin);
+            return HasPathRight(*it, origin);
         }
 
-        return answer;
+        return false;
     }
 
     bool Window::HasPathTop(Rectangle& rect, Rectangle& origin) {
-        bool answer = false;
-
         if (&rect == &origin) { return true; }
 
         for (auto it: rect._topNeighbors) {
-            answer = HasPathLeft(*it, origin);
+            return HasPathTop(*it, origin);
         }
 
-        return answer;
+        return false;
     }
 
     bool Window::HasPathBottom(Rectangle& rect, Rectangle& origin) {
-        bool answer = false;
-
         if (&rect == &origin) { return true; }
 
         for (auto it: rect._bottomNeighbors) {
-            answer = HasPathLeft(*it, origin);
+            return HasPathBottom(*it, origin);
         }
 
-        return answer;
+        return false;
     }
 
     void Window::PushLeftRectEdge(
@@ -774,7 +693,7 @@ namespace WindowsManager {
 
             if (isAvailable) {
                 if (isHeader || !HasPathLeft(*it, *origin)) {
-                    PushRightRectEdge(realDeltaSize * -1, *it, checkedPos, checkedSize, origin);
+                    PushRightRectEdge(delta * -1, *it, checkedPos, checkedSize, origin);
                 }
             }
         }
@@ -875,9 +794,9 @@ namespace WindowsManager {
                 }
             }
 
-            if (isAvailable) {
+            if (isAvailable && std::fabs(realDeltaSize) > _algEpsilon) {
                 if (isHeader || !HasPathRight(*it, *origin)) {
-                    PushLeftRectEdge(realDeltaSize * -1, *it, checkedPos, checkedSize, origin);
+                    PushLeftRectEdge(delta * -1, *it, checkedPos, checkedSize, origin);
                 }
             }
         }
@@ -1145,7 +1064,7 @@ namespace WindowsManager {
 
             if (isAvailable) {
                 if (isHeader || !HasPathTop(*it, *origin)) {
-                    PushBottomRectEdge(realDeltaSize * -1, *it, checkedPos, checkedSize, origin);
+                    PushBottomRectEdge(delta * -1, *it, checkedPos, checkedSize, origin);
                 }
             }
         }
@@ -1247,7 +1166,7 @@ namespace WindowsManager {
 
             if (isAvailable) {
                 if (isHeader || !HasPathBottom(*it, *origin)) {
-                    PushBottomRectEdge(realDeltaSize * -1, *it, checkedPos, checkedSize, origin);
+                    PushTopRectEdge(delta * -1, *it, checkedPos, checkedSize, origin);
                 }
             }
         }

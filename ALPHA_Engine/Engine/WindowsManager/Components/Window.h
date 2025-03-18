@@ -49,9 +49,6 @@ namespace WindowsManager {
         std::string _title = "Window";
 
         std::vector<std::unique_ptr<Rectangle>> _rectangles;
-        std::vector<std::pair<glm::vec2, glm::vec2>> _freeRectangles {
-            {{0,0}, {1,1}}
-        };
 
         bool _isSync = true;
         bool _isCursorVisible = true;
@@ -61,8 +58,6 @@ namespace WindowsManager {
     private:
         void SetWindowHints();
         Window(const glm::vec2& size, const std::string& title, GLFWmonitor *monitor = nullptr, GLFWwindow *share = nullptr);
-
-        void RecalculateFreeSpace(const Rectangle& support);
 
         void ResizeRectangle(Rectangle& support, glm::vec2 newSize);
 
