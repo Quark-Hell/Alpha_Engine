@@ -1371,7 +1371,7 @@ namespace WindowsManager {
        //}
     }
 
-    void Window::LeftEnd(WindowsManager::Rectangle &support) {
+    void Window::LeftEnd(Rectangle &support) {
         for(auto it : support._leftNeighbors) {
             float dist = _algEpsilon;
 
