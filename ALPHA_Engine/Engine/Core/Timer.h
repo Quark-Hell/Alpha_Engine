@@ -12,6 +12,7 @@ namespace Core {
         void Reset();
         [[nodiscard]] double Elapsed() const;
         [[nodiscard]] double ElapsedMillis() const;
+        [[nodiscard]] double ElapsedNano() const;
     private:
         std::chrono::time_point<std::chrono::high_resolution_clock> _start;
     };

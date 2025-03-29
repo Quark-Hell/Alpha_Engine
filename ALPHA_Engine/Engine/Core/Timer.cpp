@@ -19,12 +19,16 @@ namespace Core {
       return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - _start).count() * 0.001f;
     }
 
+    double Timer::ElapsedNano() const {
+        return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - _start).count();
+    }
+
 
     ScopedTimer::ScopedTimer(const std::string_view name) : _name(name) {}
 
     ScopedTimer::~ScopedTimer()
     {
-      const float time = _timer.ElapsedMillis();
-      Logger::Logger::LogInfo(_name, " - ", time, "ms");
+      const float time = _timer.ElapsedNano();
+      Logger::Logger::LogInfo(_name, " - ", time, "nano");
     }
 }

@@ -167,12 +167,12 @@ namespace WindowsManager {
         void ApplyChangesX(
                 float delta,
                 const std::shared_ptr<std::vector<Buffer>>& checkedPos,
-                const std::shared_ptr<std::vector<Buffer>>& checkedSize) const;
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize);
 
         void ApplyChangesY(
                 float delta,
-                const std::shared_ptr<std::vector<Buffer>>& checkedPos,
-                const std::shared_ptr<std::vector<Buffer>>& checkedSize) const;
+                const std::shared_ptr<std::vector<Buffer>> &checkedPos,
+                const std::shared_ptr<std::vector<Buffer>>& checkedSize);
 
         void LeftEnd(Rectangle& support);
         void RightEnd(Rectangle& support);

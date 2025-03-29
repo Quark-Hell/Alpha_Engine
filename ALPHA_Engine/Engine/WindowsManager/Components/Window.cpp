@@ -1235,7 +1235,7 @@ namespace WindowsManager {
     void Window::ApplyChangesX(
             float delta,
             const std::shared_ptr<std::vector<Buffer>>& checkedPos,
-            const std::shared_ptr<std::vector<Buffer>>& checkedSize) const {
+            const std::shared_ptr<std::vector<Buffer>>& checkedSize) {
 
         float factor = 1;
 
@@ -1267,6 +1267,8 @@ namespace WindowsManager {
                 }
 
                 it.Rect->SetSize(newSize);
+                //RecalculateRectangleNeighbors(*it.Rect);
+
             } else if (it.Direct == Direction::Left) {
                 float oldXRightCorner = it.Rect->GetRightBottomCorner().x;
 
@@ -1289,6 +1291,8 @@ namespace WindowsManager {
                 glm::vec2 newSize = it.Rect->GetSize();
                 newSize.x += -errorDelta;
                 it.Rect->SetSize(newSize);
+
+                //RecalculateRectangleNeighbors(*it.Rect);
             }
         }
 
@@ -1297,13 +1301,14 @@ namespace WindowsManager {
             newPos.x += (it.FoundDelta * factor);
 
             it.Rect->SetPosition(newPos);
+            //RecalculateRectangleNeighbors(*it.Rect);
         }
     }
 
     void Window::ApplyChangesY(
             float delta,
-            const std::shared_ptr<std::vector<Buffer>>& checkedPos,
-            const std::shared_ptr<std::vector<Buffer>>& checkedSize) const {
+            const std::shared_ptr<std::vector<Buffer>> &checkedPos,
+            const std::shared_ptr<std::vector<Buffer>>& checkedSize) {
 
         float factor = 1;
 
@@ -1335,6 +1340,8 @@ namespace WindowsManager {
                 }
 
                 it.Rect->SetSize(newSize);
+                //RecalculateRectangleNeighbors(*it.Rect);
+
             } else if (it.Direct == Direction::Bottom) {
                 float oldXRightCorner = it.Rect->GetRightBottomCorner().y;
 
@@ -1360,6 +1367,7 @@ namespace WindowsManager {
                 if(newSize.y > 1) { newSize.y = 1; }
 
                 it.Rect->SetSize(newSize);
+                //RecalculateRectangleNeighbors(*it.Rect);
             }
         }
 

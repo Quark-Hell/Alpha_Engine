@@ -111,43 +111,52 @@ void MyScript::DownMoveCamera() {
 }
 
 
-void MyScript::PushUp() {
+void MyScript::PushUp(std::vector<WindowsManager::Rectangle*>& rectBuffer) {
     float delta = 0.2f;
     delta *= Core::World::GetDeltaTime();
 
     {
         Core::ScopedTimer timer("timer");
         //winSettings.win1->PushTopRectEdge(delta, *winSettings.rect);
-        winSettings.win1->PushBottomRectEdge(-delta, *winSettings.rect);
+        winSettings.win1->PushBottomRectEdge(-delta, *rectBuffer[CurrentRectID]);
     }
 }
-void MyScript::PushDown() {
+void MyScript::PushDown(std::vector<WindowsManager::Rectangle*>& rectBuffer) {
     float delta = -0.2f;
     delta *= Core::World::GetDeltaTime();
 
     {
         Core::ScopedTimer timer("timer");
         //winSettings.win1->PushTopRectEdge(delta, *winSettings.rect);
-        winSettings.win1->PushBottomRectEdge(-delta, *winSettings.rect);
+        winSettings.win1->PushBottomRectEdge(-delta, *rectBuffer[CurrentRectID]);
     }
 }
 
-void MyScript::PushRight() {
+void MyScript::PushRight(std::vector<WindowsManager::Rectangle*>& rectBuffer) {
    float delta = -0.2f;
    delta *= Core::World::GetDeltaTime();
 
     {
         Core::ScopedTimer timer("timer");
-        winSettings.win1->PushRightRectEdge(-delta, *winSettings.rect);  // -->
+        winSettings.win1->PushRightRectEdge(-delta, *rectBuffer[CurrentRectID]);  // -->
     }
     //win1->PushLeftRectEdge(delta, *rect);  // -->
 }
-void MyScript::PushLeft() {
+void MyScript::PushLeft(std::vector<WindowsManager::Rectangle*>& rectBuffer) {
     float delta = 0.2f;
     delta *= Core::World::GetDeltaTime();
 
-    winSettings.win1->PushRightRectEdge(-delta, *winSettings.rect); // <--
+    winSettings.win1->PushRightRectEdge(-delta, *rectBuffer[CurrentRectID]); // <--
     //win1->PushLeftRectEdge(delta, *rect);  // -->
+}
+
+void MyScript::ChangeRect(std::vector<WindowsManager::Rectangle*>& rectBuffer) {
+    if (CurrentRectID + 1 >= rectBuffer.size()) {
+        CurrentRectID = 0;
+        return;
+    }
+
+    CurrentRectID++;
 }
 
 void MyScript::GenerateCubeMap() {
@@ -331,30 +340,36 @@ void MyScript::Start() {
         );
 
         buffer->CreateKeyboardBind(
-            { std::bind(&MyScript::PushRight, this) },
+            { std::bind(&MyScript::PushRight, this, std::ref(winSettings.rects)) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Right },
             winSettings.win1
         );
         buffer->CreateKeyboardBind(
-            { std::bind(&MyScript::PushLeft, this) },
+            { std::bind(&MyScript::PushLeft, this, std::ref(winSettings.rects)) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Left },
             winSettings.win1
         );
         buffer->CreateKeyboardBind(
-            { std::bind(&MyScript::PushUp, this) },
+            { std::bind(&MyScript::PushUp, this, std::ref(winSettings.rects)) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Up },
             winSettings.win1
         );
         buffer->CreateKeyboardBind(
-            { std::bind(&MyScript::PushDown, this) },
+            { std::bind(&MyScript::PushDown, this, std::ref(winSettings.rects)) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Down },
             winSettings.win1
         );
 
+        buffer->CreateKeyboardBind(
+            { std::bind(&MyScript::ChangeRect, this, std::ref(winSettings.rects)) },
+            {EnumKeyboardKeysStates::KeyReleased },
+            {EnumKeyboardTable::Add },
+            winSettings.win1
+        );
 
         //bind.IsActive = false;
     }

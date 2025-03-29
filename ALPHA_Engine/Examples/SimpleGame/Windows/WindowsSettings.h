@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 namespace Core {
     class Object;
 }
@@ -13,6 +15,8 @@ class WindowsSettings {
 public:
     WindowsManager::Window* win1 = nullptr;
     WindowsManager::Rectangle* rect = nullptr;
+
+    std::vector<WindowsManager::Rectangle*> rects;
 
     void ShowCursor();
     void HideCursor();
