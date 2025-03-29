@@ -1237,6 +1237,23 @@ namespace WindowsManager {
             const std::shared_ptr<std::vector<Buffer>>& checkedPos,
             const std::shared_ptr<std::vector<Buffer>>& checkedSize) {
 
+        //TODO: It's feels like a cringe. I should remake it
+        if (delta > 0) {
+            for (size_t i = 0; i < checkedSize->size(); i++) {
+                for (size_t j = 0; j < checkedPos->size(); j++) {
+                    if (checkedSize->at(i).Rect != checkedPos->at(j).Rect) { continue; }
+                    if (!(checkedSize->at(i).FoundDelta != 0 && checkedPos->at(j).FoundDelta != 0)) { continue; }
+
+                    if (checkedSize->at(i).FoundDelta == checkedPos->at(j).FoundDelta) {
+                        checkedSize->erase(checkedSize->begin() + i);
+                        i--;
+                        break;
+                    }
+                }
+            }
+        }
+
+
         float factor = 1;
 
         for (auto &it: *checkedSize) {

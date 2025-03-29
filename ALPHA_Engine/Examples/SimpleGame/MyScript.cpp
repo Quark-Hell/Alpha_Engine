@@ -133,8 +133,8 @@ void MyScript::PushDown(std::vector<WindowsManager::Rectangle*>& rectBuffer) {
 }
 
 void MyScript::PushRight(std::vector<WindowsManager::Rectangle*>& rectBuffer) {
-   float delta = -0.2f;
-   delta *= Core::World::GetDeltaTime();
+    float delta = -0.2f;
+    delta *= Core::World::GetDeltaTime();
 
     {
         Core::ScopedTimer timer("timer");
@@ -143,6 +143,8 @@ void MyScript::PushRight(std::vector<WindowsManager::Rectangle*>& rectBuffer) {
     //win1->PushLeftRectEdge(delta, *rect);  // -->
 }
 void MyScript::PushLeft(std::vector<WindowsManager::Rectangle*>& rectBuffer) {
+    if(CurrentRectID == 6) { return; }
+
     float delta = 0.2f;
     delta *= Core::World::GetDeltaTime();
 
