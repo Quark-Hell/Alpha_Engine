@@ -22,10 +22,18 @@ std::string Core::Object::GetName() {
 }
 
 bool Core::Object::AddComponent(Component& component) {
+	// Check if component is already added
+	for (auto* c : _components) {
+		if (c == &component) {
+			Logger::Logger::LogError("Component already attached");
+			return false;  // do not add again
+		}
+	}
+
+	// Add component
 	_components.push_back(&component);
 	component.ParentObject = this;
 	Logger::Logger::LogInfo("Component attached successfully");
-
 	return true;
 }
 

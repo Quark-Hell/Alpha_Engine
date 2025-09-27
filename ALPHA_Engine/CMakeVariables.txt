@@ -5,6 +5,10 @@ SET (Engine_Assets "${ALPHA_Engine}/Assets")
 
 SET (Example "${ALPHA_Engine}/Build_Files")
 SET (Examples_Build_Dir "${CMAKE_BINARY_DIR}/Build")
+
+SET (Tests "${ALPHA_Engine}/Tests")
+SET (Tests_Build_Dir "${CMAKE_BINARY_DIR}/Tests")
+
 include_directories(${Engine_Source})
 
 #Engine libraries
@@ -36,3 +40,9 @@ set (Game "${BuildDir}")
 set (Game_Files_Dest "${Game}/Game")
 set (Game_Engine_Dest "${Game_Files_Dest}/ALPHA_Engine")
 set (Game_Source_Dest "${Game_Files_Dest}/Source")
+
+#Tests source
+#set (Test "${BuildDir}")
+#set (Test_Files_Dest "${Game}/Game")
+#set (Test_Engine_Dest "${Game_Files_Dest}/ALPHA_Engine")
+#set (Test_Source_Dest "${Game_Files_Dest}/Source")

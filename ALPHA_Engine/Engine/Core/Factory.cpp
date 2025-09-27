@@ -6,21 +6,19 @@
 #include "Logger/Logger.h"
 
 bool Core::Factory::RemoveObject(const Core::Object* object) {
-  const auto list = World::GetObjects();
-  auto it = std::begin(*list);
+    auto& list = *World::GetObjects(); 
 
-  for (size_t i = 0; i < World::GetObjects()->size(); ++i) {
-    if (it->get() == &object[i]) {
-      Core::Logger::LogInfo("Removing object");
-      World::GetObjects()->erase(it);
-      Core::Logger::LogInfo("Object removed");
-      return true;
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        if (it->get() == object) { 
+            Core::Logger::LogInfo("Removing object");
+            list.erase(it);
+            Core::Logger::LogInfo("Object removed");
+            return true;
+        }
     }
-    std::advance(it, 1);
-  }
 
-  Core::Logger::LogInfo("Object do not exist");
-  return false;
+    Core::Logger::LogInfo("Object does not exist");
+    return false;
 }
 
 Core::Object& Core::Factory::CreateObject() {

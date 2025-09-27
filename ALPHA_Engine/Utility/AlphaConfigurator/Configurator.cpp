@@ -1,5 +1,6 @@
 #include "Configurator.h"
 
+#include <unordered_map>
 #include <filesystem>
 #include <iostream>
 

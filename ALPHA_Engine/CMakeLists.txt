@@ -26,7 +26,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-SET(CMAKE_CXX_FLAGS "-Wall -frtti")
+#SET(CMAKE_CXX_FLAGS "-Wall -frtti")
 SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
 SET(CMAKE_CXX_FLAGS_RELEASE "-O3 -flto")
 SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
@@ -50,3 +50,6 @@ include("Utility/AlphaConfigurator/CMakeLists.txt")
 
 #Example
 include("Examples/CMakeLists.txt")
+
+#Tests
+include("Tests/CMakeLists.txt")
