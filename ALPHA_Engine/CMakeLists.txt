@@ -33,7 +33,8 @@ SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
 
 #SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g -fsanitize=undefined -fsanitize=address")
 
-include("Engine/CMakeLists.txt") #Build engine core with modules
+#Engine
+include("Engine/CMakeLists.txt") 
 
 target_compile_definitions(ALPHA_Engine
 		PRIVATE
@@ -47,6 +48,7 @@ target_compile_definitions(ALPHA_Engine
 
 #Utility
 include("Utility/AlphaConfigurator/CMakeLists.txt")
+include("Utility/EngineDataCollector/CMakeLists.txt")
 
 #Example
 include("Examples/CMakeLists.txt")

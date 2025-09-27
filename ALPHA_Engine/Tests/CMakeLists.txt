@@ -1,6 +1,6 @@
 option(Build_Tests "Build tests" ON)
 
-#Examples
+#Tests
 set(Tests_Dir "${ALPHA_Engine}/Tests")
 message(${Tests_Dir})
 

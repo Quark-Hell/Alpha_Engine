@@ -2,6 +2,8 @@ option(RENDER_BASE "Build base render" ON)
 set(engine_windows_manager_list)
 
 if(RENDER_BASE)
+    list(APPEND SCAN_DIRS "${ALPHA_Engine}/Engine/WindowsManager/")
+
     add_compile_definitions(WINDOWS_MANAGER_INCLUDED)
     add_definition("WINDOWS_MANAGER_INCLUDED")
 

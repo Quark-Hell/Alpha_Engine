@@ -2,6 +2,8 @@ option(USER_SCRIPTS_REGISTER "Build user scripts register" ON)
 set(engine_user_scripts_list)
 
 if (USER_SCRIPTS_REGISTER)
+    list(APPEND SCAN_DIRS "${ALPHA_Engine}/Engine/UserScriptsRegister/")
+
     add_compile_definitions(USER_SCRIPTS_REGISTER_INCLUDED)
     add_definition("USER_SCRIPTS_REGISTER_INCLUDED")
 

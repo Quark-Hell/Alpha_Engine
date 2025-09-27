@@ -46,3 +46,8 @@ set (Game_Source_Dest "${Game_Files_Dest}/Source")
 #set (Test_Files_Dest "${Game}/Game")
 #set (Test_Engine_Dest "${Game_Files_Dest}/ALPHA_Engine")
 #set (Test_Source_Dest "${Game_Files_Dest}/Source")
+
+#Utility
+set(SCAN_DIRS
+    "${ALPHA_Engine}/Engine/Core/"
+)

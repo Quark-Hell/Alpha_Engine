@@ -21,6 +21,7 @@ if(LOGGER)
 	add_compile_definitions(LOGGER_INCLUDED)
 	file(MAKE_DIRECTORY ${Build_Dir}/Logs)
 endif()
+
 #Core
 
 add_library (

@@ -6,6 +6,8 @@ if(RENDER_ANOMALY_ENGINE AND NOT RENDER_BASE)
 endif ()
 
 if (RENDER_BASE AND RENDER_ANOMALY_ENGINE)
+    list(APPEND SCAN_DIRS "${ALPHA_Engine}/Engine/AnomalyEngine/")
+
     add_compile_definitions(ANOMALY_ENGINE_INCLUDED)
     add_definition("ANOMALY_ENGINE_INCLUDED")
 

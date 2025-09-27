@@ -6,6 +6,8 @@ if(RENDER_BINDS_ENGINE AND NOT RENDER_BASE)
 endif ()
 
 if (RENDER_BASE AND RENDER_BINDS_ENGINE)
+    list(APPEND SCAN_DIRS "${ALPHA_Engine}/Engine/BindsEngine/")
+
     add_compile_definitions(BINDS_ENGINE_INCLUDED)
     add_definition("BINDS_ENGINE_INCLUDED")
 

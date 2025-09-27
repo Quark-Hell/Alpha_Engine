@@ -7,7 +7,7 @@
 
 namespace Core {
     template<typename T>
-    class TSystemData : public SystemData { //<T, std::enable_if_t<std::is_convertible_v<Core::Component, T>>> {
+    class TSystemData : public SystemData {
     protected:
         std::vector<std::unique_ptr<T>> _data{};
 
