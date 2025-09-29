@@ -19,7 +19,7 @@ namespace Utility {
 
             if(entry.is_regular_file()) {
                 //Add file to container
-                auto it = _filesType.find(entry.path().extension());
+                auto it = _filesType.find(entry.path().extension().string());
                 if (it != _filesType.end()) {
                     const std::filesystem::path& filePath = entry.path();
                     std::string fileName = filePath.filename().string();

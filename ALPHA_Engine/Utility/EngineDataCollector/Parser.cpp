@@ -51,7 +51,7 @@ std::string Parser::PreprocessCode(const std::string& code) {
 }
 
 
-bool  Parser::ShouldExcludeClass(const std::string& parentName) {
+bool Parser::ShouldExcludeClass(const std::string& parentName) {
     static const std::unordered_set<std::string> excludedBases = {
         "TSystemData",
         "Core::TSystemData",
