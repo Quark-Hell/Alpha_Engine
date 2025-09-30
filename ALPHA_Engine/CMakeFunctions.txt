@@ -41,34 +41,21 @@ function(copy_file src dest)
 endfunction()
 
 function(recurse_copy_headers src dest)
-
+	message("${Red}copy headers${ColourReset}")
 	file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.h" "${src}/*.hpp")
-
-	set(all_copied_headers "")
-
 	foreach(templateFile ${templateFiles})
 		set(copy_src "${src}/${templateFile}")
 		set(copy_dest "${dest}/${templateFile}")
 
-		add_custom_command(
-            OUTPUT ${copy_dest}
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${copy_src} ${copy_dest}
-            DEPENDS ${copy_src}
-            COMMENT "${Cyan}copy header${ColourReset} ${copy_src} to\n ${copy_dest}"
-        )
+		message("${Cyan}copy header${ColourReset} ${copy_src} to\n ${copy_dest}")
 
-		list(APPEND all_copied_headers ${copy_dest})
+		execute_process(
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		${copy_src}
+		${copy_dest}
+		)
 	endforeach(templateFile)
-
-	if(all_copied_headers)
-        string(REPLACE ":" "_" safe_src ${src})
-        string(REPLACE "/" "_" safe_src ${safe_src})
-        string(REPLACE "\\" "_" safe_src ${safe_src})
-
-        add_custom_target(copy_headers_${safe_src} ALL DEPENDS ${all_copied_headers})
-
-        message("${Green}Headers copied from ${src} to ${dest}${ColourReset}\n")
-    endif()
+	message("\n")
 endfunction()
 
 function(recurse_copy_assets src dest)
