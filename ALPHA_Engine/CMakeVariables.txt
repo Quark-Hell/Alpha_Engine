@@ -31,7 +31,7 @@ set(bitsery "${ALPHA_Engine}/bitsery")
 include_directories(${bitsery})
 #Engine libraries
 
-set(Build_Dir "${CMAKE_BINARY_DIR}/Build")
+set(Build_Dir "${CMAKE_BINARY_DIR}/Build" CACHE PATH "Custom build dir")
 set(Configs_Dir "${Build_Dir}/Configs")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/Build/lib")
 
@@ -40,12 +40,6 @@ set (Game "${BuildDir}")
 set (Game_Files_Dest "${Game}/Game")
 set (Game_Engine_Dest "${Game_Files_Dest}/ALPHA_Engine")
 set (Game_Source_Dest "${Game_Files_Dest}/Source")
-
-#Tests source
-#set (Test "${BuildDir}")
-#set (Test_Files_Dest "${Game}/Game")
-#set (Test_Engine_Dest "${Game_Files_Dest}/ALPHA_Engine")
-#set (Test_Source_Dest "${Game_Files_Dest}/Source")
 
 #Utility
 set(SCAN_DIRS
