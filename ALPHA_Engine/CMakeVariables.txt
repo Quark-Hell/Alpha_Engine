@@ -12,22 +12,22 @@ SET (Tests_Build_Dir "${CMAKE_BINARY_DIR}/Tests")
 include_directories(${Engine_Source})
 
 #Engine libraries
-set (GLFW "${ALPHA_Engine}/GLFW")
+set (GLFW "${ALPHA_Engine}/external/GLFW")
 include_directories("${GLFW}/include")
 
 set (GLM "${Engine_Source}/Core/External/GLM")
 include_directories("${GLM}")
 
-set (GLAD "${ALPHA_Engine}/GLAD")
+set (GLAD "${ALPHA_Engine}/external/GLAD")
 include_directories("${GLAD}/glad/include")
 
-set (assimp "${ALPHA_Engine}/assimp")
+set (assimp "${ALPHA_Engine}/external/assimp")
 include_directories("${assimp}/include")
 
-set(STB "${ALPHA_Engine}/STB")
+set(STB "${ALPHA_Engine}/external/STB")
 include_directories(${STB})
 
-set(bitsery "${ALPHA_Engine}/bitsery")
+set(bitsery "${ALPHA_Engine}/external/bitsery")
 include_directories(${bitsery})
 #Engine libraries
 
