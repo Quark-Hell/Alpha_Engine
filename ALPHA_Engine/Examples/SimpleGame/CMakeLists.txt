@@ -10,7 +10,7 @@ add_executable (SimpleGame
 		"${Examples_Dir}/SimpleGame/MyScript.cpp"
 		"${Examples_Dir}/SimpleGame/Windows/WindowsSettings.cpp"
 		"${Examples_Dir}/SimpleGame/Modules.cpp"
-		"GLAD/glad/src/glad.c")
+		"external/GLAD/glad/src/glad.c")
 
 add_dependencies(SimpleGame ALPHA_Engine)
 
