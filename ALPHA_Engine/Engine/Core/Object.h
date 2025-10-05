@@ -29,15 +29,42 @@ namespace Core {
 
 		void Delete();
 
+		/**
+		 * @brief Sets the name of the object.
+		 * @param newName New name to assign to the object.
+		 */
 		void SetName(const std::string &newName);
+		/**
+		 * @brief Retrieves the current name of the object.
+		 * @return The name of the object as a std::string.
+		 */
 		std::string GetName();
 
+		/**
+		 * @brief Adds a component to the object.
+		 * @param component Reference to the component to add.
+		 * @return True if the component was added successfully, false otherwise.
+		 */
 		bool AddComponent(Component& component);
 
+		/**
+		 * @brief Returns the number of components attached to the object.
+		 * @return The count of components.
+		 */
 		[[nodiscard]] size_t GetCountOfComponents() const;
 
-		bool DeleteModuleByIndex(int index);
+		/**
+		 * @brief Deletes a component by its index.
+		 * @param index Index of the component to delete.
+		 * @return True if deletion was successful, false if the index was invalid.
+		 */
+		bool DeleteComponentByIndex(int index);
 
+
+		/**
+		 * @brief Computes and returns the object's transformation matrix.
+		 * @return 4x4 transformation matrix combining position, rotation, and scale.
+		 */
 		glm::mat4x4 GetTransformMatrix();
 
 		/**
