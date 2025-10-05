@@ -13,6 +13,7 @@ include("Engine/WindowsManager/CMakeLists.txt")
 include("Engine/AnomalyEngine/CMakeLists.txt")
 include("Engine/BindsEngine/CMakeLists.txt")
 include("Engine/UserScriptsRegister/CMakeLists.txt")
+include("Engine/AxisEngine/CMakeLists.txt")
 #Modules
 
 
@@ -35,7 +36,9 @@ add_library (
         "${engine_windows_manager_list}"
         "${engine_anomaly_list}"
         "${engine_binds_list}"
-        "${engine_user_scripts_list}")
+        "${engine_user_scripts_list}"
+        "${engine_axis_list}"    
+)
 
 set_target_properties(ALPHA_Engine PROPERTIES PREFIX "")
 set_target_properties(ALPHA_Engine PROPERTIES OUTPUT_NAME "ALPHA_Engine")
