@@ -5,7 +5,7 @@
 
 namespace AnomalyEngine {
     class PointLightsBuffer final : public Core::TSystemData<PointLight> {
-        public:
+    public:
         PointLightsBuffer();
         ~PointLightsBuffer() override = default;
 
