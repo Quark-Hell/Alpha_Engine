@@ -25,6 +25,9 @@ namespace Core {
         directLightsBuffer = new AnomalyEngine::DirectLightsBuffer();
         pointLightsBuffer = new AnomalyEngine::PointLightsBuffer();
 
+        axisSystem = new AxisEngine::PhysicsEngine();
+        rigidBodiesBuffer = new AxisEngine::RigidBodiesBuffer();
+
         IncludeScripts();
     }
 }

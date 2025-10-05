@@ -32,6 +32,20 @@
 #include "AnomalyEngine/Shaders/SimplexFractalShader.h"
 //===================Anomaly Engine===================//
 
+//===================Axis Engine======================//
+#include "AxisEngine/AxisEngine.h"
+
+#include "AxisEngine/Buffers/CollidersBuffer.h"
+#include "AxisEngine/Buffers/RigidBodiesBuffer.h"
+
+#include "AxisEngine/Components/AABB.h"
+#include "AxisEngine/Components/Collider.h"
+#include "AxisEngine/Components/CubeCollider.h"
+#include "AxisEngine/Components/MeshCollider.h"
+#include "AxisEngine/Components/SphereCollider.h"
+#include "AxisEngine/Components/Rigidbody.h"
+//===================Axis Engine======================//
+
 //===================User Scripts Register===================//
 inline Register::Registry* userScriptSystem = nullptr;
 inline Register::UserScriptsBuffer* userScriptsBuffer  = nullptr;
@@ -60,5 +74,10 @@ inline AnomalyEngine::CamerasBuffer* camerasBuffer = nullptr;
 inline AnomalyEngine::DirectLightsBuffer* directLightsBuffer = nullptr;
 inline AnomalyEngine::PointLightsBuffer* pointLightsBuffer = nullptr;
 //===================Anomaly Engine===================//
+
+//===================Axis Engine======================//
+inline AxisEngine::PhysicsEngine* axisSystem = nullptr;
+inline AxisEngine::RigidBodiesBuffer* rigidBodiesBuffer = nullptr;
+//===================Axis Engine======================//
 
 void IncludeScripts();

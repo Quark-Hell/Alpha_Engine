@@ -8,6 +8,7 @@
 namespace AxisEngine {
 	class RigidBody final : public Core::Component {
 		friend class PhysicsEngine;
+		friend class RigidBodiesBuffer;
 
 	public:
 		float Mass = 1;
