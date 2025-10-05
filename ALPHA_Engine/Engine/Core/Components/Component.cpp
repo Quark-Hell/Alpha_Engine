@@ -1,8 +1,15 @@
 #include "Component.h"
 #include "Core/Object.h"
 
-Core::Component::~Component() = default;
+namespace Core {
+	Component::~Component() = default;
 
-Core::Object* Core::Component::GetParentObject() {
-	return ParentObject;
+	void Component::UpdateParentObject() {
+
+	}
+
+	Core::Object* Component::GetParentObject() {
+		return ParentObject;
+	}
 }
+
