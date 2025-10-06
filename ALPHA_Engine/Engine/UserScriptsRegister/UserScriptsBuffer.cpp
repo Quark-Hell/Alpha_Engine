@@ -1,7 +1,5 @@
 #include "UserScriptsBuffer.h"
 
 namespace Register {
-    UserScriptsBuffer::UserScriptsBuffer() : Core::TSystemData<UserScript>("UserScriptsBuffer") {
-        _data.reserve(64);
-    }
+    UserScriptsBuffer::UserScriptsBuffer(size_t initialBufferSize) : Core::TSystemData<UserScript>("UserScriptsBuffer", initialBufferSize) {}
 }

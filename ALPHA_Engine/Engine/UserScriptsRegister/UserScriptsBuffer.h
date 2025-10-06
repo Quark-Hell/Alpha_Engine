@@ -9,7 +9,7 @@
 namespace Register {
     class UserScriptsBuffer final : public Core::TSystemData<UserScript> {
     public:
-        UserScriptsBuffer();
+        UserScriptsBuffer(size_t initialBufferSize = 0);
 
         template<typename T,
         typename K = std::enable_if_t<std::is_base_of_v<T, UserScript>>>
