@@ -35,10 +35,10 @@ namespace AnomalyEngine {
 
         Core::Logger::Logger::LogInfo("Old buffers deleted");
 
-        if (mesh->_vertex != nullptr) {
+        if (mesh->_vertices != nullptr) {
             glGenBuffers(1, &mesh->_vertexVbo);
             glBindBuffer(GL_ARRAY_BUFFER, mesh->_vertexVbo);
-            glBufferData(GL_ARRAY_BUFFER, mesh->_vertex->size() * sizeof(float), mesh->_vertex->data(), GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, mesh->_vertices->size() * sizeof(float), mesh->_vertices->data(), GL_STATIC_DRAW);
 
             Core::Logger::Logger::LogInfo("Vertex binded");
         }

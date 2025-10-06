@@ -126,7 +126,7 @@ namespace AnomalyEngine {
             if (mesh->_isIndexed)
                 glDrawElements(renderMode, mesh->_indices->size(), GL_UNSIGNED_INT, mesh->_indices->data());
             else
-                glDrawArrays(renderMode, 0, mesh->_vertex->size() / 3);
+                glDrawArrays(renderMode, 0, mesh->_vertices->size() / 3);
 
             //glDepthFunc(GL_NEVER);
             glBindVertexArray(0);
