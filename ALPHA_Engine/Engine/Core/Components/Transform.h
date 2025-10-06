@@ -4,7 +4,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "Core/Math/Vectors.h"
+#include "Core/Math/glmMath.h"
 
 namespace Core {
 	class Transform {

@@ -1,8 +1,7 @@
 #include "ShaderProgram.h"
 
-#include "Core/Math/Vectors.h"
+#include "Core/Math/glmMath.h"
 
-#include "glm/glm.hpp"
 #include "glm/gtx/string_cast.hpp"
 
 namespace AnomalyEngine {

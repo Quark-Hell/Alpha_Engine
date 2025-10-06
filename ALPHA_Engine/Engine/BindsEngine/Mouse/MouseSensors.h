@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <memory>
-#include "Core/Math/Vectors.h"
+#include "Core/Math/glmMath.h"
 #include "Core/ECS/TSystemData.h"
 
 namespace BindsEngine {

@@ -9,6 +9,8 @@
 #include <glm/gtx/norm.hpp>
 #include <glm/gtx/intersect.hpp>
 
+#include <glm/gtc/constants.hpp>
+
 namespace glm {
     template<typename T, typename... U>
     concept IsAnyOf = (std::same_as<T, U> || ...);
