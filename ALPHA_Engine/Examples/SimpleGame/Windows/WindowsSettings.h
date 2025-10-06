@@ -3,7 +3,7 @@
 #include <vector>
 
 namespace Core {
-    class Object;
+    class GameObject;
 }
 
 namespace WindowsManager {

@@ -28,7 +28,7 @@ void WindowsSettings::WindowsTest1(Core::Object& Player) {
     Player.AddComponent(cam1_2);
 }
 
-void WindowsSettings::WindowsTest2(Core::Object& Player) {
+void WindowsSettings::WindowsTest2(Core::GameObject& Player) {
     auto& cam1_1 = camerasBuffer->CreateCamera();
 
     win1->CreateRectangle({0,0},{0.025,0.95});
@@ -82,7 +82,7 @@ void WindowsSettings::WindowsTest2(Core::Object& Player) {
     win1->RectangleFillFreeSpace(rect);
 }
 
-void WindowsSettings::WindowsTest3(Core::Object& Player) {
+void WindowsSettings::WindowsTest3(Core::GameObject& Player) {
     auto& cam1_1 = camerasBuffer->CreateCamera();
 
     rect = &win1->CreateRectangle({0.3f,0.3f},{0.4f,0.4f});
@@ -156,7 +156,7 @@ void WindowsSettings::WindowsTest3(Core::Object& Player) {
     //win1->PushRightRectEdge(0.2f, rect1, nullptr);  // --> work
 }
 
-void WindowsSettings::WindowsTest4(Core::Object& Player) {
+void WindowsSettings::WindowsTest4(Core::GameObject& Player) {
     auto& cam1_2 = camerasBuffer->CreateCamera();
 
     rect = &win1->CreateRectangle({0.0f,0.0f},{0.1f, 0.2f});
@@ -197,7 +197,7 @@ void WindowsSettings::WindowsTest4(Core::Object& Player) {
     win1->RectangleFillFreeSpace(*rect);
 }
 
-void WindowsSettings::WindowsTest5(Core::Object& Player) {
+void WindowsSettings::WindowsTest5(Core::GameObject& Player) {
     auto& cam1_1 = camerasBuffer->CreateCamera();
 
     rect = &win1->CreateRectangle({0.0f,0.1f},{0.4f, 0.8f});
