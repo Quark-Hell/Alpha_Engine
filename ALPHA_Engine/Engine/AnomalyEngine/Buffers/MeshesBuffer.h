@@ -8,8 +8,10 @@ namespace AnomalyEngine {
         friend class RenderEngine;
 
         public:
-        MeshesBuffer();
+        MeshesBuffer(size_t initialBufferSize = 0);
         ~MeshesBuffer() override = default;
+
+        Mesh& CreateMesh();
 
         Mesh& CreateMesh(
                     const std::string& linkToFBX,

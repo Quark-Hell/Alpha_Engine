@@ -8,7 +8,7 @@ namespace AxisEngine {
         friend class PhysicsEngine;
 
     public:
-        CollidersBuffer();
+        CollidersBuffer(size_t initialBufferSize = 0);
         ~CollidersBuffer() override = default;
 
         Collider& CreateCollider();

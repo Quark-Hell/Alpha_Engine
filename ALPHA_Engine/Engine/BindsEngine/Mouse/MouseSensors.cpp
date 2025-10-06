@@ -3,9 +3,7 @@
 #include <GLFW/glfw3.h>
 
 namespace BindsEngine {
-    MouseSensors::MouseSensors() : Core::TSystemData<MouseKey>("MouseSensorsBuffer"){
-        _data.reserve(8);
-
+    MouseSensors::MouseSensors(size_t initialBufferSize) : Core::TSystemData<MouseKey>("MouseSensorsBuffer", initialBufferSize){
         _data.emplace_back(std::make_unique<MouseKey>(GLFW_MOUSE_BUTTON_1));
         _data.emplace_back(std::make_unique<MouseKey>(GLFW_MOUSE_BUTTON_2));
         _data.emplace_back(std::make_unique<MouseKey>(GLFW_MOUSE_BUTTON_3));

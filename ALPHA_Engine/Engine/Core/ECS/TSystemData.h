@@ -13,7 +13,7 @@ namespace Core {
 
     protected:
         TSystemData() = delete;
-        TSystemData(const std::string& token) : SystemData(token) {};
+        TSystemData(const std::string& token, size_t initialBufferSize = 0) : SystemData(token) { _data.reserve(initialBufferSize); };
 
     public:
         ~TSystemData() override = default;

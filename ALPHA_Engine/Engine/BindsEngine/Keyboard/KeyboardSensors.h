@@ -59,7 +59,7 @@ namespace BindsEngine {
         friend class KeyboardSystem;
 
     public:
-        KeyboardSensors();
+        KeyboardSensors(size_t initialBufferSize = 99);
         ~KeyboardSensors() override = default;
 
         [[nodiscard]] EnumKeyboardKeysStates GetKeyState(const EnumKeyboardTable key) const;

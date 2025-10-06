@@ -2,7 +2,7 @@
 #include "WindowsManager/Components/Window.h"
 
 namespace WindowsManager {
-    WindowsBuffer::WindowsBuffer() : Core::TSystemData<Window>("WindowsBuffer") {}
+    WindowsBuffer::WindowsBuffer(size_t initialBufferSize) : Core::TSystemData<Window>("WindowsBuffer", initialBufferSize) {}
 
     Window* WindowsBuffer::CreateWindow(const int width, const int height, const std::string& title) {
         if (GetAllData().size() >= 1) {

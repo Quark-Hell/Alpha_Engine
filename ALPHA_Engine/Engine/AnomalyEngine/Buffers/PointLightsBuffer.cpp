@@ -1,9 +1,7 @@
 #include "PointLightsBuffer.h"
 
 namespace AnomalyEngine {
-    PointLightsBuffer::PointLightsBuffer() : TSystemData("PointLightsBuffer") {
-        _data.reserve(16);
-    }
+    PointLightsBuffer::PointLightsBuffer(size_t initialBufferSize) : TSystemData("PointLightsBuffer", initialBufferSize) {}
 
     PointLight& PointLightsBuffer::CreatePointLight(const float radius, const float constant, const float linear, const float quadratic) {
         _data.emplace_back(std::unique_ptr<PointLight>(new PointLight(radius, constant, linear, quadratic)));

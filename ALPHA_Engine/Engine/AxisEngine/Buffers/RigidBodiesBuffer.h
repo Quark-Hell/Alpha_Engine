@@ -8,7 +8,7 @@ namespace AxisEngine {
         friend class PhysicsEngine;
 
     public:
-        RigidBodiesBuffer();
+        RigidBodiesBuffer(size_t initialBufferSize = 0);
         ~RigidBodiesBuffer() override = default;
 
         RigidBody& CreateRigidBody();

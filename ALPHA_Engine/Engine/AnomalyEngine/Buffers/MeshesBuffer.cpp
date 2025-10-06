@@ -1,8 +1,13 @@
 #include "MeshesBuffer.h"
 
 namespace AnomalyEngine {
-    MeshesBuffer::MeshesBuffer() : TSystemData("MeshBuffer") {
-        _data.reserve(64);
+    MeshesBuffer::MeshesBuffer(size_t initialBufferSize) : TSystemData("MeshBuffer", initialBufferSize) {}
+
+    Mesh& MeshesBuffer::CreateMesh() {
+        _data.emplace_back(std::unique_ptr<Mesh>(new Mesh()));
+        _data.back().get()->Create();
+
+        return *_data.back().get();
     }
 
     Mesh& MeshesBuffer::CreateMesh(

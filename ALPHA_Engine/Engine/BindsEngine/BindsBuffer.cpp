@@ -3,9 +3,7 @@
 #include <Core/World.h>
 
 namespace BindsEngine {
-    BindsBuffer::BindsBuffer() : Core::TSystemData<Bind>("BindsBuffer") {
-        _data.reserve(64);
-    }
+    BindsBuffer::BindsBuffer(size_t initialBufferSize) : Core::TSystemData<Bind>("BindsBuffer", initialBufferSize) {}
 
     Bind& BindsBuffer::CreateMouseButtonsBind(
         const std::vector<std::function<void()>> &Operations,

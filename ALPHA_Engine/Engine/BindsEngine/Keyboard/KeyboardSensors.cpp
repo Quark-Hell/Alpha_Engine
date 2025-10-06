@@ -6,7 +6,7 @@
 
 namespace BindsEngine {
 
-    KeyboardSensors::KeyboardSensors() : Core::TSystemData<KeyboardKey>("KeyboardSensorsBuffer"){
+    KeyboardSensors::KeyboardSensors(size_t initialBufferSize) : Core::TSystemData<KeyboardKey>("KeyboardSensorsBuffer", initialBufferSize){
 		_data.reserve(99);
 
 		_data.emplace_back(std::make_unique<KeyboardKey>(GLFW_KEY_A));

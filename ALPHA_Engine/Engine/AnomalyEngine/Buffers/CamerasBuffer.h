@@ -8,7 +8,7 @@ namespace AnomalyEngine {
         friend class RenderEngine;
 
         public:
-        CamerasBuffer();
+        CamerasBuffer(size_t initialBufferSize = 0);
         ~CamerasBuffer() override = default;
 
         Camera& CreateCamera(size_t width = 100, size_t height = 100, float fov = 45, float aspect = 1.3333333, float zNear = 0.01, float zFar = 10000);

@@ -7,7 +7,7 @@ namespace BindsEngine {
         friend class InputSystem;
 
     public:
-        BindsBuffer();
+        BindsBuffer(size_t initialBufferSize = 0);
         Bind& CreateGeneralBind();
 
         Bind& CreateMouseButtonsBind(

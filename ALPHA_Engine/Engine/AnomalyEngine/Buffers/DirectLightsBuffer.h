@@ -8,7 +8,7 @@ namespace AnomalyEngine {
         friend class RenderEngine;
 
         public:
-        DirectLightsBuffer();
+        DirectLightsBuffer(size_t initialBufferSize = 0);
         ~DirectLightsBuffer() override = default;
 
         DirectLight& CreateDirectLight(const glm::vec3& direction = glm::vec3(0, 0.7, 0.3));

@@ -58,7 +58,7 @@ namespace BindsEngine {
         EnumMouseSensorStates _mouseSensorState;
 
     public:
-        MouseSensors();
+        MouseSensors(size_t initialBufferSize = 0);
 
         [[nodiscard]] glm::vec2 GetMousePos() const;
         [[nodiscard]] glm::vec2 GetMouseDelta() const;
