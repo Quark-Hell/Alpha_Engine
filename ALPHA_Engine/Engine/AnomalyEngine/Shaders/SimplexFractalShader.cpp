@@ -5,7 +5,7 @@
 #include "SimplexFractalShader.h"
 
 #include "Core/Logger/Logger.h"
-#include "Core/Object.h"
+#include "Core/Objects/GameObject.h"
 
 #include <glad/glad.h>
 #include <random>

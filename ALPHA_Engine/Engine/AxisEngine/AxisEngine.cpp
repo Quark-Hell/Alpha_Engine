@@ -1,6 +1,6 @@
 #include "AxisEngine.h"
 
-#include "Core/Object.h"
+#include "Core/Objects/GameObject.h"
 #include "Core/World.h"
 #include "Core/Logger/Logger.h"
 

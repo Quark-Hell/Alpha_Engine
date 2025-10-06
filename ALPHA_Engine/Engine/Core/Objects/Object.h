@@ -1,17 +1,15 @@
 #pragma once
-#include <vector>
-#include "Tag.h"
 
-#include "Components/Transform.h"
+#include <vector>
+#include "Core/Tag.h"
+
+#include "Core/Components/Component.h"
+#include "Core/Components/Transform.h"
 #include "Core/Logger/Logger.h"
 
 namespace Core {
-	class Component;
-
 	class Object
 	{
-		friend class Factory;
-
 	private:
 		std::string _name = "Undefined";
 		std::vector<Component*> _components;
@@ -20,12 +18,11 @@ namespace Core {
 	public:
 		Transform transform;
 
-	private:
-		///Do not use this if you want to create new object. Use static method CreateObject for this!!!
+	protected:
 		Object();
 
 	public:
-		~Object();
+		virtual ~Object();
 
 		void Delete();
 
@@ -33,7 +30,7 @@ namespace Core {
 		 * @brief Sets the name of the object.
 		 * @param newName New name to assign to the object.
 		 */
-		void SetName(const std::string &newName);
+		void SetName(const std::string& newName);
 		/**
 		 * @brief Retrieves the current name of the object.
 		 * @return The name of the object as a std::string.
@@ -80,18 +77,20 @@ namespace Core {
 		 * @note Intended to be used internally by the #Object class for component access.
 		 */
 		template <typename T>
-		const T& GetComponentByType() const {
-			for (const auto* component : _components)
+		T* GetComponentByType() const {
+			for (auto* component : _components)
 			{
-				if (auto casted = dynamic_cast<const T*>(component))
+				if (auto* casted = dynamic_cast<T*>(component))
 				{
-					return *casted;
+					return casted;
 				}
 			}
 
 			Logger::Logger::LogWarning(
 				"Component of requested type not found " + std::string(__FILE__ ":") + std::to_string(__LINE__)
 			);
+
+			return nullptr;
 		}
 
 		/**
@@ -107,15 +106,16 @@ namespace Core {
 		 * @note Intended to be used internally by the #Object class for component access.
 		 */
 		template <typename T>
-		std::vector<std::reference_wrapper<const Core::Component>> GetComponentsByType() const
+		requires std::is_base_of_v<Component, T>
+		std::vector<std::reference_wrapper<const T>> GetComponentsByType() const
 		{
-			std::vector<std::reference_wrapper<const Core::Component>> result;
+			std::vector<std::reference_wrapper<const T>> result;
 
 			for (const auto* component : _components)
 			{
-				if (dynamic_cast<const T*>(component))
+				if (const auto* comp = dynamic_cast<const T*>(component))
 				{
-					result.push_back(*component);
+					result.push_back(*comp);
 				}
 			}
 
@@ -141,7 +141,6 @@ namespace Core {
 		 *
 		 * @note Intended to be used internally by the #Object class for component access.
 		 */
-		 const Core::Component& GetComponentByIndex(size_t index) const;
+		const Core::Component& GetComponentByIndex(size_t index) const;
 	};
-
 }

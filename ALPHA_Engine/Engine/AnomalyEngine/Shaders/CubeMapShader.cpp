@@ -1,8 +1,7 @@
 #include "CubeMapShader.h"
 
 #include <glad/glad.h>
-
-#include "Core/Object.h"
+#include "Core/Objects/GameObject.h"
 #include "Core/Timer.h"
 #include "Core/Logger/Logger.h"
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Factory.h"
-#include "Core/Object.h"
+#include "Core/Objects/GameObject.h"
 
 #include "UserScript.h"
 #include "Core/ECS/TSystemData.h"
@@ -28,7 +28,7 @@ namespace Register {
             T* userScript = new T();
 
             _data.emplace_back(std::unique_ptr<UserScript>(new T()));
-            Core::Object& obj = Core::Factory::CreateObject();
+            Core::GameObject& obj = Core::Factory::CreateObject();
 
             obj.AddComponent(*_data.back().get());
             obj.SetName(name);

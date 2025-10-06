@@ -91,7 +91,7 @@ TEST(CoreObjectTest, NameTest) {
 
 TEST(CoreObjectTest, CreateAndRemoveTest) {
     // Create a new object
-    Core::Object& obj = Core::Factory::CreateObject();
+    Core::GameObject& obj = Core::Factory::CreateObject();
 
     // Remove the object
     bool removed = Core::Factory::RemoveObject(&obj);

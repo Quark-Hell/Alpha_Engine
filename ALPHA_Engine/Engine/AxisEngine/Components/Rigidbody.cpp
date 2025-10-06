@@ -2,7 +2,9 @@
 #include <memory>
 
 #include "AxisEngine/Components/Collider.h"
-#include "Core/Object.h"
+#include "Core/Logger/Logger.h"
+#include "Core/Objects/Object.h"
+#include "Core/Objects/GameObject.h"
 
 namespace AxisEngine {
 	RigidBody::RigidBody() {

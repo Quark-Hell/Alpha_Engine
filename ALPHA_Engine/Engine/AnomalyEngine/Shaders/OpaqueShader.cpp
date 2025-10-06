@@ -8,7 +8,7 @@
 
 #include "Core/Logger/Logger.h"
 
-#include <Core/Object.h>
+#include <Core/Objects/GameObject.h>
 #include <Core/World.h>
 #include <glad/glad.h>
 

@@ -34,7 +34,7 @@ class DerivedData final : public virtual  Data {
 
 class MyScript final : public Register::UserScript {
 	private:
-	Core::Object* Player = nullptr;
+	Core::GameObject* Player = nullptr;
 	float moveSensitive = 10;
     WindowsSettings winSettings;
 

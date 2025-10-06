@@ -6,7 +6,7 @@
 #include "GLFW/glfw3.h"
 
 #include "Core/Logger/Logger.h"
-#include "Core/Object.h"
+#include "Core/Objects/GameObject.h"
 
 #include "Buffers/CamerasBuffer.h"
 #include "Buffers/MeshesBuffer.h"

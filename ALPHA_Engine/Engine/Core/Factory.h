@@ -4,7 +4,8 @@
 #pragma once
 
 namespace Core {
-    class Object;
+    class GameObject;
+    class FakeObject;
     class Component;
 
     class Factory {
@@ -13,7 +14,9 @@ namespace Core {
         ~Factory() = default;
 
     public:
-        static bool RemoveObject(const Core::Object *object);
-        static Core::Object& CreateObject();
+        static bool RemoveObject(const Core::GameObject *object);
+
+        static Core::GameObject& CreateObject();
+        static Core::FakeObject& CreateFakeObject();
     };
 }

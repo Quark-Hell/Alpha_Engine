@@ -1,5 +1,5 @@
 #include "Core/Components/Geometry.h"
-#include "Core/Object.h"
+#include "Core/Objects/GameObject.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"

@@ -3,7 +3,7 @@
 #include <Core/World.h>
 
 #include "Core/Factory.h"
-#include "Core/Object.h"
+#include "Core/Objects/GameObject.h"
 
 #include "UserScript.h"
 #include "UserScriptsBuffer.h"

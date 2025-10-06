@@ -2,7 +2,7 @@
 
 //===================Core===================//
 #include "Core/World.h"
-#include "Core/Object.h"
+#include "Core/Objects/GameObject.h"
 #include "Core/Factory.h"
 
 #include "Core/Timer.h"

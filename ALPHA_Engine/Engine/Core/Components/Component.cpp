@@ -1,5 +1,5 @@
 #include "Component.h"
-#include "Core/Object.h"
+#include "Core/Objects/Object.h"
 
 namespace Core {
 	Component::~Component() = default;

@@ -10,7 +10,9 @@
 #include "Core/ECS/SystemData.h"
 
 namespace Core {
-	class Object;
+	class GameObject;
+	class FakeObject;
+
 	class System;
 	class SystemData;
 
@@ -43,7 +45,8 @@ namespace Core {
 		[[nodiscard]] static SystemData* GetSystemData(const std::string& systemDataName);
 
 	private:
-		static std::vector<std::unique_ptr<Core::Object>>* GetObjects();
+		static std::vector<std::unique_ptr<Core::GameObject>>* GetObjects();
+		static std::vector<std::unique_ptr<Core::FakeObject>>* GetFakeObjects();
 
 	private:
 		World();

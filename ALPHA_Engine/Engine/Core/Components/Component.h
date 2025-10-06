@@ -3,10 +3,14 @@
 
 namespace Core {
 	class Object;
+	class GameObject;
+	class FakeObject;
 
 	class Component
 	{
 		friend class Object;
+		friend class GameObject;
+		friend class FakeObject;
 
 	public:
 		std::string Name = "Undefined";
