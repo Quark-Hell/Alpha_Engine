@@ -28,8 +28,24 @@ namespace Core {
 		 * when its parent object is modified. It should only be called by the
 		 * #Object class. Calling this function from any other context results in
 		 * undefined behavior.
+		 * 
+		 * @param newParent Reference to the object to which the component is being added.
 		 */
-		void virtual UpdateParentObject();
+		void virtual UpdateParentObject(Core::Object& newParent);
+
+		/**
+		 * @brief Checks whether the component can be added to the specified object.
+		 *
+		 * This function determines if the current component can be attached to the given object.
+		 * It is primarily used to restrict adding components that must exist in a single instance
+		 * per object (for example, Rigidbody).
+		 *
+		 * Derived component classes can override this method to implement custom validation logic.
+		 *
+		 * @param newParent Reference to the object to which the component is being added.
+		 * @return `true` if the component can be added to the specified object; otherwise, `false`.
+		 */
+		bool virtual CheckAddPossibility(Core::Object& newParent);
 
 	public:
 		virtual ~Component();
