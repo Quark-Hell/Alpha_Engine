@@ -23,6 +23,7 @@ namespace AnomalyEngine {
 
     private:
         Mesh();
+        bool Create() override;
         bool Create(
             const std::string& linkToFBX,
             bool initIndices = true,

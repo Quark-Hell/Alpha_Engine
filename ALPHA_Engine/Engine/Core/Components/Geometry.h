@@ -3,7 +3,6 @@
 #include <vector>
 #include "Core/Components/Component.h"
 
- 
 namespace Core {
 
 	class Geometry : public Component
@@ -11,9 +10,11 @@ namespace Core {
 	protected:
 		bool _isIndexed = false;
 
-		std::shared_ptr<std::vector<float>> _vertex = std::make_shared<std::vector<float>>();
+		std::shared_ptr<std::vector<float>> _vertices = std::make_shared<std::vector<float>>();
 		std::shared_ptr<std::vector<float>> _normals = std::make_shared<std::vector<float>>();
 		std::shared_ptr<std::vector<unsigned int>> _indices = std::make_shared<std::vector<unsigned int>>();
+
+		virtual bool Create();
 
 		virtual bool Create(const std::string& linkToFBX,
 			bool initIndices,
@@ -24,6 +25,10 @@ namespace Core {
 	public:
 		Geometry();
 		~Geometry() override;
+
+		[[nodiscard]] std::shared_ptr<std::vector<float>> GetVertices() const noexcept;
+
+		void MakeUnique();
 	};
 
 }

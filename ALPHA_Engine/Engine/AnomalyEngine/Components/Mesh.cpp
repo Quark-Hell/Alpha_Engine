@@ -14,6 +14,11 @@ namespace AnomalyEngine {
         //TODO: Delete mesh info from VRAM
     }
 
+    bool Mesh::Create() {
+        Core::Logger::Logger::LogInfo("Mesh has been loaded");
+        return true;
+    }
+
     bool Mesh::Create(
         const std::string &linkToFBX,
         const bool initIndices,
@@ -22,7 +27,7 @@ namespace AnomalyEngine {
         const bool initTexCoord) {
         Core::Logger::Logger::LogInfo("Mesh load process started");
 
-        _vertex->clear();
+        _vertices->clear();
         _indices->clear();
         _normals->clear();
         _texCoords->clear();
@@ -63,17 +68,17 @@ namespace AnomalyEngine {
         }
 
         if (mesh->HasPositions() && initVertex) {
-            Geometry::_vertex->resize(mesh->mNumVertices * 3);
+            Geometry::_vertices->resize(mesh->mNumVertices * 3);
             for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
 
-                (*Geometry::_vertex)[it] = mesh->mVertices[it / 3].x;
-                (*Geometry::_vertex)[it + 1] = mesh->mVertices[it / 3].y;
-                (*Geometry::_vertex)[it + 2] = mesh->mVertices[it / 3].z;
+                (*Geometry::_vertices)[it] = mesh->mVertices[it / 3].x;
+                (*Geometry::_vertices)[it + 1] = mesh->mVertices[it / 3].y;
+                (*Geometry::_vertices)[it + 2] = mesh->mVertices[it / 3].z;
             }
         }
 
         if (mesh->HasNormals() && initNormals) {
-            Geometry::_normals->resize(Geometry::_vertex->size());
+            Geometry::_normals->resize(Geometry::_vertices->size());
 
             for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
 
@@ -84,7 +89,7 @@ namespace AnomalyEngine {
         }
 
         if (mesh->HasTextureCoords(0) && initTexCoord) {
-            Mesh::_texCoords->resize((Geometry::_vertex->size() / 3) * 2);
+            Mesh::_texCoords->resize((Geometry::_vertices->size() / 3) * 2);
 
             for (std::uint32_t it = 0; it < Mesh::_texCoords->size(); it += 2) {
                 (*Mesh::_texCoords)[it] = mesh->mTextureCoords[0][it / 2].x;
