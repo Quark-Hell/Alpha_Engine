@@ -5,6 +5,10 @@
 #include "Core/Components/Component.h"
 #include "glm/glm.hpp"
 
+namespace Core {
+	class Object;
+}
+
 namespace AxisEngine {
 	class RigidBody final : public Core::Component {
 		friend class PhysicsEngine;
@@ -35,7 +39,7 @@ namespace AxisEngine {
 		std::vector<glm::vec3> _contactPoints;
 		std::vector<glm::vec3> _pullingVectors;
 
-		bool _hasCollision;
+		bool _hasCollision = false;
 		//Matrix3x3 _inertiaMatrix;
 
 	private:
