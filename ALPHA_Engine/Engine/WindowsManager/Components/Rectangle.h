@@ -2,7 +2,7 @@
 #define RECTANGLE_H
 
 #include <vector>
-#include "Core/Math/Vectors.h"
+#include "Core/Math/glmMath.h"
 
 namespace WindowsManager {
     class Window;

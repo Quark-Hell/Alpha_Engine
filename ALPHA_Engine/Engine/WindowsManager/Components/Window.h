@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "Rectangle.h"
-#include "Core/Math/Vectors.h"
 #include "Core/Math/glmMath.h"
 
 struct GLFWwindow;
