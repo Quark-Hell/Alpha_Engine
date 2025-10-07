@@ -8,7 +8,7 @@ namespace BindsEngine {
         void EntryPoint(std::vector<Core::SystemData*>& data) override;
 
     public:
-        MouseSystem();
+        MouseSystem(size_t order);
         ~MouseSystem() override = default;
     };
 }

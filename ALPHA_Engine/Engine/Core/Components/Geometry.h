@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 #include "Core/Components/Component.h"
+#include "Core/Math/glmMath.h"
 
 namespace Core {
 

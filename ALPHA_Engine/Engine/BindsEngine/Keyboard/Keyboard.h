@@ -9,7 +9,7 @@ namespace BindsEngine {
         void EntryPoint(std::vector<Core::SystemData*>& data) override;
 
     public:
-        KeyboardSystem();
+        KeyboardSystem(size_t order);
         ~KeyboardSystem() override = default;
     };
 }
