@@ -426,3 +426,5 @@ cmake_install.cmake
 .ninja_deps
 
 CMakeFiles
+Docs/html
+Docs/latex
