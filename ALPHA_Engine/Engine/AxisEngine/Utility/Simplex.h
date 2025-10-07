@@ -10,16 +10,16 @@ namespace AxisEngine {
         unsigned _size;
 
     public:
-        Simplex(std::array<glm::vec3, 4> points, unsigned size);
+        Simplex(std::array<glm::vec3, 4> points = { glm::vec3{0,0,0}, glm::vec3{0,0,0}, glm::vec3{0,0,0}, glm::vec3{0,0,0} }, unsigned size = 0);
         void PushFront(glm::vec3 point);
         unsigned GetSize();
 
-        bool NextSimplex(Simplex& points, glm::vec3& direction);
-        bool SameDirection(glm::vec3 direction, glm::vec3 ao);
+        static bool NextSimplex(Simplex& points, glm::vec3& direction);
+        static bool SameDirection(glm::vec3 direction, glm::vec3 ao);
 
-        bool Line(Simplex& points, glm::vec3& direction);
-        bool Triangle(Simplex& points, glm::vec3& direction);
-        bool Tetrahedron(Simplex& points, glm::vec3& direction);
+        static bool Line(Simplex& points, glm::vec3& direction);
+        static bool Triangle(Simplex& points, glm::vec3& direction);
+        static bool Tetrahedron(Simplex& points, glm::vec3& direction);
 
         Simplex& operator=(std::initializer_list < glm::vec3> list) {
             for (auto v = list.begin(); v != list.end(); v++) {
