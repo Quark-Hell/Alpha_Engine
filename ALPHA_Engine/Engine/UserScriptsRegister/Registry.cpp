@@ -9,7 +9,7 @@
 #include "UserScriptsBuffer.h"
 
 namespace Register {
-	Registry::Registry() : System({"UserScriptsBuffer"}, 100) {};
+	Registry::Registry(size_t order) : System({"UserScriptsBuffer"}, order) {};
 
 	void Registry::EntryPoint(std::vector<Core::SystemData*>& data) {
 		auto* buffer = reinterpret_cast<UserScriptsBuffer*>(data[0]);

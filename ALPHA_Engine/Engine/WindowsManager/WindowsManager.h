@@ -7,7 +7,7 @@ namespace WindowsManager {
         void EntryPoint(std::vector<Core::SystemData*>& data) override;
 
     public:
-        WindowsManager();
+        WindowsManager(size_t order);
         ~WindowsManager() override = default;
     };
 }

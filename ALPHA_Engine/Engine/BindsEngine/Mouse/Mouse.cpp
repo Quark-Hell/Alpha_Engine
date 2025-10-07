@@ -9,7 +9,7 @@
 
 namespace BindsEngine {
 
-    MouseSystem::MouseSystem() : System({"MouseSensorsBuffer", "WindowsBuffer"}, 200) {};
+    MouseSystem::MouseSystem(size_t order) : System({"MouseSensorsBuffer", "WindowsBuffer"}, order) {};
 
     void MouseSystem::EntryPoint(std::vector<Core::SystemData*>& data) {
         if (data[0] == nullptr || data[1] == nullptr) {

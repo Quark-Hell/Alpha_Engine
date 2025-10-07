@@ -13,7 +13,7 @@
 #include "Shaders/ShaderProgram.h"
 
 namespace AnomalyEngine {
-    RenderEngine::RenderEngine() : System({"MeshBuffer", "CamerasBuffer", "WindowsBuffer"}, 5000) {}
+    RenderEngine::RenderEngine(size_t order) : System({"MeshBuffer", "CamerasBuffer", "WindowsBuffer"}, order) {}
 
     void RenderEngine::ClearFrameBuffer() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -40,7 +40,7 @@ namespace AnomalyEngine  {
         [[nodiscard]] int GetRenderMode(const ShaderProgram& shader);
 
     public:
-        RenderEngine();
+        RenderEngine(size_t order);
         ~RenderEngine() override = default;
     };
 }

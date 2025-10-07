@@ -13,7 +13,7 @@
 #include "Core/Logger/Logger.h"
 
 namespace WindowsManager {
-    WindowsManager::WindowsManager() : System({"WindowsBuffer", "CamerasBuffer"}, 10000) {
+    WindowsManager::WindowsManager(size_t order) : System({"WindowsBuffer", "CamerasBuffer"}, order) {
         if (!glfwInit()) {
             Core::Logger::LogCritical("Glfw does not inited: " + __LOGERROR__);
             abort();

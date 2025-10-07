@@ -7,7 +7,7 @@
 #include "WindowsManager/Buffers/WindowsBuffer.h"
 
 namespace BindsEngine {
-    KeyboardSystem::KeyboardSystem()  : System({"KeyboardSensorsBuffer", "WindowsBuffer"}, 210) {};
+    KeyboardSystem::KeyboardSystem(size_t order)  : System({"KeyboardSensorsBuffer", "WindowsBuffer"}, order) {};
 
     void KeyboardSystem::EntryPoint(std::vector<Core::SystemData*>& data) {
         if (data[0] == nullptr || data[1] == nullptr) {
