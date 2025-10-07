@@ -58,13 +58,17 @@ namespace AxisEngine {
 
     glm::vec3 CollisionEngine::Support(Collider& colliderA, Collider& colliderB, glm::vec3 direction)
     {
-        // Get transorm matrices
+        // Get transform matrices
         glm::mat4 transformA = colliderA.GetParentObject()->transform.GetTransformMatrix();
         glm::mat4 transformB = colliderB.GetParentObject()->transform.GetTransformMatrix();
 
         // Converting directions into local spaces
-        glm::vec3 localDirA = glm::mat3(glm::transpose(glm::inverse(transformA))) * direction;
-        glm::vec3 localDirB = glm::mat3(glm::transpose(glm::inverse(transformB))) * -direction;
+        glm::vec3 localDirA = glm::mat3(glm::inverse(transformA)) * direction;
+        glm::vec3 localDirB = glm::mat3(glm::inverse(transformB)) * -direction;
+
+        // Normalize directions after transformation
+        localDirA = glm::normalize(localDirA);
+        localDirB = glm::normalize(localDirB);
 
         // Finding points in local spaces
         glm::vec3 pointA_local = colliderA.FindFurthestPoint(localDirA);

@@ -192,32 +192,62 @@ void MyScript::GenerateLightSource() {
 }
 
 void MyScript::GenerateCube() {
-    auto& cube = Core::Factory::CreateObject();
+    {
+        auto& cube = Core::Factory::CreateObject();
 
-    cube.transform.AddPosition(5, 15, -25);
-    cube.transform.AddRotation(0, 0, 0);
-    cube.transform.SetScale(1, 1, 1);
+        cube.transform.AddPosition(5, 45, -25);
+        cube.transform.AddRotation(0, 0, 0);
+        cube.transform.SetScale(1, 1, 1);
 
-    cube.SetName("Cube");
+        cube.SetName("Cube");
 
-    auto& cubeMesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
-    cube.AddComponent(cubeMesh);
+        auto& cubeMesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
+        cube.AddComponent(cubeMesh);
 
-    auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
-    shader.LoadTextures(
-        "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
-        "",
-        "",
-        "",
-        "",
-        "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+        auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
+        shader.LoadTextures(
+            "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
+            "",
+            "",
+            "",
+            "",
+            "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
 
-    auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody();
-    cube.AddComponent(cubeRigidBody);
+        auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody();
+        cube.AddComponent(cubeRigidBody);
 
-    auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
-    cubeCollider.Create("/Assets/Models/Primitives/Cube.fbx");
-    cube.AddComponent(cubeCollider);
+        auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
+        cubeCollider.Create("/Assets/Models/Primitives/Cube.fbx");
+        cube.AddComponent(cubeCollider);
+    }
+
+    {
+        auto& cube = Core::Factory::CreateObject();
+
+        cube.transform.AddPosition(5, 5, -25);
+        cube.transform.AddRotation(30, 0, 0);
+        cube.transform.SetScale(15, 1, 15);
+
+        cube.SetName("Plane");
+
+        auto& cubeMesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
+        cube.AddComponent(cubeMesh);
+
+        auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
+        shader.LoadTextures(
+            "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
+            "",
+            "",
+            "",
+            "",
+            "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+
+        auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
+        cubeCollider.Create("/Assets/Models/Primitives/Cube.fbx");
+        cube.AddComponent(cubeCollider);
+    }
+
+
 }
 
 void MyScript::GenerateEarth() {

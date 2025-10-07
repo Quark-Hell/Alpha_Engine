@@ -145,25 +145,40 @@ namespace AxisEngine {
 
 	void RigidBody::Contact(RigidBody& rb1, glm::vec3 contactNormal) {
 		contactNormal = glm::normalize(contactNormal);
-		//Math::RemoveError(contactNormal);
 
 		float u1 = glm::dot(rb1._velocity, contactNormal);
-		glm::vec3 newVelocity = rb1._velocity + contactNormal * (2 * 1 * (0 - u1) / (rb1.Mass + 0)) * rb1.ElasticityCoefficient;
 
-		rb1._velocity = newVelocity;
+		glm::vec3 reflected = rb1._velocity - 2.0f * u1 * contactNormal;
+		reflected *= rb1.ElasticityCoefficient;
+
+		glm::vec3 tangent = rb1._velocity - u1 * contactNormal;
+		reflected -= tangent * rb1.FrictionCoefficient;
+
+		rb1._velocity = reflected;
 	}
 	void RigidBody::Contact(RigidBody& rb1, RigidBody& rb2, glm::vec3 contactNormal) {
 		contactNormal = glm::normalize(contactNormal);
-		//Math::RemoveError(contactNormal);
 
-		float u1 = glm::dot(rb1._velocity, -contactNormal);
-		float u2 = glm::dot(rb2._velocity, contactNormal);
+		float u1 = glm::dot(rb1._velocity, contactNormal);
+		float u2 = glm::dot(rb2._velocity, -contactNormal);
 
-		glm::vec3 newRb1Vector = rb1._velocity + contactNormal * (2 * rb2.Mass * (u2 - u1) / (rb1.Mass + rb2.Mass)) * rb1.ElasticityCoefficient;
-		glm::vec3 newRb2Vector = rb2._velocity + contactNormal * (2 * rb1.Mass * (u1 - u2) / (rb2.Mass + rb1.Mass)) * rb2.ElasticityCoefficient;
+		float v1 = (u1 * (rb1.Mass - rb2.Mass) + 2.0f * rb2.Mass * u2) / (rb1.Mass + rb2.Mass);
+		float v2 = (u2 * (rb2.Mass - rb1.Mass) + 2.0f * rb1.Mass * u1) / (rb1.Mass + rb2.Mass);
 
-		rb1._velocity = newRb1Vector;
-		rb1._velocity = newRb2Vector;
+		glm::vec3 v1_normal = contactNormal * v1;
+		glm::vec3 v2_normal = -contactNormal * v2;
+
+		glm::vec3 v1_tangent = rb1._velocity - contactNormal * u1;
+		glm::vec3 v2_tangent = rb2._velocity - contactNormal * u2;
+
+		v1_tangent *= (1.0f - rb1.FrictionCoefficient);
+		v2_tangent *= (1.0f - rb2.FrictionCoefficient);
+
+		v1_normal *= rb1.ElasticityCoefficient;
+		v2_normal *= rb2.ElasticityCoefficient;
+
+		rb1._velocity = v1_normal + v1_tangent;
+		rb2._velocity = v2_normal + v2_tangent;
 	}
 
 	//void RigidBody::SetInertiaMatrix(Matrix3x3 matrix) {

@@ -19,12 +19,13 @@ namespace AxisEngine {
 	public:
 		float Mass = 1;
 		glm::vec3 Gravity = glm::vec3{ 0,-9.81,0 };
-		float BaseFriction = 0.990;
+		float BaseFriction = 0.995;
 		/*Description:
 		if = 1 than body movement reflect
 		if = 0 than body stop*/
 		float ElasticityCoefficient = 0.7f;
-		float MaxSpeed = 20;
+		float FrictionCoefficient = 0.3f;
+		float MaxSpeed = 2000;
 
 	private:
 		glm::vec3 _force{ 0,0,0 };
