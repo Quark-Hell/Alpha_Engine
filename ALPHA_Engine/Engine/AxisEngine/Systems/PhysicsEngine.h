@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Core/ECS/System.h"
-#include "Components/Rigidbody.h"
+#include "AxisEngine/Components/Rigidbody.h"
 
 namespace AxisEngine {
 	class CollidersBuffer;
@@ -40,8 +40,6 @@ namespace AxisEngine {
 
 		void PullingVectorsLoop(AxisEngine::RigidBodiesBuffer& rigidBodiesBuffer);
 
-		void PhysicsLoop(AxisEngine::RigidBodiesBuffer& rigidBodiesBuffer);
-
 		void ApplyGravity(RigidBody& rb);
 		void ApplyBaseFriction(RigidBody& rb);
 
@@ -58,7 +56,7 @@ namespace AxisEngine {
 		void RK4Integrate(RigidBody& rb);
 
 	public:
-		PhysicsEngine();
+		PhysicsEngine(size_t order);
 		~PhysicsEngine() override = default;
 	};
 }

@@ -12,6 +12,8 @@ namespace Core {
 namespace AxisEngine {
 	class RigidBody final : public Core::Component {
 		friend class PhysicsEngine;
+		friend class CollisionEngine;
+
 		friend class RigidBodiesBuffer;
 
 	public:
@@ -44,7 +46,11 @@ namespace AxisEngine {
 
 	private:
 		RigidBody();
-		void UpdateParentObject() override;
+		bool CheckAddPossibility(Core::Object& newParent) override;
+		void UpdateParentObject(Core::Object& newParent) override;
+
+		static void Contact(RigidBody& rb1, glm::vec3 contactNormal);
+		static void Contact(RigidBody& rb1, RigidBody& rb2, glm::vec3 contactNormal);
 
 	public:
         ~RigidBody() override = default;
@@ -55,7 +61,7 @@ namespace AxisEngine {
 		void AddAngularMomentum(const glm::vec3& forceVector, glm::vec3 relativePoint);
 		void AddAngularMomentum(const float& x, const float& y, const float& z, glm::vec3 relativePoint);
 
-		void CalculateCenterMass();
+		void UpdateCenterMass();
 		[[nodiscard]] glm::vec3 GetCenterMass();
 
 		[[nodiscard]] glm::vec3 GetVelocity();

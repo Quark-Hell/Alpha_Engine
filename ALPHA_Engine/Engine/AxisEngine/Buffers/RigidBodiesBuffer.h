@@ -6,6 +6,7 @@
 namespace AxisEngine {
     class RigidBodiesBuffer final : public Core::TSystemData<RigidBody> {
         friend class PhysicsEngine;
+        friend class CollisionEngine;
 
     public:
         RigidBodiesBuffer(size_t initialBufferSize = 0);

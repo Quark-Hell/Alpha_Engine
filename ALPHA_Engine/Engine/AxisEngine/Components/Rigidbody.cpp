@@ -11,8 +11,17 @@ namespace AxisEngine {
 
 	}
 
-	void RigidBody::UpdateParentObject() {
-		RigidBody::CalculateCenterMass();
+	bool RigidBody::CheckAddPossibility(Core::Object& newParent) {
+		auto rbs = newParent.GetComponentByType<RigidBody>();
+		if (rbs == nullptr) {
+			return true;
+		}
+		Core::Logger::LogError("Object " + newParent.GetName() + " already has rigidbody. " + __LOGERROR__);
+		return false;
+	}
+
+	void RigidBody::UpdateParentObject(Core::Object& newParent) {
+		RigidBody::UpdateCenterMass();
 
 		RigidBody::_velocity = { 0,0,0 };
 		//RigidBody::ResetInertiaMatrix();
@@ -32,7 +41,7 @@ namespace AxisEngine {
 		RigidBody::_angularMomentum += glm::vec3(x, y, z) * (relativePoint - RigidBody::_centerMass);
 	}
 
-	void RigidBody::CalculateCenterMass() {
+	void RigidBody::UpdateCenterMass() {
 		RigidBody::_centerMass = glm::vec3(0, 0, 0);
 
 		auto colliders = GetParentObject()->GetComponentsByType<Collider>();
@@ -50,39 +59,44 @@ namespace AxisEngine {
 		scope[4] = FLT_MAX;
 		scope[5] = -FLT_MAX;
 
-		//for (unsigned int it = 0; it < colliders.size(); it++) {
-		//	for (unsigned int jt = 0; jt < colliders[it]._vertex->size(); jt += 3) {
-		//		//X
-		//		if ((*colliders[it]._vertex)[jt] < scope[0]) {
-		//			scope[0] = (*colliders[it]._vertex)[jt];
-		//		}
-		//		else if ((*colliders[it]._vertex)[jt] > scope[1]) {
-		//			scope[1] = (*colliders[it]._vertex)[jt];
-		//		}
-		//
-		//		//Y
-		//		if ((*colliders[it]._vertex)[jt + 1] < scope[2]) {
-		//			scope[2] = (*colliders[it]._vertex)[jt + 1];
-		//		}
-		//		else if ((*colliders[it]._vertex)[jt + 1] > scope[3]) {
-		//			scope[3] = (*colliders[it]._vertex)[jt + 1];
-		//		}
-		//
-		//		//Z
-		//		if ((*colliders[it]._vertex)[jt + 2] < scope[4]) {
-		//			scope[4] = (*colliders[it]._vertex)[jt + 2];
-		//		}
-		//		else if ((*colliders[it]._vertex)[jt + 2] > scope[5]) {
-		//			scope[5] = (*colliders[it]._vertex)[jt + 2];
-		//		}
-		//	}
-		//
-		//	float xScope = scope[1] - scope[0];
-		//	float yScope = scope[3] - scope[2];
-		//	float zScope = scope[5] - scope[4];
-		//
-		//	RigidBody::_centerMass += glm::vec3(xScope, yScope, zScope) / glm::vec3(2, 2, 2);
-		//}
+		for (auto& colliderRef : colliders)
+		{
+			const auto& collider = colliderRef.get();
+			const auto& vertices = *collider.GetVertices();
+
+			for (size_t jt = 0; jt < vertices.size(); jt += 3)
+			{
+				// X
+				if (vertices[jt] < scope[0])
+					scope[0] = vertices[jt];
+				else if (vertices[jt] > scope[1])
+					scope[1] = vertices[jt];
+
+				// Y
+				if (vertices[jt + 1] < scope[2])
+					scope[2] = vertices[jt + 1];
+				else if (vertices[jt + 1] > scope[3])
+					scope[3] = vertices[jt + 1];
+
+				// Z
+				if (vertices[jt + 2] < scope[4])
+					scope[4] = vertices[jt + 2];
+				else if (vertices[jt + 2] > scope[5])
+					scope[5] = vertices[jt + 2];
+			}
+
+			//set all scopes to zero if collider hasn't vertices
+			for (int i = 0; i < 6; ++i) {
+				if (scope[i] == FLT_MAX || scope[i] == -FLT_MAX)
+					scope[i] = 0.0f;
+			}
+
+			float xScope = scope[1] - scope[0];
+			float yScope = scope[3] - scope[2];
+			float zScope = scope[5] - scope[4];
+
+			RigidBody::_centerMass += glm::vec3(xScope, yScope, zScope) / glm::vec3(2, 2, 2);
+		}
 
 		RigidBody::_centerMass /= colliders.size();
 	}
@@ -127,6 +141,29 @@ namespace AxisEngine {
 		realPullingVector /= _pullingVectors.size();
 
 		GetParentObject()->transform.AddPosition(realPullingVector);
+	}
+
+	void RigidBody::Contact(RigidBody& rb1, glm::vec3 contactNormal) {
+		contactNormal = glm::normalize(contactNormal);
+		//Math::RemoveError(contactNormal);
+
+		float u1 = glm::dot(rb1._velocity, contactNormal);
+		glm::vec3 newVelocity = rb1._velocity + contactNormal * (2 * 1 * (0 - u1) / (rb1.Mass + 0)) * rb1.ElasticityCoefficient;
+
+		rb1._velocity = newVelocity;
+	}
+	void RigidBody::Contact(RigidBody& rb1, RigidBody& rb2, glm::vec3 contactNormal) {
+		contactNormal = glm::normalize(contactNormal);
+		//Math::RemoveError(contactNormal);
+
+		float u1 = glm::dot(rb1._velocity, -contactNormal);
+		float u2 = glm::dot(rb2._velocity, contactNormal);
+
+		glm::vec3 newRb1Vector = rb1._velocity + contactNormal * (2 * rb2.Mass * (u2 - u1) / (rb1.Mass + rb2.Mass)) * rb1.ElasticityCoefficient;
+		glm::vec3 newRb2Vector = rb2._velocity + contactNormal * (2 * rb1.Mass * (u1 - u2) / (rb2.Mass + rb1.Mass)) * rb2.ElasticityCoefficient;
+
+		rb1._velocity = newRb1Vector;
+		rb1._velocity = newRb2Vector;
 	}
 
 	//void RigidBody::SetInertiaMatrix(Matrix3x3 matrix) {
