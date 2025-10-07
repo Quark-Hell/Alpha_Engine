@@ -10,7 +10,18 @@ void WindowsSettings::HideCursor() {
     win1->SetCursorVisible(false);
 }
 
-void WindowsSettings::WindowsTest1(Core::Object& Player) {
+void WindowsSettings::BaseWindow(Core::GameObject& Player) {
+    auto& cam1_1 = camerasBuffer->CreateCamera();
+
+    win1->CreateRectangle({ 0,0 }, { 1,1 });
+    cam1_1.SetRenderWindow(win1);
+    cam1_1.SetUseRectangle(true);
+    cam1_1.SetIndexRectangle(0);
+
+    Player.AddComponent(cam1_1);
+}
+
+void WindowsSettings::WindowsTest1(Core::GameObject& Player) {
     auto& cam1_1 = camerasBuffer->CreateCamera();
     auto& cam1_2 = camerasBuffer->CreateCamera();
 

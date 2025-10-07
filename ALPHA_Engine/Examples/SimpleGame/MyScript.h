@@ -70,4 +70,5 @@ class MyScript final : public Register::UserScript {
 	void GenerateLightSource();
 	void GenerateEarth();
 	void GenerateSun();
+	void GenerateCube();
 };

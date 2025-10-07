@@ -4,29 +4,32 @@
 
 namespace Core {
     void InstanceModule() {
-        userScriptSystem = new Register::Registry();
-        userScriptsBuffer = new Register::UserScriptsBuffer();
+        userScriptsBuffer = new Register::UserScriptsBuffer(2);
 
-        keyboardSystem = new BindsEngine::KeyboardSystem();
         keyboardBuffer = new BindsEngine::KeyboardSensors();
-
-        mouseSystem = new BindsEngine::MouseSystem();
-        mouseBuffer = new BindsEngine::MouseSensors();
+        mouseBuffer = new BindsEngine::MouseSensors(8);
 
         inputSystem = new BindsEngine::InputSystem();
-        bindsBuffer = new BindsEngine::BindsBuffer();
+        bindsBuffer = new BindsEngine::BindsBuffer(16);
 
-        windowsSystem = new WindowsManager::WindowsManager();
-        windowsBuffer = new WindowsManager::WindowsBuffer();
+        windowsBuffer = new WindowsManager::WindowsBuffer(4);
 
-        anomalySystem = new AnomalyEngine::RenderEngine();
-        meshesBuffer = new AnomalyEngine::MeshesBuffer();
-        camerasBuffer = new AnomalyEngine::CamerasBuffer();
-        directLightsBuffer = new AnomalyEngine::DirectLightsBuffer();
-        pointLightsBuffer = new AnomalyEngine::PointLightsBuffer();
+        rigidBodiesBuffer = new AxisEngine::RigidBodiesBuffer(8);
+        collidersBuffer = new AxisEngine::CollidersBuffer(8);
 
-        axisSystem = new AxisEngine::PhysicsEngine();
-        rigidBodiesBuffer = new AxisEngine::RigidBodiesBuffer();
+        meshesBuffer = new AnomalyEngine::MeshesBuffer(16);
+        camerasBuffer = new AnomalyEngine::CamerasBuffer(16);
+        directLightsBuffer = new AnomalyEngine::DirectLightsBuffer(4);
+        pointLightsBuffer = new AnomalyEngine::PointLightsBuffer(4);
+
+        userScriptSystem = new Register::Registry(100);
+        mouseSystem = new BindsEngine::MouseSystem(200);
+        keyboardSystem = new BindsEngine::KeyboardSystem(210);
+        collisionSystem = new AxisEngine::CollisionEngine(1000);
+        physicsSystem = new AxisEngine::PhysicsEngine(2000);
+        windowsSystem = new WindowsManager::WindowsManager(3000);
+        anomalySystem = new AnomalyEngine::RenderEngine(4000);
+
 
         IncludeScripts();
     }

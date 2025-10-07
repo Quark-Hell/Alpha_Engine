@@ -21,11 +21,13 @@ public:
     void ShowCursor();
     void HideCursor();
 
-    void WindowsTest1(Core::Object& Player);
-    void WindowsTest2(Core::Object& Player);
-    void WindowsTest3(Core::Object& Player);
-    void WindowsTest4(Core::Object& Player);
+    void BaseWindow(Core::GameObject& Player);
 
-    void WindowsTest5(Core::Object& Player);
+    void WindowsTest1(Core::GameObject& Player);
+    void WindowsTest2(Core::GameObject& Player);
+    void WindowsTest3(Core::GameObject& Player);
+    void WindowsTest4(Core::GameObject& Player);
+
+    void WindowsTest5(Core::GameObject& Player);
 
 };

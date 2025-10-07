@@ -191,6 +191,35 @@ void MyScript::GenerateLightSource() {
     LightsSource.AddComponent(pointLight);
 }
 
+void MyScript::GenerateCube() {
+    auto& cube = Core::Factory::CreateObject();
+
+    cube.transform.AddPosition(5, 15, -25);
+    cube.transform.AddRotation(0, 0, 0);
+    cube.transform.SetScale(1, 1, 1);
+
+    cube.SetName("Cube");
+
+    auto& cubeMesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
+    cube.AddComponent(cubeMesh);
+
+    auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
+    shader.LoadTextures(
+        "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
+        "",
+        "",
+        "",
+        "",
+        "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+
+    auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody();
+    cube.AddComponent(cubeRigidBody);
+
+    auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
+    cubeCollider.Create("/Assets/Models/Primitives/Cube.fbx");
+    cube.AddComponent(cubeCollider);
+}
+
 void MyScript::GenerateEarth() {
     auto& cube = Core::Factory::CreateObject();
 
@@ -211,6 +240,10 @@ void MyScript::GenerateEarth() {
         "",
         "",
         "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+
+    auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
+    cubeCollider.Create("/Assets/Models/Primitives/Cube.fbx");
+    cube.AddComponent(cubeCollider);
 }
 
 void MyScript::GenerateSun() {
@@ -378,12 +411,13 @@ void MyScript::Start() {
 #endif
 
 #if ANOMALY_ENGINE_INCLUDED
-    winSettings.WindowsTest5(*Player);
+    winSettings.BaseWindow(*Player);
 
     GenerateCubeMap();
     GenerateEarth();
     GenerateLightSource();
     GenerateSun();
+    GenerateCube();
 #endif
 }
 //Call every frame
