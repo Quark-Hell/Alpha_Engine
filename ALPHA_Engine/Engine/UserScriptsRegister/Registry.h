@@ -7,7 +7,7 @@ namespace Register {
 	class Registry final : public Core::System
 	{
 	public:
-		Registry();
+		Registry(size_t order);
 		~Registry() override = default;
 		
 	private:
