@@ -133,6 +133,42 @@ namespace glm {
         point = closetApproach;
         return true;
     }
+
+    /**
+     * @brief Calculates the signed distance from a point to a plane.
+     *
+     * The distance is positive if the point is in the direction of the plane's normal,
+     * negative if it is in the opposite direction.
+     *
+     * @tparam T Type of the GLM vector (e.g., glm::vec2, glm::vec3, glm::vec4).
+     * @param point The point from which to calculate the distance.
+     * @param planePoint A point lying on the plane.
+     * @param planeNormal Normal vector of the plane (does not need to be normalized).
+     * @return Signed distance from the point to the plane.
+     */
+    template<glmVector T>
+    [[nodiscard]] static inline float GetVertexToPlaneDistance(T point, T planePoint, T planeNormal) {
+        T n = glm::normalize(planeNormal);  // ensure normal is unit length
+        return glm::dot(n, point - planePoint);
+    }
+
+    /**
+     * @brief Computes the angle between two vectors in radians.
+     *
+     * The angle is always non-negative and measured in the plane containing both vectors.
+     *
+     * @tparam T Type of GLM vector (glm::vec2, glm::vec3, glm::vec4)
+     * @param a First vector.
+     * @param b Second vector.
+     * @return Angle in radians between vectors a and b.
+     */
+    template <glmVector T>
+    [[nodiscard]] static inline float GetAngle(T a, T b) {
+        float dotProduct = glm::dot(glm::normalize(a), glm::normalize(b));
+        // clamp to avoid precision errors outside [-1,1]
+        dotProduct = glm::clamp(dotProduct, -1.0f, 1.0f);
+        return glm::acos(dotProduct);
+    }
 }
 
 
