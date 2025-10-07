@@ -27,6 +27,21 @@ namespace Core {
 		~Geometry() override;
 
 		[[nodiscard]] std::shared_ptr<std::vector<float>> GetVertices() const noexcept;
+		/**
+		 * @brief Finds the furthest vertex of the geometry in a given direction.
+		 *
+		 * This function iterates over all vertices of the geometry and computes the
+		 * dot product with the specified direction vector to determine which vertex
+		 * is furthest along that direction.
+		 *
+		 * @param direction The direction vector along which to find the furthest point.
+		 * @return A glm::vec3 representing the position of the furthest vertex along the given direction.
+		 *
+		 * @note The geometry's vertices are assumed to be stored as consecutive
+		 *       x, y, z floats in the _vertices array.
+		 */
+		[[nodiscard]] glm::vec3 FindFurthestPoint(glm::vec3 direction) const;
+
 
 		void MakeUnique();
 	};

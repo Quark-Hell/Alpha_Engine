@@ -86,6 +86,23 @@ namespace Core {
         return true;
     }
 
+    glm::vec3 Geometry::FindFurthestPoint(glm::vec3 direction) const {
+        glm::vec3 maxPoint{ 0.0f };
+        float maxDistance = -FLT_MAX;
+
+        for (size_t i = 0; i + 2 < _vertices->size(); i += 3) {
+            glm::vec3 vertex{ (*_vertices)[i], (*_vertices)[i + 1], (*_vertices)[i + 2] };
+
+            float distance = glm::dot(vertex, direction);
+            if (distance > maxDistance) {
+                maxDistance = distance;
+                maxPoint = vertex;
+            }
+        }
+
+        return maxPoint;
+    }
+
     void Geometry::MakeUnique() {
         constexpr size_t arr_len = 3;
         std::array<float, arr_len> buffer;
