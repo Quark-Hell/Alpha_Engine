@@ -20,7 +20,7 @@ namespace Core {
 
         T& GetData(size_t pos) {
             if (pos >= _data.size()) {
-                Logger::LogError("Data index out of bounds: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+                Logger::LogError("Data index out of bounds: " + __LOGERROR__);
             }
             return *_data[pos];
         }
@@ -30,7 +30,7 @@ namespace Core {
 
         bool DestroyData(size_t pos) {
             if (pos >= _data.size()) {
-                Logger::LogError("Data index out of bounds: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+                Logger::LogError("Data index out of bounds: " + __LOGERROR__);
                 return false;
             }
 
@@ -40,7 +40,7 @@ namespace Core {
         }
         bool DestroyData(T* ptr) {
             if (ptr == nullptr) {
-                Logger::LogError("Data is nullptr: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+                Logger::LogError("Data is nullptr: " + __LOGERROR__);
                 return false;
             }
 
@@ -53,7 +53,7 @@ namespace Core {
                 ++it;
             }
 
-            Logger::LogError("Data does not exist: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Logger::LogError("Data does not exist: " + __LOGERROR__);
             return false;
         }
 

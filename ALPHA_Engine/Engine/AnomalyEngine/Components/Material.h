@@ -23,7 +23,8 @@ namespace AnomalyEngine {
     public:
         ~Material() = default;
 
-        template <typename T, typename = std::enable_if_t<std::is_base_of_v<ShaderProgram,T>, bool>>
+        template <typename T>
+        requires std::derived_from <T, ShaderProgram>
         T& InitShader() {
             Shader = std::unique_ptr<ShaderProgram>(new T(this));
             return *static_cast<T*>(Shader.get());

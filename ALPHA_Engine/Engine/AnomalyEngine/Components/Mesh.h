@@ -21,8 +21,8 @@ namespace AnomalyEngine {
     public:
         Material _material{this};
 
-    private:
-        Mesh();
+    protected:
+        Mesh() = default;
         bool Create() override;
         bool Create(
             const std::string& linkToFBX,

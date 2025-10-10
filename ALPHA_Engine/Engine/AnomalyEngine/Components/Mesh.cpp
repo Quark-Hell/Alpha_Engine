@@ -9,7 +9,6 @@
 #include "Core/Logger/Logger.h"
 
 namespace AnomalyEngine {
-    Mesh::Mesh() = default;
     Mesh::~Mesh() {
         //TODO: Delete mesh info from VRAM
     }

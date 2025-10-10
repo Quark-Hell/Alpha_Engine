@@ -48,7 +48,7 @@ namespace Core {
 		bool virtual CheckAddPossibility(Core::Object& newParent);
 
 	public:
-		virtual ~Component();
+		virtual ~Component() = default;
 		Component(const Component&) = delete;
 
 		//virtual void Delete() = 0;
