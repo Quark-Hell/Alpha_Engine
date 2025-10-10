@@ -46,6 +46,9 @@ namespace AxisEngine {
 	}
 
 	void PhysicsEngine::ApplyTorque(RigidBody& rb) {
+
+
+
 		//Recalculate angular velocity
 		//Eigen::Matrix3f inverseMatrix;
 		//if (MatrixMath::GetInverseMatrix3x3(rb._inertiaMatrix, inverseMatrix) == false)

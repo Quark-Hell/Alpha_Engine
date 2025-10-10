@@ -45,10 +45,6 @@ namespace AxisEngine {
 
 		void ApplyTorque(RigidBody& rb);
 
-		void Contact(RigidBody& rb1, glm::vec3 contactNormal);
-		void Contact(RigidBody& rb1, RigidBody& rb2, glm::vec3 contactNormal);
-
-
 		void ApplyPhysics(RigidBody& rb);
 
 		void SemiImplicitIntegrate(RigidBody& rb);
