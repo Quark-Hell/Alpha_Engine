@@ -16,13 +16,12 @@
 namespace AxisEngine {
 #if _DEBUG && ANOMALY_ENGINE_INCLUDED
     AABB::AABB() :_fakeObject(Core::Factory::CreateFakeObject()) {
-        auto* buffer = Core::World::GetSystemData("MeshBuffer");
+        auto* meshesBuffer = Core::World::GetSystemData<AnomalyEngine::MeshesBuffer>("MeshBuffer");
 
-        if (buffer == nullptr) {
+        if (meshesBuffer == nullptr) {
             Core::Logger::LogError("Meshes buffer not found: " + __LOGERROR__);
         }
         else {
-            AnomalyEngine::MeshesBuffer* meshesBuffer = reinterpret_cast<AnomalyEngine::MeshesBuffer*>(buffer);
             _mesh = &meshesBuffer->CreateMesh();
             _fakeObject.AddComponent(*_mesh);
 
