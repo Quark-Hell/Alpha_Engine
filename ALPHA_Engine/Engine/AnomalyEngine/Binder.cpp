@@ -11,14 +11,13 @@ namespace AnomalyEngine {
      bool Binder::BindMesh(Mesh* mesh) {
 
         if (mesh == nullptr) {
-            Core::Logger::LogError("Mesh pointer is null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::LogError("Mesh pointer is null: " + __LOGERROR__);
             return false;
         }
 
         if (mesh->_vertexVbo != 0) {
             glDeleteBuffers(1, &mesh->_vertexVbo);
             mesh->_vertexVbo = 0;
-
         }
         if (mesh->_colorsVbo != 0) {
             glDeleteBuffers(1, &mesh->_colorsVbo);

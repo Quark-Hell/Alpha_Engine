@@ -61,7 +61,6 @@ namespace AnomalyEngine {
             break;
             default:
                 Core::Logger::Logger::LogCritical("Unknown render mode: " + __LOGERROR__);
-            abort();
             break;
         }
 
