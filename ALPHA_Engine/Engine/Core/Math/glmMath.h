@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <algorithm>
 
@@ -116,21 +116,35 @@ namespace glm {
     }
 
     template<glmVector T>
-    [[nodiscard]] static inline bool ClosetPointBetweenAxis(std::pair<T, T> axis1,std::pair<T, T> axis2, T& point) {
-        T axis1Vector = glm::normalize(axis1.second - axis1.first);
-        T axis2Vector = glm::normalize(axis2.second - axis2.first);
+    [[nodiscard]] static inline bool ClosestPointBetweenAxis(std::pair<T, T> axis1,std::pair<T, T> axis2, T& point) {
+        T p1 = axis1.first;
+        T d1 = glm::normalize(axis1.second - axis1.first);
+        T p2 = axis2.first;
+        T d2 = glm::normalize(axis2.second - axis2.first);
 
-        float normU = glm::dot(axis1Vector, axis2Vector);
+        T w0 = p1 - p2;
+        float a = glm::dot(d1, d1);
+        float b = glm::dot(d1, d2);
+        float c = glm::dot(d2, d2);
+        float d = glm::dot(d1, w0);
+        float e = glm::dot(d2, w0);
 
-        //parallel
-        if (std::fabs(normU) == 1)
+        float denom = a * c - b * b; // = 1 - b*b
+
+        // Check for parrallel 
+        if (std::fabs(denom) < 1e-6f) {
             return false;
+        }
 
-        T cn = glm::normalize(glm::cross(axis2Vector ,axis1Vector));
-        T rejection = axis2.first - axis1.first - axis1Vector * glm::dot(axis2.first - axis1.first, axis1Vector) - cn * glm::dot(axis2.first - axis1.first, cn);
-        T closetApproach = axis2.first - axis2Vector * glm::length(rejection) / glm::dot(axis2Vector, glm::normalize(rejection));
+        float s = (b * e - c * d) / denom;
+        float t = (a * e - b * d) / denom;
 
-        point = closetApproach;
+        T point1 = p1 + s * d1;
+        T point2 = p2 + t * d2;
+
+        T midpoint = (point1 + point2) * 0.5f;
+        point = midpoint;
+
         return true;
     }
 
