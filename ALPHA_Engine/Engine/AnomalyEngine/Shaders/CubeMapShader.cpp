@@ -16,7 +16,7 @@ namespace AnomalyEngine {
 namespace AnomalyEngine {
 
 
-    CubeMapShader::CubeMapShader(Material* parentMat): ShaderProgram(parentMat) {
+    CubeMapShader::CubeMapShader(Material* parentMat) : ShaderProgram(parentMat) {
         AddShaderSource(R"(/Assets/Shaders/CubeMapShader/VertexShader.glsl)", ShadersType::VertexShader);
         AddShaderSource(R"(/Assets/Shaders/CubeMapShader/FragmentShader.glsl)", ShadersType::FragmentShader);
 
@@ -85,7 +85,7 @@ namespace AnomalyEngine {
         return true;
     }
 
-    void CubeMapShader::ApplyShadersSettings(Camera &camera) {
+    void CubeMapShader::ApplyShadersSettings(Camera &camera, int parentIndex) {
         if (camera.GetParentObject() == nullptr) {
             Core::Logger::LogError("camera parent was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
             return;

@@ -6,10 +6,6 @@
 #include "AnomalyEngine/Components/DirectLight.h"
 #include "AnomalyEngine/Components/PointLight.h"
 
-#include "Core/Logger/Logger.h"
-
-#include <Core/Objects/GameObject.h>
-#include <Core/World.h>
 #include <glad/glad.h>
 
 #include "AnomalyEngine/Components/Material.h"
@@ -18,13 +14,16 @@
 #include "AnomalyEngine/Components/Camera.h"
 #include "AnomalyEngine/Textures/TextureLoader.h"
 
-#include <glm/gtc/type_ptr.hpp>
-
 #include "Core/ECS/TSystemData.h"
+#include "Core/Logger/Logger.h"
+#include <Core/Objects/GameObject.h>
+#include <Core/World.h>
+
+#include <glm/gtc/type_ptr.hpp>
 
 namespace AnomalyEngine {
 
-    OpaqueShader::OpaqueShader(Material *parentMat) : ShaderProgram(parentMat) {
+    OpaqueShader::OpaqueShader(Material* parentMat) : ShaderProgram(parentMat) {
         AddShaderSource(R"(/Assets/Shaders/OpaqueShader/VertexShader.glsl)", ShadersType::VertexShader);
         AddShaderSource(R"(/Assets/Shaders/OpaqueShader/FragmentShader.glsl)", ShadersType::FragmentShader);
 
@@ -53,77 +52,77 @@ namespace AnomalyEngine {
         const std::string& opacityMapPath,
         const std::string& occlusionMapPath) {
 
-        {
-            Core::ScopedTimer timer("Load time");
+            {
+                Core::ScopedTimer timer("Load time");
 
-            const auto loader = TextureLoader::GetInstance();
-            if (!diffusePath.empty()) {
-                loader->AddTask(_textures[0], diffusePath);
-            }
-            else {
-                loader->AddTask(_textures[0], R"(/Assets/Textures/EmptyTexture.png)");
+                const auto loader = TextureLoader::GetInstance();
+                if (!diffusePath.empty()) {
+                    loader->AddTask(_textures[0], diffusePath);
+                }
+                else {
+                    loader->AddTask(_textures[0], R"(/Assets/Textures/EmptyTexture.png)");
+                }
+
+                if (!metallicPath.empty()) {
+                    loader->AddTask(_textures[1], metallicPath);
+                }
+                else {
+                    loader->AddTask(_textures[1], R"(/Assets/Textures/EmptyTexture.png)");
+                }
+
+                if (!specularPath.empty()) {
+                    loader->AddTask(_textures[2], specularPath);
+                }
+                else {
+                    loader->AddTask(_textures[2], R"(/Assets/Textures/EmptyTexture.png)");
+                }
+
+                if (!roughnessPath.empty()) {
+                    loader->AddTask(_textures[3], roughnessPath);
+                }
+                else {
+                    loader->AddTask(_textures[3], R"(/Assets/Textures/EmptyTexture.png)");
+                }
+
+                if (!anisotropicPath.empty()) {
+                    loader->AddTask(_textures[4], anisotropicPath);
+                }
+                else {
+                    loader->AddTask(_textures[4], R"(/Assets/Textures/EmptyTexture.png)");
+                }
+
+                if (!emissionPath.empty()) {
+                    loader->AddTask(_textures[5], emissionPath);
+                }
+                else {
+                    loader->AddTask(_textures[5], R"(/Assets/Textures/EmptyEmission.png)");
+                }
+
+                if (!normalMapPath.empty()) {
+                    loader->AddTask(_textures[6], normalMapPath);
+                }
+                else {
+                    loader->AddTask(_textures[6], R"(/Assets/Textures/EmptyTexture.png)");
+                }
+
+                if (!opacityMapPath.empty()) {
+                    loader->AddTask(_textures[7], opacityMapPath);
+                }
+                else {
+                    loader->AddTask(_textures[7], R"(/Assets/Textures/EmptyTexture.png)");
+                }
+
+                if (!occlusionMapPath.empty()) {
+                    loader->AddTask(_textures[8], occlusionMapPath);
+                }
+                else {
+                    loader->AddTask(_textures[8], R"(/Assets/Textures/EmptyTexture.png)");
+                }
+
+                loader->DoWork();
             }
 
-            if (!metallicPath.empty()) {
-                loader->AddTask(_textures[1], metallicPath);
-            }
-            else {
-                loader->AddTask(_textures[1], R"(/Assets/Textures/EmptyTexture.png)");
-            }
-
-            if (!specularPath.empty()) {
-                loader->AddTask(_textures[2], specularPath);
-            }
-            else {
-                loader->AddTask(_textures[2], R"(/Assets/Textures/EmptyTexture.png)");
-            }
-
-            if (!roughnessPath.empty()) {
-                loader->AddTask(_textures[3], roughnessPath);
-            }
-            else {
-                loader->AddTask(_textures[3], R"(/Assets/Textures/EmptyTexture.png)");
-            }
-
-            if (!anisotropicPath.empty()) {
-                loader->AddTask(_textures[4], anisotropicPath);
-            }
-            else {
-                loader->AddTask(_textures[4], R"(/Assets/Textures/EmptyTexture.png)");
-            }
-
-            if (!emissionPath.empty()) {
-                loader->AddTask(_textures[5], emissionPath);
-            }
-            else {
-                loader->AddTask(_textures[5], R"(/Assets/Textures/EmptyEmission.png)");
-            }
-
-            if (!normalMapPath.empty()) {
-                loader->AddTask(_textures[6], normalMapPath);
-            }
-            else {
-                loader->AddTask(_textures[6], R"(/Assets/Textures/EmptyTexture.png)");
-            }
-
-            if (!opacityMapPath.empty()) {
-                loader->AddTask(_textures[7], opacityMapPath);
-            }
-            else {
-                loader->AddTask(_textures[7], R"(/Assets/Textures/EmptyTexture.png)");
-            }
-
-            if (!occlusionMapPath.empty()) {
-                loader->AddTask(_textures[8], occlusionMapPath);
-            }
-            else {
-                loader->AddTask(_textures[8], R"(/Assets/Textures/EmptyTexture.png)");
-            }
-
-            loader->DoWork();
-        }
-
-        TransferTexturesToGPU();
+            TransferTexturesToGPU();
     }
 
     bool OpaqueShader::TransferTexturesToGPU() {
@@ -141,9 +140,9 @@ namespace AnomalyEngine {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
             glBindTexture(GL_TEXTURE_2D, 0);
-        };
+            };
 
-        for (auto & texture : _textures) {
+        for (auto& texture : _textures) {
             if (texture.GetHeight() == 0)
                 continue;
 
@@ -166,24 +165,32 @@ namespace AnomalyEngine {
         return true;
     }
 
-    void OpaqueShader::ApplyShadersSettings(Camera &camera) {
+    void OpaqueShader::ApplyShadersSettings(Camera& camera, int parentIndex) {
         if (camera.GetParentObject() == nullptr) {
             Core::Logger::LogError("Camera parent object was null: " + __LOGERROR__);
             return;
         }
 
+        Core::Object* parent;
+
+        if (parentIndex == -1) {
+            parent = GetParentMaterial()->GetParentMesh()->GetParentObject();
+        }
+        else {
+            auto parentsObj = GetParentMaterial()->GetParentMesh()->GetParentsObject();
+            parent = parentsObj[parentIndex];
+        }
+
         //=============================================Object Matrices=============================================//
-        auto modelMat = glm::mat4(glm::mat3(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
+        auto modelMat = glm::mat4(glm::mat3(parent->transform.GetTransformMatrix()));
         SetValue("model_matrix", &modelMat);
 
-        auto transMat = glm::mat3(glm::transpose(glm::inverse(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix())));
+        auto transMat = glm::mat3(glm::transpose(glm::inverse(parent->transform.GetTransformMatrix())));
         SetValue("trans_model_mat", &transMat);
 
-        auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->GetTransformMatrix() * GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
+        auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->GetTransformMatrix() * parent->transform.GetTransformMatrix();
         SetValue("MVP", &MVP);
         //=============================================Object Matrices=============================================//
-
-
 
         //=============================================Ambient Light=============================================//
         float ambStrength = Core::World::GetWorldAmbient();
@@ -194,7 +201,7 @@ namespace AnomalyEngine {
 
         //=============================================Direct Light=============================================//
         int directLightsCount = 0;
-        auto directLightsBuffer = reinterpret_cast<DirectLightsBuffer*>(Core::World::GetSystemData("DirectLightsBuffer"));
+        auto directLightsBuffer = Core::World::GetSystemData<DirectLightsBuffer>("DirectLightsBuffer");
 
         if (!directLightsBuffer->GetAllData().empty()) {
             for (size_t i = 0; i < directLightsBuffer->GetAllData().size(); i++) {
@@ -216,16 +223,16 @@ namespace AnomalyEngine {
 
         //=============================================Point Light=============================================//
         int pointLightsCount = 0;
-        auto pointLightsBuffer = reinterpret_cast<PointLightsBuffer*>(Core::World::GetSystemData("PointLightsBuffer"));
+        auto pointLightsBuffer = Core::World::GetSystemData<PointLightsBuffer>("PointLightsBuffer");
 
         if (!pointLightsBuffer->GetAllData().empty()) {
             for (size_t i = 0; i < pointLightsBuffer->GetAllData().size(); i++) {
                 auto& pLight = pointLightsBuffer->GetData(i);
 
                 glm::vec3 pos = glm::vec3(
-                        pLight.GetParentObject()->transform.GetPosition().x,
-                        pLight.GetParentObject()->transform.GetPosition().y,
-                        pLight.GetParentObject()->transform.GetPosition().z);
+                    pLight.GetParentObject()->transform.GetPosition().x,
+                    pLight.GetParentObject()->transform.GetPosition().y,
+                    pLight.GetParentObject()->transform.GetPosition().z);
 
                 SetValue(std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].position"), &pos);
                 SetValue(std::string("pointLights[").append(std::to_string(pointLightsCount)).append("].color"), &pLight.Color);
@@ -244,28 +251,29 @@ namespace AnomalyEngine {
 
         size_t spotLightsCount = 0;
 
-//        SetValue(UniformType::integer,"SpotLightsCount", &spotLightsCount);
+        //        SetValue(UniformType::integer,"SpotLightsCount", &spotLightsCount);
 
         glm::vec3 pos = glm::vec3(
-                camera.GetParentObject()->transform.GetPosition().x,
-                camera.GetParentObject()->transform.GetPosition().y,
-                camera.GetParentObject()->transform.GetPosition().z);
+            camera.GetParentObject()->transform.GetPosition().x,
+            camera.GetParentObject()->transform.GetPosition().y,
+            camera.GetParentObject()->transform.GetPosition().z);
         SetValue("viewPos", &pos);
 
         //=============================================Bind Textures=============================================//
         _textures[0].BindTexture(0, OpaqueShader::GetProgramId(), "diffuseMap");
-//        //_textures[1].BindTexture(1, OpaqueShader::GetProgramId(), "metallicMap");
-//        //_textures[2].BindTexture(2, OpaqueShader::GetProgramId(), "specularMap");
-//        //_textures[3].BindTexture(3, OpaqueShader::GetProgramId(), "roughnessMap");
-//        //_textures[4].BindTexture(4, OpaqueShader::GetProgramId(), "anisotropicMap");
+        //        //_textures[1].BindTexture(1, OpaqueShader::GetProgramId(), "metallicMap");
+        //        //_textures[2].BindTexture(2, OpaqueShader::GetProgramId(), "specularMap");
+        //        //_textures[3].BindTexture(3, OpaqueShader::GetProgramId(), "roughnessMap");
+        //        //_textures[4].BindTexture(4, OpaqueShader::GetProgramId(), "anisotropicMap");
         _textures[5].BindTexture(1, OpaqueShader::GetProgramId(), "emissionMap");
-//        //_textures[6].BindTexture(6, OpaqueShader::GetProgramId(), "normalMap");
-//        //_textures[7].BindTexture(7, OpaqueShader::GetProgramId(), "opacityMap");
-//        //_textures[8].BindTexture(8, OpaqueShader::GetProgramId(), "occlusionMap");
-        //=============================================Bind Textures=============================================//
+        //        //_textures[6].BindTexture(6, OpaqueShader::GetProgramId(), "normalMap");
+        //        //_textures[7].BindTexture(7, OpaqueShader::GetProgramId(), "opacityMap");
+        //        //_textures[8].BindTexture(8, OpaqueShader::GetProgramId(), "occlusionMap");
+                //=============================================Bind Textures=============================================//
 
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
+
     }
 }
