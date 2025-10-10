@@ -4,10 +4,6 @@ namespace Core {
 	Object::Object() = default;
 	Object::~Object() = default;
 
-	void Object::Delete() {
-		Object::~Object();
-	}
-
 	void Object::SetName(const std::string& newName) {
 		_name = newName;
 	}
@@ -15,7 +11,7 @@ namespace Core {
 		return _name;
 	}
 
-	bool Object::AddComponent(Component& component) {
+	bool Object::AddComponent(Component& component, bool isOwner) {
 		if (!component.CheckAddPossibility(*this)) {
 			Logger::Logger::LogError("Component didn't attached: " + __LOGERROR__);
 			return false;
@@ -24,17 +20,33 @@ namespace Core {
 		// Check if component is already added
 		for (auto* c : _components) {
 			if (c == &component) {
-				Logger::Logger::LogError("Component already attached " + __LOGERROR__);
+				Logger::Logger::LogError("Component already attached: " + __LOGERROR__);
 				return false;  // do not add again
 			}
 		}
 
 		// Add component
 		_components.push_back(&component);
-		component.ParentObject = this;
+		if (isOwner) {
+			component.ClearParents();
+		}
+		component._parentsObject.push_back(this);
 		component.UpdateParentObject(*this);
 		Logger::Logger::LogInfo("Component attached successfully");
 		return true;
+	}
+
+	bool Object::DetachComponent(Component& ref) {
+		for (auto it = _components.begin(); it != _components.end(); ++it) {
+			if (*it == &ref) {
+				_components.erase(it);  ///< Remove component from list
+				Logger::LogInfo("Component successfully detached");
+				return true;
+			}
+		}
+
+		Logger::Logger::LogInfo("Component didn't finded: " + __LOGERROR__);
+		return false;
 	}
 
 	size_t Object::GetCountOfComponents() const {
@@ -60,11 +72,15 @@ namespace Core {
 		return transformMatrix;
 	}
 
+	std::vector<Component*> Object::GetComponents() {
+		return _components;
+	}
+
 	const Component& Object::GetComponentByIndex(size_t index) const {
 		if (index >= _components.size())
 		{
 			Logger::Logger::LogCritical(
-				"Component index out of range " + __LOGERROR__
+				"Component index out of range: " + __LOGERROR__
 			);
 		}
 

@@ -8,7 +8,7 @@ namespace Core {
 	Core::World::World() = default;
 	Core::World::~World() = default;
 
-	std::vector<std::unique_ptr<Core::GameObject>>* World::GetObjects() {
+	std::vector<std::unique_ptr<Core::GameObject>>* World::GetGameObjects() {
 		static std::vector<std::unique_ptr<Core::GameObject>> objects{};
 		objects.reserve(64);
 		return &objects;
@@ -54,15 +54,6 @@ namespace Core {
 			return world->_worldSystem[order].get();
 		}
 		Logger::LogError("System not found: " + __LOGERROR__);
-		return nullptr;
-	}
-
-	Core::SystemData* World::GetSystemData(const std::string& systemDataName) {
-		const auto world = World::GetWorld();
-		if (world->_worldData.find(systemDataName) != world->_worldData.end()) {
-			return world->_worldData[systemDataName].get();
-		}
-		Logger::LogError("System data not found: " + __LOGERROR__);
 		return nullptr;
 	}
 

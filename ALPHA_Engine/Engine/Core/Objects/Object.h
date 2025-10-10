@@ -24,8 +24,6 @@ namespace Core {
 	public:
 		virtual ~Object();
 
-		void Delete();
-
 		/**
 		 * @brief Sets the name of the object.
 		 * @param newName New name to assign to the object.
@@ -38,11 +36,17 @@ namespace Core {
 		std::string GetName();
 
 		/**
-		 * @brief Adds a component to the object.
-		 * @param component Reference to the component to add.
-		 * @return True if the component was added successfully, false otherwise.
+		 * @brief Attaches (adds) a component to the object.
+		 *
+		 * This function registers the specified component within the object's internal
+		 * component list. Optionally, the object can take ownership of the component,
+		 * meaning it will handle its lifetime and destruction.
+		 *
+		 * @param component Reference to the component to attach.
+		 * @param isOwner If true, the object assumes ownership of the component and will manage its destruction.
+		 * @return True if the component was successfully added, false otherwise.
 		 */
-		bool AddComponent(Component& component);
+		bool AddComponent(Component& component, bool isOwner = false);
 
 		/**
 		 * @brief Returns the number of components attached to the object.
@@ -51,11 +55,13 @@ namespace Core {
 		[[nodiscard]] size_t GetCountOfComponents() const;
 
 		/**
-		 * @brief Deletes a component by its index.
+		 * @brief Detach a component by its index.
 		 * @param index Index of the component to delete.
 		 * @return True if deletion was successful, false if the index was invalid.
 		 */
-		bool DeleteComponentByIndex(int index);
+		bool DetachComponent(int index);
+
+		bool DetachComponent(Component& ref);
 
 
 		/**
@@ -63,6 +69,8 @@ namespace Core {
 		 * @return 4x4 transformation matrix combining position, rotation, and scale.
 		 */
 		glm::mat4x4 GetTransformMatrix();
+
+		std::vector<Component*> GetComponents();
 
 		/**
 		 * @brief Returns a constant reference to the first component of the specified type.

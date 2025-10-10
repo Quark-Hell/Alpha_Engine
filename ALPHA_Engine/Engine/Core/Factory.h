@@ -14,8 +14,6 @@ namespace Core {
         ~Factory() = default;
 
     public:
-        static bool RemoveObject(const Core::GameObject *object);
-
         static Core::GameObject& CreateObject();
         static Core::FakeObject& CreateFakeObject();
     };

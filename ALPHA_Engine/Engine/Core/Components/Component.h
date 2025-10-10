@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 namespace Core {
 	class Object;
@@ -16,7 +17,7 @@ namespace Core {
 		std::string Name = "Undefined";
 
 	protected:
-		Object* ParentObject = nullptr;
+		std::vector<Object*> _parentsObject;
 
 	protected:
 		Component() = default;
@@ -53,7 +54,12 @@ namespace Core {
 
 		//virtual void Delete() = 0;
 
-		Object* GetParentObject();
+		Object* GetParentObject() const noexcept;
+		const std::vector<Object*>& GetParentsObject() const noexcept;
+
+		bool RemoveParent(Core::Object& parent) noexcept;
+
+		void ClearParents() noexcept;
 	};
 
 }
