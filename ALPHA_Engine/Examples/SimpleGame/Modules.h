@@ -21,6 +21,7 @@
 
 #include "AnomalyEngine/Buffers/CamerasBuffer.h"
 #include "AnomalyEngine/Buffers/MeshesBuffer.h"
+#include "AnomalyEngine/Buffers/TempMeshesBuffer.h"
 #include "AnomalyEngine/Buffers/DirectLightsBuffer.h"
 #include "AnomalyEngine/Buffers/PointLightsBuffer.h"
 
@@ -73,6 +74,7 @@ inline WindowsManager::WindowsBuffer* windowsBuffer = nullptr;
 //===================Anomaly Engine===================//
 inline AnomalyEngine::RenderEngine* anomalySystem = nullptr;
 inline AnomalyEngine::MeshesBuffer* meshesBuffer = nullptr;
+inline AnomalyEngine::TempMeshesBuffer* tempMeshesBuffer = nullptr;
 inline AnomalyEngine::CamerasBuffer* camerasBuffer = nullptr;
 inline AnomalyEngine::DirectLightsBuffer* directLightsBuffer = nullptr;
 inline AnomalyEngine::PointLightsBuffer* pointLightsBuffer = nullptr;

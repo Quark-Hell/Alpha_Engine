@@ -18,6 +18,7 @@ namespace Core {
         collidersBuffer = new AxisEngine::CollidersBuffer(8);
 
         meshesBuffer = new AnomalyEngine::MeshesBuffer(16);
+        tempMeshesBuffer = new AnomalyEngine::TempMeshesBuffer(16);
         camerasBuffer = new AnomalyEngine::CamerasBuffer(16);
         directLightsBuffer = new AnomalyEngine::DirectLightsBuffer(4);
         pointLightsBuffer = new AnomalyEngine::PointLightsBuffer(4);
