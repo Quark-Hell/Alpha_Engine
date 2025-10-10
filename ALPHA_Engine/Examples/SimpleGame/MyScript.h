@@ -5,6 +5,8 @@
 
 #include "Windows/WindowsSettings.h"
 
+#include "AnomalyEngine/Components/Mesh.h"
+
 ACLASS()
 class Data {
 	public:
@@ -37,6 +39,8 @@ class MyScript final : public Register::UserScript {
 	Core::GameObject* Player = nullptr;
 	float moveSensitive = 10;
     WindowsSettings winSettings;
+
+	AnomalyEngine::Mesh* cubeMesh;
 
 
 	public:

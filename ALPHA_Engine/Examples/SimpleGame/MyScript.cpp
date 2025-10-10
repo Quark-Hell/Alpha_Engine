@@ -10,14 +10,13 @@ void MyScript::CameraRotate() {
     double sensitive = 7;
     sensitive *= Core::World::GetDeltaTime();
 
-    Core::SystemData *mouseData = Core::World::GetSystemData("MouseSensorsBuffer");
-    auto mouse = reinterpret_cast<BindsEngine::MouseSensors*>(mouseData);
+    auto mouseData = Core::World::GetSystemData<BindsEngine::MouseSensors>("MouseSensorsBuffer");
 
-    if (mouse->IsMouseChangePosition()) {
+    if (mouseData->IsMouseChangePosition()) {
 
         glm::vec2 delta;
-        delta.x = mouse->GetMouseDelta().x;
-        delta.y = mouse->GetMouseDelta().y;
+        delta.x = mouseData->GetMouseDelta().x;
+        delta.y = mouseData->GetMouseDelta().y;
 
         glm::vec3 newRot = Player->transform.GetRotation();
 
@@ -163,7 +162,7 @@ void MyScript::ChangeRect(std::vector<WindowsManager::Rectangle*>& rectBuffer) {
 
 void MyScript::GenerateCubeMap() {
     auto& obj2 = Core::Factory::CreateObject();
-    obj2.SetName("Mesh");
+    obj2.SetName("CubeMap");
     auto& mesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
     obj2.AddComponent(mesh);
 
@@ -201,17 +200,7 @@ void MyScript::GenerateCube() {
 
         cube.SetName("Cube");
 
-        auto& cubeMesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
-        cube.AddComponent(cubeMesh);
-
-        auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
-        shader.LoadTextures(
-            "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
-            "",
-            "",
-            "",
-            "",
-            "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+        cube.AddComponent(*cubeMesh);
 
         auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody();
         cube.AddComponent(cubeRigidBody);
@@ -230,17 +219,7 @@ void MyScript::GenerateCube() {
 
         cube.SetName("Plane");
 
-        auto& cubeMesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
-        cube.AddComponent(cubeMesh);
-
-        auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
-        shader.LoadTextures(
-            "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
-            "",
-            "",
-            "",
-            "",
-            "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+        cube.AddComponent(*cubeMesh);
 
         auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
         cubeCollider.Create("/Assets/Models/Primitives/Cube.fbx");
@@ -259,17 +238,7 @@ void MyScript::GenerateEarth() {
 
     cube.SetName("Cube");
 
-    auto& cubeMesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
-    cube.AddComponent(cubeMesh);
-
-    auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
-    shader.LoadTextures(
-        "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
-        "",
-        "",
-        "",
-        "",
-        "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+    cube.AddComponent(*cubeMesh);
 
     auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
     cubeCollider.Create("/Assets/Models/Primitives/Cube.fbx");
@@ -320,14 +289,13 @@ void MyScript::Start() {
     Player->SetName("TestObject");
 
 #if WINDOWS_MANAGER_INCLUDED
-    const auto windowsBuffer = Core::World::GetSystemData("WindowsBuffer");
+    const auto windowsBuffer = Core::World::GetSystemData<WindowsManager::WindowsBuffer>("WindowsBuffer");
     if (windowsBuffer == nullptr) {
         Core::Logger::LogError("Failed to get windows buffer: " + __LOGERROR__);
         return;
     }
-    const auto windows = reinterpret_cast<WindowsManager::WindowsBuffer*>(windowsBuffer);
 
-    winSettings.win1 = windows->CreateWindow(1280, 720, "Windows 1");
+    winSettings.win1 = windowsBuffer->CreateWindow(1280, 720, "Windows 1");
     winSettings.win1->SetCursorVisible(false);
 #endif
 
@@ -335,62 +303,61 @@ void MyScript::Start() {
     {
         using namespace BindsEngine;
 
-        auto* bindsBuffer = Core::World::GetSystemData("BindsBuffer");
+        auto* bindsBuffer = Core::World::GetSystemData<BindsBuffer>("BindsBuffer");
         if (bindsBuffer == nullptr) {
             Core::Logger::LogError("BindsBuffer does not exist: " + __LOGERROR__);
             return;
         }
-        auto* buffer = reinterpret_cast<BindsBuffer*>(bindsBuffer);
 
-        /*auto& showCursor =*/ buffer->CreateKeyboardBind(
+        /*auto& showCursor =*/ bindsBuffer->CreateKeyboardBind(
             { std::bind(&WindowsSettings::ShowCursor, winSettings) },
             { EnumKeyboardKeysStates::KeyPressed },
             { EnumKeyboardTable::LAlt },
             winSettings.win1);
 
-        /*auto& hideCursor =*/ buffer->CreateKeyboardBind(
+        /*auto& hideCursor =*/ bindsBuffer->CreateKeyboardBind(
             { std::bind(&WindowsSettings::HideCursor, winSettings) },
             { EnumKeyboardKeysStates::KeyReleased },
             { EnumKeyboardTable::LAlt },
             winSettings.win1
         );
 
-        /*auto& leftMove =*/ buffer->CreateKeyboardBind(
+        /*auto& leftMove =*/ bindsBuffer->CreateKeyboardBind(
             { std::bind(&MyScript::LeftMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::A },
             winSettings.win1
         );
 
-        /*auto& rightMove =*/ buffer->CreateKeyboardBind(
+        /*auto& rightMove =*/ bindsBuffer->CreateKeyboardBind(
             { std::bind(&MyScript::RightMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::D },
             winSettings.win1
         );
 
-        /*auto& forwardMove =*/ buffer->CreateKeyboardBind(
+        /*auto& forwardMove =*/ bindsBuffer->CreateKeyboardBind(
             { std::bind(&MyScript::ForwardMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::W },
             winSettings.win1
         );
 
-        /*auto& backwardMove =*/ buffer->CreateKeyboardBind(
+        /*auto& backwardMove =*/ bindsBuffer->CreateKeyboardBind(
             { std::bind(&MyScript::BackwardMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::S },
             winSettings.win1
         );
 
-        /*auto& upMove =*/ buffer->CreateKeyboardBind(
+        /*auto& upMove =*/ bindsBuffer->CreateKeyboardBind(
             { std::bind(&MyScript::UpMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Q },
             winSettings.win1
         );
 
-        /*auto& downMove =*/ buffer->CreateKeyboardBind(
+        /*auto& downMove =*/ bindsBuffer->CreateKeyboardBind(
             { std::bind(&MyScript::DownMoveCamera, this) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::E },
@@ -398,38 +365,38 @@ void MyScript::Start() {
         );
 
 
-        /*auto& rotateBind =*/ buffer->CreateMouseSensorBind(
+        /*auto& rotateBind =*/ bindsBuffer->CreateMouseSensorBind(
             { std::bind(&MyScript::CameraRotate, this) },
             { EnumMouseSensorStates::MouseKeepMoved, EnumMouseSensorStates::MouseStartMoved },
             winSettings.win1
         );
 
-        buffer->CreateKeyboardBind(
+        bindsBuffer->CreateKeyboardBind(
             { std::bind(&MyScript::PushRight, this, std::ref(winSettings.rects)) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Right },
             winSettings.win1
         );
-        buffer->CreateKeyboardBind(
+        bindsBuffer->CreateKeyboardBind(
             { std::bind(&MyScript::PushLeft, this, std::ref(winSettings.rects)) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Left },
             winSettings.win1
         );
-        buffer->CreateKeyboardBind(
+        bindsBuffer->CreateKeyboardBind(
             { std::bind(&MyScript::PushUp, this, std::ref(winSettings.rects)) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Up },
             winSettings.win1
         );
-        buffer->CreateKeyboardBind(
+        bindsBuffer->CreateKeyboardBind(
             { std::bind(&MyScript::PushDown, this, std::ref(winSettings.rects)) },
             { EnumKeyboardKeysStates::KeyHold },
             { EnumKeyboardTable::Down },
             winSettings.win1
         );
 
-        buffer->CreateKeyboardBind(
+        bindsBuffer->CreateKeyboardBind(
             { std::bind(&MyScript::ChangeRect, this, std::ref(winSettings.rects)) },
             {EnumKeyboardKeysStates::KeyReleased },
             {EnumKeyboardTable::Add },
@@ -444,6 +411,17 @@ void MyScript::Start() {
     winSettings.BaseWindow(*Player);
 
     GenerateCubeMap();
+
+    cubeMesh = &meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
+    auto& shader = cubeMesh->_material.InitShader<AnomalyEngine::OpaqueShader>();
+    shader.LoadTextures(
+        "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
+        "",
+        "",
+        "",
+        "",
+        "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+
     GenerateEarth();
     GenerateLightSource();
     GenerateSun();
