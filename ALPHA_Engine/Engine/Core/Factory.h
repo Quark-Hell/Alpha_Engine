@@ -3,6 +3,12 @@
 
 #pragma once
 
+#include "Core/Objects/Object.h"
+#include "Core/Objects/FakeObject.h"
+#include "Core/Objects/GameObject.h"
+
+#include "Core/World.h"
+
 namespace Core {
     class GameObject;
     class FakeObject;
@@ -14,7 +20,21 @@ namespace Core {
         ~Factory() = default;
 
     public:
-        static Core::GameObject& CreateObject();
-        static Core::FakeObject& CreateFakeObject();
+        
+        template<typename T>
+        requires std::derived_from <T, Core::Object>
+        static T& CreateObject() {
+            if constexpr (std::is_same_v <T, Core::GameObject>) {
+                World::GetGameObjects()->emplace_back(std::unique_ptr<Core::GameObject>(new Core::GameObject()));
+                Core::Logger::LogInfo("Game Object created");
+                return *World::GetGameObjects()->back().get();
+            }
+            else
+            {
+                World::GetFakeObjects()->emplace_back(std::unique_ptr<Core::FakeObject>(new Core::FakeObject()));
+                Core::Logger::LogInfo("Fake Object created");
+                return *World::GetFakeObjects()->back().get();
+            }
+        }
     };
 }

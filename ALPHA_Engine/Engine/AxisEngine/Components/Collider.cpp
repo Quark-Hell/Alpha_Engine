@@ -5,7 +5,7 @@
 #include "Core/Factory.h"
 
 namespace AxisEngine {
-    Collider::Collider() : _fakeObject(Core::Factory::CreateFakeObject()) {
+    Collider::Collider() : _fakeObject(Core::Factory::CreateObject<Core::FakeObject>()) {
         
     }
 

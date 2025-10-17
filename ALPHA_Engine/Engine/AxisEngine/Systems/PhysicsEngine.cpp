@@ -42,21 +42,19 @@ namespace AxisEngine {
 		rb.AddForce(rb.Gravity * rb.Mass);
 	}
 	void PhysicsEngine::ApplyBaseFriction(RigidBody& rb) {
-		rb._velocity *= rb.BaseFriction;
+		rb._linearVelocity *= rb.BaseFriction;
 	}
 
 	void PhysicsEngine::ApplyTorque(RigidBody& rb) {
 
+		glm::vec3 scale = rb.GetParentObject()->transform.GetScale();
 
+		constexpr float factor = 1.0 / 12.0;
+		glm::mat3 I_local(0.0f);
 
-		//Recalculate angular velocity
-		//Eigen::Matrix3f inverseMatrix;
-		//if (MatrixMath::GetInverseMatrix3x3(rb._inertiaMatrix, inverseMatrix) == false)
-			//return;
-
-		//MatrixMath::MultiplyMatrix(rb._angularVelocity, rb._angularMomentum, inverseMatrix);
-
-		//float angle = Vector3::GetAngle(rb.);
+		/*I_local[0][0]*/ float I1 = factor * rb.Mass * (glm::pow(scale.y, 2) + glm::pow(scale.z, 2));
+		/*I_local[1][1]*/ float I2 = factor * rb.Mass * (glm::pow(scale.x, 2) + glm::pow(scale.z, 2));
+		/*I_local[2][2]*/ float I3 = factor * rb.Mass * (glm::pow(scale.x, 2) + glm::pow(scale.y, 2));
 	}
 
 	void PhysicsEngine::ApplyPhysics(RigidBody& rb) {
@@ -88,15 +86,21 @@ namespace AxisEngine {
 			glm::vec3 newVelocity = rb.GetVelocity() + acceleration * PhysicsEngine::_fixTimeStep;
 
 			if (glm::length(newVelocity) > rb.MaxSpeed) {
-				rb._velocity = glm::normalize(newVelocity) * rb.MaxSpeed;
+				rb._linearVelocity = glm::normalize(newVelocity) * rb.MaxSpeed;
 			}
 			else
 			{
-				rb._velocity = newVelocity;			
+				rb._linearVelocity = newVelocity;			
 			}
 
 			rb.GetParentObject()->transform.AddPosition(rb.GetVelocity() * PhysicsEngine::_fixTimeStep);
 
+			//if (glm::length2(rb._angularAcceleration) > 0) {
+			//	rb.GetParentObject()->transform.AddRotation(-rb._angularAcceleration * PhysicsEngine::_fixTimeStep);
+			//}
+			ApplyTorque(rb);
+
+			
 			rb._force = { 0,0,0 };
 
 			accumulator -= PhysicsEngine::_fixTimeStep;
@@ -111,7 +115,7 @@ namespace AxisEngine {
 			glm::vec3 acceleration = rb._force / rb.Mass;
 			glm::vec3 newVelocity = rb.GetVelocity() + acceleration * PhysicsEngine::_fixTimeStep;
 
-			rb._velocity = glm::mix(rb._velocity, newVelocity, (float)alpha);
+			rb._linearVelocity = glm::mix(rb._linearVelocity, newVelocity, (float)alpha);
 
 			glm::vec3 deltaPos = rb.GetVelocity() * (float)(PhysicsEngine::_fixTimeStep * alpha);
 			rb.GetParentObject()->transform.AddPosition(deltaPos);
@@ -154,19 +158,19 @@ namespace AxisEngine {
 
 		State state;
 		state.Position = rb.GetParentObject()->transform.GetPosition();
-		state.Velocity = rb._velocity;
+		state.Velocity = rb._linearVelocity;
 
 		while (accumulator >= PhysicsEngine::_fixTimeStep)
 		{
 			state.Position = rb.GetParentObject()->transform.GetPosition();
-			state.Velocity = rb._velocity;
+			state.Velocity = rb._linearVelocity;
 
 			PhysicsEngine::ApplyGravity(rb);
 			PhysicsEngine::ApplyBaseFriction(rb);
 
 			integrate(state, PhysicsEngine::_fixTimeStep, rb._force, rb.Mass);
 
-			rb._velocity = state.Velocity;
+			rb._linearVelocity = state.Velocity;
 			rb.GetParentObject()->transform.SetPosition(state.Position);
 
 			accumulator -= PhysicsEngine::_fixTimeStep;
@@ -176,14 +180,14 @@ namespace AxisEngine {
 			const double alpha = accumulator / PhysicsEngine::_fixTimeStep;
 
 			state.Position = rb.GetParentObject()->transform.GetPosition();
-			state.Velocity = rb._velocity;
+			state.Velocity = rb._linearVelocity;
 
 			PhysicsEngine::ApplyGravity(rb);
 			PhysicsEngine::ApplyBaseFriction(rb);
 
 			integrate(state, PhysicsEngine::_fixTimeStep, rb._force, rb.Mass);
 
-			rb._velocity += (state.Velocity - rb._velocity) * glm::vec3(alpha);
+			rb._linearVelocity += (state.Velocity - rb._linearVelocity) * glm::vec3(alpha);
 			rb.GetParentObject()->transform.AddPosition(state.Velocity * PhysicsEngine::_fixTimeStep * glm::vec3(alpha));
 
 		}

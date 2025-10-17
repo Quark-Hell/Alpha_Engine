@@ -28,7 +28,7 @@ namespace Register {
             T* userScript = new T();
 
             _data.emplace_back(std::unique_ptr<UserScript>(new T()));
-            Core::GameObject& obj = Core::Factory::CreateObject();
+            Core::GameObject& obj = Core::Factory::CreateObject<Core::GameObject>();
 
             obj.AddComponent(*_data.back().get());
             obj.SetName(name);

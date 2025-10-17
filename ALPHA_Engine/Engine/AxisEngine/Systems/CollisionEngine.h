@@ -33,8 +33,8 @@ namespace AxisEngine {
 
 		void CalculateContactPoints(Collider& contactObject1, Collider& contactObject2, CollisionInfo& colInfo);
 		void CheckIntersection(
-			std::vector<std::pair<glm::vec3, float>>& contactPointsA,
-			std::vector<std::pair<glm::vec3, float>>& contactPointsB,
+			const std::vector<std::pair<glm::vec3, float>>& contactPointsA,
+			const std::vector<std::pair<glm::vec3, float>>& contactPointsB,
 			glm::vec3 normal,
 			std::vector<glm::vec3>& contactPointsBuf);
 

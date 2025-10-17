@@ -63,13 +63,6 @@ namespace Core {
 
 		bool DetachComponent(Component& ref);
 
-
-		/**
-		 * @brief Computes and returns the object's transformation matrix.
-		 * @return 4x4 transformation matrix combining position, rotation, and scale.
-		 */
-		glm::mat4x4 GetTransformMatrix();
-
 		std::vector<Component*> GetComponents();
 
 		/**

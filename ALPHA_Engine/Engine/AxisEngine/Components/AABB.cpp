@@ -15,7 +15,7 @@
 
 namespace AxisEngine {
 #if _DEBUG && ANOMALY_ENGINE_INCLUDED
-    AABB::AABB() :_fakeObject(Core::Factory::CreateFakeObject()) {
+    AABB::AABB() :_fakeObject(Core::Factory::CreateObject<Core::FakeObject>()) {
         auto* meshesBuffer = Core::World::GetSystemData<AnomalyEngine::MeshesBuffer>("MeshBuffer");
 
         if (meshesBuffer == nullptr) {

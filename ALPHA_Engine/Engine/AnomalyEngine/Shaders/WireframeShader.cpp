@@ -32,14 +32,24 @@ namespace AnomalyEngine {
             return;
         }
 
+        Core::Object* parent;
+
+        if (parentIndex == -1) {
+            parent = GetParentMaterial()->GetParentMesh()->GetParentObject();
+        }
+        else {
+            auto parentsObj = GetParentMaterial()->GetParentMesh()->GetParentsObject();
+            parent = parentsObj[parentIndex];
+        }
+
         //=============================================Object Matrices=============================================//
-        auto modelMat = glm::mat4(glm::mat3(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
+        auto modelMat = glm::mat4(glm::mat3(parent->transform.GetTransformMatrix()));
         SetValue("model_matrix", &modelMat);
 
-        auto transMat = glm::mat3(glm::transpose(glm::inverse(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix())));
+        auto transMat = glm::mat3(glm::transpose(glm::inverse(parent->transform.GetTransformMatrix())));
         SetValue("trans_model_mat", &transMat);
 
-        auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->GetTransformMatrix() * GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
+        auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->transform.GetTransformMatrix() * parent->transform.GetTransformMatrix();
         SetValue("MVP", &MVP);
         //=============================================Object Matrices=============================================//
 

@@ -7,6 +7,9 @@
 #include "AxisEngine/Buffers/CollidersBuffer.h"
 #include "AxisEngine/Buffers/RigidBodiesBuffer.h"
 
+#include "AnomalyEngine/Utility/BasicShapes/Sphere.h"
+#include "AnomalyEngine/Buffers/TempMeshesBuffer.h"
+
 namespace AxisEngine {
     CollisionEngine::CollisionEngine(size_t order) : System({ "CollidersBuffer", "RigidBodiesBuffer" }, order) {}
 
@@ -118,7 +121,7 @@ namespace AxisEngine {
                         rb1->_pullingVectors.push_back(-colInfo.Normal * colInfo.PenetrationDepth);
 
                         colliderA.GetParentObject()->transform.AddPosition(-colInfo.Normal * colInfo.PenetrationDepth);
-                        //CollisionEngine::CalculateContactPoints(colliderA, colliderB, colInfo);
+                        CollisionEngine::CalculateContactPoints(colliderA, colliderB, colInfo);
 
                         rb1->AddContactPoints(colInfo.CollisionPoints);
                         rb1->_hasCollision = true;
@@ -133,7 +136,7 @@ namespace AxisEngine {
                         rb2->_pullingVectors.push_back(colInfo.Normal * colInfo.PenetrationDepth);
 
                         colliderB.GetParentObject()->transform.AddPosition(colInfo.Normal * colInfo.PenetrationDepth);
-                        //CollisionEngine::CalculateContactPoints(colliderA, colliderB, colInfo);
+                        CollisionEngine::CalculateContactPoints(colliderA, colliderB, colInfo);
 
                         rb2->AddContactPoints(colInfo.CollisionPoints);
                         rb2->_hasCollision = true;
@@ -153,7 +156,7 @@ namespace AxisEngine {
                         rb2->_pullingVectors.push_back(colInfo.Normal * colInfo.PenetrationDepth * 0.5f);
 
                         colliderA.GetParentObject()->transform.AddPosition(colInfo.Normal * colInfo.PenetrationDepth);
-                        //CollisionEngine::CalculateContactPoints(colliderB, colliderA, colInfo);
+                        CollisionEngine::CalculateContactPoints(colliderB, colliderA, colInfo);
 
                         rb1->AddContactPoints(colInfo.CollisionPoints);
                         rb2->AddContactPoints(colInfo.CollisionPoints);
@@ -327,9 +330,9 @@ namespace AxisEngine {
             for (size_t i = 0; i < vertices->size(); i += 3)
             {
                 glm::vec3 point{ (*vertices)[i + 0],(*vertices)[i + 1],(*vertices)[i + 2] };
-                point += contactObject.GetParentObject()->transform.GetPosition();
+                point = glm::ToWorldSpace(point, contactObject.GetParentObject()->transform.GetTransformMatrix());
 
-                float distance = glm::GetVertexToPlaneDistance(point, contactPlane.P1, contactPlane.Normal);
+                float distance = glm::abs(glm::GetVertexToPlaneDistance(point, contactPlane.P1, contactPlane.Normal));
                 if (distance > 0.005f)
                     continue;
 
@@ -360,7 +363,8 @@ namespace AxisEngine {
         std::vector<std::pair<glm::vec3, float>> contactPointsB; contactPointsB.reserve(4);
 
         colInfo.Normal = glm::normalize(colInfo.Normal);
-        Plane contactPlane{ contactObject1.FindFurthestPoint(colInfo.Normal) + contactObject1.GetParentObject()->transform.GetPosition(), colInfo.Normal };
+        glm::vec3 point = glm::ToWorldSpace(contactObject1.FindFurthestPoint(colInfo.Normal), contactObject1.GetParentObject()->transform.GetTransformMatrix());
+        Plane contactPlane{ point, colInfo.Normal };
 
         //Finding contact points from shape A
         findContactPoints(contactObject1, contactPlane, contactPointsA);
@@ -414,11 +418,19 @@ namespace AxisEngine {
         std::cout << realContactPoints.size() << " size\t" << " End\n";
 
         colInfo.CollisionPoints = { realContactPoints.begin(), realContactPoints.end() };
+
+        auto* tempMeshesBuffer = Core::World::GetSystemData<AnomalyEngine::TempMeshesBuffer>("TempMeshesBuffer");
+
+        for (auto it : colInfo.CollisionPoints) {
+            if (tempMeshesBuffer) {
+                tempMeshesBuffer->Draw<AnomalyEngine::Sphere>(it, glm::vec3{ 0,0,0 }, glm::vec3{0.5,0.5,0.5});
+            }
+        }
     }
 
     void CollisionEngine::CheckIntersection(
-        std::vector<std::pair<glm::vec3, float>>& contactPointsA,
-        std::vector<std::pair<glm::vec3, float>>& contactPointsB,
+        const std::vector<std::pair<glm::vec3, float>>& contactPointsA,
+        const std::vector<std::pair<glm::vec3, float>>& contactPointsB,
         glm::vec3 normal,
         std::vector<glm::vec3>& contactPointsBuf) {
 
@@ -474,8 +486,12 @@ namespace AxisEngine {
             }
 
             //all points of current line is inside shape
-            if (passedCount == 2)
+            //We ignore second point because it will be added on next iteration
+            if (passedCount == 2) {
+                //contactPointsBuf.push_back(contactPointsB[itSecondP].first);
                 continue;
+            }
+
 
             ////all points of current line is outside shape
             //if (passedCount == 0 && !(contactPointsA.size() == 2 && contactPointsB.size() == 2))
@@ -490,7 +506,7 @@ namespace AxisEngine {
 
                 glm::vec3 projectPoint;
 
-                bool notParallel = glm::ClosetPointBetweenAxis(
+                bool notParallel = glm::ClosestPointBetweenAxis(
                     { contactPointsB[it].first, contactPointsB[itSecondP].first },
                     { contactPointsA[jt].first, contactPointsA[jtSecondP].first }, projectPoint);
 

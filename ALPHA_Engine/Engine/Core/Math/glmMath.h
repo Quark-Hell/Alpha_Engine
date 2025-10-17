@@ -11,6 +11,10 @@
 
 #include <glm/gtc/constants.hpp>
 
+#include "glm/gtx/euler_angles.hpp"
+
+#include <glm/gtx/quaternion.hpp> 
+
 namespace glm {
     template<typename T, typename... U>
     concept IsAnyOf = (std::same_as<T, U> || ...);
@@ -147,6 +151,31 @@ namespace glm {
 
         return true;
     }
+
+    /** @brief Converts a point from local to world space.
+     * @tparam T glm::vec2, glm::vec3, or glm::vec4
+     * @param localPoint Point in local coordinates
+     * @param transform Transformation matrix (typically model matrix)
+     * @return Point in world coordinates
+     */
+    template <glmVector T>
+    [[nodiscard]] T ToWorldSpace(const T& localPoint, const glm::mat4& transform)
+    {
+        if constexpr (std::same_as<T, glm::vec2>) {
+            glm::vec4 temp(localPoint, 0.0f, 1.0f);
+            glm::vec4 world = transform * temp;
+            return glm::vec2(world);
+        }
+        else if constexpr (std::same_as<T, glm::vec3>) {
+            glm::vec4 temp(localPoint, 1.0f);
+            glm::vec4 world = transform * temp;
+            return glm::vec3(world);
+        }
+        else if constexpr (std::same_as<T, glm::vec4>) {
+            return transform * localPoint;
+        }
+    }
+
 
     /**
      * @brief Calculates the signed distance from a point to a plane.

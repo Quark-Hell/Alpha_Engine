@@ -188,7 +188,7 @@ namespace AnomalyEngine {
         auto transMat = glm::mat3(glm::transpose(glm::inverse(parent->transform.GetTransformMatrix())));
         SetValue("trans_model_mat", &transMat);
 
-        auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->GetTransformMatrix() * parent->transform.GetTransformMatrix();
+        auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->transform.GetTransformMatrix() * parent->transform.GetTransformMatrix();
         SetValue("MVP", &MVP);
         //=============================================Object Matrices=============================================//
 

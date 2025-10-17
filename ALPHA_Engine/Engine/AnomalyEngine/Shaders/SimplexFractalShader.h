@@ -1,5 +1,6 @@
 #pragma once
 #include "AnomalyEngine/Shaders/ShaderProgram.h"
+#include "AnomalyEngine/Utility/Color.h"
 
 namespace AnomalyEngine {
     class SimplexFractalShader final : public ShaderProgram {
@@ -7,11 +8,16 @@ namespace AnomalyEngine {
         friend class Material;
 
     public:
-        float seed;
-        float resolution = 4;
-        float intensity = 4;
-        float minFactor = 0;
-        float maxFactor = 1.5;
+        float Seed;
+        float Resolution = 4;
+        float Intensity = 1;
+        float Contrast = 1;
+        float Brightness = 0;
+        float MinFactor = 0;
+        float MaxFactor = 0.5;
+
+        std::vector<Color> colors;
+
 
     private:
         bool TransferTexturesToGPU();

@@ -1,8 +1,11 @@
-#pragma once
+﻿#pragma once
 #include <vector>
+#include <memory>
 
 #include "Core/Math/glmMath.h"
 #include "Core/ECS/System.h"
+
+#include "Utility/BasicShapes/Shape.h"
 
 namespace WindowsManager {
     class Window;
@@ -10,16 +13,32 @@ namespace WindowsManager {
 
 namespace AnomalyEngine {
     class MeshesBuffer;
+    class TempMeshesBuffer;
     class ShaderProgram;
     class Camera;
     class Mesh;
 }
 
 namespace AnomalyEngine  {
+    template<typename T>
+    concept MeshBufferLike = requires(T t) {
+            requires std::derived_from<
+                typename std::remove_pointer_t<
+                    typename std::pointer_traits<
+                        typename std::remove_cvref_t<
+                            decltype(t.GetAllData()[0])
+                        >
+                    >::element_type
+                >,
+                AnomalyEngine::Mesh
+            >;
+    };
+
     class RenderEngine final : public Core::System {
     private:
         //Temp data
         unsigned int _vao = 0;
+        std::vector<std::shared_ptr<Shape>> _shapesBuffer;
 
     private:
         void ClearFrameBuffer();
@@ -30,7 +49,42 @@ namespace AnomalyEngine  {
 
         ///Before use LoadMeshArray()
         void EntryPoint(std::vector<Core::SystemData*>& data) override;
-        void RenderMeshes(Camera &camera, const MeshesBuffer &meshes);
+        void InitTempBuffer();
+        bool _isNotInited = false;
+
+        template<MeshBufferLike T>
+        void RenderMeshes(Camera& camera, const T& meshes) {
+            for (auto& mesh : meshes._data) {
+                if (!MeshChecker(*mesh))
+                    continue;
+
+                auto parents = mesh->GetParentsObject();
+
+                GenerateVao(*mesh);
+
+                glUseProgram(mesh->_material.Shader->GetProgramId());
+                glBindVertexArray(_vao);
+
+                const int renderMode = GetRenderMode(*mesh->_material.Shader);
+
+                for (int i = 0; i < parents.size(); i++) {
+
+                    mesh->_material.Shader->ApplyShadersSettings(camera, i);
+
+                    if (mesh->_isIndexed)
+                        glDrawElements(renderMode, mesh->_indices->size(), GL_UNSIGNED_INT, mesh->_indices->data());
+                    else
+                        glDrawArrays(renderMode, 0, mesh->_vertices->size() / 3);
+                }
+
+                //glDepthFunc(GL_NEVER);
+                glBindVertexArray(0);
+                glBindTexture(GL_TEXTURE_2D, 0);
+
+                //Delete vao that was created by GenerateVao() function
+                glDeleteVertexArrays(1, &_vao);
+            }
+        }
 
         void GenerateVao(const Mesh &mesh);
 

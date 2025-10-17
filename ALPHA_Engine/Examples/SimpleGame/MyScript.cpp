@@ -1,4 +1,4 @@
-#include "MyScript.h"
+﻿#include "MyScript.h"
 
 #include "Modules.h"
 
@@ -7,87 +7,56 @@ void MyScript::CameraRotate() {
     if (winSettings.win1->GetCursorVisible() == true)
         return;
 
-    double sensitive = 7;
-    sensitive *= Core::World::GetDeltaTime();
-
     auto mouseData = Core::World::GetSystemData<BindsEngine::MouseSensors>("MouseSensorsBuffer");
 
-    if (mouseData->IsMouseChangePosition()) {
+    float sensitive = 0.15;
+    glm::vec2 delta = mouseData->GetMouseDelta();
 
-        glm::vec2 delta;
-        delta.x = mouseData->GetMouseDelta().x;
-        delta.y = mouseData->GetMouseDelta().y;
+    static float targetYaw = 0.0f;
+    static float targetPitch = 0.0f;
 
-        glm::vec3 newRot = Player->transform.GetRotation();
+    targetYaw   += delta.x * sensitive;
+    targetPitch += delta.y * sensitive;
 
-        newRot.x += delta.y * sensitive;
-        newRot.y += delta.x * sensitive;
+    targetPitch = glm::clamp(targetPitch, -89.0f, 89.0f);
 
-        Player->transform.SetRotation(newRot);
+    glm::quat qYaw = glm::angleAxis(glm::radians(targetYaw), glm::vec3(0, 1, 0));
+    glm::quat qPitch = glm::angleAxis(glm::radians(targetPitch), glm::vec3(1, 0, 0));
 
-    }
+    glm::quat targetRot = qPitch * qYaw;
+
+    float slerpSpeed = 10.0f * Core::World::GetDeltaTime();
+    slerpSpeed = glm::clamp(slerpSpeed, 0.0f, 1.0f);
+
+    Player->transform.SetRotationQuatSlerp(targetRot, slerpSpeed);
 }
 
 void MyScript::LeftMoveCamera() {
-    glm::vec3 newPos = Player->transform.GetPosition();
+    glm::vec3 rightVector = Player->transform.GetRight();
+    float sensitive = moveSensitive * Core::World::GetDeltaTime();
 
-    glm::vec3 UpVector;
-
-    UpVector.x = sinf((Player->transform.GetRotation().y + 90) * 3.14159 / 180);
-    UpVector.y = 0;
-    UpVector.z = sinf((Player->transform.GetRotation().y) * 3.14159 / 180);
-
-    float sensitive = moveSensitive;
-    sensitive *= Core::World::GetDeltaTime();
-    newPos += UpVector * sensitive;
-
-    Player->transform.SetPosition(newPos);
+    Player->transform.AddPosition(rightVector * sensitive);
 }
+
 void MyScript::RightMoveCamera() {
-    glm::vec3 newPos = Player->transform.GetPosition();
+    glm::vec3 rightVector = Player->transform.GetRight();
+    float sensitive = moveSensitive * Core::World::GetDeltaTime();
 
-    glm::vec3 UpVector;
-
-    UpVector.x = sin((Player->transform.GetRotation().y + 90) * 3.14159 / 180);
-    UpVector.y = 0;
-    UpVector.z = sin((Player->transform.GetRotation().y) * 3.14159 / 180);
-
-    float sensitive = moveSensitive;
-    sensitive *= Core::World::GetDeltaTime();
-    newPos += UpVector * (-sensitive);
-
-    Player->transform.SetPosition(newPos);
+    Player->transform.AddPosition(-rightVector * sensitive);
 }
 
 void MyScript::ForwardMoveCamera() {
-    glm::vec3 newPos = Player->transform.GetPosition();
+    glm::vec3 forwardVector = Player->transform.GetForward();
+    float sensitive = moveSensitive * Core::World::GetDeltaTime();
 
-    glm::vec3 ForwardVector{ 0,0,0 };
-
-    ForwardVector.x = sin((Player->transform.GetRotation().y + 180) * 3.14159 / 180); // RIGHT
-    ForwardVector.y = cos((Player->transform.GetRotation().x + 270) * 3.14159 / 180); // RIGHT
-    ForwardVector.z = sin((Player->transform.GetRotation().y + 90) * 3.14159 / 180); // RIGHT
-
-    float sensitive = moveSensitive;
-    sensitive *= Core::World::GetDeltaTime();
-    newPos += ForwardVector * sensitive;
-
-    Player->transform.SetPosition(newPos);
+    Player->transform.AddPosition(forwardVector * sensitive);
 }
+
 void MyScript::BackwardMoveCamera() {
-    glm::vec3 newPos = Player->transform.GetPosition();
+    glm::vec3 forwardVector = Player->transform.GetForward();
+    float sensitive = moveSensitive * Core::World::GetDeltaTime();
 
-    glm::vec3 BackwardVector{ 0,0,0 };
-
-    BackwardVector.x = sin((Player->transform.GetRotation().y + 180) * 3.14159 / 180); // RIGHT
-    BackwardVector.y = cos((Player->transform.GetRotation().x + 270) * 3.14159 / 180); // RIGHT
-    BackwardVector.z = sin((Player->transform.GetRotation().y + 90) * 3.14159 / 180); // RIGHT
-
-    float sensitive = moveSensitive;
-    sensitive *= Core::World::GetDeltaTime();
-    newPos += BackwardVector * (-sensitive);
-
-    Player->transform.SetPosition(newPos);
+    Player->transform.AddPosition(-forwardVector * sensitive);
 }
 
 void MyScript::UpMoveCamera() {
@@ -161,7 +130,7 @@ void MyScript::ChangeRect(std::vector<WindowsManager::Rectangle*>& rectBuffer) {
 }
 
 void MyScript::GenerateCubeMap() {
-    auto& obj2 = Core::Factory::CreateObject();
+    auto& obj2 = Core::Factory::CreateObject<Core::GameObject>();
     obj2.SetName("CubeMap");
     auto& mesh = meshesBuffer->CreateMesh("/Assets/Models/Primitives/Cube.fbx");
     obj2.AddComponent(mesh);
@@ -178,7 +147,7 @@ void MyScript::GenerateCubeMap() {
 }
 
 void MyScript::GenerateLightSource() {
-    auto& LightsSource = Core::Factory::CreateObject();
+    auto& LightsSource = Core::Factory::CreateObject<Core::GameObject>();
     LightsSource.transform.AddPosition(0,5,0);
 
     auto& dirLight = directLightsBuffer->CreateDirectLight();
@@ -192,7 +161,7 @@ void MyScript::GenerateLightSource() {
 
 void MyScript::GenerateCube() {
     {
-        auto& cube = Core::Factory::CreateObject();
+        auto& cube = Core::Factory::CreateObject<Core::GameObject>();
 
         cube.transform.AddPosition(5, 45, -25);
         cube.transform.AddRotation(0, 0, 0);
@@ -204,14 +173,14 @@ void MyScript::GenerateCube() {
 
         auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody();
         cube.AddComponent(cubeRigidBody);
-
+        
         auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
         cubeCollider.Create("/Assets/Models/Primitives/Cube.fbx");
         cube.AddComponent(cubeCollider);
     }
 
     {
-        auto& cube = Core::Factory::CreateObject();
+        auto& cube = Core::Factory::CreateObject<Core::GameObject>();
 
         cube.transform.AddPosition(5, 5, -25);
         cube.transform.AddRotation(30, 0, 0);
@@ -230,7 +199,7 @@ void MyScript::GenerateCube() {
 }
 
 void MyScript::GenerateEarth() {
-    auto& cube = Core::Factory::CreateObject();
+    auto& cube = Core::Factory::CreateObject<Core::GameObject>();
 
     cube.transform.AddPosition(0, -5, -25);
     cube.transform.AddRotation(0, 0, 0);
@@ -246,7 +215,7 @@ void MyScript::GenerateEarth() {
 }
 
 void MyScript::GenerateSun() {
-    auto& Sun = Core::Factory::CreateObject();
+    auto& Sun = Core::Factory::CreateObject<Core::GameObject>();
 
     Sun.transform.AddPosition(0, 35, -55);
     Sun.transform.SetScale(15, 15, 15);
@@ -257,7 +226,9 @@ void MyScript::GenerateSun() {
     Sun.AddComponent(sunMesh);
 
     auto& shader = sunMesh._material.InitShader<AnomalyEngine::SimplexFractalShader>();
-    shader.resolution = 3;
+
+    shader.Contrast = 6.4;
+    shader.Brightness = 0.15;
 }
 
 void MyScript::Serialization() {
@@ -285,7 +256,7 @@ void MyScript::Start() {
     Serialization();
     LogExample();
 
-    Player = &Core::Factory::CreateObject();
+    Player = &Core::Factory::CreateObject<Core::GameObject>();
     Player->SetName("TestObject");
 
 #if WINDOWS_MANAGER_INCLUDED

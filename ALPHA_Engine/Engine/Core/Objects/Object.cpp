@@ -53,25 +53,6 @@ namespace Core {
 		return Object::_components.size();
 	}
 
-	glm::mat4x4 Object::GetTransformMatrix() {
-		glm::mat4x4 rotMat(1.0f);
-		const glm::vec4 rot = transform.GetRotation();
-
-		const float radX = glm::pi<float>() / 180 * rot.x;
-		const float radY = glm::pi<float>() / 180 * rot.y;
-		const float radZ = glm::pi<float>() / 180 * rot.z;
-
-		rotMat = glm::rotate(rotMat, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-		rotMat = glm::rotate(rotMat, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-		rotMat = glm::rotate(rotMat, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		const glm::mat4x4 transMat = glm::translate(transform.GetPosition());
-
-		const glm::mat4x4 transformMatrix = rotMat * transMat;
-
-		return transformMatrix;
-	}
-
 	std::vector<Component*> Object::GetComponents() {
 		return _components;
 	}

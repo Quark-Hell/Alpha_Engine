@@ -30,7 +30,7 @@ namespace AnomalyEngine {
 
         template <DerivedShape T>
         void Draw(glm::vec3 position, glm::vec3 rotation = glm::vec3{0,0,0}, glm::vec3 scale = glm::vec3{ 1,1,1 }) {
-            Core::FakeObject& obj = Core::Factory::CreateFakeObject();
+            Core::FakeObject& obj = Core::Factory::CreateObject<Core::FakeObject>();
 
             obj.transform.SetPosition(position);
             obj.transform.SetRotation(rotation);

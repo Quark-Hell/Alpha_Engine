@@ -30,20 +30,20 @@ namespace AxisEngine {
 	private:
 		glm::vec3 _force{ 0,0,0 };
 		//Vector3 _acceleration{ 0,0,0 };
-		glm::vec3 _velocity{ 0,0,0 };
+		glm::vec3 _linearVelocity{ 0,0,0 };
+
+		glm::vec3 _angularAcceleration{ 0,0,0 };
+		glm::vec3 _angularVelocity{ 0,0,0 };
+
+		glm::mat3x3 _invertedInertiaMatrix;
+		glm::mat3x3 _inertiaMatrix;
 
 		glm::vec3 _centerMass;
-
-		glm::vec3 _rotationVector{ 0,0,0 };
-		glm::vec4 _orientation{ 0,0,0,0 };
-		glm::vec3 _angularMomentum{ 0,0,0 };
-		glm::vec3 _angularVelocity{ 0,0,0 };
 
 		std::vector<glm::vec3> _contactPoints;
 		std::vector<glm::vec3> _pullingVectors;
 
 		bool _hasCollision = false;
-		//Matrix3x3 _inertiaMatrix;
 
 	private:
 		RigidBody();
@@ -59,8 +59,8 @@ namespace AxisEngine {
 		void AddForce(const glm::vec3& forceVector);
 		void AddForce(const float& x, const float& y, const float& z);
 
-		void AddAngularMomentum(const glm::vec3& forceVector, glm::vec3 relativePoint);
-		void AddAngularMomentum(const float& x, const float& y, const float& z, glm::vec3 relativePoint);
+		//void AddAngularMomentum(const glm::vec3& forceVector, glm::vec3 relativePoint);
+		//void AddAngularMomentum(const float& x, const float& y, const float& z, glm::vec3 relativePoint);
 
 		void UpdateCenterMass();
 		[[nodiscard]] glm::vec3 GetCenterMass();

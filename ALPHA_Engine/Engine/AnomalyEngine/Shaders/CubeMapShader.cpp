@@ -91,7 +91,7 @@ namespace AnomalyEngine {
             return;
         }
 
-        auto view = glm::mat4(glm::mat3(camera.GetParentObject()->GetTransformMatrix()));
+        auto view = glm::mat4(glm::mat3(camera.GetParentObject()->transform.GetTransformMatrix()));
         SetValue("view_matrix", &view);
 
         auto projMatrix = camera.GetProjectionMatrix();

@@ -1,4 +1,4 @@
-#include "RenderEngine.h"
+﻿#include "RenderEngine.h"
 #include <glad/glad.h>
 
 #include "WindowsManager/Buffers/WindowsBuffer.h"
@@ -7,13 +7,33 @@
 
 #include "Core/Logger/Logger.h"
 #include "Core/Objects/GameObject.h"
+#include "Core/World.h"
 
 #include "Buffers/CamerasBuffer.h"
 #include "Buffers/MeshesBuffer.h"
+#include "Buffers/TempMeshesBuffer.h"
+
 #include "Shaders/ShaderProgram.h"
+#include "Shaders/WireframeShader.h"
+
+#include "Utility/BasicShapes/Sphere.h"
 
 namespace AnomalyEngine {
-    RenderEngine::RenderEngine(size_t order) : System({"MeshBuffer", "CamerasBuffer", "WindowsBuffer"}, order) {}
+    RenderEngine::RenderEngine(size_t order) : System({"MeshBuffer", "CamerasBuffer", "WindowsBuffer", "TempMeshesBuffer"}, order) {
+
+    }
+
+    void RenderEngine::InitTempBuffer() {
+        auto meshesData = Core::World::GetSystemData<TempMeshesBuffer>("TempMeshesBuffer");
+
+        if (meshesData == nullptr) {
+            Core::Logger::LogCritical("Cannot instantiate temp meshes buffer because it don't created early: " + __LOGERROR__);
+        }
+
+        auto& sphere = meshesData->CreateMesh<Sphere>();
+        sphere._material.InitShader<WireframeShader>();
+        _isNotInited = true;
+    }
 
     void RenderEngine::ClearFrameBuffer() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -109,42 +129,19 @@ namespace AnomalyEngine {
         }
     }
 
-    void RenderEngine::RenderMeshes(Camera &camera, const MeshesBuffer &meshes) {
-        for (auto& mesh : meshes._data) {
-            if (!MeshChecker(*mesh))
-                continue;
-
-            GenerateVao(*mesh);
-
-            glUseProgram(mesh->_material.Shader->GetProgramId());
-            glBindVertexArray(_vao);
-
-            mesh->_material.Shader->ApplyShadersSettings(camera);
-            const int renderMode = GetRenderMode(*mesh->_material.Shader);
-
-            if (mesh->_isIndexed)
-                glDrawElements(renderMode, mesh->_indices->size(), GL_UNSIGNED_INT, mesh->_indices->data());
-            else
-                glDrawArrays(renderMode, 0, mesh->_vertices->size() / 3);
-
-            //glDepthFunc(GL_NEVER);
-            glBindVertexArray(0);
-            glBindTexture(GL_TEXTURE_2D, 0);
-
-            //Delete vao that was created by GenerateVao() function
-            glDeleteVertexArrays(1, &_vao);
-        }
-    }
-
     void RenderEngine::EntryPoint(std::vector<Core::SystemData *> &data) {
-        if (data[0] == nullptr || data[1] == nullptr || data[2] == nullptr) {
+        if (data[0] == nullptr || data[1] == nullptr || data[2] == nullptr || data[3] == nullptr) {
             Core::Logger::LogError("Data was null: " + __LOGERROR__);
             return;
         }
 
-        auto *meshesBuffer = reinterpret_cast<MeshesBuffer*>(data[0]);
+        if(!_isNotInited)
+            InitTempBuffer();
+
+        auto *meshesBuffer = static_cast<MeshesBuffer*>(data[0]);
         auto *camerasBuffer = reinterpret_cast<CamerasBuffer*>(data[1]);
         auto *windowsBuffer = reinterpret_cast<WindowsManager::WindowsBuffer*>(data[2]);
+        auto *tempMeshesBuffer = reinterpret_cast<TempMeshesBuffer*>(data[3]);
 
         for (auto& window : windowsBuffer->GetAllData()) {
             glm::vec2 size = window->GetSize();
@@ -209,6 +206,10 @@ namespace AnomalyEngine {
             ClearFrameBuffer();
 
             RenderMeshes(*camera, *meshesBuffer);
+            RenderMeshes(*camera, *tempMeshesBuffer);
+ 
+
+            tempMeshesBuffer->RemoveObjectsBuffer();
 
             glFinish();
         }

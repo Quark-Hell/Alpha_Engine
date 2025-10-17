@@ -10,7 +10,7 @@ namespace Core {
 	class Transform {
 	private:
 		glm::vec3 _position{ 0,0,0 };
-		glm::vec4 _rotation{ 0,0,0,1 };
+		glm::quat _rotation{ 1,0,0,0 };
 		glm::vec3 _scale{ 1,1,1 };
 
 		glm::mat4x4 _transformMatrix{ 1 };
@@ -56,7 +56,8 @@ namespace Core {
 		 * @brief Gets the current rotation of the object.
 		 * @return Rotation as a glm::vec4 (e.g., quaternion or axis-angle).
 		 */
-		[[nodiscard]] glm::vec4 GetRotation();
+		[[nodiscard]] glm::vec3 GetRotation();
+		[[nodiscard]] glm::quat GetRotationQuat();
 		/**
 		 * @brief Adds a delta rotation to the current rotation.
 		 * @param X Rotation delta along the X-axis (degrees or radians depending on convention).
@@ -83,6 +84,9 @@ namespace Core {
 		 */
 		void SetRotation(glm::vec3 rotation);
 
+		void SetRotationQuat(glm::quat rotation);
+		void SetRotationQuatSlerp(const glm::quat& targetQuat, float t);
+
 		/**
 		 * @brief Gets the current scale of the object.
 		 * @return Scale as a glm::vec3.
@@ -105,6 +109,11 @@ namespace Core {
 		 * @brief Returns the object's transform matrix.
 		 * @return 4x4 transformation matrix combining position, rotation, and scale.
 		 */
-		glm::mat4x4 GetTransformMatrix();
+		glm::mat4x4 GetTransformMatrix() const;
+		void RecalculateTransformMatrix();
+
+		[[nodiscard]] glm::vec3 GetForward() const noexcept;
+		[[nodiscard]] glm::vec3 GetRight() const noexcept;
+		[[nodiscard]] glm::vec3 GetUp() const noexcept;
 	};
 }

@@ -1,4 +1,4 @@
-#include "Rigidbody.h"
+﻿#include "Rigidbody.h"
 #include <memory>
 
 #include "AxisEngine/Components/Collider.h"
@@ -23,7 +23,7 @@ namespace AxisEngine {
 	void RigidBody::UpdateParentObject(Core::Object& newParent) {
 		RigidBody::UpdateCenterMass();
 
-		RigidBody::_velocity = { 0,0,0 };
+		RigidBody::_linearVelocity = { 0,0,0 };
 		//RigidBody::ResetInertiaMatrix();
 	}
 
@@ -34,12 +34,12 @@ namespace AxisEngine {
 		RigidBody::_force += glm::vec3(x, y, z);
 	}
 
-	void RigidBody::AddAngularMomentum(const glm::vec3& forceVector, glm::vec3 relativePoint) {
-		RigidBody::_angularMomentum += forceVector * (relativePoint - RigidBody::_centerMass);
-	}
-	void RigidBody::AddAngularMomentum(const float& x, const float& y, const float& z, glm::vec3 relativePoint) {
-		RigidBody::_angularMomentum += glm::vec3(x, y, z) * (relativePoint - RigidBody::_centerMass);
-	}
+	//void RigidBody::AddAngularMomentum(const glm::vec3& forceVector, glm::vec3 relativePoint) {
+	//	RigidBody::_angularMomentum += forceVector * (relativePoint - RigidBody::_centerMass);
+	//}
+	//void RigidBody::AddAngularMomentum(const float& x, const float& y, const float& z, glm::vec3 relativePoint) {
+	//	RigidBody::_angularMomentum += glm::vec3(x, y, z) * (relativePoint - RigidBody::_centerMass);
+	//}
 
 	void RigidBody::UpdateCenterMass() {
 		RigidBody::_centerMass = glm::vec3(0, 0, 0);
@@ -91,9 +91,9 @@ namespace AxisEngine {
 					scope[i] = 0.0f;
 			}
 
-			float xScope = scope[1] - scope[0];
-			float yScope = scope[3] - scope[2];
-			float zScope = scope[5] - scope[4];
+			float xScope = scope[1] + scope[0];
+			float yScope = scope[3] + scope[2];
+			float zScope = scope[5] + scope[4];
 
 			RigidBody::_centerMass += glm::vec3(xScope, yScope, zScope) / glm::vec3(2, 2, 2);
 		}
@@ -105,7 +105,7 @@ namespace AxisEngine {
 	}
 
 	glm::vec3 RigidBody::GetVelocity() {
-		return RigidBody::_velocity;
+		return RigidBody::_linearVelocity;
 	}
 
 	bool RigidBody::GetContactPoints(std::vector<glm::vec3>& contactPoint) {
@@ -146,21 +146,61 @@ namespace AxisEngine {
 	void RigidBody::Contact(RigidBody& rb1, glm::vec3 contactNormal) {
 		contactNormal = glm::normalize(contactNormal);
 
-		float u1 = glm::dot(rb1._velocity, contactNormal);
+		float u1 = glm::dot(rb1._linearVelocity, contactNormal);
 
-		glm::vec3 reflected = rb1._velocity - 2.0f * u1 * contactNormal;
+		glm::vec3 reflected = rb1._linearVelocity - 2.0f * u1 * contactNormal;
 		reflected *= rb1.ElasticityCoefficient;
 
-		glm::vec3 tangent = rb1._velocity - u1 * contactNormal;
+		glm::vec3 tangent = rb1._linearVelocity - u1 * contactNormal;
 		reflected -= tangent * rb1.FrictionCoefficient;
 
-		rb1._velocity = reflected;
+		rb1._linearVelocity = reflected;
+
+		if (auto parent = rb1.GetParentObject()) {
+			//glm::vec3 scale = parent->transform.GetScale();
+			//
+			//rb1._inertiaMatrix = glm::mat3x3();
+			//
+			//constexpr float factor = 1.0 / 12.0;
+			//glm::mat3 I_local(0.0f);
+			//
+			//I_local[0][0] = factor * rb1.Mass * (glm::pow(scale.y, 2) + glm::pow(scale.z, 2));
+			//I_local[1][1] = factor * rb1.Mass * (glm::pow(scale.x, 2) + glm::pow(scale.z, 2));
+			//I_local[2][2] = factor * rb1.Mass * (glm::pow(scale.x, 2) + glm::pow(scale.y, 2));
+			//
+			//rb1._inertiaMatrix = I_local;
+			//rb1._invertedInertiaMatrix = glm::inverse(I_local);
+			//
+			//glm::vec3 rotation = parent->transform.GetRotation();
+			//glm::vec3 radians = glm::radians(rotation);
+			//glm::mat3 R = glm::mat3(glm::eulerAngleXYZ(radians.x, radians.y, radians.z));
+			//
+			//glm::mat3x3 I_world_inv = R * rb1._invertedInertiaMatrix * glm::transpose(R);
+			//
+			//glm::vec3 contactPoint = glm::vec3(0.f);
+			//for (auto it : rb1._contactPoints) {
+			//	contactPoint += it;
+			//}
+			//
+			//contactPoint /= rb1._contactPoints.size();
+			//glm::vec3 centerOfMass = glm::ToWorldSpace(rb1.GetCenterMass(), parent->transform.GetTransformMatrix());
+			//
+			//glm::vec3 r = contactPoint - centerOfMass;
+			//
+			//float impulseMagnitude = glm::dot(-rb1._linearVelocity, contactNormal);
+			//glm::vec3 p = rb1.Mass * rb1._linearVelocity;
+			//glm::vec3 F = contactNormal * impulseMagnitude;
+			//glm::vec3 L = glm::cross(r, p);
+			//glm::vec3 torque = glm::cross(r, F);
+			//
+			//rb1._angularAcceleration = I_world_inv * (torque - glm::cross(rb1._angularVelocity, rb1._inertiaMatrix * rb1._angularVelocity));
+		}
 	}
 	void RigidBody::Contact(RigidBody& rb1, RigidBody& rb2, glm::vec3 contactNormal) {
 		contactNormal = glm::normalize(contactNormal);
 
-		float u1 = glm::dot(rb1._velocity, contactNormal);
-		float u2 = glm::dot(rb2._velocity, -contactNormal);
+		float u1 = glm::dot(rb1._linearVelocity, contactNormal);
+		float u2 = glm::dot(rb2._linearVelocity, -contactNormal);
 
 		float v1 = (u1 * (rb1.Mass - rb2.Mass) + 2.0f * rb2.Mass * u2) / (rb1.Mass + rb2.Mass);
 		float v2 = (u2 * (rb2.Mass - rb1.Mass) + 2.0f * rb1.Mass * u1) / (rb1.Mass + rb2.Mass);
@@ -168,8 +208,8 @@ namespace AxisEngine {
 		glm::vec3 v1_normal = contactNormal * v1;
 		glm::vec3 v2_normal = -contactNormal * v2;
 
-		glm::vec3 v1_tangent = rb1._velocity - contactNormal * u1;
-		glm::vec3 v2_tangent = rb2._velocity - contactNormal * u2;
+		glm::vec3 v1_tangent = rb1._linearVelocity - contactNormal * u1;
+		glm::vec3 v2_tangent = rb2._linearVelocity - contactNormal * u2;
 
 		v1_tangent *= (1.0f - rb1.FrictionCoefficient);
 		v2_tangent *= (1.0f - rb2.FrictionCoefficient);
@@ -177,8 +217,8 @@ namespace AxisEngine {
 		v1_normal *= rb1.ElasticityCoefficient;
 		v2_normal *= rb2.ElasticityCoefficient;
 
-		rb1._velocity = v1_normal + v1_tangent;
-		rb2._velocity = v2_normal + v2_tangent;
+		rb1._linearVelocity = v1_normal + v1_tangent;
+		rb2._linearVelocity = v2_normal + v2_tangent;
 	}
 
 	//void RigidBody::SetInertiaMatrix(Matrix3x3 matrix) {

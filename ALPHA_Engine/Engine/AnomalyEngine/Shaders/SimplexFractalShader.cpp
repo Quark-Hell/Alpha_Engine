@@ -38,7 +38,7 @@ namespace AnomalyEngine {
         std::mt19937 rng(dev());
         std::uniform_int_distribution<std::mt19937::result_type> dist(1,SIZE_MAX);
 
-        seed = dist(rng);
+        Seed = dist(rng);
     }
 
     void SimplexFractalShader::ApplyShadersSettings(Camera &camera, int parentIndex) {
@@ -48,19 +48,32 @@ namespace AnomalyEngine {
         }
 
         //=============================================Object Matrices=============================================//
-        auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->GetTransformMatrix() * GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
+        auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->transform.GetTransformMatrix() * GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
         SetValue("MVP", &MVP);
 
         auto modelMat = glm::mat4(glm::mat3(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
         SetValue("model_matrix", &modelMat);
         //=============================================Object Matrices=============================================//
 
-        seed = glfwGetTime();
-        SetValue("seed", &seed);
-        SetValue("resolution", &resolution);
-        SetValue("intensity",  &intensity);
-        SetValue("minFactor",  &minFactor);
-        SetValue("maxFactor",  &maxFactor);
+        Seed = glfwGetTime();
+        SetValue("seed", &Seed);
+
+        SetValue("resolution", &Resolution);
+        SetValue("intensity",  &Intensity);
+        SetValue("contrast",   &Contrast);
+        SetValue("brightness", &Brightness);
+
+        SetValue("minFactor",  &MinFactor);
+        SetValue("maxFactor",  &MaxFactor);
+
+        size_t size = colors.size();
+        SetValue("colorCount", &size);
+
+        for (int i = 0; i < size; i++) {
+            std::string uniformName = "gradientColors[" + std::to_string(i) + "]";
+            glm::vec3 color = glm::vec3(colors[i].r, colors[i].g, colors[i].b);
+            SetValue(uniformName, &color);
+        }
 
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);

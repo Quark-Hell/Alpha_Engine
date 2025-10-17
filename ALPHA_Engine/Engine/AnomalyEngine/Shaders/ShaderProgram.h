@@ -16,7 +16,13 @@ template <typename T, typename... U>
 concept IsAnyOf = (std::same_as<T, U> || ...);
 
 template<typename T>
-concept UniformType = IsAnyOf<T, int, unsigned int, float, glm::vec2, glm::vec3, glm::vec4, glm::mat3x3, glm::mat4x4>;
+concept UniformType =
+std::is_arithmetic_v<T> ||
+std::same_as<T, glm::vec2> ||
+std::same_as<T, glm::vec3> ||
+std::same_as<T, glm::vec4> ||
+std::same_as<T, glm::mat3> ||
+std::same_as<T, glm::mat4>;
 
 
 namespace AnomalyEngine {
