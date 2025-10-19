@@ -13,7 +13,9 @@ namespace Core {
     class Logger {
     private:
         std::ofstream _logFile;
-        std::list<std::string> _logBuffer;
+        std::vector<std::string> _logBuffer;
+
+        std::vector<std::string> _fileLogBuffer;
         int _daysToDeleteLogFile = 7;
 
         std::mutex _mutex;
@@ -21,27 +23,44 @@ namespace Core {
     private:
         Logger();
 
-        void CheckAndDeleteOldLogFile();
-
         std::string GetLogFileName();
         std::string GetCurrentTime();
         std::string GetCurrentDate();
 
-        void WriteToFile(const std::string &message);
+        void WriteToFileBuffer(const std::string &message);
         void WriteToBuffer(const std::string &message);
 
     public:
         ~Logger();
         static Logger *GetInstance();
 
-        const std::list<std::string> &GetLogBuffer();
+        const std::vector<std::string> &GetLogBuffer();
 
-        //Not work now
-        void SetDaysToDeleteLogFile(int days);
+
 
 #if LOGGER_INCLUDED
+        static inline void SaveLogs() {
+            const auto logger = GetInstance();
+
+            if (!logger->_logFile.is_open()) {
+                logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
+            }
+
+            for (auto& message : logger->_logBuffer) {
+                std::cout << message << std::endl;
+            }
+
+            for (auto& message : logger->_fileLogBuffer) {
+                logger->_logFile << message << std::endl;
+            }
+
+            logger->_logBuffer.clear();
+            logger->_fileLogBuffer.clear();
+            logger->_logFile.close();
+        }
+
         template<typename... Data>
-        static void LogInfo(const Data &... data) {
+        static inline void LogInfo(const Data &... data) {
             const auto logger = GetInstance();
 
             std::ostringstream messageStream;
@@ -50,16 +69,13 @@ namespace Core {
             const std::string message = "\033[36m" + messageStream.str() + "\033[0m";
 
             const std::lock_guard guard(logger->_mutex);
-            logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
 
-            logger->WriteToFile(messageStream.str());
+            logger->WriteToFileBuffer(messageStream.str());
             logger->WriteToBuffer(message);
-            std::cout << message << std::endl;
-            logger->_logFile.close();
         }
 
         template<typename... Data>
-        static void LogWarning(const Data &... data) {
+        static inline void LogWarning(const Data &... data) {
             const auto logger = GetInstance();
 
             std::ostringstream messageStream;
@@ -68,16 +84,13 @@ namespace Core {
             const std::string message = "\033[33m" + messageStream.str() + "\033[0m";
 
             const std::lock_guard guard(logger->_mutex);
-            logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
 
-            logger->WriteToFile(messageStream.str());
+            logger->WriteToFileBuffer(messageStream.str());
             logger->WriteToBuffer(message);
-            std::cout << message << std::endl;
-            logger->_logFile.close();
         }
 
         template<typename... Data>
-        static void LogError(const Data &... data) {
+        static inline void LogError(const Data &... data) {
             const auto logger = GetInstance();
 
             std::ostringstream messageStream;
@@ -86,12 +99,9 @@ namespace Core {
             const std::string message = "\033[31m" + messageStream.str() + "\033[0m";
 
             const std::lock_guard guard(logger->_mutex);
-            logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
 
-            logger->WriteToFile(messageStream.str());
+            logger->WriteToFileBuffer(messageStream.str());
             logger->WriteToBuffer(message);
-            std::cout << message << std::endl;
-            logger->_logFile.close();
         }
 
         template<typename... Data>
@@ -104,12 +114,12 @@ namespace Core {
             const std::string message = "\033[1;31m" + messageStream.str() + "\033[0m";
 
             const std::lock_guard guard(logger->_mutex);
-            logger->_logFile.open(logger->GetLogFileName(), std::ios::app);
 
-            logger->WriteToFile(messageStream.str());
+            logger->WriteToFileBuffer(messageStream.str());
             logger->WriteToBuffer(message);
             std::cout << message << std::endl;
-            logger->_logFile.close();
+
+            logger->SaveLogs();
 
             abort();
         }
@@ -125,6 +135,8 @@ namespace Core {
 
         template<typename... Data>
         static void LogCritical(const Data &... data) {}
+
+        static inline void SaveLogs() {}
 #endif
     };
 }

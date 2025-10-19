@@ -129,6 +129,8 @@ namespace Core {
 				system.second->EntryPoint(dataVector);
 			}
 
+			Core::Logger::SaveLogs();
+
 			_deltaTime = _timer.Elapsed();
 			_timeElapsed += _timer.Elapsed();
 			_timer.Reset();
