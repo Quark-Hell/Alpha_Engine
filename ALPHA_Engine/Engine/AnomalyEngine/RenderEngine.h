@@ -58,7 +58,11 @@ namespace AnomalyEngine  {
                 if (!MeshChecker(*mesh))
                     continue;
 
-                auto parents = mesh->GetParentsObject();
+                auto parent = mesh->GetParentObject();
+                if (parent == nullptr)
+                    continue;
+
+                auto geometry = mesh->GetGeometry();
 
                 GenerateVao(*mesh);
 
@@ -67,15 +71,12 @@ namespace AnomalyEngine  {
 
                 const int renderMode = GetRenderMode(*mesh->_material.Shader);
 
-                for (int i = 0; i < parents.size(); i++) {
+                mesh->_material.Shader->ApplyShadersSettings(camera);
 
-                    mesh->_material.Shader->ApplyShadersSettings(camera, i);
-
-                    if (mesh->_isIndexed)
-                        glDrawElements(renderMode, mesh->_indices->size(), GL_UNSIGNED_INT, mesh->_indices->data());
-                    else
-                        glDrawArrays(renderMode, 0, mesh->_vertices->size() / 3);
-                }
+                if (geometry->IsIndexed)
+                    glDrawElements(renderMode, geometry->Indices->size(), GL_UNSIGNED_INT, geometry->Indices->data());
+                else
+                    glDrawArrays(renderMode, 0, geometry->Vertices->size() / 3);
 
                 //glDepthFunc(GL_NEVER);
                 glBindVertexArray(0);

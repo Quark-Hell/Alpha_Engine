@@ -297,7 +297,7 @@ namespace AnomalyEngine {
     	Core::Logger::LogInfo("Shader was be deleted from VRAM");
     }
 
-	void ShaderProgram::ApplyShadersSettings(Camera& camera, int parentIndex) {
+	void ShaderProgram::ApplyShadersSettings(Camera& camera) {
 
     }
 

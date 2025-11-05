@@ -1,6 +1,6 @@
 #include "Sphere.h"
 
-#include "AnomalyEngine/Binder.h"
+#include "AnomalyEngine/Resources/Binder.h"
 
 namespace AnomalyEngine {
     Sphere::Sphere(Color shapeColor) : Shape(shapeColor) {
@@ -13,8 +13,8 @@ namespace AnomalyEngine {
         glm::vec3 c = glm::vec3(ShapeColor.r, ShapeColor.g, ShapeColor.b);
         std::array<glm::vec3, 6> points;
 
-        _vertices->clear();
-        _vertexColors->clear();
+        _geometry->Vertices->clear();
+        _geometry->VertexColors->clear();
 
         for (size_t i = 0; i < _segments; ++i)
         {
@@ -32,22 +32,26 @@ namespace AnomalyEngine {
 
             // 3 great circles
             for (size_t j = 0; j < points.size(); j++) {
-                _vertices->push_back(points[j].x);
-                _vertices->push_back(points[j].y);
-                _vertices->push_back(points[j].z);
+                _geometry->Vertices->push_back(points[j].x);
+                _geometry->Vertices->push_back(points[j].y);
+                _geometry->Vertices->push_back(points[j].z);
             }
 
             for (size_t j = 0; j < 6; j++) {
-                _vertexColors->push_back(c.x);
-                _vertexColors->push_back(c.y);
-                _vertexColors->push_back(c.z);
+                _geometry->VertexColors->push_back(c.x);
+                _geometry->VertexColors->push_back(c.y);
+                _geometry->VertexColors->push_back(c.z);
             }
         }
 
-        _isIndexed = false;
-        Core::Logger::Logger::LogInfo("Mesh has been loaded");
+        _geometry->IsIndexed = false;
+        Core::Logger::LogInfo("Mesh has been loaded");
 
-        Binder::BindMesh(this);
+        if (_binder == nullptr) {
+            _binder = std::make_shared<AnomalyEngine::Binder>();
+        }
+        _binder->BindMesh(*this);
+
         return true;
     }
 }

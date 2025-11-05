@@ -7,7 +7,10 @@ SET (Game_Source "${CMAKE_CURRENT_LIST_DIR}")
 include_directories("${Game_Source}")
 
 add_executable (SimpleGame
-		"${Examples_Dir}/SimpleGame/MyScript.cpp"
+		"${Examples_Dir}/SimpleGame/EngineScripts/MyScript.cpp"
+		"${Examples_Dir}/SimpleGame/EngineScripts/Player.cpp"
+		"${Examples_Dir}/SimpleGame/EngineScripts/WorldBuilder.cpp"
+
 		"${Examples_Dir}/SimpleGame/Windows/WindowsSettings.cpp"
 		"${Examples_Dir}/SimpleGame/Modules.cpp"
 		"external/GLAD/glad/src/glad.c")

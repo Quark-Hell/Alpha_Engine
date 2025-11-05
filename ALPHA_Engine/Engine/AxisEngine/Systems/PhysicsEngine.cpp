@@ -72,7 +72,7 @@ namespace AxisEngine {
 	}
 
 	void PhysicsEngine::SemiImplicitIntegrate(RigidBody& rb) {
-		double accumulator = Core::World::GetDeltaTime();
+		float accumulator = Core::World::GetDeltaTime();
 		if (accumulator > _maxTimeStep)
 			accumulator = PhysicsEngine::_fixTimeStep;
 
@@ -107,7 +107,7 @@ namespace AxisEngine {
 		}
 
 		if (accumulator != 0) {
-			const double alpha = accumulator / PhysicsEngine::_fixTimeStep;
+			const float alpha = accumulator / PhysicsEngine::_fixTimeStep;
 
 			PhysicsEngine::ApplyGravity(rb);
 			PhysicsEngine::ApplyBaseFriction(rb);
@@ -115,9 +115,9 @@ namespace AxisEngine {
 			glm::vec3 acceleration = rb._force / rb.Mass;
 			glm::vec3 newVelocity = rb.GetVelocity() + acceleration * PhysicsEngine::_fixTimeStep;
 
-			rb._linearVelocity = glm::mix(rb._linearVelocity, newVelocity, (float)alpha);
+			rb._linearVelocity = glm::mix(rb._linearVelocity, newVelocity, alpha);
 
-			glm::vec3 deltaPos = rb.GetVelocity() * (float)(PhysicsEngine::_fixTimeStep * alpha);
+			glm::vec3 deltaPos = rb.GetVelocity() * PhysicsEngine::_fixTimeStep * alpha;
 			rb.GetParentObject()->transform.AddPosition(deltaPos);
 
 			rb._force = { 0,0,0 };

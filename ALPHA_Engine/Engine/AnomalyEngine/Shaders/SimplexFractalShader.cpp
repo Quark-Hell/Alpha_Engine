@@ -41,7 +41,7 @@ namespace AnomalyEngine {
         Seed = dist(rng);
     }
 
-    void SimplexFractalShader::ApplyShadersSettings(Camera &camera, int parentIndex) {
+    void SimplexFractalShader::ApplyShadersSettings(Camera &camera) {
         if (camera.GetParentObject() == nullptr) {
             Core::Logger::LogError("Camera parent object was null: " + __LOGERROR__);
             return;

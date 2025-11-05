@@ -17,14 +17,14 @@ namespace Core {
         Transform::_position.y += Y;
         Transform::_position.z += Z;
 
-        Transform::_transformMatrix = glm::translate(Transform::_transformMatrix, glm::vec3(X, Y, Z));
+        Transform::RecalculateTransformMatrix();
     }
     void Transform::AddPosition(const glm::vec3& position) {
         Transform::_position.x += position.x;
         Transform::_position.y += position.y;
         Transform::_position.z += position.z;
 
-        Transform::_transformMatrix = glm::translate(Transform::_transformMatrix, glm::vec3(position.x, position.y, position.z));
+        Transform::RecalculateTransformMatrix();
     }
     void Transform::SetPosition(const float X, const float Y, const float Z) {
         const glm::vec3 direction = glm::vec3(X, Y, Z) - Transform::_position;
@@ -110,20 +110,18 @@ namespace Core {
 
     glm::vec3 Transform::GetScale() { return Transform::_scale; }
     void Transform::SetScale(const float X, const float Y, const float Z) {
-        const glm::vec3 delta = Transform::_scale / glm::vec3(X, Y, Z);
-        Transform::_transformMatrix = glm::scale(Transform::_transformMatrix, glm::vec3(1 / delta.x, 1 / delta.y, 1 / delta.z));
-
         Transform::_scale.x = X;
         Transform::_scale.y = Y;
         Transform::_scale.z = Z;
+
+        Transform::RecalculateTransformMatrix();
     }
     void Transform::SetScale(glm::vec3 scale) {
-        const glm::vec3 delta = Transform::_scale / scale;
-        Transform::_transformMatrix = glm::scale(Transform::_transformMatrix, glm::vec3(1 / delta.x, 1 / delta.y, 1 / delta.z));
-
         Transform::_scale.x = scale.x;
         Transform::_scale.y = scale.y;
         Transform::_scale.z = scale.z;
+
+        Transform::RecalculateTransformMatrix();
     }
 
     glm::mat4x4 Transform::GetTransformMatrix() const { return Transform::_transformMatrix; }
@@ -132,7 +130,14 @@ namespace Core {
         glm::mat4 R = glm::toMat4(glm::normalize(_rotation));
         glm::mat4 S = glm::scale(glm::mat4(1.0f), _scale);
 
-        _transformMatrix = R * T * S;
+        if (IsCamera) {
+            _transformMatrix = R * T * S;
+        }
+        else
+        {
+            _transformMatrix = T * R * S;
+        }
+
     }
 
     glm::vec3 Transform::GetForward() const noexcept {

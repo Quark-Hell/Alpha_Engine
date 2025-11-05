@@ -8,6 +8,7 @@ namespace Register {
         friend class UserScriptsBuffer;
 
     private:
+        bool _isAwaked = false;
         bool _isStarted = false;
 
     protected:
@@ -18,6 +19,7 @@ namespace Register {
 
         //void Delete() final;
 
+        void virtual Awake();
         void virtual Start();
         void virtual Update();
         void virtual End();

@@ -28,6 +28,8 @@ namespace AxisEngine {
             _mesh->_material.InitShader<AnomalyEngine::OpaqueShader>();
         }
 
+        _geometry = &Core::Factory::CreateResource<Core::Geometry>();
+
         AABB::CreateAABB();
 
         Core::Logger::LogInfo("AABB was created");
@@ -40,13 +42,12 @@ namespace AxisEngine {
     }
 #endif // _DEBUG
 
-#ifdef _DEBUG
     void AABB::CreateAABB() {
         auto pushVertex = [&](float x, float y, float z)
             {
-                _vertices->push_back(x);
-                _vertices->push_back(y);
-                _vertices->push_back(z);
+                _geometry->Vertices->push_back(x);
+                _geometry->Vertices->push_back(y);
+                _geometry->Vertices->push_back(z);
             };
 
         pushVertex(-1, -1, 1);
@@ -85,6 +86,4 @@ namespace AxisEngine {
         pushVertex(1, 1, -1);
         pushVertex(1, 1, 1);
     }
-#endif // _DEBUG
-
 }

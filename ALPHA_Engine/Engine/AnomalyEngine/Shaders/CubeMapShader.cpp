@@ -85,9 +85,9 @@ namespace AnomalyEngine {
         return true;
     }
 
-    void CubeMapShader::ApplyShadersSettings(Camera &camera, int parentIndex) {
+    void CubeMapShader::ApplyShadersSettings(Camera &camera) {
         if (camera.GetParentObject() == nullptr) {
-            Core::Logger::LogError("camera parent was null: " + std::string(__FILE__) + ":" + std::to_string(__LINE__));
+            Core::Logger::LogError("camera parent was null: " + __LOGERROR__);
             return;
         }
 

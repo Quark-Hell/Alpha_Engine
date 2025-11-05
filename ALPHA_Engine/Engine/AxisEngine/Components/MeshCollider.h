@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "Collider.h"
 
 namespace AxisEngine {
@@ -9,16 +7,9 @@ namespace AxisEngine {
 		friend class CollidersBuffer;
 
 	protected:
-		MeshCollider(const std::string& linkToFBX);
-		MeshCollider();
+		MeshCollider() = default;
 
 	public:
 		~MeshCollider() override = default;
-
-		bool Create(const std::string& linkToFBX);
-		bool Create();
-
-		void InitTransformatiom(Core::GameObject& newParent);
-		void InitTransformatiom(Core::GameObject& oldParent, Core::GameObject& newParent);
 	};
 }

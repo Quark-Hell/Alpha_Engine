@@ -24,9 +24,9 @@ namespace AxisEngine {
 
 		void EntryPoint(std::vector<Core::SystemData*>& data) override;
 
-		glm::vec3 Support(Collider& colliderA, Collider& colliderB, glm::vec3 direction);
+		glm::vec3 Support(const Collider& colliderA, const Collider& colliderB, glm::vec3 direction);
 		bool GJK(Collider& colliderA, Collider& colliderB);
-		bool EPA(Simplex& simplex, Collider& colliderA, Collider& ColliderB, CollisionInfo& colInfo);
+		bool EPA(Simplex& simplex, const Collider& colliderA, const Collider& ColliderB, CollisionInfo& colInfo);
 
 		std::pair<std::vector<glm::vec4>, size_t> GetFaceNormals(std::vector<glm::vec3>& polytope, std::vector<size_t>& faces);
 		void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, std::vector<size_t>& faces, size_t a, size_t b);

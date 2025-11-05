@@ -31,6 +31,9 @@ namespace AnomalyEngine {
         size_t _width;
         size_t _height;
 
+    private:
+        void UpdateParentObject(Core::Object& newParent) override;
+
     public:
         ~Camera() override = default;
 

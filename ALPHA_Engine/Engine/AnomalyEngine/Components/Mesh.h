@@ -1,45 +1,39 @@
 #pragma once
 
-#include "Core/Components/Geometry.h"
 #include "Material.h"
 
+#include "AnomalyEngine/Resources/Binder.h"
+
+#include "Core/Components/Component.h"
+#include "Core/Resources/Geometry.h"
+
 namespace AnomalyEngine {
-    class Mesh : public Core::Geometry {
+    class Mesh : public Core::Component {
         friend class MeshesBuffer;
         friend class Binder;
         friend class RenderEngine;
 
     protected:
-        std::unique_ptr<std::vector<float>> _vertexColors = std::make_unique<std::vector<float>>();
-        std::unique_ptr<std::vector<float>> _texCoords = std::make_unique<std::vector<float>>();
-
-        unsigned int _vertexVbo = 0;
-        unsigned int _colorsVbo = 0;
-        unsigned int _normalsVbo = 0;
-        unsigned int _texCoordsVbo = 0;
+        Core::Geometry* _geometry;
+        std::shared_ptr<AnomalyEngine::Binder> _binder;
 
     public:
         Material _material{this};
 
     protected:
         Mesh() = default;
-        bool Create() override;
-        bool Create(
-            const std::string& linkToFBX,
-            bool initIndices = true,
-            bool initVertex = true,
-            bool initNormals = true,
-            bool initTexCoord = true) override;
 
     public:
-        ~Mesh() override;
+        bool LoadMesh(Core::Geometry& geometry, std::shared_ptr<AnomalyEngine::Binder> binder = nullptr);
 
-        [[nodiscard]] unsigned int GetVertexVbo() const;
-        [[nodiscard]] unsigned int GetColorsVbo() const;
-        [[nodiscard]] unsigned int GetNormalsVbo() const;
-        [[nodiscard]] unsigned int GetTexCoordsVbo() const;
+        virtual ~Mesh();
 
-        bool LoadTextureCoord(std::string pathToCoords);
+        [[nodiscard]] const Core::Geometry* GetGeometry() const noexcept;
+
+        [[nodiscard]] unsigned int GetVertexVbo() const noexcept;
+        [[nodiscard]] unsigned int GetColorsVbo() const noexcept;
+        [[nodiscard]] unsigned int GetNormalsVbo() const noexcept;
+        [[nodiscard]] unsigned int GetTexCoordsVbo() const noexcept;
     };
 }
 

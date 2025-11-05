@@ -3,21 +3,26 @@
 
 #include "Core/Logger/Logger.h"
 
-Register::UserScript::UserScript() {
-	Core::Logger::LogInfo("Creating new user script");
-}
+namespace Register {
+	UserScript::UserScript() {
+		Core::Logger::LogInfo("Creating new user script");
+	}
 
-Register::UserScript::~UserScript() {
-	Core::Logger::LogInfo("Script deleted successfully");
-}
+	UserScript::~UserScript() {
+		Core::Logger::LogInfo("Script deleted successfully");
+	}
 
 
-void Register::UserScript::Start()  {
+	void UserScript::Awake() {
 
-}
-void Register::UserScript::Update() {
+	}
+	void UserScript::Start() {
 
-}
-void Register::UserScript::End() {
+	}
+	void UserScript::Update() {
 
+	}
+	void UserScript::End() {
+
+	}
 }

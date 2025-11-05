@@ -22,7 +22,7 @@ namespace AnomalyEngine {
     private:
         bool TransferTexturesToGPU();
 
-        void ApplyShadersSettings(Camera &camera, int parentIndex = -1) override;
+        void ApplyShadersSettings(Camera &camera) override;
 
     public:
         SimplexFractalShader(Material *parentMat);

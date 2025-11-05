@@ -159,7 +159,7 @@ protected:
 	/*
 	 *Overload this function to transfer your values from RAM to VRAM for shader
 	*/
-	virtual void ApplyShadersSettings(Camera& camera, int parentIndex = -1) = 0;
+	virtual void ApplyShadersSettings(Camera& camera) = 0;
 };
 
 }

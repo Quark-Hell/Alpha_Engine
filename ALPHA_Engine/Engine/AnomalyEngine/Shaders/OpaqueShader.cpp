@@ -165,21 +165,15 @@ namespace AnomalyEngine {
         return true;
     }
 
-    void OpaqueShader::ApplyShadersSettings(Camera& camera, int parentIndex) {
+    void OpaqueShader::ApplyShadersSettings(Camera& camera) {
         if (camera.GetParentObject() == nullptr) {
             Core::Logger::LogError("Camera parent object was null: " + __LOGERROR__);
             return;
         }
 
         Core::Object* parent;
+        parent = GetParentMaterial()->GetParentMesh()->GetParentObject();
 
-        if (parentIndex == -1) {
-            parent = GetParentMaterial()->GetParentMesh()->GetParentObject();
-        }
-        else {
-            auto parentsObj = GetParentMaterial()->GetParentMesh()->GetParentsObject();
-            parent = parentsObj[parentIndex];
-        }
 
         //=============================================Object Matrices=============================================//
         auto modelMat = glm::mat4(glm::mat3(parent->transform.GetTransformMatrix()));

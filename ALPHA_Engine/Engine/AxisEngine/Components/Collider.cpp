@@ -2,6 +2,7 @@
 
 #include "Rigidbody.h"
 
+#include "Core/Objects/FakeObject.h"
 #include "Core/Factory.h"
 
 namespace AxisEngine {
@@ -17,7 +18,13 @@ namespace AxisEngine {
         }
     }
 
-    void Collider::InitCollider(bool isExpand) {
+    void Collider::Create(Core::Geometry& geometry) {
+        geometry.MakeUnique();
 
+        _geometry = &geometry;
+    }
+
+    const Core::Geometry* Collider::GetGeometry() const noexcept {
+        return _geometry;
     }
 }

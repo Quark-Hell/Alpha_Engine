@@ -62,7 +62,7 @@ namespace AxisEngine {
 		for (auto& colliderRef : colliders)
 		{
 			const auto& collider = colliderRef.get();
-			const auto& vertices = *collider.GetVertices();
+			const auto& vertices = collider.GetGeometry()->GetVertices();
 
 			for (size_t jt = 0; jt < vertices.size(); jt += 3)
 			{

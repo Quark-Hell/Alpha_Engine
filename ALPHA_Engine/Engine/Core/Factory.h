@@ -7,11 +7,11 @@
 #include "Core/Objects/FakeObject.h"
 #include "Core/Objects/GameObject.h"
 
+#include "Resources/Resource.h"
+
 #include "Core/World.h"
 
-namespace Core {
-    class GameObject;
-    class FakeObject;
+namespace Core {;
     class Component;
 
     class Factory {
@@ -35,6 +35,17 @@ namespace Core {
                 Core::Logger::LogInfo("Fake Object created");
                 return *World::GetFakeObjects()->back().get();
             }
+        }
+
+        template<typename T>
+        requires std::derived_from <T, Core::Resource>
+        static T& CreateResource() {
+            auto& resources = *World::GetResources();
+            resources.emplace_back(std::make_unique<T>());
+
+            Core::Logger::LogInfo("Resource created: ");
+
+            return *static_cast<T*>(resources.back().get());
         }
     };
 }

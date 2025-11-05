@@ -4,7 +4,7 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
-#include "../Binder.h"
+#include "AnomalyEngine/Resources/Binder.h"
 
 #include "Core/Logger/Logger.h"
 
@@ -13,106 +13,51 @@ namespace AnomalyEngine {
         //TODO: Delete mesh info from VRAM
     }
 
-    bool Mesh::Create() {
-        Core::Logger::Logger::LogInfo("Mesh has been loaded");
-        return true;
-    }
+    bool Mesh::LoadMesh(Core::Geometry& geometry, std::shared_ptr<AnomalyEngine::Binder> binder) {
+        _geometry = &geometry;
 
-    bool Mesh::Create(
-        const std::string &linkToFBX,
-        const bool initIndices,
-        const bool initVertex,
-        const bool initNormals,
-        const bool initTexCoord) {
-        Core::Logger::Logger::LogInfo("Mesh load process started");
-
-        _vertices->clear();
-        _indices->clear();
-        _normals->clear();
-        _texCoords->clear();
-        Core::Logger::Logger::LogInfo("Mesh data has been cleared");
-
-        Assimp::Importer importer;
-        const std::string path = std::filesystem::current_path().string() + linkToFBX;
-
-        //TODO: Check if fbx
-        const aiScene* s;
-        aiMesh* mesh;
-
-        if (initIndices) {
-            s = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
-            if (s == nullptr) {
-                Core::Logger::Logger::LogError("Failed to load Mesh from", path, ":" + __LOGERROR__);
-                return false;
-            }
-            mesh = s->mMeshes[0];
-
-            Geometry::_indices->resize(mesh->mNumFaces * 3);
-
-            for (std::uint32_t it = 0; it < mesh->mNumFaces; it++) {
-                for (size_t jt = 0; jt < mesh->mFaces[it].mNumIndices; jt++)
-                {
-                    (*Geometry::_indices)[(it * 3) + jt] = mesh->mFaces[it].mIndices[jt];
-                }
-            }
+        if (binder != nullptr) {
+            _binder = binder;
         }
         else
         {
-            s = importer.ReadFile(path, aiProcess_Triangulate);
-            if (s == nullptr) {
-                Core::Logger::Logger::LogError("Failed to load Mesh from", path, ":" + __LOGERROR__);
-                return false;
-            }
-            mesh = s->mMeshes[0];
+            _binder = std::make_shared<AnomalyEngine::Binder>();
+            _binder->BindMesh(*this);
         }
 
-        if (mesh->HasPositions() && initVertex) {
-            Geometry::_vertices->resize(mesh->mNumVertices * 3);
-            for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
-
-                (*Geometry::_vertices)[it] = mesh->mVertices[it / 3].x;
-                (*Geometry::_vertices)[it + 1] = mesh->mVertices[it / 3].y;
-                (*Geometry::_vertices)[it + 2] = mesh->mVertices[it / 3].z;
-            }
-        }
-
-        if (mesh->HasNormals() && initNormals) {
-            Geometry::_normals->resize(Geometry::_vertices->size());
-
-            for (std::uint32_t it = 0; it < mesh->mNumVertices * 3; it += 3) {
-
-                (*Geometry::_normals)[it] = mesh->mNormals[it / 3].x;
-                (*Geometry::_normals)[it + 1] = mesh->mNormals[it / 3].y;
-                (*Geometry::_normals)[it + 2] = mesh->mNormals[it / 3].z;
-            }
-        }
-
-        if (mesh->HasTextureCoords(0) && initTexCoord) {
-            Mesh::_texCoords->resize((Geometry::_vertices->size() / 3) * 2);
-
-            for (std::uint32_t it = 0; it < Mesh::_texCoords->size(); it += 2) {
-                (*Mesh::_texCoords)[it] = mesh->mTextureCoords[0][it / 2].x;
-                (*Mesh::_texCoords)[it + 1] = mesh->mTextureCoords[0][it / 2].y;
-            }
-        }
-
-        _isIndexed = initIndices;
-        Core::Logger::Logger::LogInfo("Mesh has been loaded");
-
-        Binder::BindMesh(this);
         return true;
     }
 
-    unsigned int Mesh::GetVertexVbo() const {
-        return _vertexVbo;
+    unsigned int Mesh::GetVertexVbo() const noexcept {
+        if (_binder == nullptr) {
+            return 0;
+        }
+
+        return _binder->_vertexVbo;
     }
-    unsigned int Mesh::GetColorsVbo() const {
-        return _colorsVbo;
+    unsigned int Mesh::GetColorsVbo() const noexcept {
+        if (_binder == nullptr) {
+            return 0;
+        }
+
+        return _binder->_colorsVbo;
     }
-    unsigned int Mesh::GetNormalsVbo() const {
-        return _normalsVbo;
+    unsigned int Mesh::GetNormalsVbo() const noexcept {
+        if (_binder == nullptr) {
+            return 0;
+        }
+
+        return _binder->_normalsVbo;
     }
-    unsigned int Mesh::GetTexCoordsVbo() const {
-        return _texCoordsVbo;
+    unsigned int Mesh::GetTexCoordsVbo() const noexcept {
+        if (_binder == nullptr) {
+            return 0;
+        }
+
+        return _binder->_texCoordsVbo;
+    }
+
+    const Core::Geometry* Mesh::GetGeometry() const noexcept {
+        return _geometry;
     }
 }

@@ -1,26 +1,30 @@
 #pragma once
 
-#include "Core/Objects/FakeObject.h"
-#include "Core/Components/Geometry.h"
-#include "AABB.h"
+#include "Core/Components/Component.h"
+#include "Core/Resources/Geometry.h"
 
 namespace AxisEngine {
-	class Collider : public Core::Geometry {
+	class AABB;
+
+	class Collider : public Core::Component {
 		friend class PhysicsEngine;
 		friend class CollidersBuffer;
 
 	protected:
 		Core::FakeObject& _fakeObject;
-		AABB* _AABB;
+		AABB* _AABB = nullptr;
 
-	private:
-		void UpdateParentObject(Core::Object& newParent) override;
+		Core::Geometry* _geometry;
 
 	protected:
 		Collider();
-		virtual void InitCollider(bool isExpand = true);
+
+		void virtual UpdateParentObject(Core::Object& newParent) override;
 
 	public:
 		virtual ~Collider() override = default;
+
+		void Create(Core::Geometry& geometry);
+		[[nodiscard]] const Core::Geometry* GetGeometry() const noexcept;
 	};
 }

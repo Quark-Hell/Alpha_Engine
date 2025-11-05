@@ -5,20 +5,13 @@ namespace AnomalyEngine {
 
     Mesh& MeshesBuffer::CreateMesh() {
         _data.emplace_back(std::unique_ptr<Mesh>(new Mesh()));
-        _data.back().get()->Create();
 
         return *_data.back().get();
     }
 
-    Mesh& MeshesBuffer::CreateMesh(
-            const std::string& linkToFBX,
-            const bool initIndices,
-            const bool initVertex,
-            const bool initNormals,
-            const bool initTexCoord) {
-
+    Mesh& MeshesBuffer::CreateMesh(Core::Geometry& geometry, std::shared_ptr<AnomalyEngine::Binder> binder) {
         _data.emplace_back(std::unique_ptr<Mesh>(new Mesh()));
-        _data.back().get()->Create(linkToFBX, initIndices, initVertex, initNormals, initTexCoord);
+        _data.back().get()->LoadMesh(geometry, binder);
 
         return *_data.back().get();
     }

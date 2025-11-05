@@ -17,11 +17,23 @@ namespace Register {
 		for (size_t i = 0; i < buffer->GetAllData().size(); i++) {
 			auto& component = buffer->GetData(i);
 
+			if (component._isAwaked == false) {
+				component.Awake();
+				component._isAwaked = true;
+			}
+		}
+
+		for (size_t i = 0; i < buffer->GetAllData().size(); i++) {
+			auto& component = buffer->GetData(i);
+
 			if (component._isStarted == false) {
 				component.Start();
 				component._isStarted = true;
 			}
+		}
 
+		for (size_t i = 0; i < buffer->GetAllData().size(); i++) {
+			auto& component = buffer->GetData(i);
 			component.Update();
 		}
 	}

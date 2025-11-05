@@ -1,6 +1,10 @@
 #include "Modules.h"
 
-#include "MyScript.h"
+#include "EngineScripts/MyScript.h"
+#include "EngineScripts/Player.h"
+#include "EngineScripts/WorldBuilder.h"
+
+#include "Windows/WindowsSettings.h"
 
 namespace Core {
     void InstanceModule() {
@@ -37,5 +41,8 @@ namespace Core {
 }
 
 void IncludeScripts() {
-    /*auto* script =*/ userScriptsBuffer->CreateActor<MyScript>();
+    auto* script = userScriptsBuffer->CreateActor<MyScript>("MyScript");
+    auto* playerScript = userScriptsBuffer->CreateActor<Player>("Player");
+    auto* worldBuilder = userScriptsBuffer->CreateActor<WorldBuilder>("WorldBuilder");
+    auto* windowsSettings = userScriptsBuffer->CreateActor<WindowsSettings>("WindowsSettings");
 }

@@ -15,6 +15,6 @@ namespace AnomalyEngine {
         WireframeShader(Material* parentMat);
         ~WireframeShader() override = default;
 
-        void ApplyShadersSettings(Camera& camera, int parentIndex = -1) override;
+        void ApplyShadersSettings(Camera& camera) override;
     };
 }

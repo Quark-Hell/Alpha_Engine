@@ -2,7 +2,7 @@
 #include <random>
 
 
-#include "Core/Components/Geometry.h"
+#include "Core/Resources/Geometry.h"
 #include "Modules.h"
 
 TEST(CoreTest, RandomTransformTest) {

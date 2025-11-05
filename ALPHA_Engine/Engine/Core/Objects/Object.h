@@ -39,14 +39,12 @@ namespace Core {
 		 * @brief Attaches (adds) a component to the object.
 		 *
 		 * This function registers the specified component within the object's internal
-		 * component list. Optionally, the object can take ownership of the component,
-		 * meaning it will handle its lifetime and destruction.
+		 * component list.
 		 *
 		 * @param component Reference to the component to attach.
-		 * @param isOwner If true, the object assumes ownership of the component and will manage its destruction.
 		 * @return True if the component was successfully added, false otherwise.
 		 */
-		bool AddComponent(Component& component, bool isOwner = false);
+		bool AddComponent(Component& component);
 
 		/**
 		 * @brief Returns the number of components attached to the object.

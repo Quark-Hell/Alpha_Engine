@@ -20,6 +20,12 @@ namespace Core {
 		return &objects;
 	}
 
+	std::vector<std::unique_ptr<Core::Resource>>* World::GetResources() {
+		static std::vector<std::unique_ptr<Core::Resource>> resources{};
+		resources.reserve(64);
+		return &resources;
+	}
+
 	void World::AddSystem(size_t order, Core::System* system) {
 		if (system == nullptr) {
 			Logger::LogError("System is null");

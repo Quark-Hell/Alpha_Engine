@@ -6,6 +6,7 @@
 
 #include "WindowsManager/Components/Window.h"
 
+#include "Core/Objects/Object.h"
 #include "Core/Logger/Logger.h"
 
 namespace AnomalyEngine {
@@ -16,6 +17,10 @@ namespace AnomalyEngine {
         _aspect = aspect;
         _zNear = zNear;
         _zFar = zFar;
+    }
+
+    void Camera::UpdateParentObject(Core::Object& newParent) {
+        newParent.transform.IsCamera = true;
     }
 
     void Camera::SetProjection(const bool isPerspective) {

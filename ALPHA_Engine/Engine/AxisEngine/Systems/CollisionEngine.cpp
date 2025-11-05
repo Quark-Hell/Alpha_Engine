@@ -59,7 +59,7 @@ namespace AxisEngine {
         }
     }
 
-    glm::vec3 CollisionEngine::Support(Collider& colliderA, Collider& colliderB, glm::vec3 direction)
+    glm::vec3 CollisionEngine::Support(const Collider& colliderA, const Collider& colliderB, glm::vec3 direction)
     {
         // Get transform matrices
         glm::mat4 transformA = colliderA.GetParentObject()->transform.GetTransformMatrix();
@@ -74,8 +74,8 @@ namespace AxisEngine {
         localDirB = glm::normalize(localDirB);
 
         // Finding points in local spaces
-        glm::vec3 pointA_local = colliderA.FindFurthestPoint(localDirA);
-        glm::vec3 pointB_local = colliderB.FindFurthestPoint(localDirB);
+        glm::vec3 pointA_local = colliderA.GetGeometry()->FindFurthestPoint(localDirA);
+        glm::vec3 pointB_local = colliderB.GetGeometry()->FindFurthestPoint(localDirB);
 
         // Convert to world spaces
         glm::vec3 pointA_world = glm::vec3(transformA * glm::vec4(pointA_local, 1.0f));
@@ -122,7 +122,7 @@ namespace AxisEngine {
 
                         colliderA.GetParentObject()->transform.AddPosition(-colInfo.Normal * colInfo.PenetrationDepth);
                         CollisionEngine::CalculateContactPoints(colliderA, colliderB, colInfo);
-
+                        
                         rb1->AddContactPoints(colInfo.CollisionPoints);
                         rb1->_hasCollision = true;
 
@@ -137,7 +137,7 @@ namespace AxisEngine {
 
                         colliderB.GetParentObject()->transform.AddPosition(colInfo.Normal * colInfo.PenetrationDepth);
                         CollisionEngine::CalculateContactPoints(colliderA, colliderB, colInfo);
-
+                        
                         rb2->AddContactPoints(colInfo.CollisionPoints);
                         rb2->_hasCollision = true;
 
@@ -145,8 +145,6 @@ namespace AxisEngine {
 
                         return true;
                     }
-
-
                 }
                 else if (rb1 != nullptr && rb2 != nullptr) {
                     if (CollisionEngine::EPA(points, colliderB, colliderA, colInfo)) {
@@ -157,7 +155,7 @@ namespace AxisEngine {
 
                         colliderA.GetParentObject()->transform.AddPosition(colInfo.Normal * colInfo.PenetrationDepth);
                         CollisionEngine::CalculateContactPoints(colliderB, colliderA, colInfo);
-
+                        
                         rb1->AddContactPoints(colInfo.CollisionPoints);
                         rb2->AddContactPoints(colInfo.CollisionPoints);
 
@@ -169,15 +167,13 @@ namespace AxisEngine {
 
                         return true;
                     }
-
-
                 }
                 return true;
             }
         }
         return false;
     }
-    bool CollisionEngine::EPA(Simplex& simplex, Collider& colliderA, Collider& colliderB, CollisionInfo& colInfo)
+    bool CollisionEngine::EPA(Simplex& simplex, const Collider& colliderA, const Collider& colliderB, CollisionInfo& colInfo)
     {
         std::vector<glm::vec3> polytope(simplex.begin(), simplex.end());
         std::vector<size_t>  faces = {
@@ -190,7 +186,7 @@ namespace AxisEngine {
         // list: vector4(normal, distance), index: min distance
         auto [normals, minFace] = GetFaceNormals(polytope, faces);
 
-        glm::vec3 minNormal;
+        glm::vec3 minNormal = glm::vec3(0);
         float   minDistance = FLT_MAX;
 
         for (unsigned int i = 0; i < CollisionEngine::EPAaccurate; i++) {
@@ -325,11 +321,11 @@ namespace AxisEngine {
             return false;
             };
         auto findContactPoints = [](Collider& contactObject, Plane contactPlane, std::vector<std::pair<glm::vec3, float>>& contactBuf) {
-            auto vertices = contactObject.GetVertices();
+            auto vertices = contactObject.GetGeometry()->GetVertices();
 
-            for (size_t i = 0; i < vertices->size(); i += 3)
+            for (size_t i = 0; i < vertices.size(); i += 3)
             {
-                glm::vec3 point{ (*vertices)[i + 0],(*vertices)[i + 1],(*vertices)[i + 2] };
+                glm::vec3 point{ vertices[i + 0], vertices[i + 1], vertices[i + 2] };
                 point = glm::ToWorldSpace(point, contactObject.GetParentObject()->transform.GetTransformMatrix());
 
                 float distance = glm::abs(glm::GetVertexToPlaneDistance(point, contactPlane.P1, contactPlane.Normal));
@@ -363,7 +359,7 @@ namespace AxisEngine {
         std::vector<std::pair<glm::vec3, float>> contactPointsB; contactPointsB.reserve(4);
 
         colInfo.Normal = glm::normalize(colInfo.Normal);
-        glm::vec3 point = glm::ToWorldSpace(contactObject1.FindFurthestPoint(colInfo.Normal), contactObject1.GetParentObject()->transform.GetTransformMatrix());
+        glm::vec3 point = glm::ToWorldSpace(contactObject1.GetGeometry()->FindFurthestPoint(colInfo.Normal), contactObject1.GetParentObject()->transform.GetTransformMatrix());
         Plane contactPlane{ point, colInfo.Normal };
 
         //Finding contact points from shape A

@@ -3,8 +3,6 @@
 #include "Core/Serialization/TSerialized.h"
 #include "MyScript.generated.h"
 
-#include "Windows/WindowsSettings.h"
-
 #include "AnomalyEngine/Components/Mesh.h"
 
 ACLASS()
@@ -35,44 +33,15 @@ class DerivedData final : public virtual  Data {
 
 
 class MyScript final : public Register::UserScript {
-	private:
-	Core::GameObject* Player = nullptr;
-	float moveSensitive = 10;
-    WindowsSettings winSettings;
-
+private:
 	AnomalyEngine::Mesh* cubeMesh;
 
-
-	public:
+public:
 	MyScript() = default;
 
 	void Start() override;
 	void Update() override;
 	void End() override;
 
-    void CameraRotate();
-
 	void Serialization();
-	void LogExample();
-
-	void LeftMoveCamera();
-	void RightMoveCamera();
-	void ForwardMoveCamera();
-	void BackwardMoveCamera();
-    void UpMoveCamera();
-    void DownMoveCamera();
-
-    unsigned int CurrentRectID = 0;
-    void ChangeRect(std::vector<WindowsManager::Rectangle*>& rectBuffer);
-
-	void PushUp(std::vector<WindowsManager::Rectangle*>& rectBuffer);
-	void PushDown(std::vector<WindowsManager::Rectangle*>& rectBuffer);
-	void PushRight(std::vector<WindowsManager::Rectangle*>& rectBuffer);
-	void PushLeft(std::vector<WindowsManager::Rectangle*>& rectBuffer);
-
-	void GenerateCubeMap();
-	void GenerateLightSource();
-	void GenerateEarth();
-	void GenerateSun();
-	void GenerateCube();
 };

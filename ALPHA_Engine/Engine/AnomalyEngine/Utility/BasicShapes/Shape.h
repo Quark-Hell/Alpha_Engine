@@ -22,6 +22,6 @@ namespace AnomalyEngine {
 
 	public:
 		virtual ~Shape() = default;
-		bool Create() override = 0;
+		virtual bool Create() = 0;
 	};
 }

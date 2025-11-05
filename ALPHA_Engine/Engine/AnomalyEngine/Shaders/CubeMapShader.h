@@ -25,7 +25,7 @@ namespace AnomalyEngine {
 
         bool TransferTexturesToGPU();
 
-        void ApplyShadersSettings(Camera &camera, int parentIndex = -1) override;
+        void ApplyShadersSettings(Camera &camera) override;
     };
 }
 

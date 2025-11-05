@@ -10,34 +10,18 @@ namespace Core {
 		return true;
 	}
 
-	Core::Object* Component::GetParentObject() const noexcept {
-		if (_parentsObject.size() > 0) {
-			return _parentsObject[0];
+	Core::Object* Component::GetParentObject() const noexcept {	
+		return _parentObject;
+	}
+
+	void Component::RemoveParent() noexcept {
+		if (_parentObject == nullptr) {
+			return;
 		}
 
-		return nullptr;
-	}
-
-	const std::vector<Object*>& Component::GetParentsObject() const noexcept {
-		return _parentsObject;
-	}
-
-	bool Component::RemoveParent(Core::Object& parent) noexcept {
-		for (size_t i = 0; i < _parentsObject.size(); i++) {
-			if (&parent == _parentsObject[i]) {
-				std::string name = _parentsObject[i]->GetName();
-				 _parentsObject.erase(_parentsObject.begin() + i);
-				 Logger::LogInfo("Obect", name, "was removed");
-				 return true;
-			}
-		}
-
-		Logger::LogError("Parent didn't finded");
-		return false;
-	}
-
-	void Component::ClearParents() noexcept {
-		_parentsObject.clear();
+		std::string name = _parentObject->GetName();
+		_parentObject = nullptr;
+		Logger::LogInfo("Obect", name, "was removed");
 	}
 }
 

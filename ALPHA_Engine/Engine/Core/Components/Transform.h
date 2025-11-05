@@ -16,6 +16,13 @@ namespace Core {
 		glm::mat4x4 _transformMatrix{ 1 };
 
 	public:
+		/**
+		* If true so looks like R * T * S;
+		* otherwise T * R * S;
+		*/
+		bool IsCamera = false;
+
+	public:
 		Transform();
 		~Transform() = default;
 

@@ -1,13 +1,14 @@
 #pragma once
 #include <memory>
+#include <map>
+#include <unordered_map>
 
 #include "Timer.h"
 
-#include "map"
-#include "unordered_map"
-
 #include "Core/Objects/Object.h"
+#include "Core/Resources/Resource.h"
 #include "Core/Logger/Logger.h"
+
 #include "Core/ECS/System.h"
 #include "Core/ECS/SystemData.h"
 
@@ -61,12 +62,41 @@ namespace Core {
 		static std::vector<std::unique_ptr<Core::GameObject>>* GetGameObjects();
 		static std::vector<std::unique_ptr<Core::FakeObject>>* GetFakeObjects();
 
+		static std::vector<std::unique_ptr<Core::Resource>>* GetResources();
+
 	private:
 		World();
 
 	public:
 		World(const World& obj) = delete;
 		~World();
+
+		template <typename T>
+		requires std::derived_from<T, Object>
+		[[nodiscard]] static T* GetObject(const std::string& name) {
+			auto world = World::GetWorld();
+			std::vector<std::unique_ptr<T>>* objects = nullptr;
+
+			if constexpr (std::is_same_v<T, GameObject>) {
+				objects = World::GetGameObjects();
+			}
+			else {
+				objects = World::GetFakeObjects();
+			}
+
+			auto it = std::find_if(objects->begin(), objects->end(), [&](const auto& ptr) {
+				return ptr->GetName() == name;
+				});
+
+			if (it != objects->end()) {
+				if (auto casted = static_cast<T*>(it->get()))
+					return casted;
+			}
+
+			Logger::LogError("GameObject does not exist: " + name);
+			return nullptr;
+		}
+	
 
 		template <typename T>
 		requires std::derived_from<T, Object>
@@ -93,11 +123,18 @@ namespace Core {
 			if (it != list->end()) {
 				// Remove component relations
 				for (auto* comp : (*it)->GetComponents()) {
-					comp->RemoveParent(object);
+					comp->RemoveParent();
 				}
 
 				list->erase(it);
-				Logger::LogInfo("GameObject removed");
+
+				if constexpr (std::is_same_v<T, GameObject>) {
+					Logger::LogInfo("GameObject removed");
+				}
+				else {
+					Logger::LogInfo("FakeObject removed");
+				}
+
 				return true;
 			}
 

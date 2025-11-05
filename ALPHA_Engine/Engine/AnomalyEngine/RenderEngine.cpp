@@ -25,11 +25,11 @@ namespace AnomalyEngine {
 
     void RenderEngine::InitTempBuffer() {
         auto meshesData = Core::World::GetSystemData<TempMeshesBuffer>("TempMeshesBuffer");
-
+        
         if (meshesData == nullptr) {
             Core::Logger::LogCritical("Cannot instantiate temp meshes buffer because it don't created early: " + __LOGERROR__);
         }
-
+        
         auto& sphere = meshesData->CreateMesh<Sphere>();
         sphere._material.InitShader<WireframeShader>();
         _isNotInited = true;
@@ -80,7 +80,7 @@ namespace AnomalyEngine {
                 glRenderMode = GL_TRIANGLES;
             break;
             default:
-                Core::Logger::Logger::LogCritical("Unknown render mode: " + __LOGERROR__);
+                Core::Logger::LogCritical("Unknown render mode: " + __LOGERROR__);
             break;
         }
 
@@ -89,15 +89,15 @@ namespace AnomalyEngine {
 
     bool RenderEngine::MeshChecker(const Mesh& mesh) {
         if (mesh._material.Shader == nullptr) {
-            Core::Logger::Logger::LogError("Shader was be null: " + __LOGERROR__);
+            Core::Logger::LogError("Shader was be null: " + __LOGERROR__);
             return false;
         }
         if (mesh._material.Shader->GetCompiledStatus() == false) {
-            Core::Logger::Logger::LogError("Shader was not be compiled: " + __LOGERROR__);
+            Core::Logger::LogError("Shader was not be compiled: " + __LOGERROR__);
             return false;
         }
         if (mesh._material.Shader->GetProgramId() == 0) {
-            Core::Logger::Logger::LogError("Shader program was not be created: "  + __LOGERROR__);
+            Core::Logger::LogError("Shader program was not be created: "  + __LOGERROR__);
             return false;
         }
 

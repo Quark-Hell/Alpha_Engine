@@ -2,6 +2,9 @@
 
 #include <vector>
 
+#include "UserScriptsRegister/UserScriptConfig.h"
+#include "Core/Serialization/TSerialized.h"
+
 namespace Core {
     class GameObject;
 }
@@ -11,23 +14,18 @@ namespace WindowsManager {
     class Rectangle;
 }
 
-class WindowsSettings {
+class WindowsSettings  final : public Register::UserScript {
 public:
     WindowsManager::Window* win1 = nullptr;
     WindowsManager::Rectangle* rect = nullptr;
 
     std::vector<WindowsManager::Rectangle*> rects;
+    
+public:
+    void Awake() override;
 
     void ShowCursor();
     void HideCursor();
 
     void BaseWindow(Core::GameObject& Player);
-
-    void WindowsTest1(Core::GameObject& Player);
-    void WindowsTest2(Core::GameObject& Player);
-    void WindowsTest3(Core::GameObject& Player);
-    void WindowsTest4(Core::GameObject& Player);
-
-    void WindowsTest5(Core::GameObject& Player);
-
 };

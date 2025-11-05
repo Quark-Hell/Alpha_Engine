@@ -13,12 +13,7 @@ namespace AnomalyEngine {
 
         Mesh& CreateMesh();
 
-        Mesh& CreateMesh(
-                    const std::string& linkToFBX,
-                    bool initIndices = true,
-                    bool initVertex = true,
-                    bool initNormals = true,
-                    bool initTexCoord = true);
+        Mesh& CreateMesh(Core::Geometry& geometry, std::shared_ptr<AnomalyEngine::Binder> binder = nullptr);
     };
 }
 

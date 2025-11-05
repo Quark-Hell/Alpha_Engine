@@ -11,28 +11,25 @@ namespace Core {
 		return _name;
 	}
 
-	bool Object::AddComponent(Component& component, bool isOwner) {
+	bool Object::AddComponent(Component& component) {
 		if (!component.CheckAddPossibility(*this)) {
-			Logger::Logger::LogError("Component didn't attached: " + __LOGERROR__);
+			Logger::LogError("Component didn't attached: " + __LOGERROR__);
 			return false;
 		}
 
 		// Check if component is already added
 		for (auto* c : _components) {
 			if (c == &component) {
-				Logger::Logger::LogError("Component already attached: " + __LOGERROR__);
+				Logger::LogError("Component already attached: " + __LOGERROR__);
 				return false;  // do not add again
 			}
 		}
 
 		// Add component
 		_components.push_back(&component);
-		if (isOwner) {
-			component.ClearParents();
-		}
-		component._parentsObject.push_back(this);
+		component._parentObject = this;
 		component.UpdateParentObject(*this);
-		Logger::Logger::LogInfo("Component attached successfully");
+		Logger::LogInfo("Component attached successfully");
 		return true;
 	}
 
@@ -45,7 +42,7 @@ namespace Core {
 			}
 		}
 
-		Logger::Logger::LogInfo("Component didn't finded: " + __LOGERROR__);
+		Logger::LogInfo("Component didn't finded: " + __LOGERROR__);
 		return false;
 	}
 
@@ -60,7 +57,7 @@ namespace Core {
 	const Component& Object::GetComponentByIndex(size_t index) const {
 		if (index >= _components.size())
 		{
-			Logger::Logger::LogCritical(
+			Logger::LogCritical(
 				"Component index out of range: " + __LOGERROR__
 			);
 		}

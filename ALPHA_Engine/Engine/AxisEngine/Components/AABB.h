@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Components/Geometry.h"
+#include "Core/Resources/Geometry.h"
 #include "Core/Objects/GameObject.h"
 #include "Core/Math/glmMath.h"
 
@@ -13,11 +13,13 @@ namespace AnomalyEngine {
 #endif // _DEBUG
 
 namespace AxisEngine {
-	class AABB final : public Core::Geometry {
+	class AABB {
 		friend class PhysicsEngine;
 		friend class AABBBuffer;
 
 	private:
+		Core::Geometry* _geometry;
+
 		glm::vec3 _position;
 		glm::vec3 _scale{ 0,0,0 };
 
@@ -32,7 +34,7 @@ namespace AxisEngine {
 		void CreateAABB();
 
 	public:
-		~AABB() override = default;
+		~AABB() = default;
 
 		void UpdateAABB(Core::GameObject& parentObject);
 		void UpdateAABB(float radius);
