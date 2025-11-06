@@ -40,6 +40,11 @@ if(WIN32)
 
 	if(MSVC)
 		target_link_libraries(SimpleGame
+				PUBLIC USER_SCRIPTS_REGISTER
+				PUBLIC PHYSICS_AXIS_ENGINE
+				PUBLIC BINDS_ENGINE
+				PUBLIC RENDER_BASE
+				PUBLIC ANOMALY_ENGINE
 				PRIVATE ALPHA_Engine
 				PRIVATE "${Examples_Build_Dir}/external/glfw3.lib"
 				PRIVATE "${Examples_Build_Dir}/external/assimp.lib"
@@ -49,6 +54,11 @@ if(WIN32)
 		copy_file("${Examples_Build_Dir}/external/assimp-vc143-mt.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assimp-vc143-mt.dll")
 	elseif(MINGW)
 		target_link_libraries(SimpleGame
+				PUBLIC USER_SCRIPTS_REGISTER
+				PUBLIC PHYSICS_AXIS_ENGINE
+				PUBLIC BINDS_ENGINE
+				PUBLIC RENDER_BASE
+				PUBLIC ANOMALY_ENGINE
 				PRIVATE ALPHA_Engine
 				PRIVATE "${Examples_Build_Dir}/external/glfw3.a"
 				PRIVATE "${Examples_Build_Dir}/external/assimp.dll.a"
@@ -63,6 +73,11 @@ else()
 	find_package(assimp REQUIRED)
 
 	target_link_libraries(SimpleGame
+			PUBLIC USER_SCRIPTS_REGISTER
+			PUBLIC PHYSICS_AXIS_ENGINE
+			PUBLIC BINDS_ENGINE
+			PUBLIC RENDER_BASE
+			PUBLIC ANOMALY_ENGINE
 			PUBLIC ALPHA_Engine
 			PRIVATE glfw
 			PRIVATE assimp

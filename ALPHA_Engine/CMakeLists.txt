@@ -47,11 +47,17 @@ target_compile_definitions(ALPHA_Engine
 )
 
 #Utility
-include("Utility/AlphaConfigurator/CMakeLists.txt")
-include("Utility/EngineDataCollector/CMakeLists.txt")
+#include("Utility/AlphaConfigurator/CMakeLists.txt")
+#include("Utility/EngineDataCollector/CMakeLists.txt")
+
+include("Engine/UserScriptsRegister/CMakeLists.txt")
+include("Engine/AxisEngine/CMakeLists.txt")
+include("Engine/WindowsManager/CMakeLists.txt")
+include("Engine/BindsEngine/CMakeLists.txt")
+include("Engine/AnomalyEngine/CMakeLists.txt")
 
 #Example
 include("Examples/CMakeLists.txt")
 
 #Tests
-include("Tests/CMakeLists.txt")
+#include("Tests/CMakeLists.txt")

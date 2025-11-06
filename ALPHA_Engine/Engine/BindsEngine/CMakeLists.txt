@@ -1,4 +1,4 @@
-option(RENDER_BINDS_ENGINE "Build input system. Require RENDER_BASE option" ON)
+﻿option(RENDER_BINDS_ENGINE "Build input system. Require RENDER_BASE option" ON)
 set(engine_binds_list)
 
 if(RENDER_BINDS_ENGINE AND NOT RENDER_BASE)
@@ -6,8 +6,6 @@ if(RENDER_BINDS_ENGINE AND NOT RENDER_BASE)
 endif ()
 
 if (RENDER_BASE AND RENDER_BINDS_ENGINE)
-    list(APPEND SCAN_DIRS "${ALPHA_Engine}/Engine/BindsEngine/")
-
     add_compile_definitions(BINDS_ENGINE_INCLUDED)
     add_definition("BINDS_ENGINE_INCLUDED")
 
@@ -16,5 +14,7 @@ if (RENDER_BASE AND RENDER_BINDS_ENGINE)
     recurse_copy_headers("${Engine_Source}/BindsEngine" "${Build_Dir}/headers/BindsEngine")
 
     copy_file("${Engine_Source}/BindsEngine/Module.cfg" "${Configs_Dir}/BindsEngine/Module.cfg")
+
+    add_library(BINDS_ENGINE STATIC ${engine_binds_list})
 endif ()
 

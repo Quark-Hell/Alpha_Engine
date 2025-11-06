@@ -6,8 +6,6 @@ if(RENDER_ANOMALY_ENGINE AND NOT RENDER_BASE)
 endif ()
 
 if (RENDER_BASE AND RENDER_ANOMALY_ENGINE)
-    list(APPEND SCAN_DIRS "${ALPHA_Engine}/Engine/AnomalyEngine/")
-
     add_compile_definitions(ANOMALY_ENGINE_INCLUDED)
     add_definition("ANOMALY_ENGINE_INCLUDED")
 
@@ -17,4 +15,6 @@ if (RENDER_BASE AND RENDER_ANOMALY_ENGINE)
 
     copy_file("${Engine_Source}/AnomalyEngine/Module.cfg" "${Configs_Dir}/AnomalyEngine/Module.cfg")
     recurse_copy_assets("${Engine_Source}/AnomalyEngine/Assets" "${Build_Dir}/Assets")
+
+    add_library(ANOMALY_ENGINE STATIC ${engine_anomaly_list})
 endif ()
