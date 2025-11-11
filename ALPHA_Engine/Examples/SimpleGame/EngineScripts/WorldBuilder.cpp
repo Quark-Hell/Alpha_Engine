@@ -20,7 +20,7 @@ void WorldBuilder::GenerateCubeMap() {
     CubeMap.SetName("CubeMap");
 
     Core::Geometry& meshGem = Core::Factory::CreateResource<Core::Geometry>();
-    meshGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", true, true, true, true, true);
+    meshGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::All);
 
     auto& mesh = meshesBuffer->CreateMesh(meshGem);
     CubeMap.AddComponent(mesh);
@@ -38,10 +38,10 @@ void WorldBuilder::GenerateCubeMap() {
 
 void WorldBuilder::GenerateCube() {
     Core::Geometry& meshGem = Core::Factory::CreateResource<Core::Geometry>();
-    meshGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", true, true, true, true, true);
+    meshGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::All);
 
     Core::Geometry& colGem = Core::Factory::CreateResource<Core::Geometry>();
-    colGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", true, false, false, false, false);
+    colGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::InitVertex);
 
     {
         auto& cube = Core::Factory::CreateObject<Core::GameObject>();
@@ -111,7 +111,7 @@ void WorldBuilder::GenerateEarth() {
     cube.SetName("Earth");
 
     Core::Geometry& meshGem = Core::Factory::CreateResource<Core::Geometry>();
-    meshGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", true, true, true, true, true);
+    meshGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::All);
 
     auto& earthMesh = meshesBuffer->CreateMesh(meshGem);
     earthMesh.LoadMesh(meshGem);
@@ -127,8 +127,8 @@ void WorldBuilder::GenerateEarth() {
 
     cube.AddComponent(earthMesh);
 
-    Core::Geometry& colliderGem = Core::Factory::CreateResource<Core::Geometry>();;
-    colliderGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", true, false, false, false, false);
+    Core::Geometry& colliderGem = Core::Factory::CreateResource<Core::Geometry>();
+    colliderGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::InitVertex);
     
     auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
     cubeCollider.Create(colliderGem);
@@ -144,7 +144,7 @@ void WorldBuilder::GenerateSun() {
     Sun.SetName("Sun");
 
     Core::Geometry& geometry = Core::Factory::CreateResource<Core::Geometry>();
-    geometry.LoadMesh("/Assets/Models/Sci-Fi_Football.fbx", true, false, false, false, false);
+    geometry.LoadMesh("/Assets/Models/Sci-Fi_Football.fbx", Core::GeometryLoadSettings::All);
 
     auto& sunMesh = meshesBuffer->CreateMesh(geometry);
     auto& rb = rigidBodiesBuffer->CreateRigidBody();
@@ -155,7 +155,7 @@ void WorldBuilder::GenerateSun() {
     auto& shader = sunMesh._material.InitShader<AnomalyEngine::SimplexFractalShader>();
 
     Core::Geometry& collider = Core::Factory::CreateResource<Core::Geometry>();
-    collider.LoadMesh("/Assets/Models/Sci-Fi_Football.fbx", true, false, false, false, false);
+    collider.LoadMesh("/Assets/Models/Sci-Fi_Football.fbx", Core::GeometryLoadSettings::InitVertex);
 
     auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
     cubeCollider.Create(collider);

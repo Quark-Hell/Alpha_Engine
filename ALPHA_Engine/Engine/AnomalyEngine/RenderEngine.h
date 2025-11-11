@@ -73,7 +73,7 @@ namespace AnomalyEngine  {
 
                 mesh->_material.Shader->ApplyShadersSettings(camera);
 
-                if (geometry->IsIndexed)
+                if (Core::HasFlag(Core::GeometryLoadSettings::InitIndices, geometry->_loadSettings))
                     glDrawElements(renderMode, geometry->Indices->size(), GL_UNSIGNED_INT, geometry->Indices->data());
                 else
                     glDrawArrays(renderMode, 0, geometry->Vertices->size() / 3);

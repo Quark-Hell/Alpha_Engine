@@ -44,7 +44,7 @@ namespace AnomalyEngine {
             }
         }
 
-        _geometry->IsIndexed = false;
+        _geometry->_loadSettings = Core::GeometryLoadSettings::InitVertex | Core::GeometryLoadSettings::InitVertexColors;
         Core::Logger::LogInfo("Mesh has been loaded");
 
         if (_binder == nullptr) {
