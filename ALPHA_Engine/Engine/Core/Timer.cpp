@@ -16,7 +16,7 @@ namespace Core {
     }
 
     double Timer::ElapsedMillis() const {
-      return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - _start).count() * 0.001f;
+      return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - _start).count();
     }
 
     double Timer::ElapsedNano() const {
@@ -28,7 +28,8 @@ namespace Core {
 
     ScopedTimer::~ScopedTimer()
     {
-      const float time = _timer.ElapsedNano();
-      Logger::Logger::LogInfo(_name, " - ", time, "nano");
+      const float time = _timer.ElapsedMillis();
+      std::cout << _name << " - " << time << " millis" << std::endl;
+      Logger::Logger::LogInfo(_name, " - ", time, " millis");
     }
 }
