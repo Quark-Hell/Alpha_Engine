@@ -36,7 +36,7 @@ namespace Core {
 	bool Object::DetachComponent(Component& ref) {
 		for (auto it = _components.begin(); it != _components.end(); ++it) {
 			if (*it == &ref) {
-				_components.erase(it);  ///< Remove component from list
+				_components.erase(it);
 				Logger::LogInfo("Component successfully detached");
 				return true;
 			}

@@ -13,7 +13,7 @@ namespace AxisEngine {
         ~CollidersBuffer() override = default;
 
         template <typename T>
-        requires std::is_base_of_v<Collider, T> && !std::is_same_v<Collider, T>
+        requires (std::is_base_of_v<Collider, T> && !std::is_same_v<Collider, T>)
         T& CreateCollider() {
             _data.emplace_back(std::unique_ptr<T>(new T()));
 

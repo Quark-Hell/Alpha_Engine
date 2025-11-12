@@ -42,7 +42,7 @@ namespace Core {
 			return;
 		}
 		if (systemDataName.empty()) {
-			Logger::LogError("System data name is empty" + std::string(__FILE__ ":") + std::to_string(__LINE__));
+			Logger::LogError("System data name is empty" + __LOGERROR__);
 			return;
 		}
 

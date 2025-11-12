@@ -17,7 +17,7 @@ if(WIN32)
 
         FetchContent_Declare(Dependencies
           GIT_REPOSITORY "https://github.com/Quark-Hell/Alpha_Engine_Dependencies.git"
-          GIT_TAG "origin/Windows10_MSVC"
+          GIT_TAG "origin/Windows10_MINGW"
           GIT_PROGRESS   TRUE
           GIT_SHALLOW    TRUE
           SOURCE_DIR "${Examples_Build_Dir}/external"
