@@ -100,19 +100,19 @@ namespace Core {
 		 * identify the component type.
 		 *
 		 * @tparam T The type of components to retrieve.
-		 * @return A vector of constant references to all components of type @p T.
+		 * @return A vector of references to all components of type @p T.
 		 *
 		 * @note Intended to be used internally by the #Object class for component access.
 		 */
 		template <typename T>
 		requires std::is_base_of_v<Component, T>
-		std::vector<std::reference_wrapper<const T>> GetComponentsByType() const
+		std::vector<std::reference_wrapper<T>> GetComponentsByType() const
 		{
-			std::vector<std::reference_wrapper<const T>> result;
+			std::vector<std::reference_wrapper<T>> result;
 
-			for (const auto* component : _components)
+			for (auto* component : _components)
 			{
-				if (const auto* comp = dynamic_cast<const T*>(component))
+				if (auto* comp = dynamic_cast<T*>(component))
 				{
 					result.push_back(*comp);
 				}
@@ -121,8 +121,7 @@ namespace Core {
 			if (result.empty())
 			{
 				Logger::Logger::LogWarning(
-					"No components of requested type found " + std::string(__FILE__ ":") + std::to_string(__LINE__)
-				);
+					"No components of requested type found " + __LOGERROR__);
 			}
 
 			return result;
