@@ -57,12 +57,12 @@ void WorldBuilder::GenerateCube() {
 
         auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
         shader.LoadTextures(
-            "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
+            "/Assets/Textures/Planets/2k_earth_daymap.jpg",
             "",
             "",
             "",
             "",
-            "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+            "/Assets/Textures/Planets/2k_earth_nightmap.jpg");
 
         auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
         cubeCollider.Create(colGem);
@@ -86,12 +86,12 @@ void WorldBuilder::GenerateCube() {
 
         auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
         shader.LoadTextures(
-            "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
+            "/Assets/Textures/Planets/2k_earth_daymap.jpg",
             "",
             "",
             "",
             "",
-            "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+            "/Assets/Textures/Planets/2k_earth_nightmap.jpg");
 
         auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
         cubeCollider.Create(colGem);
@@ -118,12 +118,12 @@ void WorldBuilder::GenerateEarth() {
 
     auto& shader = earthMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
     shader.LoadTextures(
-        "/Assets/Textures/Planets/8k_earth_daymap.jpeg",
+        "/Assets/Textures/Planets/2k_earth_daymap.jpg",
         "",
         "",
         "",
         "",
-        "/Assets/Textures/Planets/8k_earth_nightmap.jpg");
+        "/Assets/Textures/Planets/2k_earth_nightmap.jpg");
 
     cube.AddComponent(earthMesh);
 

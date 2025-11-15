@@ -53,7 +53,7 @@ namespace AnomalyEngine {
         const std::string& occlusionMapPath) {
 
             {
-                Core::ScopedTimer timer("Load time");
+                Core::ScopedTimer timer("Load time opaque textures");
 
                 const auto loader = TextureLoader::GetInstance();
                 if (!diffusePath.empty()) {

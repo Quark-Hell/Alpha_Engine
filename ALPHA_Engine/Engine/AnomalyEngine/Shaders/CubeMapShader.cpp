@@ -41,7 +41,7 @@ namespace AnomalyEngine {
         const std::string& backSide) {
 
         {
-            Core::ScopedTimer timer("Load time");
+            Core::ScopedTimer timer("Load time cube map textures");
 
             const auto loader = TextureLoader::GetInstance();
             loader->AddTask(_cubemapTextures[0], leftSide);
