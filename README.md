@@ -1,6 +1,4 @@
 # Alpha Engine
-Open source game engine
-
 <p align="center">
       <img src="https://i.ibb.co/LprNYRR/Alpha-Engine-2.png" alt="Alpha-Engine-2" border="0">
 </p>
@@ -13,8 +11,11 @@ Open source game engine
 </p>
 
 ## About
+The Alpha Engine was created for game development. However, the engine itself is fully modular and provides only the general architecture of executable processes (systems). All further functionality depends solely on the implementation of specific systems.
 
-This game engine is being developed to make it easier for developers to create simulators. The game engine is absolutely free for use.
+Thanks to this architecture, Alpha Engine is not just a game engine but a whole meta-universe that allows you to accomplish virtually any task.
+
+At the moment, Alpha Engine is in active development and does not yet have a stable codebase, which makes it unstable. However, it is distributed under the MIT license, allowing anyone interested to contribute to the project’s development.
 
 ## Documentation
 
