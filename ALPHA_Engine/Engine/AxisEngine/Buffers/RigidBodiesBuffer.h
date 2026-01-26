@@ -12,7 +12,7 @@ namespace AxisEngine {
         RigidBodiesBuffer(size_t initialBufferSize = 0);
         ~RigidBodiesBuffer() override = default;
 
-        RigidBody& CreateRigidBody();
+        RigidBody& CreateRigidBody(PhysicsEngine& engine);
     };
 }
 

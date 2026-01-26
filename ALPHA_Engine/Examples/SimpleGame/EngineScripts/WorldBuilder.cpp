@@ -68,7 +68,7 @@ void WorldBuilder::GenerateCube() {
         cubeCollider.Create(colGem);
         cube.AddComponent(cubeCollider);
 
-        auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody();
+        auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody(*physicsSystem);
         cube.AddComponent(cubeRigidBody);
     }
 
@@ -147,19 +147,13 @@ void WorldBuilder::GenerateSun() {
     geometry.LoadMesh("/Assets/Models/Sci-Fi_Football.fbx", Core::GeometryLoadSettings::All);
 
     auto& sunMesh = meshesBuffer->CreateMesh(geometry);
-    auto& rb = rigidBodiesBuffer->CreateRigidBody();
 
     Sun.AddComponent(sunMesh);
-    Sun.AddComponent(rb);
 
     auto& shader = sunMesh._material.InitShader<AnomalyEngine::SimplexFractalShader>();
 
     Core::Geometry& collider = Core::Factory::CreateResource<Core::Geometry>();
     collider.LoadMesh("/Assets/Models/Sci-Fi_Football.fbx", Core::GeometryLoadSettings::InitVertex);
-
-    auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
-    cubeCollider.Create(collider);
-    Sun.AddComponent(cubeCollider);
 
     shader.Contrast = 6.4;
     shader.Brightness = 0.15;

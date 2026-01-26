@@ -38,6 +38,8 @@ find_package(OpenGL REQUIRED)
 if(WIN32)
 	include(CMakeCloneDependencies.txt)
 
+	set(PHYSX_LIBS_GAME)
+
 	if(MSVC)
 		target_link_libraries(SimpleGame
 				PUBLIC USER_SCRIPTS_REGISTER
@@ -46,6 +48,9 @@ if(WIN32)
 				PUBLIC RENDER_BASE
 				PUBLIC ANOMALY_ENGINE
 				PRIVATE ALPHA_Engine
+
+				PRIVATE ${PHYSX_LIBS_GAME}
+
 				PRIVATE "${Examples_Build_Dir}/external/glfw3.lib"
 				PRIVATE "${Examples_Build_Dir}/external/assimp.lib"
 				PRIVATE "${OPENGL_LIBRARIES}"
@@ -60,6 +65,9 @@ if(WIN32)
 				PUBLIC RENDER_BASE
 				PUBLIC ANOMALY_ENGINE
 				PRIVATE ALPHA_Engine
+
+				PRIVATE ${PHYSX_LIBS_GAME}
+
 				PRIVATE "${Examples_Build_Dir}/external/glfw3.a"
 				PRIVATE "${Examples_Build_Dir}/external/assimp.dll.a"
 				PRIVATE "${OPENGL_LIBRARIES}"
@@ -71,6 +79,7 @@ if(WIN32)
 else()
 	find_package(glfw3 REQUIRED)
 	find_package(assimp REQUIRED)
+	find_package(PhysX REQUIRED)
 
 	target_link_libraries(SimpleGame
 			PUBLIC USER_SCRIPTS_REGISTER
@@ -79,6 +88,7 @@ else()
 			PUBLIC RENDER_BASE
 			PUBLIC ANOMALY_ENGINE
 			PUBLIC ALPHA_Engine
+
 			PRIVATE glfw
 			PRIVATE assimp
 			PRIVATE "${OPENGL_LIBRARIES}"

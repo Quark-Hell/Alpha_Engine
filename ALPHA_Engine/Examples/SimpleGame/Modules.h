@@ -36,7 +36,6 @@
 //===================Anomaly Engine===================//
 
 //===================Axis Engine======================//
-#include "AxisEngine/Systems/CollisionEngine.h"
 #include "AxisEngine/Systems/PhysicsEngine.h"
 
 #include "AxisEngine/Buffers/CollidersBuffer.h"
@@ -82,7 +81,6 @@ inline AnomalyEngine::PointLightsBuffer* pointLightsBuffer = nullptr;
 
 //===================Axis Engine======================//
 inline AxisEngine::PhysicsEngine* physicsSystem = nullptr;
-inline AxisEngine::CollisionEngine* collisionSystem = nullptr;
 inline AxisEngine::RigidBodiesBuffer* rigidBodiesBuffer = nullptr;
 inline AxisEngine::CollidersBuffer* collidersBuffer = nullptr;
 //===================Axis Engine======================//

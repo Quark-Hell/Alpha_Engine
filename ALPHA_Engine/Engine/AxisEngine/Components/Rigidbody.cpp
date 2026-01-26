@@ -1,14 +1,16 @@
 ﻿#include "Rigidbody.h"
-#include <memory>
 
+#include "AxisEngine/Systems/PhysicsEngine.h"
 #include "AxisEngine/Components/Collider.h"
+
+#include "Core/World.h"
 #include "Core/Logger/Logger.h"
 #include "Core/Objects/Object.h"
 #include "Core/Objects/GameObject.h"
 
 namespace AxisEngine {
-	RigidBody::RigidBody() {
-
+	RigidBody::RigidBody(PhysicsEngine& engine) {
+		_physics = engine.GetPhysics();
 	}
 
 	bool RigidBody::CheckAddPossibility(Core::Object& newParent) {
@@ -21,213 +23,67 @@ namespace AxisEngine {
 	}
 
 	void RigidBody::UpdateParentObject(Core::Object& newParent) {
-		RigidBody::UpdateCenterMass();
+		if (!_pxDynamicRigidBody) {
+			if (auto* parent = GetParentObject()) {
+				auto colliders = parent->GetComponentsByType<Collider>();
 
-		RigidBody::_linearVelocity = { 0,0,0 };
-		//RigidBody::ResetInertiaMatrix();
+				for (auto& collider : colliders)
+				{
+					auto& shape = collider.get()._shape;
+					_pxDynamicRigidBody->detachShape(*shape);
+
+				}
+
+				_pxDynamicRigidBody.reset(PxCreateDynamic(_physics, _transform, _geometry, *_material, 10.0f));
+			}
+		}
+
+		auto newPos = newParent.transform.GetPosition();
+		auto newRot = newParent.transform.GetRotationQuat();
+
+		_transform.p = physx::PxVec3(newPos.x, newPos.y, newPos.z);
+		_transform.q = physx::PxQuat(newRot.x, newRot.y, newRot.z, newRot.w);
+
+		_pxDynamicRigidBody->setLinearVelocity(physx::PxVec3(0,0,0));
+		_pxDynamicRigidBody->setAngularVelocity(physx::PxVec3(0, 0, 0));
+
+		_pxDynamicRigidBody.reset(PxCreateDynamic(_physics, _transform, _geometry, *_material, 10.0f));
+
+
+		auto colliders = newParent.GetComponentsByType<Collider>();
+
+		for (auto& collider : colliders)
+		{
+			auto& shape = collider.get()._shape;
+			_pxDynamicRigidBody->attachShape(*shape);
+
+		}
 	}
 
 	void RigidBody::AddForce(const glm::vec3& forceVector) {
-		RigidBody::_force += forceVector;
+		_pxDynamicRigidBody->addForce(physx::PxVec3(forceVector.x, forceVector.y, forceVector.z));
 	}
-	void RigidBody::AddForce(const float& x, const float& y, const float& z) {
-		RigidBody::_force += glm::vec3(x, y, z);
-	}
-
-	//void RigidBody::AddAngularMomentum(const glm::vec3& forceVector, glm::vec3 relativePoint) {
-	//	RigidBody::_angularMomentum += forceVector * (relativePoint - RigidBody::_centerMass);
-	//}
-	//void RigidBody::AddAngularMomentum(const float& x, const float& y, const float& z, glm::vec3 relativePoint) {
-	//	RigidBody::_angularMomentum += glm::vec3(x, y, z) * (relativePoint - RigidBody::_centerMass);
-	//}
-
-	void RigidBody::UpdateCenterMass() {
-		RigidBody::_centerMass = glm::vec3(0, 0, 0);
-
-		auto colliders = GetParentObject()->GetComponentsByType<Collider>();
-
-		float scope[6];
-		//X
-		scope[0] = FLT_MAX;
-		scope[1] = -FLT_MAX;
-
-		//Y
-		scope[2] = FLT_MAX;
-		scope[3] = -FLT_MAX;
-
-		//Z
-		scope[4] = FLT_MAX;
-		scope[5] = -FLT_MAX;
-
-		for (auto& colliderRef : colliders)
-		{
-			const auto& collider = colliderRef.get();
-			const auto& vertices = collider.GetGeometry()->GetVertices();
-
-			for (size_t jt = 0; jt < vertices.size(); jt += 3)
-			{
-				// X
-				if (vertices[jt] < scope[0])
-					scope[0] = vertices[jt];
-				else if (vertices[jt] > scope[1])
-					scope[1] = vertices[jt];
-
-				// Y
-				if (vertices[jt + 1] < scope[2])
-					scope[2] = vertices[jt + 1];
-				else if (vertices[jt + 1] > scope[3])
-					scope[3] = vertices[jt + 1];
-
-				// Z
-				if (vertices[jt + 2] < scope[4])
-					scope[4] = vertices[jt + 2];
-				else if (vertices[jt + 2] > scope[5])
-					scope[5] = vertices[jt + 2];
-			}
-
-			//set all scopes to zero if collider hasn't vertices
-			for (int i = 0; i < 6; ++i) {
-				if (scope[i] == FLT_MAX || scope[i] == -FLT_MAX)
-					scope[i] = 0.0f;
-			}
-
-			float xScope = scope[1] + scope[0];
-			float yScope = scope[3] + scope[2];
-			float zScope = scope[5] + scope[4];
-
-			RigidBody::_centerMass += glm::vec3(xScope, yScope, zScope) / glm::vec3(2, 2, 2);
-		}
-
-		RigidBody::_centerMass /= colliders.size();
-	}
-	glm::vec3 RigidBody::GetCenterMass() {
-		return RigidBody::_centerMass;
+	void RigidBody::AddForce(float x, float y, float z) {
+		_pxDynamicRigidBody->addForce(physx::PxVec3(x, y, z));
 	}
 
-	glm::vec3 RigidBody::GetVelocity() {
-		return RigidBody::_linearVelocity;
+	void RigidBody::AddTorque(const glm::vec3& forceVector) {
+		_pxDynamicRigidBody->addTorque(physx::PxVec3(forceVector.x, forceVector.y, forceVector.z));
+	}
+	void RigidBody::AddTorque(float x, float y, float z) {
+		_pxDynamicRigidBody->addTorque(physx::PxVec3(x, y, z));
 	}
 
-	bool RigidBody::GetContactPoints(std::vector<glm::vec3>& contactPoint) {
-		if (!RigidBody::_hasCollision)
-			return false;
-
-		contactPoint = { _contactPoints.begin(), _contactPoints.end() };
-		return true;
+	glm::vec3 RigidBody::GetLinearVelocity() const {
+		auto vel = _pxDynamicRigidBody->getLinearVelocity();
+		return { vel.x, vel.y, vel.z };
+	}
+	glm::vec3 RigidBody::GetAngularVelocity() const {
+		auto vel = _pxDynamicRigidBody->getAngularVelocity();
+		return { vel.x, vel.y, vel.z };
 	}
 
-	void RigidBody::AddContactPoints(std::vector<glm::vec3>& points) {
-		for (size_t i = 0; i < points.size(); i++) {
-			RigidBody::_contactPoints.push_back(points[i]);
-		}
+	physx::PxRigidDynamic* RigidBody::GetRigidActor() const noexcept {
+		return _pxDynamicRigidBody.get();
 	}
-
-	void RigidBody::ClearCollisinInfo() {
-		RigidBody::_hasCollision = false;
-		RigidBody::_contactPoints.clear();
-		RigidBody::_pullingVectors.clear();
-	}
-
-	void RigidBody::ApplyPullingVectors() {
-		if (_pullingVectors.size() == 0)
-			return;
-
-		glm::vec3 realPullingVector;
-		for (size_t i = 0; i < _pullingVectors.size(); i++)
-		{
-			//RigidBody::GetParentObject()->AddPosition(_pullingVectors[i]);
-			realPullingVector += _pullingVectors[i];
-		}
-		realPullingVector /= _pullingVectors.size();
-
-		GetParentObject()->transform.AddPosition(realPullingVector);
-	}
-
-	void RigidBody::Contact(RigidBody& rb1, glm::vec3 contactNormal) {
-		contactNormal = glm::normalize(contactNormal);
-
-		float u1 = glm::dot(rb1._linearVelocity, contactNormal);
-
-		glm::vec3 reflected = rb1._linearVelocity - 2.0f * u1 * contactNormal;
-		reflected *= rb1.ElasticityCoefficient;
-
-		glm::vec3 tangent = rb1._linearVelocity - u1 * contactNormal;
-		reflected -= tangent * rb1.FrictionCoefficient;
-
-		rb1._linearVelocity = reflected;
-
-		if (auto parent = rb1.GetParentObject()) {
-			//glm::vec3 scale = parent->transform.GetScale();
-			//
-			//rb1._inertiaMatrix = glm::mat3x3();
-			//
-			//constexpr float factor = 1.0 / 12.0;
-			//glm::mat3 I_local(0.0f);
-			//
-			//I_local[0][0] = factor * rb1.Mass * (glm::pow(scale.y, 2) + glm::pow(scale.z, 2));
-			//I_local[1][1] = factor * rb1.Mass * (glm::pow(scale.x, 2) + glm::pow(scale.z, 2));
-			//I_local[2][2] = factor * rb1.Mass * (glm::pow(scale.x, 2) + glm::pow(scale.y, 2));
-			//
-			//rb1._inertiaMatrix = I_local;
-			//rb1._invertedInertiaMatrix = glm::inverse(I_local);
-			//
-			//glm::vec3 rotation = parent->transform.GetRotation();
-			//glm::vec3 radians = glm::radians(rotation);
-			//glm::mat3 R = glm::mat3(glm::eulerAngleXYZ(radians.x, radians.y, radians.z));
-			//
-			//glm::mat3x3 I_world_inv = R * rb1._invertedInertiaMatrix * glm::transpose(R);
-			//
-			//glm::vec3 contactPoint = glm::vec3(0.f);
-			//for (auto it : rb1._contactPoints) {
-			//	contactPoint += it;
-			//}
-			//
-			//contactPoint /= rb1._contactPoints.size();
-			//glm::vec3 centerOfMass = glm::ToWorldSpace(rb1.GetCenterMass(), parent->transform.GetTransformMatrix());
-			//
-			//glm::vec3 r = contactPoint - centerOfMass;
-			//
-			//float impulseMagnitude = glm::dot(-rb1._linearVelocity, contactNormal);
-			//glm::vec3 p = rb1.Mass * rb1._linearVelocity;
-			//glm::vec3 F = contactNormal * impulseMagnitude;
-			//glm::vec3 L = glm::cross(r, p);
-			//glm::vec3 torque = glm::cross(r, F);
-			//
-			//rb1._angularAcceleration = I_world_inv * (torque - glm::cross(rb1._angularVelocity, rb1._inertiaMatrix * rb1._angularVelocity));
-		}
-	}
-	void RigidBody::Contact(RigidBody& rb1, RigidBody& rb2, glm::vec3 contactNormal) {
-		contactNormal = glm::normalize(contactNormal);
-
-		float u1 = glm::dot(rb1._linearVelocity, contactNormal);
-		float u2 = glm::dot(rb2._linearVelocity, -contactNormal);
-
-		float v1 = (u1 * (rb1.Mass - rb2.Mass) + 2.0f * rb2.Mass * u2) / (rb1.Mass + rb2.Mass);
-		float v2 = (u2 * (rb2.Mass - rb1.Mass) + 2.0f * rb1.Mass * u1) / (rb1.Mass + rb2.Mass);
-
-		glm::vec3 v1_normal = contactNormal * v1;
-		glm::vec3 v2_normal = -contactNormal * v2;
-
-		glm::vec3 v1_tangent = rb1._linearVelocity - contactNormal * u1;
-		glm::vec3 v2_tangent = rb2._linearVelocity - contactNormal * u2;
-
-		v1_tangent *= (1.0f - rb1.FrictionCoefficient);
-		v2_tangent *= (1.0f - rb2.FrictionCoefficient);
-
-		v1_normal *= rb1.ElasticityCoefficient;
-		v2_normal *= rb2.ElasticityCoefficient;
-
-		rb1._linearVelocity = v1_normal + v1_tangent;
-		rb2._linearVelocity = v2_normal + v2_tangent;
-	}
-
-	//void RigidBody::SetInertiaMatrix(Matrix3x3 matrix) {
-	//	RigidBody::_inertiaMatrix = matrix;
-	//}
-	//void RigidBody::ResetInertiaMatrix() {
-	//	RigidBody::_inertiaMatrix.Identity();
-	//}
-	//Matrix3x3 RigidBody::GetInertiaMatrix() {
-	//	return RigidBody::_inertiaMatrix;
-	//}
 }

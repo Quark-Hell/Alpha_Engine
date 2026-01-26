@@ -31,7 +31,6 @@ namespace Core {
         mouseSystem = new BindsEngine::MouseSystem(200);
         keyboardSystem = new BindsEngine::KeyboardSystem(210);
         physicsSystem = new AxisEngine::PhysicsEngine(1000);
-        collisionSystem = new AxisEngine::CollisionEngine(2000);
         windowsSystem = new WindowsManager::WindowsManager(3000);
         anomalySystem = new AnomalyEngine::RenderEngine(4000);
 
