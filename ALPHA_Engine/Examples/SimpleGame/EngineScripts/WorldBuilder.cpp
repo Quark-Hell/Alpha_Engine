@@ -1,4 +1,4 @@
-#include "WorldBuilder.h"
+﻿#include "WorldBuilder.h"
 
 #include "Modules.h"
 
@@ -64,8 +64,7 @@ void WorldBuilder::GenerateCube() {
             "",
             "/Assets/Textures/Planets/2k_earth_nightmap.jpg");
 
-        auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
-        cubeCollider.Create(colGem);
+        auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::CubeCollider>(*physicsSystem);
         cube.AddComponent(cubeCollider);
 
         auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody(*physicsSystem);
@@ -93,12 +92,9 @@ void WorldBuilder::GenerateCube() {
             "",
             "/Assets/Textures/Planets/2k_earth_nightmap.jpg");
 
-        auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
-        cubeCollider.Create(colGem);
+        auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::CubeCollider>(*physicsSystem);
         cube.AddComponent(cubeCollider);
     }
-
-
 }
 
 void WorldBuilder::GenerateEarth() {
@@ -130,8 +126,7 @@ void WorldBuilder::GenerateEarth() {
     Core::Geometry& colliderGem = Core::Factory::CreateResource<Core::Geometry>();
     colliderGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::InitVertex);
     
-    auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
-    cubeCollider.Create(colliderGem);
+    auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::CubeCollider>(*physicsSystem);
     cube.AddComponent(cubeCollider);
 }
 

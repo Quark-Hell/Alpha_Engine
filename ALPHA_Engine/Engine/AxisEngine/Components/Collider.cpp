@@ -1,4 +1,4 @@
-#include "Collider.h"
+﻿#include "Collider.h"
 
 #include "Rigidbody.h"
 #include "Core/Logger/Logger.h"
@@ -8,10 +8,6 @@
 namespace AxisEngine {
     Collider::Collider(PhysicsEngine& engine) {
         _physics = engine.GetPhysics();
-
-        if (_physics == nullptr) {
-            Core::Logger::LogCritical("Collider cannot be intialized, because engine doesn't conain physics module " + __LOGERROR__);
-        }
 
         _material.reset(_physics->createMaterial(0.5f, 0.5f, 0.6f));
     }

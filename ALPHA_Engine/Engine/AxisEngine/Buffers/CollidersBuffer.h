@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "AxisEngine/Components/Collider.h"
 #include "Core/ECS/TSystemData.h"
@@ -14,8 +14,8 @@ namespace AxisEngine {
 
         template <typename T>
         requires (std::is_base_of_v<Collider, T> && !std::is_same_v<Collider, T>)
-        T& CreateCollider() {
-            _data.emplace_back(std::unique_ptr<T>(new T()));
+        T& CreateCollider(PhysicsEngine& engine) {
+            _data.emplace_back(std::unique_ptr<T>(new T(engine)));
 
             return *static_cast<T*>(_data.back().get());
         }

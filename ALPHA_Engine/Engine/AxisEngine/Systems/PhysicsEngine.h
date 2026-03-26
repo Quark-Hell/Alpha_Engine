@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <vector>
 #include <memory>
@@ -60,14 +60,12 @@ namespace AxisEngine {
 		std::unique_ptr<physx::PxSceneDesc> _sceneDesc = nullptr;
 
 		std::unique_ptr<physx::PxDefaultCpuDispatcher, PxDefaultCpuDispatcherDeleter> _dispatcher = nullptr;
-		std::unique_ptr <physx::PxScene, PxSceneDeleter> _scene = nullptr;
+		std::unique_ptr<physx::PxScene, PxSceneDeleter> _scene = nullptr;
 
 	private:
 		void InitPhysX();
 
 		void EntryPoint(std::vector<Core::SystemData*>& data) override;
-
-		void ApplyGravity(RigidBody& rb);
 
 		void ApplyPhysics(RigidBody& rb);
 

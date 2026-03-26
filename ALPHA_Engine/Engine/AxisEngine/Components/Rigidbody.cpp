@@ -11,6 +11,7 @@
 namespace AxisEngine {
 	RigidBody::RigidBody(PhysicsEngine& engine) {
 		_physics = engine.GetPhysics();
+		_scene = engine.GetScene();
 	}
 
 	bool RigidBody::CheckAddPossibility(Core::Object& newParent) {
@@ -23,41 +24,67 @@ namespace AxisEngine {
 	}
 
 	void RigidBody::UpdateParentObject(Core::Object& newParent) {
-		if (!_pxDynamicRigidBody) {
-			if (auto* parent = GetParentObject()) {
-				auto colliders = parent->GetComponentsByType<Collider>();
 
-				for (auto& collider : colliders)
-				{
-					auto& shape = collider.get()._shape;
-					_pxDynamicRigidBody->detachShape(*shape);
+		if (_pxDynamicRigidBody == nullptr) {
+			auto pos = newParent.transform.GetPosition();
+			auto rot = newParent.transform.GetRotationQuat();
 
-				}
+			physx::PxTransform pose(
+				physx::PxVec3(pos.x, pos.y, pos.z),
+				physx::PxQuat(rot.x, rot.y, rot.z, rot.w)
+			);
 
-				_pxDynamicRigidBody.reset(PxCreateDynamic(_physics, _transform, _geometry, *_material, 10.0f));
-			}
+			_pxDynamicRigidBody.reset(_physics->createRigidDynamic(pose));
+
+			_scene->addActor(*_pxDynamicRigidBody);
 		}
 
-		auto newPos = newParent.transform.GetPosition();
-		auto newRot = newParent.transform.GetRotationQuat();
+#pragma region Detach_Shapes
+		auto* oldParent = GetParentObject();
+		if (oldParent != nullptr) {
+			auto colliders = oldParent->GetComponentsByType<Collider>();
 
-		_transform.p = physx::PxVec3(newPos.x, newPos.y, newPos.z);
-		_transform.q = physx::PxQuat(newRot.x, newRot.y, newRot.z, newRot.w);
+			for (auto& collider : colliders)
+			{
+				auto& shape = collider.get()._shape;
+				//TODO: Check for shape actor doesn't belong other RigidBody
+				if (shape->getActor() != nullptr) {
+					_pxDynamicRigidBody->detachShape(*shape);
+				}
+			}
+		}
+#pragma endregion
 
-		_pxDynamicRigidBody->setLinearVelocity(physx::PxVec3(0,0,0));
+		//Clear velociies
+		_pxDynamicRigidBody->setLinearVelocity(physx::PxVec3(0, 0, 0));
 		_pxDynamicRigidBody->setAngularVelocity(physx::PxVec3(0, 0, 0));
 
-		_pxDynamicRigidBody.reset(PxCreateDynamic(_physics, _transform, _geometry, *_material, 10.0f));
+#pragma region Update_Transform_and_Velocity
+		auto newPosition = newParent.transform.GetPosition();
+		auto newRotationQuat = newParent.transform.GetRotationQuat();
 
+		_transform.p = physx::PxVec3(newPosition.x, newPosition.y, newPosition.z);
+		_transform.q = physx::PxQuat(newRotationQuat.x, newRotationQuat.y, newRotationQuat.z, newRotationQuat.w);
 
+		_pxDynamicRigidBody->setGlobalPose(physx::PxTransform(_transform.p, _transform.q));
+#pragma endregion
+
+#pragma region Attach_Shapes
 		auto colliders = newParent.GetComponentsByType<Collider>();
 
 		for (auto& collider : colliders)
 		{
+			collider.get().ResetShape();
 			auto& shape = collider.get()._shape;
-			_pxDynamicRigidBody->attachShape(*shape);
 
+			_pxDynamicRigidBody->attachShape(*shape);
+			shape->release();
 		}
+#pragma endregion
+
+		physx::PxRigidBodyExt::updateMassAndInertia(*_pxDynamicRigidBody, _mass);
+
+		_pxDynamicRigidBody->wakeUp();
 	}
 
 	void RigidBody::AddForce(const glm::vec3& forceVector) {

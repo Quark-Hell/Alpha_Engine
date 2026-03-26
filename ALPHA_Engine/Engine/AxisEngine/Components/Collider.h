@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Core/Components/Component.h"
 #include "Core/Resources/Geometry.h"
@@ -37,6 +37,10 @@ namespace AxisEngine {
 
 	protected:
 		Collider(PhysicsEngine& engine);
+		
+		//Typically used for change ridgidbody for this collider
+		virtual void ResetShape() = 0;
+		virtual void AutoBuildColliderShape() = 0;
 
 	public:
 		virtual ~Collider() override = default;

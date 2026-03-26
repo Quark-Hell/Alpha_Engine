@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <vector>
 #include <memory>
@@ -32,6 +32,9 @@ namespace AxisEngine {
 		physx::PxTransform _transform{ physx::PxVec3(0, 10, 0) };
 
 		physx::PxPhysics* _physics;
+		physx::PxScene* _scene;
+
+		float _mass = 1.0f;
 
 	private:
 		RigidBody(PhysicsEngine& engine);
