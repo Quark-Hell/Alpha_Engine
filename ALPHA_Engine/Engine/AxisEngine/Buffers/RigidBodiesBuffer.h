@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "AxisEngine/Components/RigidBody.h"
 #include "Core/ECS/TSystemData.h"
@@ -12,7 +12,7 @@ namespace AxisEngine {
         RigidBodiesBuffer(size_t initialBufferSize = 0);
         ~RigidBodiesBuffer() override = default;
 
-        RigidBody& CreateRigidBody(PhysicsEngine& engine);
+        RigidBody& CreateRigidBody(PhysicsEngine& engine, AxisEngine::RigidBodyType rigidBodyType = AxisEngine::RigidBodyType::Kinematic);
     };
 }
 

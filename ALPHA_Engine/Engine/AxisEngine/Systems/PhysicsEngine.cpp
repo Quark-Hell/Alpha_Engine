@@ -35,7 +35,7 @@ namespace AxisEngine {
 		_sceneDesc->cpuDispatcher = _dispatcher.get();
 		_sceneDesc->filterShader = physx::PxDefaultSimulationFilterShader;
 
-		_scene.reset(_physics->createScene(*_sceneDesc));;
+		_scene.reset(_physics->createScene(*_sceneDesc));
 
 		Core::Logger::LogInfo("PhysX scene created");
 	}
@@ -57,7 +57,8 @@ namespace AxisEngine {
 				Core::Logger::LogInfo("Added rigid body to scene");
 			}
 
-			rigidBody->_pxDynamicRigidBody->wakeUp();
+			if(rigidBody->GetRigidBodyType() == AxisEngine::RigidBodyType::Dynamic)
+				rigidBody->_pxDynamicRigidBody->wakeUp();
 		}
 
 		double elapsed = Core::World::GetDeltaTime();
@@ -82,6 +83,8 @@ namespace AxisEngine {
 		Core::Object* obj = rb.GetParentObject();
 
 		if (!obj) { return; }
+		if (rb._rigidBodyType == AxisEngine::RigidBodyType::Static) { return; }
+		if (rb._pxDynamicRigidBody == nullptr) { return; }
 
 		auto globalTransform = rb._pxDynamicRigidBody->getGlobalPose();
 

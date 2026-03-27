@@ -67,7 +67,7 @@ void WorldBuilder::GenerateCube() {
         auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::CubeCollider>(*physicsSystem);
         cube.AddComponent(cubeCollider);
 
-        auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody(*physicsSystem);
+        auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody(*physicsSystem, AxisEngine::RigidBodyType::Dynamic);
         cube.AddComponent(cubeRigidBody);
     }
 
@@ -94,6 +94,9 @@ void WorldBuilder::GenerateCube() {
 
         auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::CubeCollider>(*physicsSystem);
         cube.AddComponent(cubeCollider);
+
+        auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody(*physicsSystem, AxisEngine::RigidBodyType::Kinematic);
+        cube.AddComponent(cubeRigidBody);
     }
 }
 
