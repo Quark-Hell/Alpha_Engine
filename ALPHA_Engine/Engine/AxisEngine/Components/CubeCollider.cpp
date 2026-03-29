@@ -7,10 +7,10 @@
 
 namespace AxisEngine {
     CubeCollider::CubeCollider(PhysicsEngine& engine) : Collider::Collider(engine) {
-        _shape.reset(_physics->createShape(_boxGeometry, *_material));
+        ResetShape();
     }
 
-    void CubeCollider::UpdateParentObject(Core::Object& newParent) {
+    void CubeCollider::OnParentObjectChanged(Core::Object& newParent) {
         {
             if (auto oldParent = GetParentObject()) {
                 if (auto oldRb = oldParent->GetComponentByType<AxisEngine::RigidBody>()) {
@@ -29,24 +29,25 @@ namespace AxisEngine {
             if (actor != nullptr) {
                 //TODO: add multi-colliders support (local position)
                 // _boxShape->setLocalPose(PxTransform(PxVec3(1.0f, 0, 0)));
-                AutoBuildColliderShape();
-                _shape.reset(_physics->createShape(_boxGeometry, *_material));
+                ResetShape();
                 actor->attachShape(*_shape);
             }
         }
     }
 
     void CubeCollider::ResetShape() {
-        _shape.reset(_physics->createShape(_boxGeometry, *_material));
-    }
+        if (_material == nullptr) {
+            Core::Logger::LogError("Cannot reset shape. Material is null", __LOGERROR__);
+            return;
+        }
 
-    void CubeCollider::AutoBuildColliderShape() {
-        //TODO: Add auto build
-        // 
-        //if (auto oldRb = _parentObject->GetComponentByType<AxisEngine::>()) {
-        //
-        //}
-        //
-        //Core::Logger::LogWarning("Collider parent doesn't have mesh component " + __LOGERROR__);
+        physx::PxBoxGeometry geom(_scale);
+
+        if (_shape) {
+            _shape->setGeometry(geom);
+        }
+        else {
+            _shape.reset(_physics->createShape(geom, *_material, true));
+        }
     }
 }

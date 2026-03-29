@@ -72,16 +72,16 @@ void WorldBuilder::GenerateCube() {
     }
 
     {
-        auto& cube = Core::Factory::CreateObject<Core::GameObject>();
+        plane = &Core::Factory::CreateObject<Core::GameObject>();
 
-        cube.transform.AddPosition(5, 5, -25);
-        cube.transform.AddRotation(30, 0, 0);
-        cube.transform.SetScale(15, 1, 15);
+        plane->transform.AddPosition(5, 5, -25);
+        plane->transform.AddRotation(30, 0, 0);
+        plane->transform.SetScale(15, 1, 15);
 
-        cube.SetName("Plane");
+        plane->SetName("Plane");
 
         auto& cubeMesh = meshesBuffer->CreateMesh(meshGem);
-        cube.AddComponent(cubeMesh);
+        plane->AddComponent(cubeMesh);
 
         auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
         shader.LoadTextures(
@@ -92,11 +92,12 @@ void WorldBuilder::GenerateCube() {
             "",
             "/Assets/Textures/Planets/2k_earth_nightmap.jpg");
 
-        auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::CubeCollider>(*physicsSystem);
-        cube.AddComponent(cubeCollider);
+        auto& meshCollider = collidersBuffer->CreateCollider<AxisEngine::ConvexMeshCollider>(*physicsSystem);
+        meshCollider.LoadGeometry(colGem);
+        plane->AddComponent(meshCollider);
 
         auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody(*physicsSystem, AxisEngine::RigidBodyType::Kinematic);
-        cube.AddComponent(cubeRigidBody);
+        plane->AddComponent(cubeRigidBody);
     }
 }
 
@@ -131,6 +132,9 @@ void WorldBuilder::GenerateEarth() {
     
     auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::CubeCollider>(*physicsSystem);
     cube.AddComponent(cubeCollider);
+
+    auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody(*physicsSystem, AxisEngine::RigidBodyType::Kinematic);
+    cube.AddComponent(cubeRigidBody);
 }
 
 void WorldBuilder::GenerateSun() {
@@ -169,7 +173,9 @@ void WorldBuilder::Start() {
 }
 
 void WorldBuilder::Update() {
-
+    //plane->transform.AddPosition(0, 0, -0.1);
+    plane->transform.AddRotation(1, 0, 0);
+    //plane->transform.AddScale(0, 0, 0.1);
 }
 
 void WorldBuilder::End() {

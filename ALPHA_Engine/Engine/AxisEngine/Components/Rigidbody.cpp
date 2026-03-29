@@ -108,16 +108,12 @@ namespace AxisEngine {
 			{
 				auto& shape = collider.get()._shape;
 				//TODO: Check for shape actor doesn't belong other RigidBody
-				if (shape->getActor() != nullptr) {
+				if (shape != nullptr && shape->getActor() != nullptr) {
 					_pxDynamicRigidBody->detachShape(*shape);
 				}
 			}
 		}
 #pragma endregion
-
-		//Clear velociies
-		_pxDynamicRigidBody->setLinearVelocity(physx::PxVec3(0, 0, 0));
-		_pxDynamicRigidBody->setAngularVelocity(physx::PxVec3(0, 0, 0));
 
 #pragma region Update_Transform_and_Velocity
 		auto newPosition = newParent.transform.GetPosition();
@@ -127,6 +123,7 @@ namespace AxisEngine {
 		_transform.q = physx::PxQuat(newRotationQuat.x, newRotationQuat.y, newRotationQuat.z, newRotationQuat.w);
 
 		_pxDynamicRigidBody->setGlobalPose(physx::PxTransform(_transform.p, _transform.q));
+	
 #pragma endregion
 
 #pragma region Attach_Shapes
@@ -209,7 +206,7 @@ namespace AxisEngine {
 		_pxDynamicRigidBody->wakeUp();
 	}
 
-	void RigidBody::UpdateParentObject(Core::Object& newParent) {
+	void RigidBody::OnParentObjectChanged(Core::Object& newParent) {
 		switch (_rigidBodyType) {
 
 		case AxisEngine::RigidBodyType::Static:
@@ -224,6 +221,66 @@ namespace AxisEngine {
 			UpdateDynamic(newParent);
 			break;
 		}
+	}
+
+	void RigidBody::UpdateObjectTransform() {
+		if (_rigidBodyType == AxisEngine::RigidBodyType::Static) {
+			Core::Logger::LogError("Cannot update rigidbody transform. RigidBody type is STATIC", __LOGERROR__);
+			return;
+		}
+
+		if (_pxDynamicRigidBody == nullptr) { 
+			Core::Logger::LogError("Cannot update rigidbody transform. PhysX instance of RigidBody was null", __LOGERROR__);
+			return; 
+		}
+
+		Core::Object* obj = _parentObject;
+		if (obj == nullptr) {
+			Core::Logger::LogError("Cannot update rigidbody transform. Parent object was null", __LOGERROR__);
+			return;
+		}
+
+		auto physXpose = _pxDynamicRigidBody->getGlobalPose();
+
+		glm::vec3 physXvec = glm::vec3(physXpose.p.x, physXpose.p.y, physXpose.p.z);
+		glm::quat physXquat = glm::quat(physXpose.q.w, physXpose.q.x, physXpose.q.y, physXpose.q.z);
+
+		obj->transform.SetPosition(physXvec);
+		obj->transform.SetRotationQuat(physXquat);
+	}
+
+	void RigidBody::UpdatePhysXTransform() {
+		if (_rigidBodyType == AxisEngine::RigidBodyType::Static) {
+			Core::Logger::LogError("Cannot update rigidbody transform. RigidBody type is STATIC", __LOGERROR__);
+			return;
+		}
+
+		if (_pxDynamicRigidBody == nullptr) {
+			Core::Logger::LogError("Cannot update rigidbody transform. PhysX instance of RigidBody was null", __LOGERROR__);
+			return;
+		}
+
+		Core::Object* obj = _parentObject;
+		if (obj == nullptr) {
+			Core::Logger::LogError("Cannot update rigidbody transform. Parent object was null", __LOGERROR__);
+			return;
+		}
+
+#pragma region Update_Pose
+		glm::vec3 objPos = obj->transform.GetPosition();
+		glm::quat objQuat = obj->transform.GetRotationQuat();
+
+		physx::PxTransform pose = _pxDynamicRigidBody->getGlobalPose();
+
+		pose.p = physx::PxVec3(objPos.x, objPos.y, objPos.z);
+		pose.q = physx::PxQuat(objQuat.x, objQuat.y, objQuat.z, objQuat.w);
+		pose.q.normalize();
+
+		if (_rigidBodyType == AxisEngine::RigidBodyType::Kinematic)
+			_pxDynamicRigidBody->setKinematicTarget(pose);
+		else
+			_pxDynamicRigidBody->setGlobalPose(pose);
+#pragma endregion
 	}
 
 	void RigidBody::AddForce(const glm::vec3& forceVector) {

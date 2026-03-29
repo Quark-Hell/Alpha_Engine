@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 //===================Core===================//
 #include "Core/World.h"
@@ -44,7 +44,7 @@
 #include "AxisEngine/Components/AABB.h"
 #include "AxisEngine/Components/Collider.h"
 #include "AxisEngine/Components/CubeCollider.h"
-#include "AxisEngine/Components/MeshCollider.h"
+#include "AxisEngine/Components/ConvexMeshCollider.h"
 #include "AxisEngine/Components/SphereCollider.h"
 #include "AxisEngine/Components/Rigidbody.h"
 //===================Axis Engine======================//

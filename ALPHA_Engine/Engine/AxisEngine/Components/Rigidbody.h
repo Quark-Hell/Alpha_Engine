@@ -56,13 +56,16 @@ namespace AxisEngine {
 	private:
 		RigidBody(PhysicsEngine& engine, AxisEngine::RigidBodyType = AxisEngine::RigidBodyType::Static);
 
+		void UpdateObjectTransform();
+		void UpdatePhysXTransform();
+
 		void UpdateStatic(Core::Object& newParent);
 		void UpdateKinematic(Core::Object& newParent);
 		void UpdateDynamic(Core::Object& newParent);
 
 	protected:
 		bool CheckAddPossibility(Core::Object& newParent) override;
-		void UpdateParentObject(Core::Object& newParent) override;
+		void OnParentObjectChanged(Core::Object& newParent) override;
 
 	public:
         ~RigidBody() override = default;

@@ -1,4 +1,4 @@
-#include "PhysicsEngine.h"
+﻿#include "PhysicsEngine.h"
 
 #include "Core/Objects/GameObject.h"
 #include "Core/World.h"
@@ -8,7 +8,7 @@
 #include "AxisEngine/Buffers/RigidBodiesBuffer.h"
 
 namespace AxisEngine {
-	PhysicsEngine::PhysicsEngine(size_t order) : System({ "RigidBodiesBuffer" }, order) {
+	PhysicsEngine::PhysicsEngine(size_t order) : System({ "RigidBodiesBuffer", "CollidersBuffer"}, order) {
 		InitPhysX();
 	}
 
@@ -20,13 +20,19 @@ namespace AxisEngine {
 		if (!_foundation) {
 			Core::Logger::LogCritical("PxCreateFoundation failed " + __LOGERROR__);
 		}
+
+		physx::PxPvd* pvd = physx::PxCreatePvd(*_foundation);
+		physx::PxPvdTransport* transport =
+			physx::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+
+		pvd->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
+
+		Core::Logger::LogInfo("PVD connected");
 		
-		_physics.reset(PxCreatePhysics(PX_PHYSICS_VERSION, *_foundation, physx::PxTolerancesScale(), true));
+		_physics.reset(PxCreatePhysics(PX_PHYSICS_VERSION, *_foundation, physx::PxTolerancesScale(), true, pvd));
 		if (!_physics) {
 			Core::Logger::LogCritical("PxCreatePhysics failed " + __LOGERROR__);
 		}
-		
-		Core::Logger::LogInfo("PhysX started succesfully");
 
 		_sceneDesc = std::make_unique<physx::PxSceneDesc>(_physics->getTolerancesScale());
 		_sceneDesc->gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
@@ -38,12 +44,24 @@ namespace AxisEngine {
 		_scene.reset(_physics->createScene(*_sceneDesc));
 
 		Core::Logger::LogInfo("PhysX scene created");
+
+		Core::Logger::LogInfo("PhysX started succesfully. PhysX version: ",
+			PX_PHYSICS_VERSION_MAJOR, ".",
+			PX_PHYSICS_VERSION_MINOR);
 	}
 
 	void PhysicsEngine::EntryPoint(std::vector<Core::SystemData*>& data) {
-		if (data[0] == nullptr) {
+		if (data[0] == nullptr || data[1] == nullptr) {
 			Core::Logger::LogError("Data was null: " + __LOGERROR__);
 			return;
+		}
+
+		auto* collidersBuffer = reinterpret_cast<CollidersBuffer*>(data[1]);
+		for (auto& collider : collidersBuffer->_data) {
+			if (collider == nullptr && collider->_shape == nullptr)
+				continue;
+
+			collider->UpdateScale();
 		}
 
 		auto* rigidBodiesBuffer = reinterpret_cast<RigidBodiesBuffer*>(data[0]);
@@ -56,6 +74,8 @@ namespace AxisEngine {
 				_scene->addActor(*rigidBody->_pxDynamicRigidBody);
 				Core::Logger::LogInfo("Added rigid body to scene");
 			}
+
+			rigidBody->UpdatePhysXTransform();
 
 			if(rigidBody->GetRigidBodyType() == AxisEngine::RigidBodyType::Dynamic)
 				rigidBody->_pxDynamicRigidBody->wakeUp();
@@ -75,24 +95,12 @@ namespace AxisEngine {
 			if (rigidBody == nullptr)
 				continue;
 
-			PhysicsEngine::ApplyPhysics(*rigidBody);
+			rigidBody->UpdateObjectTransform();
 		}
 	}
 
 	void PhysicsEngine::ApplyPhysics(RigidBody& rb) {
-		Core::Object* obj = rb.GetParentObject();
 
-		if (!obj) { return; }
-		if (rb._rigidBodyType == AxisEngine::RigidBodyType::Static) { return; }
-		if (rb._pxDynamicRigidBody == nullptr) { return; }
-
-		auto globalTransform = rb._pxDynamicRigidBody->getGlobalPose();
-
-		physx::PxVec3 pos = globalTransform.p;
-		physx::PxQuat rot = globalTransform.q;
-
-		obj->transform.SetPosition({ pos.x, pos.y, pos.z });
-		obj->transform.SetRotationQuat({ rot.w, rot.x, rot.y, rot.z });
 	}
 
 	physx::PxPhysics* PhysicsEngine::GetPhysics() const noexcept {

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
@@ -30,7 +30,7 @@ namespace Core {
 		 * @brief Gets the current world position of the object.
 		 * @return The position as a glm::vec3.
 		 */
-		[[nodiscard]] glm::vec3 GetPosition();
+		[[nodiscard]] glm::vec3 GetPosition() const noexcept;
 		/**
 		 * @brief Adds a delta to the current position.
 		 * @param X Delta along the X-axis.
@@ -43,7 +43,6 @@ namespace Core {
 		 * @param position Delta vector to add.
 		 */
 		void AddPosition(const glm::vec3& position);
-
 
 		/**
 		 * @brief Sets the absolute position of the object.
@@ -63,8 +62,8 @@ namespace Core {
 		 * @brief Gets the current rotation of the object.
 		 * @return Rotation as a glm::vec4 (e.g., quaternion or axis-angle).
 		 */
-		[[nodiscard]] glm::vec3 GetRotation();
-		[[nodiscard]] glm::quat GetRotationQuat();
+		[[nodiscard]] glm::vec3 GetRotation() const noexcept;
+		[[nodiscard]] glm::quat GetRotationQuat() const noexcept;
 		/**
 		 * @brief Adds a delta rotation to the current rotation.
 		 * @param X Rotation delta along the X-axis (degrees or radians depending on convention).
@@ -98,7 +97,19 @@ namespace Core {
 		 * @brief Gets the current scale of the object.
 		 * @return Scale as a glm::vec3.
 		 */
-		[[nodiscard]] glm::vec3 GetScale();
+		[[nodiscard]] glm::vec3 GetScale() const noexcept;
+		/**
+		* @brief Adds a delta scale to the current scale.
+		* @param X Scale delta along the X-axis.
+		* @param Y Scale delta along the Y-axis.
+		* @param Z Scale delta along the Z-axis.
+		*/
+		void AddScale(float X, float Y, float Z);
+		/**
+		 * @brief Adds a delta scale to the current scale.
+		 * @param scale Scale delta vector.
+		 */
+		void AddScale(glm::vec3 scale);
 		/**
 		 * @brief Sets the absolute scale of the object.
 		 * @param X Scale factor along the X-axis.
@@ -116,7 +127,7 @@ namespace Core {
 		 * @brief Returns the object's transform matrix.
 		 * @return 4x4 transformation matrix combining position, rotation, and scale.
 		 */
-		glm::mat4x4 GetTransformMatrix() const;
+		[[nodiscard]] glm::mat4x4 GetTransformMatrix() const noexcept;
 		void RecalculateTransformMatrix();
 
 		[[nodiscard]] glm::vec3 GetForward() const noexcept;

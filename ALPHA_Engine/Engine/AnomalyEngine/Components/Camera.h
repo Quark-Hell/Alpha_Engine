@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Core/Components/Component.h"
 #include "glm/glm.hpp"
 
@@ -32,7 +32,7 @@ namespace AnomalyEngine {
         size_t _height;
 
     private:
-        void UpdateParentObject(Core::Object& newParent) override;
+        void OnParentObjectChanged(Core::Object& newParent) override;
 
     public:
         ~Camera() override = default;

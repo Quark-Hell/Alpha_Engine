@@ -1,8 +1,8 @@
-#include "Component.h"
+﻿#include "Component.h"
 #include "Core/Objects/Object.h"
 
 namespace Core {
-	void Component::UpdateParentObject(Core::Object& newParent) {
+	void Component::OnParentObjectChanged(Core::Object& newParent) {
 
 	}
 

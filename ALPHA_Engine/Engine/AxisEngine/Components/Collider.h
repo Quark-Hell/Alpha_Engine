@@ -32,20 +32,16 @@ namespace AxisEngine {
 		std::unique_ptr<physx::PxMaterial, PxMaterialDeleter> _material;
 		std::unique_ptr<physx::PxShape, PxShapeDeleter> _shape;
 
-		glm::vec3 size = { 1.0, 1.0, 1.0f };
-		//Core::Geometry* _geometry;
+		physx::PxVec3 _scale = { 1.0, 1.0, 1.0f };
 
 	protected:
 		Collider(PhysicsEngine& engine);
 		
 		//Typically used for change ridgidbody for this collider
 		virtual void ResetShape() = 0;
-		virtual void AutoBuildColliderShape() = 0;
+		void UpdateScale();
 
 	public:
 		virtual ~Collider() override = default;
-
-		//void Create(Core::Geometry& geometry);
-		//[[nodiscard]] const Core::Geometry* GetGeometry() const noexcept;
 	};
 }

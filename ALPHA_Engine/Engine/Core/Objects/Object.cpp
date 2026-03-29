@@ -1,4 +1,4 @@
-#include "Object.h"
+﻿#include "Object.h"
 
 namespace Core {
 	Object::Object() = default;
@@ -28,7 +28,7 @@ namespace Core {
 		// Add component
 		_components.push_back(&component);
 		component._parentObject = this;
-		component.UpdateParentObject(*this);
+		component.OnParentObjectChanged(*this);
 		Logger::LogInfo("Component attached successfully");
 		return true;
 	}
