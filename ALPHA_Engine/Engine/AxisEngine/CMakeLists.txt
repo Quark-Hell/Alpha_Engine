@@ -178,6 +178,25 @@ if (PHYSICS_AXIS_ENGINE AND BUILD_PhysX AND PHYSX_DOWNLOADED)
                 PRESET_CONTENT 
                 "${PRESET_CONTENT}"
             )
+
+        string(FIND "${PRESET_CONTENT}" "PX_ENABLE_COOKING" COOKING_POS)
+        if(COOKING_POS EQUAL -1)
+            string(REGEX REPLACE
+                "(<CMakeSwitches>)"
+                "\\1\n    <cmakeSwitch name=\"PX_ENABLE_COOKING\" value=\"True\" comment=\"Enable Cooking module\" />"
+                PRESET_CONTENT
+                "${PRESET_CONTENT}"
+            )
+            message(STATUS "Added PX_ENABLE_COOKING to preset")
+        else()
+            string(REGEX REPLACE
+                "PX_ENABLE_COOKING\" value=\"False\""
+                "PX_ENABLE_COOKING\" value=\"True\""
+                PRESET_CONTENT
+                "${PRESET_CONTENT}"
+            )
+        message(STATUS "Patched PX_ENABLE_COOKING to True")
+        endif()
         
         file(WRITE ${PRESET_FILE} "${PRESET_CONTENT}")
         message(STATUS "Patched preset for static libraries")
