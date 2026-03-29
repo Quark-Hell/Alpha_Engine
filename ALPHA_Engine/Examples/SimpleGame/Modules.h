@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 //===================Core===================//
 #include "Core/World.h"
@@ -36,7 +36,6 @@
 //===================Anomaly Engine===================//
 
 //===================Axis Engine======================//
-#include "AxisEngine/Systems/CollisionEngine.h"
 #include "AxisEngine/Systems/PhysicsEngine.h"
 
 #include "AxisEngine/Buffers/CollidersBuffer.h"
@@ -45,7 +44,7 @@
 #include "AxisEngine/Components/AABB.h"
 #include "AxisEngine/Components/Collider.h"
 #include "AxisEngine/Components/CubeCollider.h"
-#include "AxisEngine/Components/MeshCollider.h"
+#include "AxisEngine/Components/ConvexMeshCollider.h"
 #include "AxisEngine/Components/SphereCollider.h"
 #include "AxisEngine/Components/Rigidbody.h"
 //===================Axis Engine======================//
@@ -82,7 +81,6 @@ inline AnomalyEngine::PointLightsBuffer* pointLightsBuffer = nullptr;
 
 //===================Axis Engine======================//
 inline AxisEngine::PhysicsEngine* physicsSystem = nullptr;
-inline AxisEngine::CollisionEngine* collisionSystem = nullptr;
 inline AxisEngine::RigidBodiesBuffer* rigidBodiesBuffer = nullptr;
 inline AxisEngine::CollidersBuffer* collidersBuffer = nullptr;
 //===================Axis Engine======================//

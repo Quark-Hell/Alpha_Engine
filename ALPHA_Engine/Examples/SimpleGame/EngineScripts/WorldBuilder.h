@@ -1,10 +1,12 @@
-#pragma once
+﻿#pragma once
 
 #include "UserScriptsRegister/UserScriptConfig.h"
 #include "Core/Serialization/TSerialized.h"
 
 class WorldBuilder final : public Register::UserScript {
 public:
+	Core::GameObject* plane;
+
 	WorldBuilder() = default;
 
 	void Start() override;

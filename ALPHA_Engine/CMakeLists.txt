@@ -26,6 +26,13 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+    add_definitions(-DNDEBUG)
+else()
+    add_definitions(-D_DEBUG)
+endif()
+
+
 #SET(CMAKE_CXX_FLAGS "-Wall -frtti")
 SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
 SET(CMAKE_CXX_FLAGS_RELEASE "-O3 -flto")

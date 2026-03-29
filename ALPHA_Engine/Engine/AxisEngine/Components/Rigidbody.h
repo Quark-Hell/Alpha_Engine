@@ -1,12 +1,37 @@
-#pragma once
+﻿#pragma once
 
 #include <vector>
+#include <memory>
 
 #include "Core/Components/Component.h"
 #include "glm/glm.hpp"
 
+#include "PhysX/PxPhysicsAPI.h"
+
 namespace Core {
 	class Object;
+}
+
+namespace AxisEngine {
+	struct PxRigidDynamicDeleter {
+		void operator()(physx::PxRigidDynamic* s) const noexcept {
+			if (s) s->release();
+		}
+	};
+
+	struct PxRigidStaticDeleter {
+		void operator()(physx::PxRigidStatic* s) const noexcept {
+			if (s) s->release();
+		}
+	};
+}
+
+namespace AxisEngine {
+	enum class RigidBodyType {
+		Static, 
+		Kinematic, 
+		Dynamic
+	};
 }
 
 namespace AxisEngine {
@@ -16,69 +41,48 @@ namespace AxisEngine {
 
 		friend class RigidBodiesBuffer;
 
-	public:
-		float Mass = 1;
-		glm::vec3 Gravity = glm::vec3{ 0,-9.81,0 };
-		float BaseFriction = 0.995;
-		/*Description:
-		if = 1 than body movement reflect
-		if = 0 than body stop*/
-		float ElasticityCoefficient = 0.7f;
-		float FrictionCoefficient = 0.3f;
-		float MaxSpeed = 2000;
+	private:
+		std::unique_ptr<physx::PxRigidDynamic, PxRigidDynamicDeleter> _pxDynamicRigidBody;
+		std::unique_ptr<physx::PxRigidStatic, PxRigidStaticDeleter> _pxStaticRigidBody;
+
+		physx::PxTransform _transform{ physx::PxVec3(0, 10, 0) };
+
+		physx::PxPhysics* _physics;
+		physx::PxScene* _scene;
+
+		float _mass = 1.0f;
+		RigidBodyType _rigidBodyType = RigidBodyType::Static;
 
 	private:
-		glm::vec3 _force{ 0,0,0 };
-		//Vector3 _acceleration{ 0,0,0 };
-		glm::vec3 _linearVelocity{ 0,0,0 };
+		RigidBody(PhysicsEngine& engine, AxisEngine::RigidBodyType = AxisEngine::RigidBodyType::Static);
 
-		glm::vec3 _angularAcceleration{ 0,0,0 };
-		glm::vec3 _angularVelocity{ 0,0,0 };
+		void UpdateObjectTransform();
+		void UpdatePhysXTransform();
 
-		glm::mat3x3 _invertedInertiaMatrix;
-		glm::mat3x3 _inertiaMatrix;
+		void UpdateStatic(Core::Object& newParent);
+		void UpdateKinematic(Core::Object& newParent);
+		void UpdateDynamic(Core::Object& newParent);
 
-		glm::vec3 _centerMass;
-
-		std::vector<glm::vec3> _contactPoints;
-		std::vector<glm::vec3> _pullingVectors;
-
-		bool _hasCollision = false;
-
-	private:
-		RigidBody();
+	protected:
 		bool CheckAddPossibility(Core::Object& newParent) override;
-		void UpdateParentObject(Core::Object& newParent) override;
-
-		static void Contact(RigidBody& rb1, glm::vec3 contactNormal);
-		static void Contact(RigidBody& rb1, RigidBody& rb2, glm::vec3 contactNormal);
+		void OnParentObjectChanged(Core::Object& newParent) override;
 
 	public:
         ~RigidBody() override = default;
 
 		void AddForce(const glm::vec3& forceVector);
-		void AddForce(const float& x, const float& y, const float& z);
+		void AddForce(float x, float y, float z);
 
-		//void AddAngularMomentum(const glm::vec3& forceVector, glm::vec3 relativePoint);
-		//void AddAngularMomentum(const float& x, const float& y, const float& z, glm::vec3 relativePoint);
+		void AddTorque(const glm::vec3& forceVector);
+		void AddTorque(float x, float y, float z);
 
-		void UpdateCenterMass();
-		[[nodiscard]] glm::vec3 GetCenterMass();
+		[[nodiscard]] RigidBodyType GetRigidBodyType() const noexcept;
+		void SetRigidBodyType(RigidBodyType rigidBodyType);
 
-		[[nodiscard]] glm::vec3 GetVelocity();
-		[[nodiscard]] glm::vec3 GetPosition();
+		[[nodiscard]] glm::vec3 GetLinearVelocity() const;
+		[[nodiscard]] glm::vec3 GetAngularVelocity() const;
 
-		[[nodiscard]] bool GetContactPoints(std::vector<glm::vec3>& contactPoint);
-
-		void AddContactPoints(std::vector<glm::vec3>& points);
-
-		void ClearCollisinInfo();
-
-		void ApplyPullingVectors();
-
-		void SetInertiaMatrix(glm::mat3x3 matrix);
-		void ResetInertiaMatrix();
-		glm::mat3x3 GetInertiaMatrix();
+		[[nodiscard]] physx::PxRigidDynamic* GetRigidActor() const noexcept;
 	};
 }
 

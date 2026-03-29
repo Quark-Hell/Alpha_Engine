@@ -11,7 +11,7 @@ namespace Core {
         SetScale(1, 1, 1);
     }
 
-    glm::vec3 Transform::GetPosition() { return Transform::_position; }
+    glm::vec3 Transform::GetPosition() const noexcept { return Transform::_position; }
     void Transform::AddPosition(const float X, const float Y, const float Z) {
         Transform::_position.x += X;
         Transform::_position.y += Y;
@@ -27,23 +27,27 @@ namespace Core {
         Transform::RecalculateTransformMatrix();
     }
     void Transform::SetPosition(const float X, const float Y, const float Z) {
-        const glm::vec3 direction = glm::vec3(X, Y, Z) - Transform::_position;
+        Transform::_position.x = X;
+        Transform::_position.y = Y;
+        Transform::_position.z = Z;
 
-        Transform::AddPosition(direction);
+        Transform::RecalculateTransformMatrix();
     }
     void Transform::SetPosition(const glm::vec3& position) {
-        const glm::vec3 direction = position - Transform::_position;
+        Transform::_position.x = position.x;
+        Transform::_position.y = position.y;
+        Transform::_position.z = position.z;
 
-        Transform::AddPosition(direction);
+        Transform::RecalculateTransformMatrix();
     }
 
-    glm::vec3 Transform::GetRotation() { 
+    glm::vec3 Transform::GetRotation() const noexcept { 
         const glm::vec3 euler = glm::eulerAngles(_rotation);
         const glm::vec3 degrees = glm::degrees(euler);
 
         return degrees;
     }
-    glm::quat Transform::GetRotationQuat() {
+    glm::quat Transform::GetRotationQuat() const noexcept {
         return _rotation;
     }
 
@@ -53,33 +57,20 @@ namespace Core {
         const float radY = glm::radians(Y);
         const float radZ = glm::radians(Z);
 
-        Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-        Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-        Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+        glm::quat delta = glm::quat(glm::vec3(radX, radY, radZ));
+        _rotation = glm::normalize(delta * _rotation);
 
-
-        glm::vec3 euler = glm::radians(glm::vec3(X, Y, Z));
-        Transform::_rotation = glm::quat(euler);
-
-        //Transform::_rotation.x += X;
-        //Transform::_rotation.y += Y;
-        //Transform::_rotation.z += Z;
+        RecalculateTransformMatrix();
     }
     void Transform::AddRotation(glm::vec3 rotation) {
         const float radX = glm::radians(rotation.x);
         const float radY = glm::radians(rotation.y);
         const float radZ = glm::radians(rotation.z);
 
-        Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radX, glm::vec3(1.0f, 0.0f, 0.0f));
-        Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radY, glm::vec3(0.0f, 1.0f, 0.0f));
-        Transform::_transformMatrix = glm::rotate(Transform::_transformMatrix, radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+        glm::quat delta = glm::quat(glm::vec3(radX, radY, radZ));
+        _rotation = glm::normalize(delta * _rotation);
 
-        glm::vec3 euler = glm::radians(rotation);
-        Transform::_rotation = glm::quat(euler);
-
-        //Transform::_rotation.x += rotation.x;
-        //Transform::_rotation.y += rotation.y;
-        //Transform::_rotation.z += rotation.z;
+        RecalculateTransformMatrix();
     }
 
     void Transform::SetRotation(const float X, const float Y, const float Z) {
@@ -108,7 +99,24 @@ namespace Core {
         RecalculateTransformMatrix();
     }
 
-    glm::vec3 Transform::GetScale() { return Transform::_scale; }
+    glm::vec3 Transform::GetScale() const noexcept { return Transform::_scale; }
+
+    void Transform::AddScale(const float X, const float Y, const float Z) {
+        Transform::_scale.x += X;
+        Transform::_scale.y += Y;
+        Transform::_scale.z += Z;
+
+        Transform::RecalculateTransformMatrix();
+    }
+
+    void Transform::AddScale(glm::vec3 scale) {
+        Transform::_scale.x += scale.x;
+        Transform::_scale.y += scale.y;
+        Transform::_scale.z += scale.z;
+
+        Transform::RecalculateTransformMatrix();
+    }
+
     void Transform::SetScale(const float X, const float Y, const float Z) {
         Transform::_scale.x = X;
         Transform::_scale.y = Y;
@@ -124,7 +132,7 @@ namespace Core {
         Transform::RecalculateTransformMatrix();
     }
 
-    glm::mat4x4 Transform::GetTransformMatrix() const { return Transform::_transformMatrix; }
+    glm::mat4x4 Transform::GetTransformMatrix() const noexcept { return Transform::_transformMatrix; }
     void Transform::RecalculateTransformMatrix() {
         glm::mat4 T = glm::translate(glm::mat4(1.0f), _position);
         glm::mat4 R = glm::toMat4(glm::normalize(_rotation));
@@ -137,7 +145,6 @@ namespace Core {
         {
             _transformMatrix = T * R * S;
         }
-
     }
 
     glm::vec3 Transform::GetForward() const noexcept {

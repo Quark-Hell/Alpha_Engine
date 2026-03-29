@@ -1,4 +1,4 @@
-#include "Camera.h"
+﻿#include "Camera.h"
 
 #include <glm/gtx/transform.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
@@ -19,7 +19,7 @@ namespace AnomalyEngine {
         _zFar = zFar;
     }
 
-    void Camera::UpdateParentObject(Core::Object& newParent) {
+    void Camera::OnParentObjectChanged(Core::Object& newParent) {
         newParent.transform.IsCamera = true;
     }
 

@@ -178,25 +178,6 @@ if (PHYSICS_AXIS_ENGINE AND BUILD_PhysX AND PHYSX_DOWNLOADED)
                 PRESET_CONTENT 
                 "${PRESET_CONTENT}"
             )
-
-        string(FIND "${PRESET_CONTENT}" "PX_ENABLE_COOKING" COOKING_POS)
-        if(COOKING_POS EQUAL -1)
-            string(REGEX REPLACE
-                "(<CMakeSwitches>)"
-                "\\1\n    <cmakeSwitch name=\"PX_ENABLE_COOKING\" value=\"True\" comment=\"Enable Cooking module\" />"
-                PRESET_CONTENT
-                "${PRESET_CONTENT}"
-            )
-            message(STATUS "Added PX_ENABLE_COOKING to preset")
-        else()
-            string(REGEX REPLACE
-                "PX_ENABLE_COOKING\" value=\"False\""
-                "PX_ENABLE_COOKING\" value=\"True\""
-                PRESET_CONTENT
-                "${PRESET_CONTENT}"
-            )
-        message(STATUS "Patched PX_ENABLE_COOKING to True")
-        endif()
         
         file(WRITE ${PRESET_FILE} "${PRESET_CONTENT}")
         message(STATUS "Patched preset for static libraries")
@@ -270,11 +251,23 @@ if (PHYSICS_AXIS_ENGINE)
     add_compile_definitions(AXIS_ENGINE_INCLUDED)
     add_definition("AXIS_ENGINE_INCLUDED")
 
+    set(PHYSX_INCLUDES_DIR "${Engine_Source}/AxisEngine/External/PhysX/include")
+    include_directories(${PHYSX_INCLUDES_DIR})
+
     message("${Cyan}include .cpp engine_axis_list${ColourReset}")
+
     recurse_add_cpp_items("${Engine_Source}/AxisEngine" engine_axis_list)
     recurse_copy_headers("${Engine_Source}/AxisEngine" "${Build_Dir}/headers/AxisEngine")
 
     #copy_file("${Engine_Source}/AxisEngine/Module.cfg" "${Configs_Dir}/AxisEngine/Module.cfg")
 
     add_library(PHYSICS_AXIS_ENGINE STATIC ${engine_axis_list})
-endif ()
+
+    message(${PHYSX_LIBS} SDFFS)
+
+    target_compile_definitions(PHYSICS_AXIS_ENGINE PRIVATE PX_PHYSX_STATIC_LIB)
+
+	target_link_libraries(PHYSICS_AXIS_ENGINE
+		PRIVATE ${PHYSX_LIBS}
+	)
+endif()

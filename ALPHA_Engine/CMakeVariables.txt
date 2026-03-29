@@ -1,4 +1,6 @@
 #Engine source
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 SET (ALPHA_Engine "${PROJECT_SOURCE_DIR}")
 SET (Engine_Source "${ALPHA_Engine}/Engine")
 SET (Engine_Assets "${ALPHA_Engine}/Assets")

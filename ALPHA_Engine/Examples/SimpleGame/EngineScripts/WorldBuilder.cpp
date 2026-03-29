@@ -1,4 +1,4 @@
-#include "WorldBuilder.h"
+﻿#include "WorldBuilder.h"
 
 #include "Modules.h"
 
@@ -64,25 +64,24 @@ void WorldBuilder::GenerateCube() {
             "",
             "/Assets/Textures/Planets/2k_earth_nightmap.jpg");
 
-        auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
-        cubeCollider.Create(colGem);
+        auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::CubeCollider>(*physicsSystem);
         cube.AddComponent(cubeCollider);
 
-        auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody();
+        auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody(*physicsSystem, AxisEngine::RigidBodyType::Dynamic);
         cube.AddComponent(cubeRigidBody);
     }
 
     {
-        auto& cube = Core::Factory::CreateObject<Core::GameObject>();
+        plane = &Core::Factory::CreateObject<Core::GameObject>();
 
-        cube.transform.AddPosition(5, 5, -25);
-        cube.transform.AddRotation(30, 0, 0);
-        cube.transform.SetScale(15, 1, 15);
+        plane->transform.AddPosition(5, 5, -25);
+        plane->transform.AddRotation(30, 0, 0);
+        plane->transform.SetScale(15, 1, 15);
 
-        cube.SetName("Plane");
+        plane->SetName("Plane");
 
         auto& cubeMesh = meshesBuffer->CreateMesh(meshGem);
-        cube.AddComponent(cubeMesh);
+        plane->AddComponent(cubeMesh);
 
         auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
         shader.LoadTextures(
@@ -93,12 +92,13 @@ void WorldBuilder::GenerateCube() {
             "",
             "/Assets/Textures/Planets/2k_earth_nightmap.jpg");
 
-        auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
-        cubeCollider.Create(colGem);
-        cube.AddComponent(cubeCollider);
+        auto& meshCollider = collidersBuffer->CreateCollider<AxisEngine::ConvexMeshCollider>(*physicsSystem);
+        meshCollider.LoadGeometry(colGem);
+        plane->AddComponent(meshCollider);
+
+        auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody(*physicsSystem, AxisEngine::RigidBodyType::Kinematic);
+        plane->AddComponent(cubeRigidBody);
     }
-
-
 }
 
 void WorldBuilder::GenerateEarth() {
@@ -130,9 +130,11 @@ void WorldBuilder::GenerateEarth() {
     Core::Geometry& colliderGem = Core::Factory::CreateResource<Core::Geometry>();
     colliderGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::InitVertex);
     
-    auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
-    cubeCollider.Create(colliderGem);
+    auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::CubeCollider>(*physicsSystem);
     cube.AddComponent(cubeCollider);
+
+    auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody(*physicsSystem, AxisEngine::RigidBodyType::Kinematic);
+    cube.AddComponent(cubeRigidBody);
 }
 
 void WorldBuilder::GenerateSun() {
@@ -147,19 +149,13 @@ void WorldBuilder::GenerateSun() {
     geometry.LoadMesh("/Assets/Models/Sci-Fi_Football.fbx", Core::GeometryLoadSettings::All);
 
     auto& sunMesh = meshesBuffer->CreateMesh(geometry);
-    auto& rb = rigidBodiesBuffer->CreateRigidBody();
 
     Sun.AddComponent(sunMesh);
-    Sun.AddComponent(rb);
 
     auto& shader = sunMesh._material.InitShader<AnomalyEngine::SimplexFractalShader>();
 
     Core::Geometry& collider = Core::Factory::CreateResource<Core::Geometry>();
     collider.LoadMesh("/Assets/Models/Sci-Fi_Football.fbx", Core::GeometryLoadSettings::InitVertex);
-
-    auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::MeshCollider>();
-    cubeCollider.Create(collider);
-    Sun.AddComponent(cubeCollider);
 
     shader.Contrast = 6.4;
     shader.Brightness = 0.15;
@@ -177,7 +173,9 @@ void WorldBuilder::Start() {
 }
 
 void WorldBuilder::Update() {
-
+    //plane->transform.AddPosition(0, 0, -0.1);
+    plane->transform.AddRotation(1, 0, 0);
+    //plane->transform.AddScale(0, 0, 0.1);
 }
 
 void WorldBuilder::End() {

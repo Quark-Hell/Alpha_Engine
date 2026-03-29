@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
 
@@ -32,7 +32,7 @@ namespace Core {
 		 * 
 		 * @param newParent Reference to the object to which the component is being added.
 		 */
-		void virtual UpdateParentObject(Core::Object& newParent);
+		void virtual OnParentObjectChanged(Core::Object& newParent);
 
 		/**
 		 * @brief Checks whether the component can be added to the specified object.
