@@ -1,14 +1,36 @@
 ﻿#include("CMakeVariables.txt")
 
-function(recurse_add_cpp_items src return_list)
-file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.cpp" "${src}/*.c")
-    foreach(file ${templateFiles})
-		set(copy_src "${src}/${file}")
-		list(APPEND return_list "${copy_src}")
+macro(recurse_add_cpp_items src return_list)
+    file(GLOB_RECURSE new_files "${src}/*.cpp" "${src}/*.c")
+    
+    set(IGNORE_PATTERNS
+        "/[Ee]xternal/"
+        "/[Tt]hird[Pp]arty/"
+        "/[Vv]endor/"
+        "/.git/"
+    )
+    
+    set(filtered_files)
+    foreach(file ${new_files})
+        string(REPLACE "\\" "/" normalized_file "${file}")
+        
+        set(should_ignore FALSE)
+        foreach(pattern ${IGNORE_PATTERNS})
+            if(normalized_file MATCHES "${pattern}")
+                set(should_ignore TRUE)
+                break()
+            endif()
+        endforeach()
+        
+        if(NOT should_ignore)
+            list(APPEND filtered_files ${file})
+        endif()
     endforeach()
-	message("${return_list}\n")
-	set(${return_list} "${${return_list}}" PARENT_SCOPE)
-endfunction()
+    
+    list(APPEND ${return_list} ${filtered_files})
+    
+    list(LENGTH filtered_files count)
+endmacro()
 
 function(add_cpp_items src return_list)
 file(GLOB templateFiles RELATIVE ${src} "${src}/*.cpp")
@@ -41,21 +63,63 @@ function(copy_file src dest)
 endfunction()
 
 function(recurse_copy_headers src dest)
-	message("${Red}copy headers${ColourReset}")
-	file(GLOB_RECURSE templateFiles RELATIVE ${src} "${src}/*.h" "${src}/*.hpp")
-	foreach(templateFile ${templateFiles})
-		set(copy_src "${src}/${templateFile}")
-		set(copy_dest "${dest}/${templateFile}")
-
-		message("${Cyan}copy header${ColourReset} ${copy_src} to\n ${copy_dest}")
-
-		execute_process(
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		${copy_src}
-		${copy_dest}
-		)
-	endforeach(templateFile)
-	message("\n")
+    message("${Red}copy headers${ColourReset}")
+    
+    file(GLOB_RECURSE templateFiles "${src}/*.h" "${src}/*.hpp")
+    
+    set(IGNORE_PATTERNS
+        "/[Ee]xternal/"
+        "/[Tt]hird[Pp]arty/"
+        "/[Vv]endor/"
+        "/.git/"
+    )
+    
+    set(filtered_files)
+    foreach(file ${templateFiles})
+        string(REPLACE "\\" "/" normalized_file "${file}")
+        
+        set(should_ignore FALSE)
+        foreach(pattern ${IGNORE_PATTERNS})
+            if(normalized_file MATCHES "${pattern}")
+                set(should_ignore TRUE)
+                break()
+            endif()
+        endforeach()
+        
+        if(NOT should_ignore)
+            list(APPEND filtered_files ${file})
+        endif()
+    endforeach()
+    
+    set(copied_count 0)
+    set(skipped_count 0)
+    
+    foreach(file ${filtered_files})
+        file(RELATIVE_PATH rel_path ${src} ${file})
+        set(copy_dest "${dest}/${rel_path}")
+        
+        get_filename_component(dest_dir ${copy_dest} DIRECTORY)
+        file(MAKE_DIRECTORY ${dest_dir})
+        
+        message("${Cyan}copy header${ColourReset} ${file} to\n  ${copy_dest}")
+        
+        execute_process(
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${file} ${copy_dest}
+        )
+    endforeach()
+    
+    # Статистика
+    list(LENGTH templateFiles total_found)
+    list(LENGTH filtered_files total_processed)
+    math(EXPR ignored_count "${total_found} - ${total_processed}")
+    
+    if(ignored_count GREATER 0)
+        message(STATUS "Copied ${copied_count} headers (${ignored_count} ignored from External)")
+    else()
+        message(STATUS "Copied ${copied_count} headers")
+    endif()
+    
+    message("\n")
 endfunction()
 
 function(recurse_copy_assets src dest)
