@@ -1,0 +1,44 @@
+﻿#pragma once
+
+#include <vector>
+#include <memory>
+
+#include "Core/ECS/System.h"
+
+#include "AL/al.h"
+#include "AL/alc.h"
+
+namespace SonarEngine {
+	struct ALCdeviceDeleter {
+		void operator()(ALCdevice* s) const noexcept {
+			if (s) alcCloseDevice(s);
+		}
+	};
+
+	struct ALCcontextDeleter {
+		void operator()(ALCcontext* s) const noexcept {
+			if (s) {
+				alcMakeContextCurrent(nullptr);
+				alcDestroyContext(s);
+			}
+		}
+	};
+}
+
+namespace SonarEngine {
+	class SonarEngine final : public Core::System {
+
+	private:
+		std::unique_ptr<ALCdevice, ALCdeviceDeleter> device = nullptr;
+		std::unique_ptr<ALCcontext, ALCcontextDeleter> context = nullptr;
+
+	private:
+		void InitSonarEngine();
+
+		void EntryPoint(std::vector<Core::SystemData*>& data) override;
+
+	public:
+		SonarEngine(size_t order);
+		~SonarEngine() override = default;
+	};
+}

@@ -1,4 +1,4 @@
-option(Build_Examples "Build examples" ON)
+﻿option(Build_Examples "Build examples" ON)
 
 #Examples
 set(Examples_Dir "${ALPHA_Engine}/Examples")

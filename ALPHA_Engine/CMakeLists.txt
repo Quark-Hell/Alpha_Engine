@@ -62,6 +62,7 @@ include("Engine/AxisEngine/CMakeLists.txt")
 include("Engine/WindowsManager/CMakeLists.txt")
 include("Engine/BindsEngine/CMakeLists.txt")
 include("Engine/AnomalyEngine/CMakeLists.txt")
+include("Engine/SonarEngine/CMakeLists.txt")
 
 #Example
 include("Examples/CMakeLists.txt")
