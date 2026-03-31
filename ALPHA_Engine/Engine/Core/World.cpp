@@ -1,12 +1,21 @@
-#include "World.h"
+﻿#include "World.h"
 
 #include "Core/Logger/Logger.h"
 #include "Core/Objects/GameObject.h"
 #include "Core/Objects/FakeObject.h"
 
 namespace Core {
-	Core::World::World() = default;
-	Core::World::~World() = default;
+	Core::World::World() {
+		_worldResources.reserve(64);
+	}
+
+	Core::World::~World() {
+		_worldData.clear();
+		_worldResources.clear();
+		_worldSystem.clear();
+
+		Core::Logger::LogInfo("World successfully deleted");
+	}
 
 	std::vector<std::unique_ptr<Core::GameObject>>* World::GetGameObjects() {
 		static std::vector<std::unique_ptr<Core::GameObject>> objects{};
@@ -21,9 +30,8 @@ namespace Core {
 	}
 
 	std::vector<std::unique_ptr<Core::Resource>>* World::GetResources() {
-		static std::vector<std::unique_ptr<Core::Resource>> resources{};
-		resources.reserve(64);
-		return &resources;
+		const auto world = World::GetWorld();
+		return &world->_worldResources;
 	}
 
 	void World::AddSystem(size_t order, Core::System* system) {

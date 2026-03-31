@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <memory>
 #include <map>
 #include <unordered_map>
@@ -38,6 +38,7 @@ namespace Core {
 
 		std::map<size_t, std::unique_ptr<System>> _worldSystem{};
 		std::unordered_map<std::string, std::unique_ptr<SystemData>> _worldData{};
+		std::vector<std::unique_ptr<Resource>> _worldResources{};
 
 	private:
 		static void AddSystem(size_t order, System* system);
