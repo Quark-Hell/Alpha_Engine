@@ -53,7 +53,7 @@ function(add_definition ModuleName)
 endfunction()
 
 function(copy_file src dest)
-	message("${Cyan}copy header${ColourReset} ${src} to\n ${dest}\n")
+	message("${Cyan}copy file${ColourReset} ${src} to\n ${dest}\n")
 
 	execute_process(
 	COMMAND ${CMAKE_COMMAND} -E copy_if_different

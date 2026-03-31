@@ -58,7 +58,7 @@ if(WIN32)
 		)
 
 		copy_file("${Examples_Build_Dir}/external/assimp-vc143-mt.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assimp-vc143-mt.dll")
-		copy_file("${Examples_Build_Dir}/lib/OpenAL32.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpenAL32.dll")
+		copy_file("${Examples_Build_Dir}/external/OpenAL32.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpenAL32.dll")
 	elseif(MINGW)
 		target_link_libraries(SimpleGame
 				PUBLIC USER_SCRIPTS_REGISTER
@@ -77,7 +77,7 @@ if(WIN32)
 		)
 
 		copy_file("${Examples_Build_Dir}/external/libassimp-5.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libassimp-5.dll")
-		copy_file("${Examples_Build_Dir}/lib/OpenAL32.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpenAL32.dll")
+		copy_file("${Examples_Build_Dir}/external/OpenAL32.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpenAL32.dll")
 	endif()
 
 else()
