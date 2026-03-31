@@ -49,6 +49,22 @@
 #include "AxisEngine/Components/Rigidbody.h"
 //===================Axis Engine======================//
 
+
+//===================Sonar Engine======================//
+#include "SonarEngine/Buffers/AudioSourcesBuffer.h"
+#include "SonarEngine/Systems/SonarEngine.h"
+//===================Sonar Engine======================//
+
+
+
+
+
+
+
+
+
+
+
 //===================User Scripts Register===================//
 inline Register::Registry* userScriptSystem = nullptr;
 inline Register::UserScriptsBuffer* userScriptsBuffer  = nullptr;
@@ -84,5 +100,10 @@ inline AxisEngine::PhysicsEngine* physicsSystem = nullptr;
 inline AxisEngine::RigidBodiesBuffer* rigidBodiesBuffer = nullptr;
 inline AxisEngine::CollidersBuffer* collidersBuffer = nullptr;
 //===================Axis Engine======================//
+
+//===================Sonar Engine======================//
+inline SonarEngine::SonarEngine* audioSystem = nullptr;
+inline SonarEngine::AudioSourcesBuffer* audioSurcesBuffer = nullptr;
+//===================Sonar Engine======================//
 
 void IncludeScripts();

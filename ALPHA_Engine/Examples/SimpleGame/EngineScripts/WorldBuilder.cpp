@@ -170,6 +170,13 @@ void WorldBuilder::Start() {
     //GenerateSun();
     GenerateCube();
 #endif
+
+    SonarEngine::AudioClip& audioClip = Core::Factory::CreateResource<SonarEngine::AudioClip>();
+    audioClip.LoadMusic();
+
+    SonarEngine::AudioSource& audioSource = audioSurcesBuffer->CreateAudioSource();
+    audioSource.SetAudioClip(audioClip);
+    audioSource.PlayMusic();
 }
 
 void WorldBuilder::Update() {

@@ -1,4 +1,4 @@
-#include "Modules.h"
+﻿#include "Modules.h"
 
 #include "EngineScripts/MyScript.h"
 #include "EngineScripts/Player.h"
@@ -27,12 +27,15 @@ namespace Core {
         directLightsBuffer = new AnomalyEngine::DirectLightsBuffer(4);
         pointLightsBuffer = new AnomalyEngine::PointLightsBuffer(4);
 
-        userScriptSystem = new Register::Registry(100);
-        mouseSystem = new BindsEngine::MouseSystem(200);
-        keyboardSystem = new BindsEngine::KeyboardSystem(210);
-        physicsSystem = new AxisEngine::PhysicsEngine(1000);
-        windowsSystem = new WindowsManager::WindowsManager(3000);
-        anomalySystem = new AnomalyEngine::RenderEngine(4000);
+        audioSurcesBuffer = new SonarEngine::AudioSourcesBuffer(8);
+
+        userScriptSystem = new Register::Registry(1000);
+        mouseSystem = new BindsEngine::MouseSystem(2000);
+        keyboardSystem = new BindsEngine::KeyboardSystem(2500);
+        physicsSystem = new AxisEngine::PhysicsEngine(3000);
+        audioSystem = new SonarEngine::SonarEngine(4000);
+        windowsSystem = new WindowsManager::WindowsManager(5000);
+        anomalySystem = new AnomalyEngine::RenderEngine(6000);
 
 
         IncludeScripts();
