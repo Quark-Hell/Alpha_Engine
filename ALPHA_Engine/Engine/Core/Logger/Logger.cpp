@@ -1,4 +1,4 @@
-#include "Logger.h"
+﻿#include "Logger.h"
 
 namespace Core {
 	Logger::Logger() {
@@ -10,6 +10,8 @@ namespace Core {
 	}
 
 	Logger::~Logger() {
+		SaveLogs();
+
 		if (_logFile.is_open()) {
 			_logFile.close();
 		}
