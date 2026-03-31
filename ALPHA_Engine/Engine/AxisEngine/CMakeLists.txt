@@ -282,8 +282,6 @@ if (PHYSICS_AXIS_ENGINE)
 
     add_library(PHYSICS_AXIS_ENGINE STATIC ${engine_axis_list})
 
-    message(${PHYSX_LIBS} SDFFS)
-
     target_compile_definitions(PHYSICS_AXIS_ENGINE PRIVATE PX_PHYSX_STATIC_LIB)
 
 	target_link_libraries(PHYSICS_AXIS_ENGINE

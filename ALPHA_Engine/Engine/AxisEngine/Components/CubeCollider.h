@@ -14,5 +14,4 @@ namespace AxisEngine {
 		void virtual OnParentObjectChanged(Core::Object& newParent) override;
 		void virtual ResetShape() override;
 	};
-
 }
