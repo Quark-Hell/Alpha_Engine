@@ -1,4 +1,4 @@
-#include "OpaqueShader.h"
+﻿#include "OpaqueShader.h"
 
 #include "AnomalyEngine/Buffers/DirectLightsBuffer.h"
 #include "AnomalyEngine/Buffers/PointLightsBuffer.h"
@@ -60,63 +60,63 @@ namespace AnomalyEngine {
                     loader->AddTask(_textures[0], diffusePath);
                 }
                 else {
-                    loader->AddTask(_textures[0], R"(/Assets/Textures/EmptyTexture.png)");
+                    loader->AddTask(_textures[0], std::filesystem::current_path().string() + R"(/Assets/Textures/EmptyTexture.png)");
                 }
 
                 if (!metallicPath.empty()) {
                     loader->AddTask(_textures[1], metallicPath);
                 }
                 else {
-                    loader->AddTask(_textures[1], R"(/Assets/Textures/EmptyTexture.png)");
+                    loader->AddTask(_textures[1], std::filesystem::current_path().string() + R"(/Assets/Textures/EmptyTexture.png)");
                 }
 
                 if (!specularPath.empty()) {
                     loader->AddTask(_textures[2], specularPath);
                 }
                 else {
-                    loader->AddTask(_textures[2], R"(/Assets/Textures/EmptyTexture.png)");
+                    loader->AddTask(_textures[2], std::filesystem::current_path().string() + R"(/Assets/Textures/EmptyTexture.png)");
                 }
 
                 if (!roughnessPath.empty()) {
                     loader->AddTask(_textures[3], roughnessPath);
                 }
                 else {
-                    loader->AddTask(_textures[3], R"(/Assets/Textures/EmptyTexture.png)");
+                    loader->AddTask(_textures[3], std::filesystem::current_path().string() + R"(/Assets/Textures/EmptyTexture.png)");
                 }
 
                 if (!anisotropicPath.empty()) {
                     loader->AddTask(_textures[4], anisotropicPath);
                 }
                 else {
-                    loader->AddTask(_textures[4], R"(/Assets/Textures/EmptyTexture.png)");
+                    loader->AddTask(_textures[4], std::filesystem::current_path().string() + R"(/Assets/Textures/EmptyTexture.png)");
                 }
 
                 if (!emissionPath.empty()) {
                     loader->AddTask(_textures[5], emissionPath);
                 }
                 else {
-                    loader->AddTask(_textures[5], R"(/Assets/Textures/EmptyEmission.png)");
+                    loader->AddTask(_textures[5], std::filesystem::current_path().string() + R"(/Assets/Textures/EmptyEmission.png)");
                 }
 
                 if (!normalMapPath.empty()) {
                     loader->AddTask(_textures[6], normalMapPath);
                 }
                 else {
-                    loader->AddTask(_textures[6], R"(/Assets/Textures/EmptyTexture.png)");
+                    loader->AddTask(_textures[6], std::filesystem::current_path().string() + R"(/Assets/Textures/EmptyTexture.png)");
                 }
 
                 if (!opacityMapPath.empty()) {
                     loader->AddTask(_textures[7], opacityMapPath);
                 }
                 else {
-                    loader->AddTask(_textures[7], R"(/Assets/Textures/EmptyTexture.png)");
+                    loader->AddTask(_textures[7], std::filesystem::current_path().string() + R"(/Assets/Textures/EmptyTexture.png)");
                 }
 
                 if (!occlusionMapPath.empty()) {
                     loader->AddTask(_textures[8], occlusionMapPath);
                 }
                 else {
-                    loader->AddTask(_textures[8], R"(/Assets/Textures/EmptyTexture.png)");
+                    loader->AddTask(_textures[8], std::filesystem::current_path().string() + R"(/Assets/Textures/EmptyTexture.png)");
                 }
 
                 loader->DoWork();
@@ -176,13 +176,15 @@ namespace AnomalyEngine {
 
 
         //=============================================Object Matrices=============================================//
+        auto viewMat = camera.GetViewMatrix();
+
         auto modelMat = glm::mat4(glm::mat3(parent->transform.GetTransformMatrix()));
         SetValue("model_matrix", &modelMat);
 
         auto transMat = glm::mat3(glm::transpose(glm::inverse(parent->transform.GetTransformMatrix())));
         SetValue("trans_model_mat", &transMat);
 
-        auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->transform.GetTransformMatrix() * parent->transform.GetTransformMatrix();
+        auto MVP = camera.GetProjectionMatrix() * viewMat * parent->transform.GetTransformMatrix();
         SetValue("MVP", &MVP);
         //=============================================Object Matrices=============================================//
 

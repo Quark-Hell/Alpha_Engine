@@ -1,4 +1,4 @@
-#include "BaseTexture.h"
+﻿#include "BaseTexture.h"
 
 #include "Core/Logger/Logger.h"
 
@@ -22,11 +22,11 @@ namespace AnomalyEngine {
 #endif
 
         stbi_set_flip_vertically_on_load(false);
-        unsigned char *data = stbi_load((std::filesystem::current_path().string() + pathToTexture).c_str(),
+        unsigned char *data = stbi_load((pathToTexture).c_str(),
                                         &width, &height, &channelsCount, 0);
 
         if (data == nullptr) {
-            Core::Logger::Logger::LogError("Could not create texture. Check path: ", std::filesystem::current_path().string() + pathToTexture);
+            Core::Logger::Logger::LogError("Could not create texture. Check path: ", pathToTexture);
             return;
         }
 

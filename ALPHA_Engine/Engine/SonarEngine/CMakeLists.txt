@@ -19,6 +19,9 @@ if(AUDIO_SONAR_ENGINE)
         set(OPENAL_LIB "${OpenAL_Install_Dir}/lib/libOpenAL32.dll.a")
     endif()
 
+    add_compile_definitions(SONAR_ENGINE_INCLUDED)
+    add_definition("SONAR_ENGINE_INCLUDED")
+
     copy_file("${OpenAL_Install_Dir}/bin/OpenAL32.dll" "${Build_Dir}/external/OpenAL32.dll")
 
     include_directories(${OPENAL_INCLUDE_DIR})

@@ -5,8 +5,6 @@
 #include "SonarEngine/Resources/AudioClip.h"
 
 namespace SonarEngine {
-	class AABB;
-
 	class AudioSource final : public Core::Component {
 		friend class SonarEngine;
 		friend class AudioSourcesBuffer;
@@ -15,8 +13,18 @@ namespace SonarEngine {
 		ALuint _bufferID = 0;
 		AudioClip* _audioClip = nullptr;
 
+		float _referenceDistance;
+		float _maxDistance;
+
+		float _gain;
+		float _pitch;
+		bool _is_looping;
+		bool _isGlobal;
+
 	private:
 		AudioSource();
+
+		void UpdatePosition();
 
 	public:
 		void PlayMusic();
@@ -24,6 +32,14 @@ namespace SonarEngine {
 
 		[[nodiscard]] void ClearAudioClip() noexcept;
 		[[nodiscard]] AudioClip* GetAudioClip() const noexcept;
+
+		void SetReferenceDistance(float distance);
+		void SetMaxDistance(float distance);
+
+		void SetGain(float gain);
+		void SetPitch(float pitch);
+		void SetLooping(bool isLooping);
+		void SetGlobal(bool isGlobal);
 
 		virtual ~AudioSource() override;
 	};

@@ -52,6 +52,7 @@
 
 //===================Sonar Engine======================//
 #include "SonarEngine/Buffers/AudioSourcesBuffer.h"
+#include "SonarEngine/Buffers/AudioListenersBuffer.h"
 #include "SonarEngine/Systems/SonarEngine.h"
 //===================Sonar Engine======================//
 
@@ -103,7 +104,8 @@ inline AxisEngine::CollidersBuffer* collidersBuffer = nullptr;
 
 //===================Sonar Engine======================//
 inline SonarEngine::SonarEngine* audioSystem = nullptr;
-inline SonarEngine::AudioSourcesBuffer* audioSurcesBuffer = nullptr;
+inline SonarEngine::AudioSourcesBuffer* audioSourcesBuffer = nullptr;
+inline SonarEngine::AudioListenersBuffer* audioListenersBuffer = nullptr;
 //===================Sonar Engine======================//
 
 void IncludeScripts();

@@ -20,28 +20,28 @@ void WorldBuilder::GenerateCubeMap() {
     CubeMap.SetName("CubeMap");
 
     Core::Geometry& meshGem = Core::Factory::CreateResource<Core::Geometry>();
-    meshGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::All);
+    meshGem.LoadMesh(GAME_ASSETS_PATH "/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::All);
 
     auto& mesh = meshesBuffer->CreateMesh(meshGem);
     CubeMap.AddComponent(mesh);
 
     auto& shader = mesh._material.InitShader<AnomalyEngine::CubeMapShader>();
     shader.LoadTextures(
-        R"(/Assets/Textures/CubeMap/Left_Tex.tga)",
-        R"(/Assets/Textures/CubeMap/Right_Tex.tga)",
-        R"(/Assets/Textures/CubeMap/Top_Tex.tga)",
-        R"(/Assets/Textures/CubeMap/Bottom_Tex.tga)",
-        R"(/Assets/Textures/CubeMap/Front_Tex.tga)",
-        R"(/Assets/Textures/CubeMap/Back_Tex.tga)"
+        GAME_ASSETS_PATH R"(/Textures/CubeMap/Left_Tex.tga)",
+        GAME_ASSETS_PATH R"(/Textures/CubeMap/Right_Tex.tga)",
+        GAME_ASSETS_PATH R"(/Textures/CubeMap/Top_Tex.tga)",
+        GAME_ASSETS_PATH R"(/Textures/CubeMap/Bottom_Tex.tga)",
+        GAME_ASSETS_PATH R"(/Textures/CubeMap/Front_Tex.tga)",
+        GAME_ASSETS_PATH R"(/Textures/CubeMap/Back_Tex.tga)"
     );
 }
 
 void WorldBuilder::GenerateCube() {
     Core::Geometry& meshGem = Core::Factory::CreateResource<Core::Geometry>();
-    meshGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::All);
+    meshGem.LoadMesh(GAME_ASSETS_PATH "/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::All);
 
     Core::Geometry& colGem = Core::Factory::CreateResource<Core::Geometry>();
-    colGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::InitVertex);
+    colGem.LoadMesh(GAME_ASSETS_PATH "/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::InitVertex);
 
     {
         auto& cube = Core::Factory::CreateObject<Core::GameObject>();
@@ -57,18 +57,26 @@ void WorldBuilder::GenerateCube() {
 
         auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
         shader.LoadTextures(
-            "/Assets/Textures/Planets/2k_earth_daymap.jpg",
+            GAME_ASSETS_PATH "/Textures/Planets/2k_earth_daymap.jpg",
             "",
             "",
             "",
             "",
-            "/Assets/Textures/Planets/2k_earth_nightmap.jpg");
+            GAME_ASSETS_PATH "/Textures/Planets/2k_earth_nightmap.jpg");
 
         auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::CubeCollider>(*physicsSystem);
         cube.AddComponent(cubeCollider);
 
         auto& cubeRigidBody = rigidBodiesBuffer->CreateRigidBody(*physicsSystem, AxisEngine::RigidBodyType::Dynamic);
         cube.AddComponent(cubeRigidBody);
+
+        SonarEngine::AudioClip& audioClip = Core::Factory::CreateResource<SonarEngine::AudioClip>();
+        audioClip.LoadMusic(GAME_ASSETS_PATH "/Audio/Gachi_remix_mono.wav");
+
+        SonarEngine::AudioSource& audioSource = audioSourcesBuffer->CreateAudioSource();
+        audioSource.SetAudioClip(audioClip);
+        cube.AddComponent(audioSource);
+        audioSource.PlayMusic();
     }
 
     {
@@ -85,12 +93,12 @@ void WorldBuilder::GenerateCube() {
 
         auto& shader = cubeMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
         shader.LoadTextures(
-            "/Assets/Textures/Planets/2k_earth_daymap.jpg",
+            GAME_ASSETS_PATH "/Textures/Planets/2k_earth_daymap.jpg",
             "",
             "",
             "",
             "",
-            "/Assets/Textures/Planets/2k_earth_nightmap.jpg");
+            GAME_ASSETS_PATH "/Textures/Planets/2k_earth_nightmap.jpg");
 
         auto& meshCollider = collidersBuffer->CreateCollider<AxisEngine::ConvexMeshCollider>(*physicsSystem);
         meshCollider.LoadGeometry(colGem);
@@ -106,29 +114,29 @@ void WorldBuilder::GenerateEarth() {
 
     cube.transform.AddPosition(0, -5, -25);
     cube.transform.AddRotation(0, 0, 0);
-    cube.transform.SetScale(50, 0.5, 50);
+    cube.transform.SetScale(500, 0.5, 500);
 
     cube.SetName("Earth");
 
     Core::Geometry& meshGem = Core::Factory::CreateResource<Core::Geometry>();
-    meshGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::All);
+    meshGem.LoadMesh(GAME_ASSETS_PATH "/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::All);
 
     auto& earthMesh = meshesBuffer->CreateMesh(meshGem);
     earthMesh.LoadMesh(meshGem);
 
     auto& shader = earthMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
     shader.LoadTextures(
-        "/Assets/Textures/Planets/2k_earth_daymap.jpg",
+        GAME_ASSETS_PATH "/Textures/Planets/2k_earth_daymap.jpg",
         "",
         "",
         "",
         "",
-        "/Assets/Textures/Planets/2k_earth_nightmap.jpg");
+        GAME_ASSETS_PATH "/Textures/Planets/2k_earth_nightmap.jpg");
 
     cube.AddComponent(earthMesh);
 
     Core::Geometry& colliderGem = Core::Factory::CreateResource<Core::Geometry>();
-    colliderGem.LoadMesh("/Assets/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::InitVertex);
+    colliderGem.LoadMesh(GAME_ASSETS_PATH "/Models/Primitives/Cube.fbx", Core::GeometryLoadSettings::InitVertex);
     
     auto& cubeCollider = collidersBuffer->CreateCollider<AxisEngine::CubeCollider>(*physicsSystem);
     cube.AddComponent(cubeCollider);
@@ -170,13 +178,6 @@ void WorldBuilder::Start() {
     //GenerateSun();
     GenerateCube();
 #endif
-
-    SonarEngine::AudioClip& audioClip = Core::Factory::CreateResource<SonarEngine::AudioClip>();
-    audioClip.LoadMusic();
-
-    SonarEngine::AudioSource& audioSource = audioSurcesBuffer->CreateAudioSource();
-    audioSource.SetAudioClip(audioClip);
-    audioSource.PlayMusic();
 }
 
 void WorldBuilder::Update() {

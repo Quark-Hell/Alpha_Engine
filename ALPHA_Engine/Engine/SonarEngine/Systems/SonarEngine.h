@@ -8,6 +8,8 @@
 #include "AL/al.h"
 #include "AL/alc.h"
 
+#define DR_WAV_IMPLEMENTATION
+
 namespace SonarEngine {
 	struct ALCdeviceDeleter {
 		void operator()(ALCdevice* s) const noexcept {
@@ -32,6 +34,9 @@ namespace SonarEngine {
 		std::unique_ptr<ALCdevice, ALCdeviceDeleter> device = nullptr;
 		std::unique_ptr<ALCcontext, ALCcontextDeleter> context = nullptr;
 
+		float _dopplerFactor;
+		float _speedOfSound;
+
 	private:
 		void InitSonarEngine();
 
@@ -40,5 +45,11 @@ namespace SonarEngine {
 	public:
 		SonarEngine(size_t order);
 		~SonarEngine() override = default;
+
+		void SetDopplerFactor(float factor);
+		void SetSpeedOfSound(float speed);
+
+		[[nodiscard]] float GetDopplerFactor() const noexcept;
+		[[nodiscard]] float GetSpeedOfSound() const noexcept;
 	};
 }

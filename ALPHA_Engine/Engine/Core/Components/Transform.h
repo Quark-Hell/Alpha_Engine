@@ -15,6 +15,10 @@ namespace Core {
 
 		glm::mat4x4 _transformMatrix{ 1 };
 
+		glm::vec3 _lastPosition{ 0, 0, 0};
+		glm::vec3 _linearVelocity{ 0,0,0 };
+		float _timeStamp = 0;
+
 	public:
 		/**
 		* If true so looks like R * T * S;
@@ -22,9 +26,14 @@ namespace Core {
 		*/
 		bool IsCamera = false;
 
+	private:
+		void UpdateLinearVelocity();
+
 	public:
 		Transform();
 		~Transform() = default;
+
+		[[nodiscard]] glm::vec3 GetLinearVelocity();
 
 		/**
 		 * @brief Gets the current world position of the object.

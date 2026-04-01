@@ -1,7 +1,9 @@
-#include "Player.h"
+﻿#include "Player.h"
 
 #include "Windows/WindowsSettings.h"
 #include "Modules.h"
+
+#include "SonarEngine/Components/AudioListener.h"
 
 void Player::Start() {
 #if ANOMALY_ENGINE_INCLUDED
@@ -46,14 +48,14 @@ void Player::Start() {
     /*auto& upMove =*/ bindsBuffer->CreateKeyboardBind(
         { std::bind(&Player::UpMoveCamera, this) },
         { EnumKeyboardKeysStates::KeyHold },
-        { EnumKeyboardTable::Q },
+        { EnumKeyboardTable::E },
         wind->win1
     );
 
     /*auto& downMove =*/ bindsBuffer->CreateKeyboardBind(
         { std::bind(&Player::DownMoveCamera, this) },
         { EnumKeyboardKeysStates::KeyHold },
-        { EnumKeyboardTable::E },
+        { EnumKeyboardTable::Q },
         wind->win1
     );
 
@@ -63,6 +65,12 @@ void Player::Start() {
         wind->win1
     );
 #endif
+
+#if SONAR_ENGINE_INCLUDED
+    SonarEngine::AudioListener& audioListener = audioListenersBuffer->CreateAudioListener();
+    GetParentObject()->AddComponent(audioListener);
+#endif
+
 }
 void Player::Update() {
 
@@ -86,15 +94,15 @@ void Player::CameraRotate() {
     float sensitive = 0.15;
     glm::vec2 delta = mouseData->GetMouseDelta();
 
-    targetYaw += delta.x * sensitive;
-    targetPitch += delta.y * sensitive;
+    targetYaw -= delta.x * sensitive;
+    targetPitch -= delta.y * sensitive;
 
     targetPitch = glm::clamp(targetPitch, -89.0f, 89.0f);
 
     glm::quat qYaw = glm::angleAxis(glm::radians(targetYaw), glm::vec3(0, 1, 0));
     glm::quat qPitch = glm::angleAxis(glm::radians(targetPitch), glm::vec3(1, 0, 0));
 
-    glm::quat targetRot = qPitch * qYaw;
+    glm::quat targetRot = qYaw * qPitch;
 
     float slerpSpeed = 10.0f * Core::World::GetDeltaTime();
     slerpSpeed = glm::clamp(slerpSpeed, 0.0f, 1.0f);
@@ -107,28 +115,30 @@ void Player::LeftMoveCamera() {
     glm::vec3 rightVector = GetParentObject()->transform.GetRight();
     float sensitive = moveSensitive * Core::World::GetDeltaTime();
 
-    GetParentObject()->transform.AddPosition(rightVector * sensitive);
+    GetParentObject()->transform.AddPosition(-rightVector * sensitive);
 }
 
 void Player::RightMoveCamera() {
     glm::vec3 rightVector = GetParentObject()->transform.GetRight();
     float sensitive = moveSensitive * Core::World::GetDeltaTime();
 
-    GetParentObject()->transform.AddPosition(-rightVector * sensitive);
+    GetParentObject()->transform.AddPosition(rightVector * sensitive);
 }
 
 void Player::ForwardMoveCamera() {
-    glm::vec3 forwardVector = GetParentObject()->transform.GetForward();
+    glm::vec3 forward = GetParentObject()->transform.GetForward();
+    forward.y = 0.0f;
+    forward = glm::normalize(forward);
     float sensitive = moveSensitive * Core::World::GetDeltaTime();
-
-    GetParentObject()->transform.AddPosition(forwardVector * sensitive);
+    GetParentObject()->transform.AddPosition(forward * sensitive);
 }
 
 void Player::BackwardMoveCamera() {
-    glm::vec3 forwardVector = GetParentObject()->transform.GetForward();
+    glm::vec3 forward = GetParentObject()->transform.GetForward();
+    forward.y = 0.0f;
+    forward = glm::normalize(forward);
     float sensitive = moveSensitive * Core::World::GetDeltaTime();
-
-    GetParentObject()->transform.AddPosition(-forwardVector * sensitive);
+    GetParentObject()->transform.AddPosition(-forward * sensitive);
 }
 
 void Player::UpMoveCamera() {

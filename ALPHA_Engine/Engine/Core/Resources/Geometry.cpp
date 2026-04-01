@@ -27,16 +27,15 @@ namespace Core {
         Core::Logger::LogInfo("Mesh data has been cleared");
 
         Assimp::Importer importer;
-        const std::string path = std::filesystem::current_path().string() + linkToFBX;
 
         //TODO: Check if fbx
         const aiScene* meshFile;
         aiMesh* mesh;
 
         if (HasFlag(GeometryLoadSettings::InitIndices, _loadSettings)) {
-            meshFile = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+            meshFile = importer.ReadFile(linkToFBX, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
             if (meshFile == nullptr) {
-                Core::Logger::LogError("Failed to load Mesh from", path, ":" + __LOGERROR__);
+                Core::Logger::LogError("Failed to load Mesh from", linkToFBX, ":" + __LOGERROR__);
                 return;
             }
             mesh = meshFile->mMeshes[0];
@@ -50,9 +49,9 @@ namespace Core {
             }
         }
         else {
-            meshFile = importer.ReadFile(path, aiProcess_Triangulate);
+            meshFile = importer.ReadFile(linkToFBX, aiProcess_Triangulate);
             if (meshFile == nullptr) {
-                Core::Logger::LogError("Failed to load Mesh from", path, ":" + __LOGERROR__);
+                Core::Logger::LogError("Failed to load Mesh from", linkToFBX, ":" + __LOGERROR__);
                 return;
             }
             mesh = meshFile->mMeshes[0];

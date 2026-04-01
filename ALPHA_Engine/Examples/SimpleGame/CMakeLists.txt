@@ -4,7 +4,12 @@ if (POLICY CMP0072)
 endif(POLICY CMP0072)
 
 SET (Game_Source "${CMAKE_CURRENT_LIST_DIR}")
+
+SET (GAME_BUILD_PATH "${CMAKE_BINARY_DIR}/Examples/SimpleGame")
+SET (GAME_ASSETS_PATH "${GAME_BUILD_PATH}/Assets")
+
 include_directories("${Game_Source}")
+add_compile_definitions(GAME_ASSETS_PATH="${GAME_ASSETS_PATH}")
 
 add_executable (SimpleGame
 		"${Examples_Dir}/SimpleGame/EngineScripts/MyScript.cpp"
@@ -18,9 +23,9 @@ add_executable (SimpleGame
 add_dependencies(SimpleGame ALPHA_Engine)
 
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Examples/SimpleGame/Logs")
-recurse_copy_assets(${Engine_Assets} "${CMAKE_BINARY_DIR}/Examples/SimpleGame/Assets")
+recurse_copy_assets("${Game_Source}/Assets" "${GAME_ASSETS_PATH}")
 if(RENDER_ANOMALY_ENGINE)
-	recurse_copy_assets(${Engine_Source}/AnomalyEngine/Assets "${CMAKE_BINARY_DIR}/Examples/SimpleGame/Assets")
+	recurse_copy_assets(${Engine_Source}/AnomalyEngine/Assets "${GAME_ASSETS_PATH}")
 endif ()
 
 target_compile_definitions(SimpleGame

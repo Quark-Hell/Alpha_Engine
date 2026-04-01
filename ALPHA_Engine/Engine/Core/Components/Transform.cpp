@@ -1,6 +1,8 @@
 ﻿#define _USE_MATH_DEFINES
 #include "Transform.h"
 
+#include "Core/World.h"
+
 #include "Core/Logger/Logger.h"
 #include "Core/Math/glmMath.h"
 
@@ -11,11 +13,32 @@ namespace Core {
         SetScale(1, 1, 1);
     }
 
+    void Transform::UpdateLinearVelocity() {
+        const float epsilon = 1e-6f;
+
+        float currentTime = World::GetElapsedTime();
+        float delta = currentTime - _timeStamp;
+
+        if (delta > epsilon) {
+            _linearVelocity = (_position - _lastPosition) / delta;
+
+            _timeStamp = currentTime;
+            _lastPosition = _position;
+        }
+    }
+
+    glm::vec3 Transform::GetLinearVelocity() {
+        UpdateLinearVelocity();
+        return _linearVelocity;
+    }
+
     glm::vec3 Transform::GetPosition() const noexcept { return Transform::_position; }
     void Transform::AddPosition(const float X, const float Y, const float Z) {
         Transform::_position.x += X;
         Transform::_position.y += Y;
         Transform::_position.z += Z;
+
+        Transform::UpdateLinearVelocity();
 
         Transform::RecalculateTransformMatrix();
     }
@@ -24,6 +47,8 @@ namespace Core {
         Transform::_position.y += position.y;
         Transform::_position.z += position.z;
 
+        Transform::UpdateLinearVelocity();
+
         Transform::RecalculateTransformMatrix();
     }
     void Transform::SetPosition(const float X, const float Y, const float Z) {
@@ -31,12 +56,16 @@ namespace Core {
         Transform::_position.y = Y;
         Transform::_position.z = Z;
 
+        Transform::UpdateLinearVelocity();
+
         Transform::RecalculateTransformMatrix();
     }
     void Transform::SetPosition(const glm::vec3& position) {
         Transform::_position.x = position.x;
         Transform::_position.y = position.y;
         Transform::_position.z = position.z;
+
+        Transform::UpdateLinearVelocity();
 
         Transform::RecalculateTransformMatrix();
     }
@@ -138,25 +167,25 @@ namespace Core {
         glm::mat4 R = glm::toMat4(glm::normalize(_rotation));
         glm::mat4 S = glm::scale(glm::mat4(1.0f), _scale);
 
-        if (IsCamera) {
-            _transformMatrix = R * T * S;
-        }
-        else
-        {
+        //if (IsCamera) {
+        //    _transformMatrix = R * T * S;
+        //}
+        //else
+        //{
             _transformMatrix = T * R * S;
-        }
+        //}
     }
 
     glm::vec3 Transform::GetForward() const noexcept {
         glm::mat4x4 matrix = GetTransformMatrix();
-        return glm::vec3(matrix[0][2], matrix[1][2], matrix[2][2]);
+        return glm::normalize(-glm::vec3(matrix[2]));
     }
     glm::vec3 Transform::GetRight() const noexcept {
         glm::mat4x4 matrix = GetTransformMatrix();
-        return glm::vec3(matrix[0][0], matrix[1][0], matrix[2][0]);
+        return glm::normalize(glm::vec3(matrix[0]));
     }
     glm::vec3 Transform::GetUp() const noexcept {
         glm::mat4x4 matrix = GetTransformMatrix();
-        return glm::vec3(matrix[0][1], matrix[1][1], matrix[2][1]);
+        return glm::normalize(glm::vec3(matrix[1]));
     }
 }

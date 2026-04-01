@@ -27,7 +27,8 @@ namespace Core {
         directLightsBuffer = new AnomalyEngine::DirectLightsBuffer(4);
         pointLightsBuffer = new AnomalyEngine::PointLightsBuffer(4);
 
-        audioSurcesBuffer = new SonarEngine::AudioSourcesBuffer(8);
+        audioSourcesBuffer = new SonarEngine::AudioSourcesBuffer(8);
+        audioListenersBuffer = new SonarEngine::AudioListenersBuffer(1);
 
         userScriptSystem = new Register::Registry(1000);
         mouseSystem = new BindsEngine::MouseSystem(2000);

@@ -62,6 +62,15 @@ namespace AnomalyEngine {
         }
     }
 
+    glm::mat4x4 Camera::GetViewMatrix() const {
+        if (GetParentObject() == nullptr) {
+            Core::Logger::LogError("Cannot return View Matrix. Parent object is null");
+            return glm::mat4x4{};
+        }
+
+        return glm::inverse(GetParentObject()->transform.GetTransformMatrix());
+    }
+
     void Camera::SetRenderWindow(WindowsManager::Window* window) {
         if (window == nullptr) {
             Core::Logger::LogError("Window is null: " + __LOGERROR__);

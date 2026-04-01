@@ -1,4 +1,4 @@
-#include "CubeMapShader.h"
+﻿#include "CubeMapShader.h"
 
 #include <glad/glad.h>
 #include "Core/Objects/GameObject.h"
@@ -91,7 +91,10 @@ namespace AnomalyEngine {
             return;
         }
 
-        auto view = glm::mat4(glm::mat3(camera.GetParentObject()->transform.GetTransformMatrix()));
+        auto viewMatInverse = camera.GetViewMatrix();
+        auto view = glm::mat4(glm::mat3(viewMatInverse));
+
+
         SetValue("view_matrix", &view);
 
         auto projMatrix = camera.GetProjectionMatrix();

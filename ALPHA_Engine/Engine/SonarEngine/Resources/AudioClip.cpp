@@ -18,39 +18,59 @@ namespace SonarEngine {
 		Core::Logger::LogInfo("Audio Clip deleted");
 	}
 
-	void AudioClip::LoadMusic() {
-		_sampleRate = 22050;
-		_duration = 2;
-		_samples = _sampleRate * _duration;
+	void AudioClip::LoadMusic(const std::string& path) {
 
-		_data.clear();
-		_data.reserve(_samples);
+		std::string GlobalPath = path;
 
-		for (int i = 0; i < _samples; i++) {
-			_data.emplace_back(static_cast<short>(
-				32760.f * sin((2.f * 3.1415926f * 440.f * i) / _sampleRate)
-				));
+#ifdef WINDOWS
+		std::replace(GlobalPath.begin(), GlobalPath.end(), '/', '\\');
+#else
+		std::replace(GlobalPath.begin(), GlobalPath.end(), '\\', '/');
+#endif
+
+		unsigned int channels;
+		unsigned int sampleRate;
+		uint64_t duration;
+
+		int16_t* rawSamples = drwav_open_file_and_read_pcm_frames_s16(
+			GlobalPath.data(),
+			&channels,
+			&sampleRate,
+			&duration,
+			nullptr
+		);
+
+		if (rawSamples == nullptr) {
+			Core::Logger::LogError("Cannot load file", __LOGERROR__);
+			return;
 		}
+
+		_channels = channels;
+		_sampleRate = sampleRate;
+		_duration = duration;
+
+		_samples.reset(rawSamples);
+		ALenum format = (_channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
 
 		alBufferData(
 			_bufferID,
-			AL_FORMAT_MONO16,
-			_data.data(),
-			static_cast<ALsizei>(_data.size() * sizeof(short)),
+			format,
+			_samples.get(),
+			static_cast<ALsizei>(_duration * _channels * sizeof(int16_t)),
 			_sampleRate
 		);
 	}
 
-	int AudioClip::GetSampleRate() const noexcept {
+	unsigned int AudioClip::GetChannelsCount() const noexcept {
+		return _channels;
+	}
+
+	unsigned int AudioClip::GetSampleRate() const noexcept {
 		return _sampleRate;
 	}
 
-	int AudioClip::GetDuration() const noexcept {
+	unsigned int AudioClip::GetDuration() const noexcept {
 		return _duration;
-	}
-
-	int AudioClip::GetSamples() const noexcept {
-		return _samples;
 	}
 
 	ALuint AudioClip::GetOpenALBufferID() const noexcept {

@@ -41,6 +41,7 @@ namespace AnomalyEngine {
         //True = perspective matrix
         //otherwise ortho matrix
         [[nodiscard]] bool GetProjection() const;
+        [[nodiscard]] glm::mat4x4 GetViewMatrix() const;
         glm::mat4x4 GetProjectionMatrix();
 
         void SetRenderWindow(WindowsManager::Window* window);
