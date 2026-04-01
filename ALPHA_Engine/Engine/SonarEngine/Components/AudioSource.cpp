@@ -132,6 +132,11 @@ namespace SonarEngine {
 			return;
 		}
 
+		if (distance > _maxDistance) {
+			Core::Logger::LogError("reference distance cannot be bigger then max distance", __LOGERROR__);
+			return;
+		}
+
 		_referenceDistance = distance;
 		alSourcef(_bufferID, AL_REFERENCE_DISTANCE, _referenceDistance);
 	}
@@ -143,6 +148,11 @@ namespace SonarEngine {
 
 		if (distance < 0) {
 			Core::Logger::LogError("max distance cannot be less then zero", __LOGERROR__);
+			return;
+		}
+
+		if (distance < _referenceDistance) {
+			Core::Logger::LogError("max distance cannot be less then reference distance", __LOGERROR__);
 			return;
 		}
 
