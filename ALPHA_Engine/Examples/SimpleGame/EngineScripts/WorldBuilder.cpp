@@ -76,7 +76,7 @@ void WorldBuilder::GenerateCube() {
         SonarEngine::AudioSource& audioSource = audioSourcesBuffer->CreateAudioSource();
         audioSource.SetAudioClip(audioClip);
         cube.AddComponent(audioSource);
-        audioSource.PlayMusic();
+        audioSource.Play();
     }
 
     {

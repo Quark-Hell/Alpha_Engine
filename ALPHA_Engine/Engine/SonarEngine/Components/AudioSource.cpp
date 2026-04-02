@@ -54,7 +54,7 @@ namespace SonarEngine {
 		alSourcei(_bufferID, AL_BUFFER, audioClip.GetOpenALBufferID());
 	}
 
-	void AudioSource::PlayMusic() {
+	void AudioSource::Play() {
 		if (_bufferID == 0) {
 			Core::Logger::LogError("Audio Source not inited", __LOGERROR__);
 		}
@@ -65,7 +65,26 @@ namespace SonarEngine {
 				__LOGERROR__);
 		}
 
+		_audioPlayStatus = AudioPlayStatus::Playing;
 		alSourcePlay(_bufferID);
+	}
+
+	void AudioSource::Pause() {
+		if (_bufferID == 0) {
+			Core::Logger::LogError("Audio Source not inited", __LOGERROR__);
+		}
+
+		_audioPlayStatus = AudioPlayStatus::Pause;
+		alSourcePause(_bufferID);
+	}
+
+	void AudioSource::Stop() {
+		if (_bufferID == 0) {
+			Core::Logger::LogError("Audio Source not inited", __LOGERROR__);
+		}
+
+		_audioPlayStatus = AudioPlayStatus::Chilling;
+		alSourceStop(_bufferID);
 	}
 
 	void AudioSource::ClearAudioClip() noexcept {
@@ -73,6 +92,10 @@ namespace SonarEngine {
 	}
 	AudioClip* AudioSource::GetAudioClip() const noexcept {
 		return _audioClip;
+	}
+
+	AudioPlayStatus AudioSource::GetPlayStatus() const noexcept {
+		return _audioPlayStatus;
 	}
 
 	void AudioSource::SetGain(float gain) {

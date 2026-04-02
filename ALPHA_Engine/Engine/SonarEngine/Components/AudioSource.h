@@ -5,6 +5,14 @@
 #include "SonarEngine/Resources/AudioClip.h"
 
 namespace SonarEngine {
+	enum class AudioPlayStatus {
+		Chilling,
+		Pause,
+		Playing,
+	};
+}
+
+namespace SonarEngine {
 	class AudioSource final : public Core::Component {
 		friend class SonarEngine;
 		friend class AudioSourcesBuffer;
@@ -21,17 +29,25 @@ namespace SonarEngine {
 		bool _is_looping;
 		bool _isGlobal;
 
+		AudioPlayStatus _audioPlayStatus;
+
 	private:
 		AudioSource();
 
 		void UpdatePosition();
 
 	public:
-		void PlayMusic();
+		void Play();
+		void Pause();
+		void Stop();
+
+
 		void SetAudioClip(AudioClip& audioClip);
 
 		[[nodiscard]] void ClearAudioClip() noexcept;
 		[[nodiscard]] AudioClip* GetAudioClip() const noexcept;
+
+		[[nodiscard]] AudioPlayStatus GetPlayStatus() const noexcept;
 
 		void SetReferenceDistance(float distance);
 		void SetMaxDistance(float distance);
