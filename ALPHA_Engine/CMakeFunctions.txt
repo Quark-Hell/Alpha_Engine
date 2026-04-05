@@ -68,7 +68,6 @@ function(recurse_copy_headers src dest)
     file(GLOB_RECURSE templateFiles "${src}/*.h" "${src}/*.hpp")
     
     set(IGNORE_PATTERNS
-        "/[Ee]xternal/"
         "/[Tt]hird[Pp]arty/"
         "/[Vv]endor/"
         "/.git/"

@@ -1,29 +1,39 @@
-﻿set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Examples/SimpleGame")
-if (POLICY CMP0072)
+﻿if (POLICY CMP0072)
 	cmake_policy (SET CMP0072 NEW)
 endif(POLICY CMP0072)
 
-SET (Game_Source "${CMAKE_CURRENT_LIST_DIR}")
+set (GAME_SOURCE "${CMAKE_CURRENT_LIST_DIR}")
 
-SET (GAME_BUILD_PATH "${CMAKE_BINARY_DIR}/Examples/SimpleGame")
-SET (GAME_ASSETS_PATH "${GAME_BUILD_PATH}/Assets")
+set (GAME_BUILD_PATH "${OUTPUT_BINARY_DIR}/Examples/SimpleGame")
+set (GAME_ASSETS_PATH "${GAME_BUILD_PATH}/Assets")
 
-include_directories("${Game_Source}")
 add_compile_definitions(GAME_ASSETS_PATH="${GAME_ASSETS_PATH}")
 
 add_executable (SimpleGame
-		"${Examples_Dir}/SimpleGame/EngineScripts/MyScript.cpp"
-		"${Examples_Dir}/SimpleGame/EngineScripts/Player.cpp"
-		"${Examples_Dir}/SimpleGame/EngineScripts/WorldBuilder.cpp"
+		"${GAME_SOURCE}/SimpleGame/EngineScripts/MyScript.cpp"
+		"${GAME_SOURCE}/SimpleGame/EngineScripts/Player.cpp"
+		"${GAME_SOURCE}/SimpleGame/EngineScripts/WorldBuilder.cpp"
 
-		"${Examples_Dir}/SimpleGame/Windows/WindowsSettings.cpp"
-		"${Examples_Dir}/SimpleGame/Modules.cpp"
-		"external/GLAD/glad/src/glad.c")
+		"${GAME_SOURCE}/SimpleGame/Windows/WindowsSettings.cpp"
+		"${GAME_SOURCE}/SimpleGame/Modules.cpp"
+)
+if(TARGET ANOMALY_ENGINE)
+    list(APPEND SOURCES "${GAME_SOURCE}/SimpleGame/External/glad/src/glad.c")
+endif()
 
-add_dependencies(SimpleGame ALPHA_Engine)
+set_target_properties(SimpleGame PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${GAME_BUILD_PATH}"
+)
 
-file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Examples/SimpleGame/Logs")
-recurse_copy_assets("${Game_Source}/Assets" "${GAME_ASSETS_PATH}")
+add_dependencies(SimpleGame ALPHA_ENGINE)
+target_include_directories(SimpleGame PRIVATE "${GAME_SOURCE}/SimpleGame")
+target_include_directories(SimpleGame PRIVATE "${GAME_SOURCE}/External")
+target_include_directories(SimpleGame PRIVATE "${GAME_SOURCE}/External/glad/include")
+
+
+file(MAKE_DIRECTORY "${GAME_BUILD_PATH}/Logs")
+recurse_copy_assets("${OUTPUT_BINARY_DIR}/Engine/Assets" "${GAME_ASSETS_PATH}")
+recurse_copy_assets("${GAME_SOURCE}/SimpleGame/Assets" "${GAME_ASSETS_PATH}")
 if(RENDER_ANOMALY_ENGINE)
 	recurse_copy_assets(${Engine_Source}/AnomalyEngine/Assets "${GAME_ASSETS_PATH}")
 endif ()
@@ -38,69 +48,69 @@ target_compile_definitions(SimpleGame
 		$<$<CONFIG:MinSizeRel>:OE_RELEASE>
 )
 
+function(link_if_exists target dependency compile_flag)
+    if(TARGET ${dependency})
+        target_link_libraries(${target} PRIVATE ${dependency})
+		target_compile_definitions(${target} PRIVATE ${compile_flag})
+    endif()
+endfunction()
+
+
 find_package(OpenGL REQUIRED)
 
 if(WIN32)
-	include(CMakeCloneDependencies.txt)
-
 	set(PHYSX_LIBS_GAME)
 
 	if(MSVC)
 		target_link_libraries(SimpleGame
-				PUBLIC USER_SCRIPTS_REGISTER
-				PUBLIC PHYSICS_AXIS_ENGINE
-				PUBLIC BINDS_ENGINE
-				PUBLIC RENDER_BASE
-				PUBLIC ANOMALY_ENGINE
-				PUBLIC AUDIO_SONAR_ENGINE
-				PRIVATE ALPHA_Engine
+				#PUBLIC AXIS_ENGINE
+				PRIVATE ALPHA_ENGINE
 
 				PRIVATE ${PHYSX_LIBS_GAME}
-
-				PRIVATE "${Examples_Build_Dir}/external/glfw3.lib"
-				PRIVATE "${Examples_Build_Dir}/external/assimp.lib"
-				PRIVATE "${OPENGL_LIBRARIES}"
+				PRIVATE ${OPENGL_LIBRARIES}
 		)
 
-		copy_file("${Examples_Build_Dir}/external/assimp-vc143-mt.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assimp-vc143-mt.dll")
-		copy_file("${Examples_Build_Dir}/external/OpenAL32.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpenAL32.dll")
+		link_if_exists(SimpleGame USER_SCRIPTS_REGISTER USER_SCRIPTS_REGISTER_INCLUDED)
+		link_if_exists(SimpleGame WINDOWS_MANAGER WINDOWS_MANAGER_INCLUDED)
+		link_if_exists(SimpleGame ANOMALY_ENGINE ANOMALY_ENGINE_INCLUDED)
+		link_if_exists(SimpleGame BINDS_ENGINE BINDS_ENGINE_INCLUDED)
+		link_if_exists(SimpleGame SONAR_ENGINE SONAR_ENGINE_INCLUDED)
+
+		#if(TARGET SONAR_ENGINE)
+			#copy_file("${Examples_Build_Dir}/external/OpenAL32.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpenAL32.dll")
+		#endif()
 	elseif(MINGW)
 		target_link_libraries(SimpleGame
 				PUBLIC USER_SCRIPTS_REGISTER
-				PUBLIC PHYSICS_AXIS_ENGINE
+				PUBLIC AXIS_ENGINE
 				PUBLIC BINDS_ENGINE
-				PUBLIC RENDER_BASE
+				PUBLIC WINDOWS_MANAGER
 				PUBLIC ANOMALY_ENGINE
-				PUBLIC AUDIO_SONAR_ENGINE
-				PRIVATE ALPHA_Engine
+				PUBLIC SONAR_ENGINE
+				PRIVATE ALPHA_ENGINE
 
 				PRIVATE ${PHYSX_LIBS_GAME}
-
-				PRIVATE "${Examples_Build_Dir}/external/glfw3.a"
-				PRIVATE "${Examples_Build_Dir}/external/assimp.dll.a"
-				PRIVATE "${OPENGL_LIBRARIES}"
+				PRIVATE ${OPENGL_LIBRARIES}
 		)
 
-		copy_file("${Examples_Build_Dir}/external/libassimp-5.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libassimp-5.dll")
-		copy_file("${Examples_Build_Dir}/external/OpenAL32.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpenAL32.dll")
+		if(TARGET SONAR_ENGINE)
+			copy_file("${Examples_Build_Dir}/external/OpenAL32.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpenAL32.dll")
+		endif()
 	endif()
-
 else()
 	find_package(glfw3 REQUIRED)
-	find_package(assimp REQUIRED)
 	find_package(PhysX REQUIRED)
 
 	target_link_libraries(SimpleGame
 			PUBLIC USER_SCRIPTS_REGISTER
-			PUBLIC PHYSICS_AXIS_ENGINE
+			PUBLIC AXIS_ENGINE
 			PUBLIC BINDS_ENGINE
-			PUBLIC RENDER_BASE
+			PUBLIC WINDOWS_MANAGER
 			PUBLIC ANOMALY_ENGINE
-			PUBLIC AUDIO_SONAR_ENGINE
-			PUBLIC ALPHA_Engine
+			PUBLIC SONAR_ENGINE
+			PUBLIC ALPHA_ENGINE
 
 			PRIVATE glfw
-			PRIVATE assimp
 			PRIVATE "${OPENGL_LIBRARIES}"
 	)
 endif()

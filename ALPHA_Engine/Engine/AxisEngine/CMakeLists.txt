@@ -268,7 +268,6 @@ endif()
 
 if (PHYSICS_AXIS_ENGINE)
     add_compile_definitions(AXIS_ENGINE_INCLUDED)
-    add_definition("AXIS_ENGINE_INCLUDED")
 
     set(PHYSX_INCLUDES_DIR "${Engine_Source}/AxisEngine/External/PhysX/include")
     include_directories(${PHYSX_INCLUDES_DIR})

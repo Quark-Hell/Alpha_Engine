@@ -2,14 +2,55 @@
 # and include sub-projects here.
 
 cmake_minimum_required (VERSION 3.31)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project ("ALPHA_Engine")
 
 include("CMakeColorsOutput.txt")
-include("CMakeVariables.txt")
-
 include("CMakeFunctions.txt")
 
+
+
+# ------------------- Global compiler flags -------------------
+if(MSVC)
+    # Warning level
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
+else()
+    # Warning level for GCC/Clang
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+endif()
+
+set(CMAKE_DEBUG_POSTFIX "")
+
+# ------------------- Configuration-specific flags -------------------
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O2 -g")
+
+# Debug
+if(MSVC)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Od /Zi")
+else()
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g")
+    add_compile_options($<$<CONFIG:Debug>:-fsanitize=address>)
+    add_link_options($<$<CONFIG:Debug>:-fsanitize=address>)
+endif()
+# ------------------- /Configuration-specific flags -------------------
+
+
+
+
+set (ALPHA_Engine "${PROJECT_SOURCE_DIR}")
+set (Engine_Source "${ALPHA_Engine}/Engine")
+set (Examples_Source "${ALPHA_Engine}/Examples")
+
+set (OUTPUT_BINARY_DIR "${CMAKE_BINARY_DIR}/_Output")
+
+set(BUILD_DIR "${OUTPUT_BINARY_DIR}/Engine" CACHE PATH "Custom build dir")
+set(LIBRARY_OUTPUT_PATH "${OUTPUT_BINARY_DIR}/Engine/lib")
+set(RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_BINARY_DIR}/Examples")
+
+#Checking platform
 if(WIN32)
 	message("\n${BoldRed}Windows build${ColourReset}\n")
 	add_compile_definitions(WINDOWS)
@@ -18,9 +59,6 @@ if (LINUX)
 	message("\n${BoldRed}Linux build${ColourReset}\n")
 	add_compile_definitions(LINUX)
 endif ()
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -32,40 +70,20 @@ else()
     add_definitions(-D_DEBUG)
 endif()
 
-
-#SET(CMAKE_CXX_FLAGS "-Wall -frtti")
-SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
-SET(CMAKE_CXX_FLAGS_RELEASE "-O3 -flto")
-SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
-
-#SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g -fsanitize=undefined -fsanitize=address")
-
-#Engine
-include("Engine/CMakeLists.txt") 
-
-target_compile_definitions(ALPHA_Engine
-		PRIVATE
-		_CRT_SECURE_NO_WARNINGS
-		PUBLIC
-		$<$<CONFIG:Debug>:OE_DEBUG>
-		$<$<CONFIG:RelWithDebInfo>:OE_DEBUG>
-		$<$<CONFIG:Release>:OE_RELEASE>
-		$<$<CONFIG:MinSizeRel>:OE_RELEASE>
-)
-
 #Utility
 #include("Utility/AlphaConfigurator/CMakeLists.txt")
 #include("Utility/EngineDataCollector/CMakeLists.txt")
 
-include("Engine/UserScriptsRegister/CMakeLists.txt")
-include("Engine/AxisEngine/CMakeLists.txt")
-include("Engine/WindowsManager/CMakeLists.txt")
-include("Engine/BindsEngine/CMakeLists.txt")
-include("Engine/AnomalyEngine/CMakeLists.txt")
-include("Engine/SonarEngine/CMakeLists.txt")
+add_subdirectory("${Engine_Source}/Core") 
+add_subdirectory("${Engine_Source}/UserScriptsRegister") 
+add_subdirectory("${Engine_Source}/WindowsManager") 
+add_subdirectory("${Engine_Source}/AnomalyEngine")
+add_subdirectory("${Engine_Source}/BindsEngine")
+add_subdirectory("${Engine_Source}/SonarEngine")
+#include("Engine/AxisEngine/CMakeLists.txt")
 
 #Example
-include("Examples/CMakeLists.txt")
+add_subdirectory("${Examples_Source}")
 
 #Tests
 #include("Tests/CMakeLists.txt")

@@ -1,34 +1,53 @@
 ﻿set(engine_sonar_list)
-option(AUDIO_SONAR_ENGINE "Build audio engine." ON)
+option(SONAR_ENGINE "Build audio engine." ON)
 
-if(AUDIO_SONAR_ENGINE)
-    include(FetchContent)
-
-    set(EXTERNAL_DIR "${Engine_Source}/SonarEngine/External")
-
-    set(OpenAL_Install_Dir "${EXTERNAL_DIR}/OpenAL")
-    set(DR_Install_Dir "${EXTERNAL_DIR}/Dr_Libs/")
+if(SONAR_ENGINE)
+    set (SONAR_ENGINE_SOURCE "${CMAKE_CURRENT_LIST_DIR}")
     
-    recurse_add_cpp_items("${Engine_Source}/SonarEngine" engine_sonar_list)
-    recurse_copy_headers("${Engine_Source}/SonarEngine" "${Build_Dir}/headers/SonarEngine")
+    recurse_add_cpp_items("${SONAR_ENGINE_SOURCE}/SonarEngine" engine_sonar_list)
+    recurse_copy_headers("${SONAR_ENGINE_SOURCE}/SonarEngine" "${BUILD_DIR}/headers/SonarEngine")
+
+    add_library(SONAR_ENGINE STATIC ${engine_sonar_list})
+
+    #===================Link OpenAL===================#
+    find_package(OpenAL)
     
-    set(OPENAL_INCLUDE_DIR "${OpenAL_Install_Dir}/include")
-    if(WIN32)
-        set(OPENAL_LIB "${OpenAL_Install_Dir}/lib/OpenAL32.lib")
+    if(OpenAL_FOUND)
+        target_link_libraries(SONAR_ENGINE PRIVATE OpenAL::OpenAL)
     else()
-        set(OPENAL_LIB "${OpenAL_Install_Dir}/lib/libOpenAL32.dll.a")
-    endif()
-
-    add_compile_definitions(SONAR_ENGINE_INCLUDED)
-    add_definition("SONAR_ENGINE_INCLUDED")
-
-    copy_file("${OpenAL_Install_Dir}/bin/OpenAL32.dll" "${Build_Dir}/external/OpenAL32.dll")
-
-    include_directories(${OPENAL_INCLUDE_DIR})
-    include_directories(${DR_Install_Dir})
-
-    add_library(AUDIO_SONAR_ENGINE STATIC ${engine_sonar_list})
+        message(WARNING "OpenAL not found, using manual fetching and building")
     
-    target_include_directories(AUDIO_SONAR_ENGINE PRIVATE ${OPENAL_INCLUDE_DIR})
-    target_link_libraries(AUDIO_SONAR_ENGINE PRIVATE ${OPENAL_LIB})
+        include(FetchContent)
+    
+        set(ALSOFT_EXAMPLES OFF CACHE BOOL "" FORCE)
+        set(ALSOFT_TESTS OFF CACHE BOOL "" FORCE)
+        set(ALSOFT_UTILS OFF CACHE BOOL "" FORCE)
+        set(ALSOFT_NO_CONFIG_UTIL ON CACHE BOOL "" FORCE)
+        set(ALSOFT_INSTALL OFF CACHE BOOL "" FORCE)
+        set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+        set(ALSOFT_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+        set(LIBTYPE "STATIC" CACHE STRING "" FORCE)
+    
+        FetchContent_Declare(
+            openal
+            GIT_REPOSITORY https://github.com/kcat/openal-soft.git
+            GIT_TAG 1.24.2
+        )
+    
+        FetchContent_MakeAvailable(openal)
+    
+        target_link_libraries(SONAR_ENGINE PRIVATE OpenAL)
+    endif()
+    #===================/Link OpenAL===================#
+
+    if(LOGGER_INCLUDED)
+        target_compile_definitions(SONAR_ENGINE PRIVATE LOGGER_INCLUDED)
+    endif()
+    
+    target_include_directories(SONAR_ENGINE
+        PUBLIC "${SONAR_ENGINE_SOURCE}"
+
+        PRIVATE "${Engine_Source}/Core"
+        PRIVATE "${Engine_Source}/Core/External"
+    )
 endif()

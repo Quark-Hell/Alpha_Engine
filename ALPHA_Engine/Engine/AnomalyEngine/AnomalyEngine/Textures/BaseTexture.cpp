@@ -1,0 +1,76 @@
+﻿#include "BaseTexture.h"
+
+#include "Core/Logger/Logger.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <STB/stb_image.h>
+
+#include <filesystem>
+
+#include <string>
+#include <algorithm>
+#include <glad/glad.h>
+
+namespace AnomalyEngine {
+    void BaseTexture::CreateTexture(std::string pathToTexture) {
+        int width, height, channelsCount;
+
+#ifdef WINDOWS
+        std::replace(pathToTexture.begin(), pathToTexture.end(), '/', '\\');
+#else
+        std::replace(pathToTexture.begin(), pathToTexture.end(), '\\', '/');
+#endif
+
+        stbi_set_flip_vertically_on_load(false);
+        unsigned char *data = stbi_load((pathToTexture).c_str(),
+                                        &width, &height, &channelsCount, 0);
+
+        if (data == nullptr) {
+            Core::Logger::Logger::LogError("Could not create texture. Check path: ", pathToTexture);
+            return;
+        }
+
+        _textureData = std::unique_ptr<unsigned char>(data);
+
+        _width = width;
+        _height = height;
+        _channelsCount = channelsCount;
+        Core::Logger::Logger::LogInfo("Texture created successfully");
+    }
+
+    void BaseTexture::DeleteTextureFromRAM() {
+        stbi_image_free(_textureData.release());
+        //_textureData.reset();
+        Core::Logger::Logger::LogInfo("Texture was deleted from RAM");
+    }
+    void BaseTexture::DeleteTextureFromVRAM() {
+        if (_textureID == 0)
+            return;
+
+        glDeleteTextures(1, &_textureID);
+        _textureID = 0;
+
+        Core::Logger::Logger::LogInfo("Texture was deleted from VRAM");
+    }
+
+    unsigned int BaseTexture::GetTextureId() const
+    {
+        return _textureID;
+    }
+
+    unsigned int BaseTexture::GetTextureLocation() const
+    {
+        return textureLocation;
+    }
+
+    unsigned int BaseTexture::GetWidth() const
+    {
+        return _width;
+    }
+
+    unsigned int BaseTexture::GetHeight() const
+    {
+        return _height;
+    }
+}
+
