@@ -12,7 +12,7 @@
 
 #include "AxisEngine/Components/Rigidbody.h"
 
-#include "PhysX/PxPhysicsAPI.h"
+#include "AxisEngine/External/PhysX/PxPhysicsAPI.h"
 
 namespace AxisEngine {
     ConvexMeshCollider::ConvexMeshCollider(PhysicsEngine& engine) : Collider::Collider(engine) {

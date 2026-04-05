@@ -64,21 +64,23 @@ endfunction()
 
 function(recurse_copy_headers src dest)
     message("${Red}copy headers${ColourReset}")
+
+    cmake_parse_arguments(ARG "" "" "IGNORE_PATTERNS" ${ARGN})
+
+    if(NOT DEFINED ARG_IGNORE_PATTERNS)
+        set(ARG_IGNORE_PATTERNS
+            "/.git/"
+        )
+    endif()
     
     file(GLOB_RECURSE templateFiles "${src}/*.h" "${src}/*.hpp")
-    
-    set(IGNORE_PATTERNS
-        "/[Tt]hird[Pp]arty/"
-        "/[Vv]endor/"
-        "/.git/"
-    )
     
     set(filtered_files)
     foreach(file ${templateFiles})
         string(REPLACE "\\" "/" normalized_file "${file}")
         
         set(should_ignore FALSE)
-        foreach(pattern ${IGNORE_PATTERNS})
+        foreach(pattern ${ARG_IGNORE_PATTERNS})
             if(normalized_file MATCHES "${pattern}")
                 set(should_ignore TRUE)
                 break()
@@ -107,7 +109,7 @@ function(recurse_copy_headers src dest)
         )
     endforeach()
     
-    # Статистика
+    # Statistics
     list(LENGTH templateFiles total_found)
     list(LENGTH filtered_files total_processed)
     math(EXPR ignored_count "${total_found} - ${total_processed}")

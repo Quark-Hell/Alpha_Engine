@@ -6,8 +6,8 @@
 #include "Core/ECS/System.h"
 #include "AxisEngine/Components/Rigidbody.h"
 
-#include "PhysX/cooking/PxCooking.h"
-#include "PhysX/PxPhysicsAPI.h"
+#include "AxisEngine/External/PhysX/cooking/PxCooking.h"
+#include "AxisEngine/External/PhysX/PxPhysicsAPI.h"
 
 namespace AxisEngine {
 	class CollidersBuffer;

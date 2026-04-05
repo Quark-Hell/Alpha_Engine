@@ -139,7 +139,6 @@ void WorldBuilder::GenerateEarth() {
 
 #if ANOMALY_ENGINE_INCLUDED
     auto& earthMesh = meshesBuffer->CreateMesh(meshGem);
-    earthMesh.LoadMesh(meshGem);
 
     auto& shader = earthMesh._material.InitShader<AnomalyEngine::OpaqueShader>();
     shader.LoadTextures(
@@ -168,25 +167,24 @@ void WorldBuilder::GenerateEarth() {
 void WorldBuilder::GenerateSun() {
     auto& Sun = Core::Factory::CreateObject<Core::GameObject>();
 
-    Sun.transform.AddPosition(0, 55, -55);
+    Sun.transform.AddPosition(0, 105, -255);
     Sun.transform.SetScale(35, 35, 35);
 
     Sun.SetName("Sun");
 
-    //Core::Geometry& geometry = Core::Factory::CreateResource<Core::Geometry>();
-    //geometry.LoadMesh("/Assets/Models/Sci-Fi_Football.fbx", Core::GeometryLoadSettings::All);
-    //
-    //auto& sunMesh = meshesBuffer->CreateMesh(geometry);
-    //
-    //Sun.AddComponent(sunMesh);
-    //
-    //auto& shader = sunMesh._material.InitShader<AnomalyEngine::SimplexFractalShader>();
-    //
-    //Core::Geometry& collider = Core::Factory::CreateResource<Core::Geometry>();
-    //collider.LoadMesh("/Assets/Models/Sci-Fi_Football.fbx", Core::GeometryLoadSettings::InitVertex);
-    //
-    //shader.Contrast = 6.4;
-    //shader.Brightness = 0.15;
+    Core::Geometry& geometry = Core::Factory::CreateResource<Core::Geometry>();
+    geometry.LoadMesh(GAME_ASSETS_PATH "/Models/Primitives/Sphere.fbx", Core::GeometryLoadSettings::All);
+
+#if ANOMALY_ENGINE_INCLUDED   
+    auto& sunMesh = meshesBuffer->CreateMesh(geometry);
+
+    Sun.AddComponent(sunMesh);
+    
+    auto& shader = sunMesh._material.InitShader<AnomalyEngine::SimplexFractalShader>();
+    
+    shader.Contrast = 6.4;
+    shader.Brightness = 0.15;
+#endif
 }
 
 
@@ -194,7 +192,7 @@ void WorldBuilder::Start() {
     GenerateCubeMap();
     GenerateEarth();
     GenerateLightSource();
-    //GenerateSun();
+    GenerateSun();
     GenerateCube();
 }
 

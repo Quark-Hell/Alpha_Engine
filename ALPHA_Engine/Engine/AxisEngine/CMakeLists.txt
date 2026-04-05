@@ -1,26 +1,30 @@
 ﻿set(engine_axis_list)
-option(PHYSICS_AXIS_ENGINE "Build physics engine." ON)
+option(AXIS_ENGINE "Build physics engine." ON)
 
 option(BUILD_PhysX "Build NVIDIA PhysX SDK." ON)
 option(BUILD_PhysX_GPU_SUPPORT "Build NVIDIA PhysX SDK with CUDA toolkit." OFF)
 
 #define build type
-if(PHYSICS_AXIS_ENGINE)
+if(AXIS_ENGINE)
     if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
         set(BUILD_TYPE release)
     else()
         set(BUILD_TYPE debug)
     endif()
+
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
-if(PHYSICS_AXIS_ENGINE)
-    set(EXTERNAL_DIR "${Engine_Source}/AxisEngine/External")
+if(AXIS_ENGINE)
+    set (AXIS_ENGINE_SOURCE "${CMAKE_CURRENT_LIST_DIR}")
+
+    set(EXTERNAL_DIR "${AXIS_ENGINE_SOURCE}/AxisEngine/External")
     set(PHYSX_ROOT_DIR "${EXTERNAL_DIR}/PhysX-omni/physx")
     set(PHYSX_ROOT_INCLUDES_DIR "${PHYSX_ROOT_DIR}/include")
     set(PHYSX_ROOT_LIBS_DIR "${PHYSX_ROOT_DIR}/bin/win.x86_64.vc143.mt/${BUILD_TYPE}")
 
-    set(PHYSX_INCLUDES_DIR "${Engine_Source}/AxisEngine/External/PhysX/include/PhysX")
-    set(PHYSX_LIBS_DIR "${Engine_Source}/AxisEngine/External/PhysX/lib")
+    set(PHYSX_INCLUDES_DIR "${AXIS_ENGINE_SOURCE}/AxisEngine/External/PhysX")
+    set(PHYSX_LIBS_DIR "${AXIS_ENGINE_SOURCE}/AxisEngine/External/PhysX-libs")
 
     set(PHYSX_LIBS)
 endif()
@@ -111,7 +115,7 @@ function(setup_physx_libs physx_root_libs_dir physx_libs_dir result_var libs_var
     endif()
 endfunction()
 
-if(PHYSICS_AXIS_ENGINE)
+if(AXIS_ENGINE)
     #find includes  
     setup_physx_includes(
         "${PHYSX_ROOT_INCLUDES_DIR}" 
@@ -145,7 +149,7 @@ if(NOT FOUND_PHYSX_INCLUDES OR NOT FOUND_PHYSX_LIBS)
 endif()
 
 #build PhysX
-if (PHYSICS_AXIS_ENGINE AND BUILD_PhysX AND PHYSX_DOWNLOADED)
+if (AXIS_ENGINE AND BUILD_PhysX AND PHYSX_DOWNLOADED)
     set(BUILD_FOLDER "win.x86_64.vc143.mt")
 
 	if(MSVC)
@@ -249,7 +253,7 @@ if (PHYSICS_AXIS_ENGINE AND BUILD_PhysX AND PHYSX_DOWNLOADED)
     endif()
 endif()
 
-if(PHYSICS_AXIS_ENGINE AND PHYSX_BUILDED)
+if(AXIS_ENGINE AND PHYSX_BUILDED)
     #find includes
     setup_physx_includes(
         "${PHYSX_ROOT_INCLUDES_DIR}" 
@@ -266,24 +270,45 @@ if(PHYSICS_AXIS_ENGINE AND PHYSX_BUILDED)
     )
 endif()
 
-if (PHYSICS_AXIS_ENGINE)
-    add_compile_definitions(AXIS_ENGINE_INCLUDED)
-
-    set(PHYSX_INCLUDES_DIR "${Engine_Source}/AxisEngine/External/PhysX/include")
-    include_directories(${PHYSX_INCLUDES_DIR})
+if (AXIS_ENGINE)
+    set(PHYSX_INCLUDES_DIR "${AXIS_ENGINE_SOURCE}/AxisEngine/External/PhysX-includes")
 
     message("${Cyan}include .cpp engine_axis_list${ColourReset}")
 
-    recurse_add_cpp_items("${Engine_Source}/AxisEngine" engine_axis_list)
-    recurse_copy_headers("${Engine_Source}/AxisEngine" "${Build_Dir}/headers/AxisEngine")
+    recurse_add_cpp_items("${AXIS_ENGINE_SOURCE}/AxisEngine" engine_axis_list)
+    recurse_copy_headers("${AXIS_ENGINE_SOURCE}/AxisEngine" "${BUILD_DIR}/headers/AxisEngine"
+        IGNORE_PATTERNS
+            "/[Ee]xternal/"
+            "/[Tt]hird[Pp]arty/"
+            "/[Ee]xternal/"
+            "/[Gg]enerated/"
+    )
 
-    #copy_file("${Engine_Source}/AxisEngine/Module.cfg" "${Configs_Dir}/AxisEngine/Module.cfg")
+    recurse_copy_headers(
+        "${AXIS_ENGINE_SOURCE}/AxisEngine/External/PhysX" 
+        "${BUILD_DIR}/headers/AxisEngine/External/PhysX"
+    )
 
-    add_library(PHYSICS_AXIS_ENGINE STATIC ${engine_axis_list})
+    message("${PHYSX_INCLUDES_DIR}    sdfsdfsdfs")
 
-    target_compile_definitions(PHYSICS_AXIS_ENGINE PRIVATE PX_PHYSX_STATIC_LIB)
+    add_library(AXIS_ENGINE STATIC ${engine_axis_list})
 
-	target_link_libraries(PHYSICS_AXIS_ENGINE
+    if(LOGGER_INCLUDED)
+        target_compile_definitions(SONAR_ENGINE PRIVATE LOGGER_INCLUDED)
+    endif()
+
+    target_compile_definitions(AXIS_ENGINE PRIVATE PX_PHYSX_STATIC_LIB)
+
+    target_include_directories(AXIS_ENGINE
+        PUBLIC "${AXIS_ENGINE_SOURCE}"
+    
+        PRIVATE "${Engine_Source}/Core"
+        PRIVATE "${Engine_Source}/Core/External"
+
+        PRIVATE "${PHYSX_INCLUDES_DIR}"
+    )
+
+	target_link_libraries(AXIS_ENGINE
 		PRIVATE ${PHYSX_LIBS}
 	)
 endif()

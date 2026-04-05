@@ -50,6 +50,8 @@ set(BUILD_DIR "${OUTPUT_BINARY_DIR}/Engine" CACHE PATH "Custom build dir")
 set(LIBRARY_OUTPUT_PATH "${OUTPUT_BINARY_DIR}/Engine/lib")
 set(RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_BINARY_DIR}/Examples")
 
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 #Checking platform
 if(WIN32)
 	message("\n${BoldRed}Windows build${ColourReset}\n")
@@ -80,7 +82,7 @@ add_subdirectory("${Engine_Source}/WindowsManager")
 add_subdirectory("${Engine_Source}/AnomalyEngine")
 add_subdirectory("${Engine_Source}/BindsEngine")
 add_subdirectory("${Engine_Source}/SonarEngine")
-#include("Engine/AxisEngine/CMakeLists.txt")
+add_subdirectory("${Engine_Source}/AxisEngine")
 
 #Example
 add_subdirectory("${Examples_Source}")

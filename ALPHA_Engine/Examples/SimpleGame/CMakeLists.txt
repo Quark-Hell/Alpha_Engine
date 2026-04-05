@@ -75,10 +75,7 @@ if(WIN32)
 		link_if_exists(SimpleGame ANOMALY_ENGINE ANOMALY_ENGINE_INCLUDED)
 		link_if_exists(SimpleGame BINDS_ENGINE BINDS_ENGINE_INCLUDED)
 		link_if_exists(SimpleGame SONAR_ENGINE SONAR_ENGINE_INCLUDED)
-
-		#if(TARGET SONAR_ENGINE)
-			#copy_file("${Examples_Build_Dir}/external/OpenAL32.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpenAL32.dll")
-		#endif()
+		link_if_exists(SimpleGame AXIS_ENGINE AXIS_ENGINE_INCLUDED)
 	elseif(MINGW)
 		target_link_libraries(SimpleGame
 				PUBLIC USER_SCRIPTS_REGISTER
@@ -93,9 +90,6 @@ if(WIN32)
 				PRIVATE ${OPENGL_LIBRARIES}
 		)
 
-		if(TARGET SONAR_ENGINE)
-			copy_file("${Examples_Build_Dir}/external/OpenAL32.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpenAL32.dll")
-		endif()
 	endif()
 else()
 	find_package(glfw3 REQUIRED)

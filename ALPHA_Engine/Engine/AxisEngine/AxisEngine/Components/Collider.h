@@ -3,7 +3,7 @@
 #include "Core/Components/Component.h"
 #include "Core/Resources/Geometry.h"
 
-#include "PhysX/PxPhysicsAPI.h"
+#include "AxisEngine/External/PhysX/PxPhysicsAPI.h"
 
 namespace AxisEngine {
 	struct PxMaterialDeleter {

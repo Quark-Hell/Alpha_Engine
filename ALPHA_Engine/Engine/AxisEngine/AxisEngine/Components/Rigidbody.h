@@ -6,7 +6,7 @@
 #include "Core/Components/Component.h"
 #include "glm/glm.hpp"
 
-#include "PhysX/PxPhysicsAPI.h"
+#include "AxisEngine/External/PhysX/PxPhysicsAPI.h"
 
 namespace Core {
 	class Object;
