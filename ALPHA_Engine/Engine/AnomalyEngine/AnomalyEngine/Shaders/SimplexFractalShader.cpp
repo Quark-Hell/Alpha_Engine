@@ -1,4 +1,4 @@
-#include "AnomalyEngine/Components/Camera.h"
+﻿#include "AnomalyEngine/Components/Camera.h"
 #include "AnomalyEngine/Components/Material.h"
 #include "AnomalyEngine/Components/Mesh.h"
 
@@ -48,7 +48,9 @@ namespace AnomalyEngine {
         }
 
         //=============================================Object Matrices=============================================//
-        auto MVP = camera.GetProjectionMatrix() * camera.GetParentObject()->transform.GetTransformMatrix() * GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
+        auto viewMat = camera.GetViewMatrix();
+
+        auto MVP = camera.GetProjectionMatrix() * viewMat * GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix();
         SetValue("MVP", &MVP);
 
         auto modelMat = glm::mat4(glm::mat3(GetParentMaterial()->GetParentMesh()->GetParentObject()->transform.GetTransformMatrix()));
