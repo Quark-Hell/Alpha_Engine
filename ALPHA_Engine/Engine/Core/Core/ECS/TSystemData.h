@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <vector>
 #include <memory>
@@ -18,9 +18,9 @@ namespace Core {
     public:
         ~TSystemData() override = default;
 
-        T& GetData(size_t pos) {
+        T& GetData(size_t pos) const {
             if (pos >= _data.size()) {
-                Logger::LogError("Data index out of bounds: " + __LOGERROR__);
+                Logger::LogCritical("Data index out of bounds: " + __LOGERROR__);
             }
             return *_data[pos];
         }
