@@ -82,8 +82,8 @@ void WorldBuilder::GenerateCube() {
 
 #if SONAR_ENGINE_INCLUDED
         SonarEngine::AudioClip& audioClip = Core::Factory::CreateResource<SonarEngine::AudioClip>();
-        audioClip.LoadMusic(GAME_ASSETS_PATH "/Audio/Gachi_remix_mono.wav");
-
+        audioClip.LoadMusic(GAME_ASSETS_PATH "/Audio/Unknown_Ambient_mono.wav");
+        
         SonarEngine::AudioSource& audioSource = audioSourcesBuffer->CreateAudioSource();
         audioSource.SetAudioClip(audioClip);
         cube.AddComponent(audioSource);
