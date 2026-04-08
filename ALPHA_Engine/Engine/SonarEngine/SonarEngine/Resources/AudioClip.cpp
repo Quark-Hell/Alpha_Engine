@@ -43,7 +43,7 @@ namespace SonarEngine {
 		);
 
 		if (rawSamples == nullptr) {
-			Core::Logger::LogError("Cannot load file", __LOGERROR__);
+			Core::Logger::LogError("Cannot load file. Samples info is null", __LOGERROR__);
 			return;
 		}
 
