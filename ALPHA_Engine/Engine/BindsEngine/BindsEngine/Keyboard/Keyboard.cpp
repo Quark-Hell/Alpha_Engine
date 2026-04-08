@@ -1,4 +1,4 @@
-#include "Keyboard.h"
+﻿#include "Keyboard.h"
 #include "KeyboardSensors.h"
 
 #include <GLFW/glfw3.h>
@@ -33,15 +33,12 @@ namespace BindsEngine {
             if (glfwGetKey(glfwWindow, static_cast<uint16_t>(it->KEY))) {
                 if (it->KeyState == EnumKeyboardKeysStates::KeyNotPressed) {
                     it->KeyState = EnumKeyboardKeysStates::KeyPressed;
-                    //std::cout << "Pressed" << std::endl;
                 } else if (it->KeyState == EnumKeyboardKeysStates::KeyPressed) {
                     it->KeyState = EnumKeyboardKeysStates::KeyHold;
-                    //std::cout << "Hold" << std::endl;
                 }
             } else {
                 if (it->KeyState == EnumKeyboardKeysStates::KeyHold || it->KeyState == EnumKeyboardKeysStates::KeyPressed) {
                     it->KeyState = EnumKeyboardKeysStates::KeyReleased;
-                    //std::cout << "Released" << std::endl;
                     continue;
                 }
                 it->KeyState = EnumKeyboardKeysStates::KeyNotPressed;
