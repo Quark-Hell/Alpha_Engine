@@ -15,7 +15,7 @@ namespace SonarEngine {
 	SonarEngine::SonarEngine(size_t order) : System({ "AudioSourcesBuffer", "AudioListenersBuffer"}, order) {
 		InitSonarEngine();
 
-        SetDopplerFactor(1.0f);
+        SetDopplerFactor(0.0f);
         SetSpeedOfSound(343.3f);
 	}
 
@@ -53,13 +53,6 @@ namespace SonarEngine {
         for (auto& listener : audioListeners->GetAllData()) {
             listener->UpdateTransform();
         }
-
-        auto& source = audioSources->GetData(0);
-        auto& listener = audioListeners->GetData(0);
-
-        glm::vec3 srcPos = source._parentObject->transform.GetPosition();
-        glm::vec3 lstPos = listener._parentObject->transform.GetPosition();
-        float distance = glm::distance(srcPos, lstPos);
 	}
 
     void SonarEngine::SetDopplerFactor(float factor) {
