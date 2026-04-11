@@ -1,4 +1,4 @@
-﻿#version 450
+#version 450
 in vec3 color;
 in vec3 normal;
 in vec3 frag_Pos;
@@ -41,7 +41,7 @@ vec3 calcSpecularLight(vec3 lColor, vec3 norm, vec3 lightDir) {
     vec3 reflectDir = reflect(-lightDir, norm);
 
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0);
-    return 0.5 * spec * lColor; // Fix: убран лишний vec3 specular = vec3(0,0,0)
+    return 0.5 * spec * lColor;
 }
 //============================Specular Light============================//
 
@@ -61,7 +61,7 @@ uniform DirectLight directLights[MAXDIRECTLIGHT];
 vec3 calcDirectLight(DirectLight dirLight);
 
 vec3 calcDirectLight(DirectLight dirLight) {
-    vec3 lightDir = normalize(-dirLight.direction); // Fix: инверсия — direction задаёт куда светит источник
+    vec3 lightDir = normalize(-dirLight.direction);
 
     vec3 norm = normalize(normal);
 
@@ -131,7 +131,6 @@ void main()
     vec3 diffuseTex = vec3(texture(diffuseMap, texCoords));
     vec3 emissionTex = vec3(texture(emissionMap, texCoords));
 
-    // Fix: emission не умножается на diffuse, а складывается поверх
     vec3 result = diffuseTex * lightColor + emissionTex * 2.0;
     FragColor = vec4(result, 1.0);
 }

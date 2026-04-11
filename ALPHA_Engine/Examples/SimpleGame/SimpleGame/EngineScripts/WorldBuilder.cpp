@@ -82,7 +82,7 @@ void WorldBuilder::GenerateCube() {
 
 #if SONAR_ENGINE_INCLUDED
         SonarEngine::AudioClip& audioClip = Core::Factory::CreateResource<SonarEngine::AudioClip>();
-        audioClip.LoadMusic(GAME_ASSETS_PATH "/Audio/Unknown_Ambient_mono.wav");
+        audioClip.LoadMusic(GAME_ASSETS_PATH "/Audio/Call of the Sea Claudie Mackula.wav");
         
         SonarEngine::AudioSource& audioSource = audioSourcesBuffer->CreateAudioSource();
         audioSource.SetAudioClip(audioClip);
