@@ -1,81 +1,78 @@
 # Alpha Engine
-Open source game engine
+
+**Open Source Modular Game Engine**  
+*Built with C++ for maximum performance and flexibility*
 
 <p align="center">
-      <img src="https://i.ibb.co/LprNYRR/Alpha-Engine-2.png" alt="Alpha-Engine-2" border="0">
+  <img src="https://i.ibb.co/LprNYRR/Alpha-Engine-2.png" alt="Alpha Engine Logo" width="280">
 </p>
 
 <p align="center">
-   <img src="https://img.shields.io/badge/Version-v0.1--Alpha-blue" alt="Engine Version">
-   <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
-   <img src="https://img.shields.io/github/last-commit/Quark-Hell/Alpha_Engine" alt="Last Update">
-   <img src="https://img.shields.io/github/languages/code-size/Quark-Hell/Alpha_Engine" alt="Size">
+  <img src="https://img.shields.io/badge/Version-v0.1_Alpha-blue" alt="Version">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+  <img src="https://img.shields.io/github/last-commit/Quark-Hell/Alpha_Engine" alt="Last Commit">
+  <img src="https://img.shields.io/github/languages/code-size/Quark-Hell/Alpha_Engine" alt="Code Size">
 </p>
 
 ## About
-The Alpha Engine was created for game development. 
-    However, the engine itself is fully modular and provides only the general architecture of executable processes (systems). 
-    All further functionality depends solely on the implementation of specific systems.
 
-Thanks to this architecture, Alpha Engine is not just a game engine but a whole meta-universe that allows you to accomplish virtually any task.
-    
- At the moment, Alpha Engine is in active development and does not yet have a stable codebase, which makes it unstable. 
-    However, it is distributed under the MIT license, allowing anyone interested to contribute to the project’s development.
+**Alpha Engine** is a lightweight, modular, and highly extensible game engine focused on performance and clean architecture.
+
+Instead of providing a rigid set of features, the engine offers a powerful foundation of systems and architecture. All gameplay, rendering, physics, audio, and other functionality is implemented through modular systems — giving developers complete freedom to build exactly what they need.
+
+This makes Alpha Engine not just a game engine, but a **meta-framework** suitable for games, tools, simulations, and other high-performance applications.
+
+> ⚠️ The engine is currently in **early alpha** stage and is under active development.
+
+## Features
+
+- Fully modular architecture
+- High performance C++20 codebase
+- Clean separation of systems
+- Easy to extend and customize
+- Statically linked external dependencies
+- Cross-platform support (Windows & Linux)
+
+## Screenshots
 
 <p align="center">
-      <img src="https://i.ibb.co/HDTpqGXh/Game.png" alt="Alpha-Engine-2" border="0">
-      <img src="https://i.ibb.co/S4gGtXKJ/Logs.png" alt="Alpha-Engine-2" border="0">
+  <img src="https://i.ibb.co/HDTpqGXh/Game.png" alt="Game Screenshot" width="49%" style="margin: 4px; border-radius: 8px;">
+  <img src="https://i.ibb.co/S4gGtXKJ/Logs.png" alt="Engine Logs" width="49%" style="margin: 4px; border-radius: 8px;">
 </p>
 
 ## Architecture
+
 <p align="center">
-      <img src="https://i.ibb.co/mCCnCRps/Architect.png" alt="Alpha-Engine-2" border="0">
+  <img src="https://i.ibb.co/mCCnCRps/Architect.png" alt="Alpha Engine Architecture" width="75%" style="margin: 10px; border-radius: 8px;">
 </p>
 
 ## Documentation
 
-- placed there [Docs](https://github.com/Quark-Hell/Alpha_Engine_Docs)
-- also you can check [examples](https://github.com/Quark-Hell/Alpha_Engine/tree/Architect2.0/ALPHA_Engine/Examples)
+Full documentation is available in a separate repository:
 
-## Developers
-- [Quark](https://github.com/Quark-Hell)
-- [Kleshovdd](https://github.com/kleshovdd)
+→ **[Alpha Engine Documentation](https://github.com/Quark-Hell/Alpha_Engine_Docs)**
 
-## License
-- MIT License
+Also check out the [Examples folder](https://github.com/Quark-Hell/Alpha_Engine/tree/Architect2.0/ALPHA_Engine/Examples).
 
 ## Build
-### Windows with Visual Studio or CLion(MinGW compiler):
-<pre>
-<b>Step 1:</b> Clone repository to your computer
-<b>Step 2:</b> In Visual Studio build project as you need(Debug or Release)
-<b>Step 3:</b> Enjoy
-</pre>
 
-### Linux:
+### Windows (Visual Studio / CLion)
 
-<b>Step 1:</b>
-Clone the repo
-```
-git clone https://github.com/Quark-Hell/Alpha_Engine.git 
-```
-<b>Step 2:</b>
-Go to the Engine source directory and create build folder. Then generate cmake files(I use ninja as generator and clang as compiler, but make will work too):
-```
-cd Alpha_Engine/ALPHA_Engine  
-mkdir build
-cmake -G "Ninja" -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -B build
-```
-<b>Step 3:</b>
-Build engine
-```
-cd build
+1. Clone the repository
+2. Open the project in Visual Studio
+3. Build in **Debug** or **Release** configuration
+
+### Linux
+
+```bash
+git clone https://github.com/Quark-Hell/Alpha_Engine.git
+cd Alpha_Engine/ALPHA_Engine
+
+mkdir build && cd build
+
+cmake -G "Ninja" \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_C_COMPILER=clang \
+      -DCMAKE_CXX_COMPILER=clang++ ..
+
 ninja
-```
-Done
-
-## Note
-<pre>
-Folder "_Output/Engine" contains files needed for linking with your project
-External dependencies are statically linked to libraries    
-</pre>
