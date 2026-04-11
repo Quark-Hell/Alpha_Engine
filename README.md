@@ -31,7 +31,7 @@ This game engine is being developed to make it easier for developers to create s
 ## Build
 ### Windows with Visual Studio or CLion(MinGW compiler):
 <pre>
-<b>Step 1:</b> Clone repository to your computer and switch to the "Architect2.0" branch
+<b>Step 1:</b> Clone repository to your computer
 <b>Step 2:</b> In Visual Studio build project as you need(Debug or Release)
 <b>Step 3:</b> Enjoy
 </pre>
@@ -41,7 +41,7 @@ This game engine is being developed to make it easier for developers to create s
 <b>Step 1:</b>
 Clone the repo
 ```
-git clone https://github.com/Quark-Hell/Alpha_Engine.git --branch Architect2.0   
+git clone https://github.com/Quark-Hell/Alpha_Engine.git 
 ```
 <b>Step 2:</b>
 Go to the Engine source directory and create build folder. Then generate cmake files(I use ninja as generator and clang as compiler, but make will work too):
